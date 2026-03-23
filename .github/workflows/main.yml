@@ -17,13 +17,11 @@ jobs:
 
       - name: Build APK
         run: |
-          # Entramos directamente en la carpeta y lanzamos el build
-          cd agenda-eden
+          # Solo lanzamos el build porque ya estamos en la carpeta correcta
           flet build apk main.py
           
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Mi-App-Instalador
-          # Usamos el asterisco para que encuentre el APK esté donde esté
-          path: "**/build/outputs/apk/release/app-release.apk"
+          path: build/outputs/apk/release/app-release.apk
