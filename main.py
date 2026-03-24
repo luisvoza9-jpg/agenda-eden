@@ -1,5 +1,4 @@
 import flet as ft
-import os
 
 def main(page: ft.Page):
     page.title = "SISTEMA EDEN"
@@ -8,10 +7,25 @@ def main(page: ft.Page):
     page.window_height = 800
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     
-    archivo_notas = "mis_notas_grafica.txt"
-    archivo_users = "usuarios.txt"
+    # --- FUNCIONES DE ALMACENAMIENTO (PARA WEB) ---
+    def obtener_usuarios():
+        # Recupera la lista de usuarios del navegador, si no hay nada, devuelve lista vacía
+        users = page.client_storage.get("usuarios_eden")
+        return users if users else []
 
-    # --- FUNCIONES ---
+    def guardar_usuario(u, p):
+        users = obtener_usuarios()
+        users.append({"user": u, "pass": p})
+        page.client_storage.set("usuarios_eden", users)
+
+    def obtener_notas():
+        notas = page.client_storage.get("notas_eden")
+        return notas if notas else []
+
+    def guardar_notas_todas(lista_strings):
+        page.client_storage.set("notas_eden", lista_strings)
+
+    # --- FUNCIONES DE INTERFAZ ---
     def ir_a_registro(e):
         vista_login.visible = False
         vista_eden.visible = True
@@ -21,37 +35,30 @@ def main(page: ft.Page):
         u = user_reg.value.strip()
         p = pass_reg.value.strip()
         if u != "" and p != "":
-            with open(archivo_users, "a") as f:
-                f.write(f"{u}:{p}\n")
+            guardar_usuario(u, p)
             page.snack_bar = ft.SnackBar(ft.Text("Usuario creado correctamente"), bgcolor="green")
             page.snack_bar.open = True
             vista_eden.visible = False
             vista_login.visible = True
             page.update()
         else:
-            page.snack_bar = ft.SnackBar(ft.Text("Incorrecto, intenta de nuevo"), bgcolor="red")
+            page.snack_bar = ft.SnackBar(ft.Text("Campos vacíos"), bgcolor="red")
             page.snack_bar.open = True
             page.update()
 
     def validar_acceso(e):
         u = user_in.value.strip()
         p = pass_in.value.strip()
-        encontrado = False
-        if os.path.exists(archivo_users):
-            with open(archivo_users, "r") as f:
-                for linea in f:
-                    if ":" in linea:
-                        u_db, p_db = linea.strip().split(":")
-                        if u == u_db and p == p_db:
-                            encontrado = True
-                            break
+        usuarios = obtener_usuarios()
+        
+        encontrado = any(user["user"] == u and user["pass"] == p for user in usuarios)
         
         if encontrado or (u == "admin" and p == "1234"):
             vista_login.visible = False
             vista_agenda.visible = True
             cargar_notas()
         else:
-            page.snack_bar = ft.SnackBar(ft.Text("Incorrecto, intenta de nuevo"), bgcolor="red")
+            page.snack_bar = ft.SnackBar(ft.Text("Credenciales incorrectas"), bgcolor="red")
             page.snack_bar.open = True
         page.update()
 
@@ -62,10 +69,9 @@ def main(page: ft.Page):
         vista_login.visible = True
         page.update()
 
-    # --- VISTA 1: LOGIN ---
+    # --- VISTAS ---
     user_in = ft.TextField(label="Usuario", width=300)
     pass_in = ft.TextField(label="Contraseña", password=True, width=300)
-    
     vista_login = ft.Column([
         ft.Text("INICIO DE SESIÓN", size=25, weight="bold", color="blue"),
         user_in, pass_in,
@@ -73,10 +79,8 @@ def main(page: ft.Page):
         ft.TextButton("¿No tienes cuenta? REGÍSTRATE AQUÍ", on_click=ir_a_registro)
     ], horizontal_alignment="center", visible=True)
 
-    # --- VISTA 2: BIENVENIDOS AL EDEN ---
     user_reg = ft.TextField(label="Nuevo Usuario", width=300)
     pass_reg = ft.TextField(label="Nueva Contraseña", password=True, width=300)
-    
     vista_eden = ft.Column([
         ft.Text("BIENVENIDOS AL EDEN", size=40, weight="bold", color="cyan", italic=True),
         ft.Text("REGÍSTRATE", size=20, color="cyan"),
@@ -85,30 +89,26 @@ def main(page: ft.Page):
         ft.TextButton("Volver al Login", on_click=lambda _: [setattr(vista_eden, 'visible', False), setattr(vista_login, 'visible', True), page.update()])
     ], visible=False, horizontal_alignment="center")
 
-    # --- VISTA 3: AGENDA ---
     lista_tareas = ft.Column(scroll="auto", height=350)
     campo_tarea = ft.TextField(label="Nueva tarea...", expand=True)
 
     def cargar_notas():
         lista_tareas.controls.clear()
-        if os.path.exists(archivo_notas):
-            with open(archivo_notas, "r") as f:
-                for linea in f:
-                    if linea.strip():
-                        lista_tareas.controls.append(ft.Checkbox(label=linea.strip()))
+        for nota in obtener_notas():
+            lista_tareas.controls.append(ft.Checkbox(label=nota))
         page.update()
 
     def guardar_tarea(e):
         if campo_tarea.value.strip():
-            with open(archivo_notas, "a") as f:
-                f.write(campo_tarea.value + "\n")
+            notas = obtener_notas()
+            notas.append(campo_tarea.value.strip())
+            guardar_notas_todas(notas)
             campo_tarea.value = ""
             cargar_notas()
 
     def borrar_marcados(e):
         restantes = [c.label for c in lista_tareas.controls if not c.value]
-        with open(archivo_notas, "w") as f:
-            for r in restantes: f.write(r + "\n")
+        guardar_notas_todas(restantes)
         cargar_notas()
 
     vista_agenda = ft.Column([
@@ -123,4 +123,5 @@ def main(page: ft.Page):
     ], visible=False)
 
     page.add(vista_login, vista_eden, vista_agenda)
+
 ft.app(target=main, view=ft.AppView.WEB_BROWSER)
