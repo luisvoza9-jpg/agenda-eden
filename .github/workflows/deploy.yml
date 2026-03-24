@@ -14,12 +14,9 @@ jobs:
         run: |
           pip install flet
 
-      - name: Crear Web (Auto-busqueda)
+      - name: Crear Web 
         run: |
-          # Buscamos el archivo main.py esté donde esté
-          FILE_PATH=$(find . -name "main.py" | head -n 1)
-          echo "Archivo encontrado en: $FILE_PATH"
-          flet publish "$FILE_PATH" --base-url /agenda-eden/
+          flet publish agenda_eden/main.py --base-url /agenda-eden/
 
       - name: Subir a GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
