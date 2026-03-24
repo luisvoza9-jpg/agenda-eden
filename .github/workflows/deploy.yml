@@ -5,14 +5,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Esto le da permiso para crear la web
     steps:
       - uses: actions/checkout@v4
+
       - name: Instalar Python y Flet
         run: |
           pip install flet
-      - name: Crear Web
+
+      - name: Crear Web (Auto-busqueda)
         run: |
-          flet publish "githun/flujos de trabajo/main.py" --base-url /agenda-eden/
+          # Buscamos el archivo main.py esté donde esté
+          FILE_PATH=$(find . -name "main.py" | head -n 1)
+          echo "Archivo encontrado en: $FILE_PATH"
+          flet publish "$FILE_PATH" --base-url /agenda-eden/
+
       - name: Subir a GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
