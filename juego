@@ -1,0 +1,1086 @@
+import flet as ft
+import random
+import threading
+import time
+
+# =============================================
+#                  CONSTANTES
+# =============================================
+GRAVITY = 0.45
+JUMP_FORCE = -13.5
+PLAYER_W = 44
+PLAYER_H = 52
+PLAT_H = 14
+PLATFORM_COUNT = 9
+FPS = 0.033
+
+CHARACTERS = [
+    {
+        "id": "superpaula",
+        "name": "Superpaula",
+        "desc": "Chica rubia con\npoderes del viento",
+        "emoji": "👱‍♀️",
+        "badge": "💨",
+        "color": "#E91E8C",
+        "jump_bonus": 0.8,
+        "speed": 5.5,
+    },
+    {
+        "id": "superluis",
+        "name": "Superluis",
+        "desc": "Chico moreno\nsin camiseta",
+        "emoji": "🦸‍♂️",
+        "badge": "💪",
+        "color": "#1565C0",
+        "jump_bonus": 1.5,
+        "speed": 4.8,
+    },
+    {
+        "id": "superprimo",
+        "name": "El Primo",
+        "desc": "Niño deportista\nde 12 años",
+        "emoji": "🏃",
+        "badge": "⚡",
+        "color": "#2E7D32",
+        "jump_bonus": 0.4,
+        "speed": 7.0,
+    },
+]
+
+BACKGROUNDS = [
+    {
+        "min_m": 0, "max_m": 500,
+        "label": "🌤 Cielo",
+        "bg_top": "#42A5F5", "bg_bot": "#BBDEFB",
+        "plat_color": "#4CAF50", "plat_edge": "#2E7D32",
+        "stars": False,
+    },
+    {
+        "min_m": 500, "max_m": 1500,
+        "label": "🌅 Atardecer",
+        "bg_top": "#E65100", "bg_bot": "#FFB74D",
+        "plat_color": "#F57C00", "plat_edge": "#BF360C",
+        "stars": False,
+    },
+    {
+        "min_m": 1500, "max_m": 3000,
+        "label": "🌌 Espacio",
+        "bg_top": "#0D0221", "bg_bot": "#1A0533",
+        "plat_color": "#7C4DFF", "plat_edge": "#4527A0",
+        "stars": True,
+    },
+    {
+        "min_m": 3000, "max_m": 99999,
+        "label": "🪐 Planetas",
+        "bg_top": "#0A001F", "bg_bot": "#1B0040",
+        "plat_color": "#FF6D00", "plat_edge": "#BF360C",
+        "stars": True,
+    },
+]
+
+
+def get_bg(meters):
+    for b in BACKGROUNDS:
+        if b["min_m"] <= meters < b["max_m"]:
+            return b
+    return BACKGROUNDS[-1]
+
+
+# =============================================
+#               CLASES DEL JUEGO
+# =============================================
+class Platform:
+    def __init__(self, x, y, w, moving=False):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.moving = moving
+        self.dir = 1
+        self.speed = random.uniform(1.2, 2.5) if moving else 0
+
+    def update(self, screen_w):
+        if self.moving:
+            self.x += self.dir * self.speed
+            if self.x < 0:
+                self.dir = 1
+            if self.x + self.w > screen_w:
+                self.dir = -1
+
+
+class GameState:
+    def __init__(self):
+        self.player_name = ""
+        self.selected_char = None
+        self.player_x = 0.0
+        self.player_y = 0.0
+        self.player_vx = 0.0
+        self.player_vy = 0.0
+        self.player_facing = 1
+        self.platforms = []
+        self.camera_y = 0.0
+        self.meters = 0
+        self.alive = True
+        self.left_held = False
+        self.right_held = False
+        self.arrow_size = 64
+        self.game_running = False
+        self.screen_w = 400
+        self.screen_h = 720
+        self.star_positions = []
+
+
+def init_game(state, sw, sh):
+    sw = int(sw)
+    sh = int(sh)
+    state.screen_w = sw
+    state.screen_h = sh
+    state.player_x = float(sw // 2 - PLAYER_W // 2)
+    state.player_y = float(sh - 120)
+    state.player_vx = 0.0
+    state.player_vy = JUMP_FORCE
+    state.player_facing = 1
+    state.camera_y = 0.0
+    state.meters = 0
+    state.alive = True
+    state.left_held = False
+    state.right_held = False
+
+    gap_y = sh // (PLATFORM_COUNT + 1)
+    state.platforms = []
+    for i in range(PLATFORM_COUNT):
+        pw = random.randint(65, 115)
+        max_x = int(max(11, sw - pw - 10))
+        px = random.randint(10, max_x)
+        py = sh - 80 - i * gap_y
+        moving = i > 4 and random.random() < 0.25
+        state.platforms.append(Platform(px, float(py), pw, moving))
+
+    state.star_positions = [
+        (random.randint(0, int(sw)), random.randint(0, int(sh)))
+        for _ in range(40)
+    ]
+
+
+# =============================================
+#              PANTALLA DE INICIO
+# =============================================
+def build_start_screen(page, state, go_select, go_settings):
+    name_field = ft.TextField(
+        hint_text="Escribe tu nombre...",
+        text_align=ft.TextAlign.CENTER,
+        border_radius=30,
+        filled=True,
+        fill_color="#FFFFFF20",
+        border_color="#FFFFFF60",
+        color="#FFFFFF",
+        hint_style=ft.TextStyle(color="#FFFFFF88"),
+        cursor_color="#FFFFFF",
+        text_style=ft.TextStyle(size=18, weight=ft.FontWeight.BOLD),
+        max_length=16,
+    )
+
+    def on_start(e):
+        n = name_field.value.strip() if name_field.value else ""
+        state.player_name = n if n else "Jugador"
+        go_select()
+
+    return ft.Stack(
+        controls=[
+            ft.Container(
+                expand=True,
+                gradient=ft.LinearGradient(
+                    colors=["#0D0221", "#3A0060", "#7B00C8"],
+                ),
+            ),
+            ft.Container(
+                expand=True,
+                content=ft.Column(
+                    controls=[
+                        ft.Container(height=30),
+                        ft.Text(
+                            "✨ BOZA ✨",
+                            size=72,
+                            weight=ft.FontWeight.W_900,
+                            color="#FFD700",
+                            text_align=ft.TextAlign.CENTER,
+                        ),
+                        ft.Text(
+                            "El juego de los superhéroes",
+                            size=16,
+                            color="#FFFFFFCC",
+                            text_align=ft.TextAlign.CENTER,
+                        ),
+                        ft.Container(height=6),
+                        ft.Row(
+                            controls=[
+                                ft.Text("⭐", size=26),
+                                ft.Text("💣", size=26),
+                                ft.Text("⭐", size=26),
+                                ft.Text("💣", size=26),
+                                ft.Text("⭐", size=26),
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            spacing=8,
+                        ),
+                        ft.Container(height=22),
+                        ft.Container(
+                            content=ft.Column(
+                                controls=[
+                                    ft.Text(
+                                        "¿Cómo te llamas?",
+                                        size=14,
+                                        color="#FFFFFFAA",
+                                        text_align=ft.TextAlign.CENTER,
+                                    ),
+                                    ft.Container(height=6),
+                                    name_field,
+                                ],
+                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                            ),
+                            padding=ft.padding.symmetric(horizontal=32),
+                        ),
+                        ft.Container(height=22),
+                        ft.ElevatedButton(
+                            content=ft.Row(
+                                controls=[
+                                    ft.Text("🚀", size=20),
+                                    ft.Text(
+                                        "  ¡JUGAR!",
+                                        size=20,
+                                        weight=ft.FontWeight.W_900,
+                                    ),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                            ),
+                            width=240,
+                            height=56,
+                            style=ft.ButtonStyle(
+                                bgcolor={"": "#FFD700"},
+                                color={"": "#1A0040"},
+                                elevation={"": 8},
+                                shape={"": ft.RoundedRectangleBorder(radius=28)},
+                            ),
+                            on_click=on_start,
+                        ),
+                        ft.Container(height=12),
+                        ft.TextButton(
+                            content=ft.Row(
+                                controls=[
+                                    ft.Text("⚙️", size=16),
+                                    ft.Text(
+                                        " Ajustes",
+                                        size=15,
+                                        color="#FFFFFFCC",
+                                    ),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                            ),
+                            on_click=lambda e: go_settings("start"),
+                        ),
+                        ft.Container(height=16),
+                        ft.Text(
+                            "⭐ 💣 ⭐ 💣 ⭐",
+                            size=20,
+                            color="#FFFFFF66",
+                            text_align=ft.TextAlign.CENTER,
+                        ),
+                        ft.Container(height=8),
+                        ft.Text(
+                            "Salta lo más alto posible",
+                            size=13,
+                            color="#FFFFFF55",
+                            text_align=ft.TextAlign.CENTER,
+                        ),
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    scroll=ft.ScrollMode.AUTO,
+                ),
+            ),
+        ],
+        expand=True,
+    )
+
+
+# =============================================
+#         SELECCIÓN DE PERSONAJE
+# =============================================
+def build_char_select(page, state, on_char_selected, go_back):
+    card_containers = []
+
+    def make_card(char, idx):
+        def on_tap(e, cidx=idx, c=char):
+            state.selected_char = c
+            for i, cc in enumerate(card_containers):
+                cc.border = (
+                    ft.border.all(3, "#FFD700")
+                    if i == cidx
+                    else ft.border.all(1, "#FFFFFF33")
+                )
+                cc.bgcolor = (
+                    c["color"] + "55" if i == cidx else c["color"] + "22"
+                )
+            page.update()
+
+        card = ft.Container(
+            content=ft.Column(
+                controls=[
+                    ft.Text(char["emoji"], size=52, text_align=ft.TextAlign.CENTER),
+                    ft.Text(char["badge"], size=22, text_align=ft.TextAlign.CENTER),
+                    ft.Text(
+                        char["name"],
+                        size=15,
+                        weight=ft.FontWeight.W_900,
+                        color="#FFFFFF",
+                        text_align=ft.TextAlign.CENTER,
+                    ),
+                    ft.Text(
+                        char["desc"],
+                        size=10,
+                        color="#FFFFFFBB",
+                        text_align=ft.TextAlign.CENTER,
+                    ),
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=4,
+            ),
+            width=108,
+            padding=10,
+            border_radius=18,
+            bgcolor=char["color"] + "22",
+            border=ft.border.all(1, "#FFFFFF33"),
+            on_click=on_tap,
+        )
+        card_containers.append(card)
+        return card
+
+    cards = [make_card(ch, i) for i, ch in enumerate(CHARACTERS)]
+
+    def on_confirm(e):
+        if state.selected_char is None:
+            state.selected_char = CHARACTERS[0]
+        on_char_selected()
+
+    return ft.Stack(
+        controls=[
+            ft.Container(
+                expand=True,
+                gradient=ft.LinearGradient(
+                    colors=["#0D0221", "#1A0040", "#2A0060"],
+                ),
+            ),
+            ft.Container(
+                expand=True,
+                content=ft.Column(
+                    controls=[
+                        ft.Container(height=20),
+                        ft.Row(
+                            controls=[
+                                ft.IconButton(
+                                    icon="arrow_back",
+                                    icon_color="#FFFFFF",
+                                    on_click=lambda e: go_back(),
+                                ),
+                                ft.Text(
+                                    "Elige tu héroe",
+                                    size=24,
+                                    weight=ft.FontWeight.W_900,
+                                    color="#FFD700",
+                                ),
+                                ft.Container(width=48),
+                            ],
+                            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                        ),
+                        ft.Container(height=10),
+                        ft.Text(
+                            "⭐ Toca para seleccionar ⭐",
+                            size=13,
+                            color="#FFFFFF88",
+                            text_align=ft.TextAlign.CENTER,
+                        ),
+                        ft.Container(height=14),
+                        ft.Row(
+                            controls=cards,
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            spacing=10,
+                        ),
+                        ft.Container(height=26),
+                        ft.ElevatedButton(
+                            content=ft.Row(
+                                controls=[
+                                    ft.Text("⚡", size=20),
+                                    ft.Text(
+                                        "  ¡COMENZAR!",
+                                        size=18,
+                                        weight=ft.FontWeight.W_900,
+                                    ),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                            ),
+                            width=240,
+                            height=52,
+                            style=ft.ButtonStyle(
+                                bgcolor={"": "#FFD700"},
+                                color={"": "#1A0040"},
+                                shape={"": ft.RoundedRectangleBorder(radius=26)},
+                                elevation={"": 8},
+                            ),
+                            on_click=on_confirm,
+                        ),
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                ),
+            ),
+        ],
+        expand=True,
+    )
+
+
+# =============================================
+#              AJUSTES
+# =============================================
+def build_settings_screen(page, state, go_back):
+    lbl_arrow = ft.Text(
+        f"Tamaño flechas: {int(state.arrow_size)}px",
+        size=14,
+        color="#FFFFFF",
+    )
+
+    def on_arrow_change(e):
+        state.arrow_size = int(e.control.value)
+        lbl_arrow.value = f"Tamaño flechas: {state.arrow_size}px"
+        page.update()
+
+    return ft.Stack(
+        controls=[
+            ft.Container(
+                expand=True,
+                gradient=ft.LinearGradient(
+                    colors=["#0D0221", "#1A0040"],
+                ),
+            ),
+            ft.Container(
+                expand=True,
+                content=ft.Column(
+                    controls=[
+                        ft.Container(height=20),
+                        ft.Row(
+                            controls=[
+                                ft.IconButton(
+                                    icon="arrow_back",
+                                    icon_color="#FFFFFF",
+                                    on_click=lambda e: go_back(),
+                                ),
+                                ft.Text(
+                                    "⚙️ Ajustes",
+                                    size=24,
+                                    weight=ft.FontWeight.W_900,
+                                    color="#FFD700",
+                                ),
+                                ft.Container(width=48),
+                            ],
+                            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                        ),
+                        ft.Container(height=30),
+                        ft.Container(
+                            content=ft.Column(
+                                controls=[
+                                    lbl_arrow,
+                                    ft.Slider(
+                                        min=40,
+                                        max=100,
+                                        value=float(state.arrow_size),
+                                        divisions=6,
+                                        active_color="#FFD700",
+                                        thumb_color="#FFD700",
+                                        on_change=on_arrow_change,
+                                    ),
+                                ]
+                            ),
+                            bgcolor="#FFFFFF10",
+                            border_radius=14,
+                            padding=20,
+                            margin=ft.margin.symmetric(horizontal=20),
+                        ),
+                        ft.Container(height=20),
+                        ft.Container(
+                            content=ft.Column(
+                                controls=[
+                                    ft.Text(
+                                        "🎮 Controles",
+                                        size=15,
+                                        weight=ft.FontWeight.BOLD,
+                                        color="#FFD700",
+                                    ),
+                                    ft.Text(
+                                        "Usa las flechas ◀ ▶ para\nmoverte izquierda y derecha",
+                                        size=13,
+                                        color="#FFFFFFAA",
+                                        text_align=ft.TextAlign.CENTER,
+                                    ),
+                                ],
+                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                            ),
+                            bgcolor="#FFFFFF10",
+                            border_radius=14,
+                            padding=20,
+                            margin=ft.margin.symmetric(horizontal=20),
+                        ),
+                        ft.Container(height=20),
+                        ft.Container(
+                            content=ft.Column(
+                                controls=[
+                                    ft.Text(
+                                        "⭐ Consejos 💣",
+                                        size=15,
+                                        weight=ft.FontWeight.BOLD,
+                                        color="#FFD700",
+                                    ),
+                                    ft.Text(
+                                        "Sube lo más alto posible\nsin caer al vacío",
+                                        size=13,
+                                        color="#FFFFFFAA",
+                                        text_align=ft.TextAlign.CENTER,
+                                    ),
+                                ],
+                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                            ),
+                            bgcolor="#FFFFFF10",
+                            border_radius=14,
+                            padding=20,
+                            margin=ft.margin.symmetric(horizontal=20),
+                        ),
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                ),
+            ),
+        ],
+        expand=True,
+    )
+
+
+# =============================================
+#               GAME OVER
+# =============================================
+def build_game_over_screen(page, state, on_restart, go_home):
+    char = state.selected_char or CHARACTERS[0]
+    stars_count = min(5, max(1, int(state.meters / 200)))
+    stars_str = "⭐" * stars_count + "💣" * (5 - stars_count)
+
+    return ft.Stack(
+        controls=[
+            ft.Container(
+                expand=True,
+                gradient=ft.LinearGradient(
+                    colors=["#200000", "#600010", "#A00020"],
+                ),
+            ),
+            ft.Container(
+                expand=True,
+                content=ft.Column(
+                    controls=[
+                        ft.Container(height=40),
+                        ft.Text(
+                            "💥 GAME OVER 💥",
+                            size=36,
+                            weight=ft.FontWeight.W_900,
+                            color="#FF4444",
+                            text_align=ft.TextAlign.CENTER,
+                        ),
+                        ft.Container(height=16),
+                        ft.Text(
+                            char["emoji"],
+                            size=64,
+                            text_align=ft.TextAlign.CENTER,
+                        ),
+                        ft.Container(height=10),
+                        ft.Text(
+                            state.player_name,
+                            size=22,
+                            weight=ft.FontWeight.BOLD,
+                            color="#FFFFFF",
+                            text_align=ft.TextAlign.CENTER,
+                        ),
+                        ft.Container(height=10),
+                        ft.Container(
+                            content=ft.Column(
+                                controls=[
+                                    ft.Text(
+                                        "METROS SUBIDOS",
+                                        size=13,
+                                        color="#FFFFFFAA",
+                                        text_align=ft.TextAlign.CENTER,
+                                    ),
+                                    ft.Text(
+                                        f"{state.meters}m",
+                                        size=52,
+                                        weight=ft.FontWeight.W_900,
+                                        color="#FFD700",
+                                        text_align=ft.TextAlign.CENTER,
+                                    ),
+                                    ft.Text(
+                                        stars_str,
+                                        size=24,
+                                        text_align=ft.TextAlign.CENTER,
+                                    ),
+                                ],
+                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                spacing=4,
+                            ),
+                            bgcolor="#FFFFFF10",
+                            border_radius=20,
+                            padding=20,
+                            margin=ft.margin.symmetric(horizontal=40),
+                        ),
+                        ft.Container(height=28),
+                        ft.ElevatedButton(
+                            content=ft.Row(
+                                controls=[
+                                    ft.Text("🔄", size=20),
+                                    ft.Text(
+                                        "  ¡DE NUEVO!",
+                                        size=18,
+                                        weight=ft.FontWeight.W_900,
+                                    ),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                            ),
+                            width=220,
+                            height=52,
+                            style=ft.ButtonStyle(
+                                bgcolor={"": "#FFD700"},
+                                color={"": "#1A0040"},
+                                shape={"": ft.RoundedRectangleBorder(radius=26)},
+                                elevation={"": 8},
+                            ),
+                            on_click=lambda e: on_restart(),
+                        ),
+                        ft.Container(height=12),
+                        ft.TextButton(
+                            content=ft.Row(
+                                controls=[
+                                    ft.Text("🏠", size=16),
+                                    ft.Text(
+                                        " Inicio",
+                                        size=15,
+                                        color="#FFFFFFCC",
+                                    ),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                            ),
+                            on_click=lambda e: go_home(),
+                        ),
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                ),
+            ),
+        ],
+        expand=True,
+    )
+
+
+# =============================================
+#           PANTALLA DE JUEGO + LOOP
+# =============================================
+def build_game_view(page, state, go_game_over, go_settings_from_game):
+    sw = int(state.screen_w)
+    sh = int(state.screen_h)
+    char = state.selected_char or CHARACTERS[0]
+
+    # Fondo
+    bg_ctrl = ft.Container(
+        expand=True,
+        gradient=ft.LinearGradient(
+            colors=["#42A5F5", "#BBDEFB"],
+        ),
+    )
+
+    # Estrellas
+    star_ctrls = []
+    for _ in range(40):
+        sc = ft.Container(
+            width=3,
+            height=3,
+            bgcolor="#FFFFFF",
+            border_radius=2,
+            left=0,
+            top=0,
+            opacity=0.0,
+        )
+        star_ctrls.append(sc)
+
+    # Plataformas
+    plat_ctrls = []
+    for p in state.platforms:
+        pc = ft.Container(
+            width=float(p.w),
+            height=float(PLAT_H),
+            border_radius=8,
+            bgcolor="#4CAF50",
+            border=ft.border.all(2, "#2E7D32"),
+            left=float(p.x),
+            top=float(p.y),
+        )
+        plat_ctrls.append(pc)
+
+    # Jugador
+    player_text = ft.Text(
+        value=char["emoji"],
+        size=38,
+        text_align=ft.TextAlign.CENTER,
+    )
+    player_ctrl = ft.Container(
+        content=player_text,
+        width=float(PLAYER_W),
+        height=float(PLAYER_H),
+        border_radius=10,
+        left=float(state.player_x),
+        top=float(state.player_y),
+    )
+
+    # HUD - Metros
+    meter_text = ft.Text(
+        value="0m",
+        size=20,
+        weight=ft.FontWeight.W_900,
+        color="#FFD700",
+    )
+    bg_label_text = ft.Text(
+        value="🌤 Cielo",
+        size=11,
+        color="#FFFFFF99",
+    )
+    meter_display = ft.Container(
+        content=ft.Column(
+            controls=[meter_text, bg_label_text],
+            spacing=0,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        ),
+        top=12,
+        right=12,
+        bgcolor="#00000055",
+        border_radius=12,
+        padding=ft.padding.symmetric(horizontal=10, vertical=6),
+    )
+
+    # HUD - Nombre
+    name_display = ft.Container(
+        content=ft.Text(
+            f"{state.player_name} {char['badge']}",
+            size=13,
+            color="#FFFFFFCC",
+            weight=ft.FontWeight.BOLD,
+        ),
+        top=12,
+        left=12,
+        bgcolor="#00000044",
+        border_radius=10,
+        padding=ft.padding.symmetric(horizontal=8, vertical=4),
+    )
+
+    # Botón de ajustes dentro del juego
+    settings_btn = ft.Container(
+        content=ft.GestureDetector(
+            content=ft.Container(
+                content=ft.Text("⚙️", size=22, text_align=ft.TextAlign.CENTER),
+                bgcolor="#00000044",
+                border_radius=10,
+                padding=6,
+                width=42,
+                height=42,
+            ),
+            on_tap=lambda e: go_settings_from_game(),
+        ),
+        top=52,
+        left=12,
+    )
+
+    # Flechas táctiles
+    arrow_sz = int(state.arrow_size)
+
+    def set_left_down(e):
+        state.left_held = True
+
+    def set_left_up(e):
+        state.left_held = False
+
+    def set_right_down(e):
+        state.right_held = True
+
+    def set_right_up(e):
+        state.right_held = False
+
+    left_btn = ft.GestureDetector(
+        content=ft.Container(
+            content=ft.Text(
+                "◀",
+                size=int(arrow_sz * 0.55),
+                text_align=ft.TextAlign.CENTER,
+            ),
+            width=float(arrow_sz),
+            height=float(arrow_sz),
+            bgcolor="#FFFFFF20",
+            border_radius=arrow_sz // 2,
+            border=ft.border.all(2, "#FFFFFF44"),
+            alignment=ft.Alignment(0, 0),
+        ),
+        on_tap_down=set_left_down,
+        on_tap_up=set_left_up,
+        on_horizontal_drag_start=set_left_down,
+        on_horizontal_drag_end=set_left_up,
+    )
+
+    right_btn = ft.GestureDetector(
+        content=ft.Container(
+            content=ft.Text(
+                "▶",
+                size=int(arrow_sz * 0.55),
+                text_align=ft.TextAlign.CENTER,
+            ),
+            width=float(arrow_sz),
+            height=float(arrow_sz),
+            bgcolor="#FFFFFF20",
+            border_radius=arrow_sz // 2,
+            border=ft.border.all(2, "#FFFFFF44"),
+            alignment=ft.Alignment(0, 0),
+        ),
+        on_tap_down=set_right_down,
+        on_tap_up=set_right_up,
+        on_horizontal_drag_start=set_right_down,
+        on_horizontal_drag_end=set_right_up,
+    )
+
+    arrow_row = ft.Container(
+        content=ft.Row(
+            controls=[left_btn, ft.Container(expand=True), right_btn],
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+        ),
+        bottom=24,
+        left=20,
+        right=20,
+    )
+
+    game_stack = ft.Stack(
+        controls=[
+            bg_ctrl,
+            *star_ctrls,
+            *plat_ctrls,
+            player_ctrl,
+            meter_display,
+            name_display,
+            settings_btn,
+            arrow_row,
+        ],
+        expand=True,
+    )
+
+    # -------- BUCLE DEL JUEGO (Thread) --------
+    scroll_line = sh * 0.38
+    world_top = [float(sh - 80)]
+
+    def game_loop():
+        while state.game_running and state.alive:
+            bg = get_bg(state.meters)
+            speed = char["speed"]
+
+            # Movimiento horizontal
+            if state.left_held:
+                state.player_vx = -speed
+                state.player_facing = -1
+            elif state.right_held:
+                state.player_vx = speed
+                state.player_facing = 1
+            else:
+                state.player_vx *= 0.7
+
+            state.player_x += state.player_vx
+            state.player_vy += GRAVITY
+            state.player_y += state.player_vy
+
+            # Envolver en los bordes horizontales
+            if state.player_x + PLAYER_W < 0:
+                state.player_x = float(sw)
+            if state.player_x > sw:
+                state.player_x = float(-PLAYER_W)
+
+            # Scroll de cámara
+            if state.player_y < scroll_line:
+                delta = scroll_line - state.player_y
+                state.player_y = scroll_line
+                state.camera_y += delta
+                world_top[0] += delta
+                for p in state.platforms:
+                    p.y += delta
+
+            # Contador de metros
+            new_m = int(state.camera_y / 8)
+            if new_m > state.meters:
+                state.meters = new_m
+
+            # Colisión con plataformas (solo bajando)
+            if state.player_vy > 0:
+                for p in state.platforms:
+                    if (
+                        state.player_x + PLAYER_W > p.x + 6
+                        and state.player_x < p.x + p.w - 6
+                        and state.player_y + PLAYER_H >= p.y
+                        and state.player_y + PLAYER_H <= p.y + PLAT_H + 12
+                    ):
+                        state.player_vy = JUMP_FORCE - char["jump_bonus"]
+
+            # Mover plataformas móviles
+            for p in state.platforms:
+                p.update(sw)
+
+            # Regenerar plataformas que salen por abajo
+            for p in state.platforms:
+                if p.y > sh + 20:
+                    pw2 = random.randint(65, 115)
+                    max_x2 = int(max(11, sw - pw2 - 10))
+                    p.x = float(random.randint(10, max_x2))
+                    p.y = world_top[0] - float(random.randint(60, 145))
+                    p.w = pw2
+                    p.moving = state.meters > 300 and random.random() < 0.3
+                    p.speed = random.uniform(1.2, 3.0)
+                    world_top[0] = min(world_top[0], p.y)
+
+            # Comprobar si cayó
+            if state.player_y > sh + 100:
+                state.alive = False
+                state.game_running = False
+                break
+
+            # --- ACTUALIZAR CONTROLES VISUALES ---
+            bg_ctrl.gradient = ft.LinearGradient(
+                colors=[bg["bg_top"], bg["bg_bot"]],
+            )
+
+            show_stars = bg["stars"]
+            for i, sc in enumerate(star_ctrls):
+                if show_stars:
+                    sx, sy = state.star_positions[i]
+                    sc.left = float(sx)
+                    sc.top = float(sy)
+                    sc.opacity = 0.85
+                else:
+                    sc.opacity = 0.0
+
+            for p, pc in zip(state.platforms, plat_ctrls):
+                pc.left = float(p.x)
+                pc.top = float(p.y)
+                pc.width = float(p.w)
+                pc.bgcolor = bg["plat_color"]
+                pc.border = ft.border.all(2, bg["plat_edge"])
+
+            player_ctrl.left = float(state.player_x)
+            player_ctrl.top = float(state.player_y)
+
+            meter_text.value = f"{state.meters}m"
+            bg_label_text.value = bg["label"]
+
+            try:
+                page.update()
+            except Exception:
+                break
+
+            time.sleep(FPS)
+
+        # Fin del juego
+        if not state.alive:
+            try:
+                go_game_over()
+            except Exception:
+                pass
+
+    return game_stack, game_loop
+
+
+# =============================================
+#              FUNCIÓN PRINCIPAL
+# =============================================
+def main(page: ft.Page):
+    page.title = "BOZA"
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#0D0221"
+    page.padding = 0
+    page.spacing = 0
+
+    state = GameState()
+    settings_origin = ["start"]
+
+    def get_page_size():
+        try:
+            w = page.window.width
+            h = page.window.height
+            if w and int(w) > 100:
+                state.screen_w = int(w)
+            if h and int(h) > 200:
+                state.screen_h = int(h)
+        except Exception:
+            pass
+
+    def show(control):
+        page.controls.clear()
+        page.controls.append(control)
+        page.update()
+
+    def go_start():
+        state.game_running = False
+        get_page_size()
+        scr = build_start_screen(page, state, go_select, go_settings)
+        show(scr)
+
+    def go_select():
+        get_page_size()
+        scr = build_char_select(page, state, go_game, go_start)
+        show(scr)
+
+    def go_settings(origin="start"):
+        settings_origin[0] = origin
+        state.game_running = False
+        scr = build_settings_screen(page, state, go_back_from_settings)
+        show(scr)
+
+    def go_back_from_settings():
+        if settings_origin[0] == "game":
+            go_select()
+        else:
+            go_start()
+
+    def go_game():
+        state.game_running = False
+        time.sleep(0.06)
+        get_page_size()
+        state.selected_char = state.selected_char or CHARACTERS[0]
+        init_game(state, state.screen_w, state.screen_h)
+
+        game_view, loop_fn = build_game_view(
+            page, state, go_game_over, lambda: go_settings("game")
+        )
+        show(game_view)
+
+        state.game_running = True
+        t = threading.Thread(target=loop_fn, daemon=True)
+        t.start()
+
+    def go_game_over():
+        state.game_running = False
+        scr = build_game_over_screen(page, state, go_game, go_start)
+        show(scr)
+
+    def on_resize(e):
+        try:
+            w = page.window.width
+            h = page.window.height
+            if w and int(w) > 100:
+                state.screen_w = int(w)
+            if h and int(h) > 200:
+                state.screen_h = int(h)
+        except Exception:
+            pass
+
+    page.on_resized = on_resize
+
+    go_start()
+
+
+ft.app(target=main)
