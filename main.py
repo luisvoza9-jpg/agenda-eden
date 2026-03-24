@@ -123,4 +123,4 @@ def main(page: ft.Page):
     ], visible=False)
 
     page.add(vista_login, vista_eden, vista_agenda)
-ft.app(target=main)
+ft.app(target=main, view=ft.AppView.WEB_BROWSER)
