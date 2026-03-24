@@ -1,27 +1,26 @@
 name: Desplegar Agenda
 on:
   push:
-    branches: [ main ] # Se activa cada vez que guardas cambios en main
-
+    branches: [ main ]
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Permiso para que el robot cree la web
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
       - name: Instalar Python y Flet
-        run: |
-          pip install flet
+        run: pip install flet
 
-      - name: Crear Web
+      - name: Crear Web (Forzado)
         run: |
-          # El punto "." hace que busque el main.py en cualquier carpeta
-          flet publish . --base-url /agenda-eden/
+          # Publicamos el archivo main.py directamente al nivel raíz de la web
+          flet publish main.py --base-url /agenda-eden/
 
       - name: Subir a GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist
-          branch: gh-pages # Aquí es donde se guarda la web
+          branch: gh-pages
+          clean: true
