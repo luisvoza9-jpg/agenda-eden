@@ -16,7 +16,7 @@ jobs:
 
       - name: Crear Web 
         run: |
-          flet publish "agenda_edén/main.py" --base-url /agenda-eden/
+          flet publish . --base-url /agenda-eden/
 
       - name: Subir a GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
