@@ -1,0 +1,20 @@
+name: Desplegar Agenda a GitHub Pages
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Instalar Python y Flet
+        run: |
+          pip install flet
+      - name: Crear Web
+        run: |
+          flet publish githun/flujos\ de\ trabajo/main.py --base-url /agenda-eden/
+      - name: Subir a GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages # Crea una rama especial para la web
