@@ -17,11 +17,19 @@
         h1 { color: #00FFFF; margin-bottom: 20px; font-size: 32px; text-shadow: 0 0 15px #00FFFF; display: flex; flex-direction: column; align-items: center; letter-spacing: 2px; font-weight: bold; line-height: 1.1; min-height: 110px; }
         h1 span { display: block; width: 100%; }
         .frase-neon { color: #00FFFF; font-size: 14px; text-shadow: 0 0 10px #00FFFF; display: block; margin-top: 20px; text-align: center; }
+        
+        /* CORRECCIÓN: input sin margen superior para alinear con el botón */
         input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00FFFF; background: rgba(0, 0, 0, 0.7); color: white; font-size: 16px; outline: none; text-align: center; }
+        
         .btn-exit-fixed { position: fixed; top: 25px; right: 25px; color: #ff4444; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1000; transition: 0.3s; }
         .btn-exit-fixed:hover { transform: scale(1.2); filter: drop-shadow(0 0 10px #ff0000); }
-        .task-input-group { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-blue { background: #00FFFF; color: black; width: 55px; font-size: 24px; border-radius: 10px; border: none; cursor: pointer; height: 45px; }
+        
+        /* CORRECCIÓN: Alineación perfecta del grupo de entrada */
+        .task-input-group { display: flex; gap: 10px; margin-top: 10px; align-items: center; }
+        .task-input-group input { margin: 0; flex: 1; } /* Quitamos el margen para que no se desfase del botón */
+        
+        .btn-blue { background: #00FFFF; color: black; width: 55px; font-size: 24px; border-radius: 10px; border: none; cursor: pointer; height: 45px; flex-shrink: 0; }
+        
         .task-list { text-align: left; margin-top: 20px; max-height: 250px; overflow-y: auto; }
         .task-item { background: rgba(0, 0, 0, 0.6); margin-bottom: 8px; padding: 12px; border-radius: 10px; display: flex; align-items: center; border: 1px solid rgba(0, 255, 255, 0.2); text-align: left; }
         .task-text { flex: 1; margin-left: 10px; color: white; word-break: break-word; text-align: left; }
@@ -102,7 +110,24 @@
         </div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
     <script>
+        // CONFIGURACIÓN DE TU BASE DE DATOS
+        const firebaseConfig = {
+            apiKey: "AIzaSyCod7qKXcefhTqa40EVWbl32dygU9G10Aw",
+            authDomain: "edengame-5a40c.firebaseapp.com",
+            databaseURL: "https://edengame-5a40c-default-rtdb.firebaseio.com",
+            projectId: "edengame-5a40c",
+            storageBucket: "edengame-5a40c.firebasestorage.app",
+            messagingSenderId: "837651200703",
+            appId: "1:837651200703:web:0c3e237c36e1bb37b6640a"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        let currentUser = "";
+
         const tituloEden = document.getElementById('titulo-eden');
         const lineas = ["BIENVENIDOS", "AL", "EDÉN"];
         let timer;
@@ -129,31 +154,53 @@
                 overlay.classList.add('hidden'); cargarTareas();
             } else { overlay.classList.remove('hidden'); }
         }
+
+        // LÓGICA DE ACCESO CON BASE DE DATOS
         function validarAcceso() {
             const u = document.getElementById('user-in').value.trim();
             const p = document.getElementById('pass-in').value.trim();
-            const saved = localStorage.getItem('user_' + u);
-            if ((u === 'admin' && p === '1234') || (saved !== null && saved === p)) { mostrarVista('vista-agenda'); }
-            else { alert("Usuario o contraseña incorrectos"); }
+            if (u === 'admin' && p === '1234') { 
+                currentUser = u; 
+                mostrarVista('vista-agenda'); 
+                return; 
+            }
+            db.ref('usuarios/' + u).once('value', (snapshot) => {
+                if (snapshot.exists() && snapshot.val().password === p) {
+                    currentUser = u;
+                    mostrarVista('vista-agenda');
+                } else {
+                    alert("Usuario o contraseña incorrectos");
+                }
+            });
         }
+
         function ejecutarRegistro() {
             const u = document.getElementById('user-reg').value.trim();
             const p = document.getElementById('pass-reg').value.trim();
-            if(u && p) { localStorage.setItem('user_' + u, p); alert("¡Registrado!"); mostrarVista('vista-login'); }
+            if(u && p) { 
+                db.ref('usuarios/' + u).set({ password: p })
+                .then(() => {
+                    alert("¡Registrado en la nube!"); 
+                    mostrarVista('vista-login');
+                });
+            }
         }
-        function cerrarSesion() { mostrarVista('vista-login'); }
+
+        function cerrarSesion() { currentUser = ""; mostrarVista('vista-login'); }
+
+        // AGENDA DE NOTAS
         function añadirTarea() {
             const input = document.getElementById('campo-tarea');
             if(input.value.trim()) {
-                let t = JSON.parse(localStorage.getItem('tareas_eden') || '[]');
+                let t = JSON.parse(localStorage.getItem('tareas_' + currentUser) || '[]');
                 t.unshift({text: input.value.trim(), done: false});
-                localStorage.setItem('tareas_eden', JSON.stringify(t));
+                localStorage.setItem('tareas_' + currentUser, JSON.stringify(t));
                 input.value = ''; cargarTareas();
             }
         }
         function cargarTareas() {
             const lista = document.getElementById('lista-tareas'); lista.innerHTML = '';
-            let t = JSON.parse(localStorage.getItem('tareas_eden') || '[]');
+            let t = JSON.parse(localStorage.getItem('tareas_' + currentUser) || '[]');
             t.forEach((tarea, i) => {
                 const item = document.createElement('div'); item.className = 'task-item'; item.id = `nota-${i}`;
                 item.innerHTML = `<input type="checkbox" style="width:20px; cursor:pointer;" ${tarea.done?'checked':''} onchange="toggle(${i})"><div class="task-text" style="${tarea.done?'text-decoration:line-through;opacity:0.5':''}">${tarea.text}</div>`;
@@ -161,20 +208,20 @@
             });
         }
         function toggle(i) {
-            let t = JSON.parse(localStorage.getItem('tareas_eden')); t[i].done = !t[i].done;
-            localStorage.setItem('tareas_eden', JSON.stringify(t)); cargarTareas();
+            let t = JSON.parse(localStorage.getItem('tareas_' + currentUser)); t[i].done = !t[i].done;
+            localStorage.setItem('tareas_' + currentUser, JSON.stringify(t)); cargarTareas();
         }
         function borrarMarcados() {
-            let t = JSON.parse(localStorage.getItem('tareas_eden') || '[]'); let hayMarcados = false;
+            let t = JSON.parse(localStorage.getItem('tareas_' + currentUser) || '[]'); let hayMarcados = false;
             const papelera = document.getElementById('btn-borrar');
             t.forEach((tarea, i) => { if(tarea.done) { document.getElementById(`nota-${i}`).classList.add('arrugando'); hayMarcados = true; } });
             if(!hayMarcados) return;
             papelera.classList.add('papelera-atrapando');
             setTimeout(() => { papelera.classList.remove('papelera-atrapando'); }, 550);
-            setTimeout(() => { t = t.filter(tarea => !tarea.done); localStorage.setItem('tareas_eden', JSON.stringify(t)); cargarTareas(); }, 600);
+            setTimeout(() => { t = t.filter(tarea => !tarea.done); localStorage.setItem('tareas_' + currentUser, JSON.stringify(t)); cargarTareas(); }, 600);
         }
 
-        // --- LÓGICA MINIJUEGO ULTRA ---
+        // --- LÓGICA MINIJUEGO ULTRA (SIN CAMBIOS) ---
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         const menuGameOver = document.getElementById("game-over-menu");
@@ -203,31 +250,23 @@
             isFireBall = false;
             score = 0;
             document.getElementById("game-score").innerText = "SCORE: 0";
-            
             let ballRadius = (diff === 'eden') ? 5 : 8;
             balls = [{ x: canvas.width/2, y: canvas.height-100, dx: 2.1, dy: -2.1, radius: ballRadius }];
-            
-            // Configuración de ladrillos según nivel
             bricks = [];
             let rows = (diff === 'terrestre') ? 5 : (diff === 'semidios' ? 8 : 12);
             let cols = (diff === 'terrestre') ? 7 : (diff === 'semidios' ? 12 : 18);
             let bWidth = (canvas.width - 40) / cols;
             let bHeight = (diff === 'terrestre') ? 20 : 12;
-
             for (let c = 0; c < cols; c++) {
                 bricks[c] = [];
                 for (let r = 0; r < rows; r++) {
-                    let type = "normal"; // normal, hard (2 golpes), wall (indestructible)
-                    let life = 1;
-
+                    let type = "normal"; let life = 1;
                     if(diff === 'semidios' && Math.random() < 0.2) { type = "hard"; life = 2; }
                     if(diff === 'eden') {
                         if(Math.random() < 0.15) { type = "wall"; life = 999; }
                         else if(Math.random() < 0.3) { type = "hard"; life = 2; }
-                        // Arquitectura no lineal: huecos aleatorios
                         if(Math.random() < 0.1) life = 0; 
                     }
-
                     bricks[c][r] = { x: 0, y: 0, status: life, type: type, w: bWidth - 4, h: bHeight - 4 };
                 }
             }
@@ -244,25 +283,21 @@
         function draw() {
             if (!gameActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             let allBroken = true;
             bricks.forEach((col, c) => {
                 col.forEach((b, r) => {
                     if (b.status > 0) {
                         if(b.type !== "wall") allBroken = false;
                         b.x = c * (b.w + 4) + 15; b.y = r * (b.h + 4) + 50;
-                        
                         ctx.shadowBlur = 5;
                         if(b.type === "wall") { ctx.fillStyle = "#888"; ctx.shadowColor = "#555"; }
                         else if(b.type === "hard") { ctx.fillStyle = (b.status === 2) ? "#FFD700" : "#FF4444"; ctx.shadowColor = ctx.fillStyle; }
                         else { ctx.fillStyle = "#FF4444"; ctx.shadowColor = "#FF4444"; }
-                        
                         ctx.fillRect(b.x, b.y, b.w, b.h);
                     }
                 });
             });
             if(allBroken) endPartida("¡EL REY DEL EDÉN!");
-
             powerUps.forEach((p, i) => {
                 p.y += 2;
                 ctx.beginPath(); ctx.arc(p.x, p.y, 10, 0, Math.PI*2);
@@ -274,16 +309,13 @@
                     powerUps.splice(i, 1);
                 }
             });
-
             ctx.fillStyle = "#00FFFF"; ctx.shadowBlur = 15; ctx.shadowColor = "#00FFFF";
             ctx.fillRect(paddleX, canvas.height - 70, paddleWidth, 12);
-
             balls.forEach((b, index) => {
                 ctx.beginPath(); ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
                 ctx.fillStyle = isFireBall ? "#FFA500" : "#FF0000";
                 ctx.shadowBlur = 15; ctx.shadowColor = ctx.fillStyle;
                 ctx.fill(); ctx.closePath();
-
                 bricks.forEach(col => col.forEach(brick => {
                     if (brick.status > 0 && b.x > brick.x && b.x < brick.x + brick.w && b.y > brick.y && b.y < brick.y + brick.h) {
                         if(!isFireBall || brick.type === "wall") b.dy = -b.dy;
@@ -292,7 +324,6 @@
                             if(brick.status === 0) {
                                 score++;
                                 document.getElementById("game-score").innerText = "SCORE: " + score;
-                                // Probabilidades de poder según nivel
                                 let prob = (currentDifficulty === 'terrestre') ? 0.15 : (currentDifficulty === 'semidios' ? 0.07 : 0.03);
                                 if(Math.random() < prob) {
                                     let types = ['P', '2', 'F'];
@@ -302,7 +333,6 @@
                         }
                     }
                 }));
-
                 if (b.x + b.dx > canvas.width - b.radius || b.x + b.dx < b.radius) b.dx = -b.dx;
                 if (b.y + b.dy < b.radius) b.dy = -b.dy;
                 else if (b.y + b.dy > canvas.height - 80) {
@@ -311,10 +341,8 @@
                 }
                 b.x += b.dx; b.y += b.dy;
             });
-
             if(balls.length === 0) endPartida("GAME OVER");
         }
-
         function activarPowerUp(type) {
             if(type === 'P') { paddleWidth = 180; setTimeout(() => paddleWidth = 90, 8000); }
             if(type === '2') { 
@@ -323,26 +351,14 @@
             }
             if(type === 'F') { isFireBall = true; setTimeout(() => isFireBall = false, 3000); }
         }
-
         function endPartida(msg) {
             gameActive = false; clearInterval(gameInterval);
             canvas.style.cursor = "auto";
             document.getElementById("end-title").innerText = msg;
             menuGameOver.classList.remove("hidden");
         }
-
-        function iniciarJuegoEden(diff) { 
-            resetVariablesJuego(diff); 
-            gameActive = true; 
-            gameInterval = setInterval(draw, 10); 
-        }
-
-        function salirDelJuego() { 
-            gameActive = false; 
-            clearInterval(gameInterval); 
-            menuDifficulty.classList.add('hidden');
-            mostrarVista('vista-agenda'); 
-        }
+        function iniciarJuegoEden(diff) { resetVariablesJuego(diff); gameActive = true; gameInterval = setInterval(draw, 10); }
+        function salirDelJuego() { gameActive = false; clearInterval(gameInterval); menuDifficulty.classList.add('hidden'); mostrarVista('vista-agenda'); }
 
         mostrarVista('vista-login');
     </script>
