@@ -61,7 +61,6 @@
             background: rgba(0, 0, 0, 0.6);
             color: white; font-size: 16px; outline: none;
             text-align: center;
-            height: 45px;
         }
 
         input:focus { border-color: #00FFFF; box-shadow: 0 0 10px #00FFFF; }
@@ -77,24 +76,15 @@
             text-align: left; margin-bottom: 20px;
         }
 
-        /* === GRUPO INPUTS: ALINEADO Y SIMÉTRICO === */
-        .task-input-group { 
-            display: flex; gap: 10px; align-items: center; /* === MISMA SEPARACIÓN (GAP) === */
-            justify-content: flex-end; /* === ALINEADO A LA DERECHA === */
-        }
+        .task-input-group { display: flex; gap: 10px; }
         #campo-tarea { 
             text-align: left; 
             padding-left: 15px;
-            flex: 1; /* === EL INPUT TAREA OCUPA EL ESPACIO RESTANTE === */
-            height: 45px;
+            flex: 1;
             margin: 0;
         }
 
-        .btn-blue { 
-            background: #00FFFF; color: black; width: 60px; font-size: 20px; border-radius: 10px; border: none; cursor: pointer; 
-            height: 45px; /* === MISMO GROSOR QUE EL INPUT === */
-            display: flex; justify-content: center; align-items: center;
-        }
+        .btn-blue { background: #00FFFF; color: black; width: 60px; font-size: 20px; border-radius: 10px; border: none; cursor: pointer; height: 45px; display: flex; justify-content: center; align-items: center; }
 
         .task-list { text-align: left; margin-top: 20px; max-height: 300px; overflow-y: auto; position: relative; }
         
@@ -109,17 +99,13 @@
         }
         .task-text { flex: 1; margin-left: 10px; color: white; font-size: 16px; }
 
-        /* === BOTÓN EXIT: MISMO GROSOR Y ALADO DEL PLUS === */
         .btn-exit-container {
-            background: none; border: none; cursor: pointer; color: #ff4444; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            height: 45px; /* === MISMO GROSOR QUE EL BOTÓN BLUE === */
-            width: 60px; /* === MISMO ANCHO QUE EL BOTÓN BLUE === */
-            padding: 0;
-            transition: 0.3s;
+            float: right; color: #ff4444; cursor: pointer; border: none; background: none;
+            display: flex; flex-direction: column; align-items: center;
+            margin-top: -10px; text-decoration: none;
         }
         .btn-exit-container:hover { transform: scale(1.1); color: #ff0000; filter: drop-shadow(0 0 5px #ff4444); }
-        .door-icon { font-size: 26px; /* === EMOJI MÁS GRANDE === */ }
+        .door-icon { font-size: 26px; }
         .exit-text { font-size: 9px; font-weight: bold; margin-top: -2px; }
 
         @keyframes pulsoNeon {
@@ -128,22 +114,23 @@
             100% { filter: drop-shadow(0 0 10px #ff4444); }
         }
 
+        /* === PAPELERA FIJA EN ESQUINA INFERIOR DERECHA (PULSO ROJO) === */
         .btn-trash-central {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            position: fixed; bottom: 30px; right: 30px; /* === UBICACIÓN SEÑALADA === */
             background: none; color: #ff4444; font-size: 50px; border: none; 
             filter: drop-shadow(0 0 10px #ff4444); cursor: pointer;
-            transition: all 0.3s ease;
+            z-index: 100;
+            transition: 0.3s;
         }
-        
         .btn-trash-central:hover { 
             animation: pulsoNeon 1.5s infinite; 
-            transform: translateX(-50%) scale(1.05);
+            transform: scale(1.1); /* === NO SE MUEVE DE SITIO, SOLO AGRANDA === */
         }
         
         .hidden { display: none !important; }
         button:hover { opacity: 0.8; transition: 0.2s; }
 
-        /* === ANIMACIONES DE LA BOLA DE PAPEL === */
+        /* === ANIMACIONES DE LA BOLA DE PAPEL REVISADAS === */
         @keyframes arrugar {
             0% { opacity: 1; transform: scale(1); border-radius: 10px; }
             50% { opacity: 0.9; transform: scale(0.6) rotate(15deg); border-radius: 50%; background: #fff; border-color: #ccc; }
@@ -152,20 +139,22 @@
 
         @keyframes volarALaBasura {
             0% { transform: scale(0.2) translate(0, 0); opacity: 1; }
-            80% { transform: scale(0.15) translate(0, 40vh); opacity: 0.8; } 
-            100% { transform: scale(0.0) translate(0, 50vh); opacity: 0; }
+            /* Volamos en diagonal hacia abajo-derecha, donde está la papelera */
+            80% { transform: scale(0.15) translate(40vw, 40vh); opacity: 0.8; } 
+            100% { transform: scale(0.0) translate(50vw, 50vh); opacity: 0; }
         }
 
         .arrugando {
+            /* Primero arrugamos (0.4s) y LUEGO volamos (0.4s) */
             animation: arrugar 0.4s ease-in-out forwards, volarALaBasura 0.4s ease-in-out 0.4s forwards;
             position: relative;
             z-index: 20;
             overflow: hidden;
-            border-collapse: collapse;
+            border-collapse: collapse; /* Ayuda visual al encoger */
         }
         
         .task-list.borrando {
-            overflow: visible;
+            overflow: visible; /* Necesario para que la bola "vuele" fuera de la agenda */
         }
 
     </style>
@@ -182,7 +171,7 @@
         </h1>
         <input type="text" id="user-in" placeholder="Usuario">
         <input type="password" id="pass-in" placeholder="Contraseña">
-        <button style="background:#00FFFF; color:black; width:100%; height: 45px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="validarAcceso()">ENTRAR</button>
+        <button style="background:#00FFFF; color:black; width:100%; padding:12px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="validarAcceso()">ENTRAR</button>
         <span class="frase-neon">¡Un paraíso para tus secretos te espera en el edén!</span>
         <p style="cursor:pointer; color:#ccc; font-size: 12px; margin-top: 20px;" onclick="mostrarVista('vista-eden')">Registrarse</p>
     </div>
@@ -191,19 +180,19 @@
         <h2>REGISTRO</h2>
         <input type="text" id="user-reg" placeholder="Nuevo usuario">
         <input type="password" id="pass-reg" placeholder="Contraseña">
-        <button style="background:#00FFFF; color:black; width:100%; height: 45px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="ejecutarRegistro()">GUARDAR</button>
+        <button style="background:#00FFFF; color:black; width:100%; padding:12px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="ejecutarRegistro()">GUARDAR</button>
         <p style="cursor:pointer; color:#ccc; margin-top:20px; font-size: 12px;" onclick="mostrarVista('vista-login')">Volver</p>
     </div>
 
     <div id="vista-agenda" class="container hidden">
+        <button class="btn-exit-container" onclick="cerrarSesion()">
+            <span style="font-size:30px;">🚪</span>
+            <span class="exit-text">EXIT</span>
+        </button>
         <h3>MIS NOTAS</h3>
         <div class="task-input-group">
             <input type="text" id="campo-tarea" placeholder="Escribe algo...">
             <button class="btn-blue" onclick="añadirTarea()">+</button>
-            <button class="btn-exit-container" onclick="cerrarSesion()" title="Cerrar Sesión">
-                <span class="door-icon">🚪</span>
-                <span class="exit-text">EXIT</span>
-            </button>
         </div>
         <div id="lista-tareas" class="task-list"></div>
     </div>
@@ -300,6 +289,7 @@
                 }
             });
 
+            // Esperamos el tiempo total de las dos animaciones encadenadas (0.4s + 0.4s = 0.8s)
             setTimeout(() => {
                 tareas = tareas.filter(t => !t.done);
                 localStorage.setItem('tareas_eden', JSON.stringify(tareas));
