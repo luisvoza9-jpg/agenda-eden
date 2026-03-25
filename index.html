@@ -11,7 +11,7 @@
             height: 100vh;
             display: flex; justify-content: center; align-items: center;
             font-family: 'Segoe UI', sans-serif;
-            background-image: url('fondo-nubes.jpg'); /* Mismo fondo */
+            background-image: url('fondo-nubes.jpg');
             background-size: cover;
             background-position: center;
             overflow: hidden;
@@ -31,7 +31,6 @@
             z-index: 10;
         }
 
-        /* === TÍTULO MODO PELÍCULA === */
         h1 { 
             color: #00FFFF; margin-bottom: 20px; font-size: 32px; 
             text-shadow: 0 0 15px #00FFFF;
@@ -52,7 +51,6 @@
             color: white; font-size: 16px; outline: none; text-align: center;
         }
 
-        /* === PUERTA EXIT GLOBAL (AGENDA) === */
         .btn-exit-fixed {
             position: fixed; top: 25px; right: 25px; 
             color: #ff4444; cursor: pointer; border: none; background: none;
@@ -63,7 +61,6 @@
         .door-icon { font-size: 32px; }
         .exit-text { font-size: 10px; font-weight: bold; }
 
-        /* === NOTAS A LA IZQUIERDA (SENTIDO ESCRITURA) === */
         .task-input-group { display: flex; gap: 10px; margin-top: 10px; }
         .btn-blue { background: #00FFFF; color: black; width: 55px; font-size: 24px; border-radius: 10px; border: none; cursor: pointer; height: 45px; }
 
@@ -76,7 +73,6 @@
         }
         .task-text { flex: 1; margin-left: 10px; color: white; word-break: break-word; text-align: left; }
 
-        /* === PAPELERA (CON EFECTO CANASTA) === */
         .btn-trash-central {
             position: fixed; bottom: 30px; right: 30px;
             background: none; color: #ff4444; font-size: 50px; border: none; 
@@ -97,53 +93,38 @@
         .arrugando { animation: borrarVuelo 0.6s ease-in forwards; pointer-events: none; }
         .papelera-atrapando { animation: inclinarPapelera 0.6s ease-out forwards; }
 
-        /* =========================================
-           === ESTILOS DEL MINIJUEGO ARKANOID ======
-           ========================================= */
-        
-        /* === MANDO DE CONSOLA (BOTÓN SECRETO) === */
+        /* === MINIJUEGO === */
         .btn-game-flotante {
-            position: fixed; bottom: 30px; left: 30px; /* LADO IZQUIERDO */
+            position: fixed; bottom: 30px; left: 30px;
             background: none; color: #00FFFF; font-size: 40px; border: none; 
             filter: drop-shadow(0 0 10px #00FFFF); cursor: pointer;
             z-index: 101; transition: 0.3s;
         }
-        .btn-game-flotante:hover { transform: scale(1.2) rotate(-15deg); filter: drop-shadow(0 0 15px #00FFFF); }
 
-        /* === PANTALLA DEL JUEGO (FULLSCREEN OVERLAY) === */
         #vista-juego {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Mismo fondo pero más oscuro para que brillen los neones */
-            background-image: url('fondo-nubes.jpg'); /* Mismo fondo */
-            background-size: cover; background-position: center;
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            z-index: 1000; padding: 20px;
+            background-image: url('fondo-nubes.jpg'); background-size: cover; background-position: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; /* Centrado vertical */
+            z-index: 1000;
         }
 
-        /* === CANVAS DEL JUEGO === */
         #gameCanvas {
-            border: 2px solid #00FFFF;
-            background: rgba(0, 0, 0, 0.8);
-            box-shadow: 0 0 20px #00FFFF;
-            margin-top: 50px;
-            cursor: none; /* Escondemos el ratón al jugar */
+            border: 3px solid #00FFFF;
+            background: rgba(0, 0, 0, 0.85);
+            box-shadow: 0 0 30px #00FFFF;
+            cursor: none;
+            margin-top: 20px;
         }
 
-        /* === PUERTA RETORNAR (IZQUIERDA) === */
         .btn-game-return {
-            position: absolute; top: 20px; left: 20px; /* ESQUINA SUPERIOR IZQUIERDA */
+            position: absolute; top: 20px; left: 20px;
             color: #00FFFF; cursor: pointer; border: none; background: none;
             display: flex; flex-direction: column; align-items: center;
-            z-index: 1002; transition: 0.3s;
         }
-        .btn-game-return:hover { transform: scale(1.1); filter: drop-shadow(0 0 10px #00FFFF); }
-        .btn-game-return .door-icon { font-size: 26px; }
-        .btn-game-return .exit-text { font-size: 9px; font-weight: bold; margin-top: -2px; color: #00FFFF; }
 
-        /* Marcador de puntuación neón */
         #game-score {
-            font-size: 20px; color: #00FFFF; text-shadow: 0 0 10px #00FFFF;
-            position: absolute; top: 20px; right: 20px;
+            font-size: 24px; color: #00FFFF; text-shadow: 0 0 10px #00FFFF;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -156,8 +137,7 @@
         <span class="exit-text">EXIT</span>
     </button>
     <button class="btn-trash-central hidden" id="btn-borrar" onclick="borrarMarcados()">🗑️</button>
-
-    <button id="game-btn" class="btn-game-flotante hidden" onclick="iniciarJuegoEden()" title="¡Secreto: Entrar al Edén Arkanoid!">🎮</button>
+    <button id="game-btn" class="btn-game-flotante hidden" onclick="iniciarJuegoEden()">🎮</button>
 
     <div id="vista-login" class="container">
         <h1 id="titulo-eden"></h1>
@@ -186,18 +166,16 @@
     </div>
 
     <div id="vista-juego" class="hidden">
-        <button class="btn-game-return" onclick="salirDelJuego()" title="Cerrar el Juego y volver a las Notas">
+        <button class="btn-game-return" onclick="salirDelJuego()">
             <span class="door-icon">🚪</span>
             <span class="exit-text">RETORNAR</span>
         </button>
-        
-        <h2 style="color:#00FFFF; font-size: 32px; text-shadow: 0 0 15px #00FFFF; margin-bottom: 20px;">ARKANOID EDÉN</h2>
         <div id="game-score">SCORE: 0</div>
-        
-        <canvas id="gameCanvas" width="550" height="400"></canvas>
+        <canvas id="gameCanvas" width="480" height="400"></canvas>
     </div>
 
     <script>
+        // --- Lógica del Edén (Login/Agenda) ---
         const tituloEden = document.getElementById('titulo-eden');
         const lineas = ["BIENVENIDOS", "AL", "EDÉN"];
         let timer;
@@ -211,7 +189,6 @@
                 tituloEden.appendChild(s);
             });
             let spans = tituloEden.querySelectorAll("span");
-
             timer = setInterval(() => {
                 if(l < lineas.length){
                     spans[l].innerText += lineas[l][c];
@@ -222,21 +199,17 @@
         }
 
         function mostrarVista(id) {
-            document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.container, #vista-juego').forEach(c => c.classList.add('hidden'));
             document.getElementById('btn-borrar').classList.add('hidden');
             document.getElementById('exit-btn').classList.add('hidden');
-            document.getElementById('game-btn').classList.add('hidden'); // Ocultar mando
-            document.getElementById('vista-juego').classList.add('hidden'); // Ocultar juego
-
+            document.getElementById('game-btn').classList.add('hidden');
             const overlay = document.getElementById('pantalla-oscura');
-
             document.getElementById(id).classList.remove('hidden');
-            
             if(id === 'vista-login') animar();
             if(id === 'vista-agenda') {
                 document.getElementById('btn-borrar').classList.remove('hidden');
                 document.getElementById('exit-btn').classList.remove('hidden');
-                document.getElementById('game-btn').classList.remove('hidden'); // MOSTRAR MANDO EN AGENDA
+                document.getElementById('game-btn').classList.remove('hidden');
                 overlay.classList.add('hidden');
                 cargarTareas();
             } else { overlay.classList.remove('hidden'); }
@@ -253,11 +226,7 @@
         function ejecutarRegistro() {
             const u = document.getElementById('user-reg').value.trim();
             const p = document.getElementById('pass-reg').value.trim();
-            if(u && p) {
-                localStorage.setItem('user_' + u, p);
-                alert("¡Registrado!");
-                mostrarVista('vista-login');
-            }
+            if(u && p) { localStorage.setItem('user_' + u, p); alert("¡Registrado!"); mostrarVista('vista-login'); }
         }
 
         function cerrarSesion() { mostrarVista('vista-login'); }
@@ -308,41 +277,34 @@
             }, 600);
         }
 
-        mostrarVista('vista-login');
-
-        /* =========================================
-           === LÓGICA DEL MINIJUEGO ARKANOID ========
-           ========================================= */
+        // --- Lógica del Minijuego (ARKANOID REAL) ---
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         const scoreElement = document.getElementById("game-score");
         
-        let ballRadius = 6;
+        let ballRadius = 8;
         let x, y, dx, dy;
-        let paddleHeight = 10;
-        let paddleWidth = 75;
+        let paddleHeight = 12;
+        let paddleWidth = 90;
         let paddleX;
-        let rightPressed = false;
-        let leftPressed = false;
-        let brickRowCount, brickColumnCount, brickWidth, brickHeight, brickPadding, brickOffsetTop, brickOffsetLeft;
+        let brickRowCount = 5; // Más filas
+        let brickColumnCount = 6;
+        let brickWidth = 65;
+        let brickHeight = 20;
+        let brickPadding = 10;
+        let brickOffsetTop = 40;
+        let brickOffsetLeft = 20;
         let bricks = [];
         let score = 0;
         let gameActive = false;
         let gameInterval;
 
         function resetVariablesJuego() {
-            canvas.style.cursor = "none";
             x = canvas.width / 2;
-            y = canvas.height - 30;
-            dx = 3; dy = -3;
+            y = canvas.height - 40;
+            dx = 2.5; // Velocidad más lenta
+            dy = -2.5; 
             paddleX = (canvas.width - paddleWidth) / 2;
-            brickRowCount = 3;
-            brickColumnCount = 6;
-            brickWidth = 75;
-            brickHeight = 20;
-            brickPadding = 10;
-            brickOffsetTop = 30;
-            brickOffsetLeft = 30;
             bricks = [];
             for (let c = 0; c < brickColumnCount; c++) {
                 bricks[c] = [];
@@ -351,20 +313,17 @@
                 }
             }
             score = 0;
-            updateScore();
+            scoreElement.innerText = "SCORE: 0";
         }
 
-        function updateScore() { scoreElement.innerText = "SCORE: " + score; }
-
-        document.addEventListener("mousemove", mouseMoveHandler, false);
-
-        function mouseMoveHandler(e) {
+        document.addEventListener("mousemove", (e) => {
             if (!gameActive) return;
-            let relativeX = e.clientX - canvas.offsetLeft - (window.innerWidth - canvas.width)/2;
+            let rect = canvas.getBoundingClientRect();
+            let relativeX = e.clientX - rect.left;
             if (relativeX > 0 && relativeX < canvas.width) {
                 paddleX = relativeX - paddleWidth / 2;
             }
-        }
+        });
 
         function collisionDetection() {
             for (let c = 0; c < brickColumnCount; c++) {
@@ -375,9 +334,9 @@
                             dy = -dy;
                             b.status = 0;
                             score++;
-                            updateScore();
+                            scoreElement.innerText = "SCORE: " + score;
                             if (score === brickRowCount * brickColumnCount) {
-                                alert("¡ARKANOID EDÉN COMPLETADO! ¡Felicidades, Socio!");
+                                alert("¡ERES EL REY DEL EDÉN!");
                                 salirDelJuego();
                             }
                         }
@@ -386,50 +345,50 @@
             }
         }
 
-        function drawBall() {
-            ctx.beginPath(); ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-            ctx.fillStyle = "#FF0000"; ctx.fill(); ctx.closePath();
-            ctx.shadowColor = '#FF0000'; ctx.shadowBlur = 10;
-        }
-
-        function drawPaddle() {
-            ctx.beginPath(); ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-            ctx.fillStyle = "#00FFFF"; ctx.fill(); ctx.closePath();
-            ctx.shadowColor = '#00FFFF'; ctx.shadowBlur = 10;
-        }
-
-        function drawBricks() {
+        function draw() {
+            if (!gameActive) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Ladrillos Neón
             for (let c = 0; c < brickColumnCount; c++) {
                 for (let r = 0; r < brickRowCount; r++) {
                     if (bricks[c][r].status === 1) {
                         let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
                         let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
                         bricks[c][r].x = brickX; bricks[c][r].y = brickY;
-                        ctx.beginPath(); ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                        ctx.fillStyle = "#FF4444"; ctx.fill(); ctx.closePath();
-                        ctx.shadowColor = '#FF4444'; ctx.shadowBlur = 8;
+                        ctx.fillStyle = "#FF4444";
+                        ctx.shadowBlur = 10; ctx.shadowColor = "#FF4444";
+                        ctx.fillRect(brickX, brickY, brickWidth, brickHeight);
                     }
                 }
             }
-        }
 
-        function draw() {
-            if (!gameActive) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.shadowBlur = 0;
-            drawBricks(); drawBall(); drawPaddle(); collisionDetection();
-            if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) { dx = -dx; }
-            if (y + dy < ballRadius) { dy = -dy; } else if (y + dy > canvas.width - (ballRadius+paddleHeight*2)) { // Game Over a esta altura
-                 if (x > paddleX && x < paddleX + paddleWidth) { dy = -dy; } 
-                 else if (y + dy > canvas.height + ballRadius * 2) { 
-                    alert("GAME OVER, SOCIO... Inténtalo de nuevo.");
+            // Bola
+            ctx.beginPath(); ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+            ctx.fillStyle = "#FF0000"; ctx.shadowBlur = 15; ctx.shadowColor = "#FF0000";
+            ctx.fill(); ctx.closePath();
+
+            // Pala Cyan
+            ctx.fillStyle = "#00FFFF"; ctx.shadowBlur = 15; ctx.shadowColor = "#00FFFF";
+            ctx.fillRect(paddleX, canvas.height - paddleHeight - 10, paddleWidth, paddleHeight);
+
+            collisionDetection();
+
+            if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) dx = -dx;
+            if (y + dy < ballRadius) dy = -dy;
+            else if (y + dy > canvas.height - paddleHeight - 20) {
+                if (x > paddleX && x < paddleX + paddleWidth) {
+                    dy = -dy;
+                } else if (y + dy > canvas.height) {
+                    alert("GAME OVER");
                     salirDelJuego();
-                 }
+                }
             }
+
             x += dx; y += dy;
         }
 
         function iniciarJuegoEden() {
-            if (!localStorage.getItem('tareas_eden')) { alert("Secreto: Necesitas tener al menos una nota guardada para abrir el portal del juego."); return; }
             mostrarVista('vista-juego');
             resetVariablesJuego();
             gameActive = true;
@@ -439,11 +398,10 @@
         function salirDelJuego() {
             gameActive = false;
             clearInterval(gameInterval);
-            canvas.style.cursor = "auto";
-            alert("Saliendo del Arkanoid... ¡Volviendo al Edén!");
             mostrarVista('vista-agenda');
         }
 
+        mostrarVista('vista-login');
     </script>
 </body>
 </html>
