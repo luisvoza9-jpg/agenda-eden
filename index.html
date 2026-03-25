@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIENVENIDOS AL EDÉN (ULTRA GAME)</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icono.png">
+    <meta name="theme-color" content="#00FFFF">
+
     <style>
         /* ESTILO ORIGINAL BLOQUEADO - NO SE TOCA */
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,7 +43,6 @@
         .arrugando { animation: borrarVuelo 0.6s ease-in forwards; pointer-events: none; }
         .papelera-atrapando { animation: inclinarPapelera 0.6s ease-out forwards; }
 
-        /* BOTONES FLOTANTES */
         .btn-game-flotante { position: fixed; bottom: 30px; left: 30px; background: none; color: #00FFFF; font-size: 40px; border: none; filter: drop-shadow(0 0 10px #00FFFF); cursor: pointer; z-index: 101; transition: 0.3s; }
         .btn-rank-flotante { position: fixed; bottom: 30px; left: 90px; background: none; color: #FFD700; font-size: 40px; border: none; filter: drop-shadow(0 0 10px #FFD700); cursor: pointer; z-index: 101; transition: 0.3s; }
         
@@ -47,7 +51,6 @@
         .btn-game-return { position: absolute; top: 20px; left: 20px; color: #00FFFF; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1002; }
         #game-score { font-size: 24px; color: #00FFFF; text-shadow: 0 0 10px #00FFFF; margin-bottom: 10px; font-weight: bold; }
         
-        /* MENÚS FLOTANTES - CORREGIDO PARA QUE NO SE SOLAPEN */
         .menu-eden { position: absolute; background: rgba(0,0,0,0.95); border: 2px solid #00FFFF; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 50px #00FFFF; z-index: 1010; width: 340px; }
         .game-btn-neon { background: none; border: 1px solid #00FFFF; color: #00FFFF; padding: 10px 20px; margin: 10px auto; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; display: block; width: 100%; }
         .game-btn-neon:hover { background: #00FFFF; color: black; box-shadow: 0 0 20px #00FFFF; }
@@ -130,7 +133,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <script>
-        /* CONFIGURACIÓN FIREBASE INTACTA */
         const firebaseConfig = {
             apiKey: "AIzaSyCod7qKXcefhTqa40EVWbl32dygU9G10Aw",
             authDomain: "edengame-5a40c.firebaseapp.com",
@@ -224,7 +226,6 @@
             }, 600);
         }
 
-        // --- RANKING ACTUALIZADO CON €EDEN€ ---
         function abrirRanking() {
             mostrarVista('vista-juego');
             document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden'));
@@ -240,7 +241,6 @@
         }
         function cerrarRanking() { document.getElementById('rank-menu').classList.add('hidden'); mostrarVista('vista-agenda'); }
 
-        // --- LÓGICA DEL JUEGO INTACTA ---
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         const menuGameOver = document.getElementById("game-over-menu");
