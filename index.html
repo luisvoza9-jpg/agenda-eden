@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIENVENIDOS AL EDÉN</title>
     <style>
+        /* Animación para que el login aparezca suave */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         body {
             margin: 0; padding: 0; height: 100vh;
             display: flex; justify-content: center; align-items: center;
@@ -24,29 +30,39 @@
             object-fit: cover;
             z-index: -1;
             transition: opacity 1s ease-in-out;
-            opacity: 1;
+            background: black; 
         }
 
         .container {
             width: 350px; text-align: center;
             background: transparent; padding: 25px;
             z-index: 1;
+            animation: fadeIn 1.2s ease-out;
         }
 
-        /* Estilo Login */
-        #vista-login h1, #vista-eden h2 { color: #00FFFF; margin-bottom: 20px; font-size: 28px; text-shadow: 0 0 10px rgba(0, 255, 255, 0.5); }
+        /* Estilo Login Neón */
+        #vista-login h1, #vista-eden h2 { 
+            color: #00FFFF; margin-bottom: 20px; font-size: 28px; 
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.6); 
+        }
+
         #vista-login input, #vista-eden input {
             width: 85%; padding: 12px; margin: 10px 0; border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.3); background: rgba(0, 0, 0, 0.4);
-            color: white; font-size: 16px; outline: none;
+            border: 1px solid rgba(255,255,255,0.3); background: rgba(0, 0, 0, 0.5);
+            color: white; font-size: 16px; outline: none; transition: 0.3s;
+        }
+
+        #vista-login input:focus, #vista-eden input:focus {
+            border-color: #00FFFF;
+            box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
         }
         
         button { padding: 12px; cursor: pointer; border: none; border-radius: 10px; font-weight: bold; width: 100%; transition: 0.3s; }
-        .btn-cyan { background: #00FFFF; color: black; }
+        .btn-cyan { background: #00FFFF; color: black; box-shadow: 0 4px 10px rgba(0, 255, 255, 0.2); }
         .frase-secreta { font-size: 12px; color: #ccc; margin-top: 25px; font-style: italic; }
         .hidden { display: none; }
 
-        /* Estilo Agenda */
+        /* Estilo Agenda (Nubes) */
         #vista-agenda {
             background: rgba(255,255,255,0.9);
             border-radius: 20px;
@@ -54,14 +70,20 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             padding: 30px;
         }
-        #vista-agenda h3 { color: #2196F3; margin: 0 0 15px 0; }
+
+        .btn-exit {
+            background: transparent; font-size: 24px; width: auto; 
+            cursor: pointer; transition: 0.3s; border: none;
+        }
+        .btn-exit:hover { transform: scale(1.2); }
+
+        #vista-agenda h3 { color: #2196F3; margin: 0; }
         #vista-agenda input {
             width: 75%; padding: 10px; border-radius: 8px;
             border: 1px solid #ddd; background: white; color: #333;
         }
 
         .btn-blue { background: #2196F3; color: white; width: auto; padding: 10px 15px; }
-        .btn-red { background: #ff4444; color: white; padding: 6px 12px; font-size: 11px; width: auto; border-radius: 20px; }
 
         .task-list { text-align: left; max-height: 350px; overflow-y: auto; margin-top: 15px; }
         .task-item { 
@@ -71,28 +93,21 @@
         }
         .task-text { flex: 1; margin-left: 10px; font-size: 15px; color: #444; }
 
-        /* Papelera posicionada */
         .btn-trash {
-            position: fixed;
-            bottom: 40px;
-            right: 40px;
-            background: transparent !important;
-            color: #ff4444 !important;
-            font-size: 45px !important;
-            cursor: pointer;
-            border: none;
-            z-index: 100;
-            filter: drop-shadow(0 2px 10px rgba(0,0,0,0.2));
+            position: fixed; bottom: 40px; right: 40px;
+            background: transparent !important; color: #ff4444 !important;
+            font-size: 45px !important; cursor: pointer; border: none;
+            z-index: 100; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.2));
             transition: 0.3s;
         }
-        .btn-trash:hover { transform: scale(1.2); }
+        .btn-trash:hover { transform: scale(1.2) rotate(10deg); }
     </style>
 </head>
 <body id="cuerpo">
 
-    <video id="video-fondo" autoplay muted playsinline>
+    <video id="video-fondo" autoplay muted playsinline loop preload="auto">
         <source src="intro.mp4" type="video/mp4">
-    </video>
+        </video>
 
     <div id="vista-login" class="container">
         <h1>BIENVENIDOS AL EDÉN</h1>
@@ -100,7 +115,7 @@
         <input type="password" id="pass-in" placeholder="Contraseña">
         <button class="btn-cyan" onclick="validarAcceso()">ENTRAR</button>
         <p class="frase-secreta">(Un paraíso para tus secretos te espera en el edén)</p>
-        <p style="cursor:pointer; color:#00FFFF; font-size: 12px; margin-top: 10px;" onclick="mostrarVista('vista-eden')">REGISTRARSE</p>
+        <p style="cursor:pointer; color:#00FFFF; font-size: 12px; margin-top: 15px;" onclick="mostrarVista('vista-eden')">REGISTRARSE</p>
     </div>
 
     <div id="vista-eden" class="container hidden">
@@ -114,7 +129,7 @@
     <div id="vista-agenda" class="container hidden">
         <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h3>MIS NOTAS</h3>
-            <button class="btn-red" onclick="cerrarSesion()">SALIR</button>
+            <button class="btn-exit" onclick="cerrarSesion()">🚪</button>
         </div>
         <div style="display:flex; gap:8px;">
             <input type="text" id="campo-tarea" placeholder="Nueva nota...">
@@ -130,7 +145,19 @@
         const cuerpo = document.getElementById('cuerpo');
         const btnBorrar = document.getElementById('btn-borrar');
 
-        video.onended = () => video.pause();
+        // Función para forzar la reproducción (algunos navegadores lo necesitan)
+        function forzarVideo() {
+            video.play().catch(e => console.log("Esperando interacción..."));
+        }
+
+        window.addEventListener('load', forzarVideo);
+        window.addEventListener('click', forzarVideo, {once: true}); // Al primer click se asegura de sonar/verse
+
+        video.onended = () => {
+             // Si quieres que se quede quieto al final, deja esto. 
+             // Si quieres que se repita, quita esta línea y pon 'loop' arriba.
+             video.pause(); 
+        };
 
         function mostrarVista(id) {
             document.getElementById('vista-login').classList.add('hidden');
@@ -145,10 +172,9 @@
                 cuerpo.style.backgroundImage = "url('fondo-nubes.jpg')";
                 btnBorrar.classList.remove('hidden');
             } else {
-                // CORRECCIÓN AQUÍ: Volver a mostrar el vídeo al salir
                 video.style.opacity = '1';
                 cuerpo.style.backgroundImage = "none";
-                if (video.paused) video.play();
+                video.play();
             }
         }
 
