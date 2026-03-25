@@ -27,19 +27,19 @@
             content: "";
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 20, 50, 0.4); /* Azul marino muy transparente */
+            background: rgba(0, 20, 50, 0.4); 
             z-index: -1;
         }
 
-        /* CONTENEDOR GRIS CLARITO */
+        /* CONTENEDOR PRINCIPAL */
         .container {
             width: 350px; 
             text-align: center;
-            background: rgba(60, 60, 60, 0.85); 
+            background: rgba(45, 45, 45, 0.9); 
             padding: 25px;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 1;
         }
@@ -70,50 +70,54 @@
 
         .btn-blue { background: #2196F3; color: white; width: 100%; }
         .btn-cyan { background: #00FFFF; color: black; width: 100%; }
-        .btn-red { background: #ff4444; color: white; padding: 4px 10px; font-size: 10px; }
+        .btn-red { background: #ff4444; color: white; padding: 6px 12px; font-size: 11px; }
 
         .hidden { display: none; }
 
         .task-list { 
             text-align: left; 
-            max-height: 350px; 
+            max-height: 380px; 
             overflow-y: auto; 
             margin-top: 15px;
         }
 
-        /* NOTA COMPACTA Y ALINEADA A LA IZQUIERDA */
+        /* --- CORRECCIÓN DE ALINEACIÓN A LA IZQUIERDA --- */
         .task-item { 
             display: flex; 
-            align-items: center; 
+            align-items: center; /* Centra verticalmente check y texto */
+            justify-content: flex-start; /* PEGA TODO A LA IZQUIERDA */
             background: rgba(255, 255, 255, 0.1);
-            margin-bottom: 6px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border-left: 3px solid #00FFFF;
+            margin-bottom: 8px;
+            padding: 12px;
+            border-radius: 10px;
+            border-left: 4px solid #00FFFF;
             animation: slideIn 0.3s ease-out forwards;
         }
 
         .task-text {
-            font-size: 18px; 
-            text-align: left; /* Todo a la izquierda */
-            margin-left: 10px;
-            flex-grow: 1;
-            word-break: break-word;
+            font-size: 16px; 
+            line-height: 1.4; /* Espacio para que no se amontone el texto */
+            text-align: left; 
+            margin-left: 12px; /* Espacio después del checkbox */
+            flex-grow: 1; /* Ocupa el resto del ancho */
+            word-break: break-word; 
             color: #fff;
         }
 
+        input[type="checkbox"] {
+            transform: scale(1.2);
+            cursor: pointer;
+            flex-shrink: 0; /* Evita que el checkbox se deforme */
+        }
+        /* ----------------------------------------------- */
+
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-30px); }
+            from { opacity: 0; transform: translateX(-20px); }
             to { opacity: 1; transform: translateX(0); }
         }
 
-        input[type="checkbox"] {
-            transform: scale(1.1);
-            cursor: pointer;
-        }
-
-        .task-list::-webkit-scrollbar { width: 3px; }
-        .task-list::-webkit-scrollbar-thumb { background: #00FFFF; }
+        .task-list::-webkit-scrollbar { width: 4px; }
+        .task-list::-webkit-scrollbar-thumb { background: #00FFFF; border-radius: 10px; }
     </style>
 </head>
 <body id="cuerpo">
@@ -135,18 +139,18 @@
     </div>
 
     <div id="vista-agenda" class="container hidden">
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 style="color:#00FFFF; margin:0; font-size: 16px;">MIS NOTAS</h3>
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="color:#00FFFF; margin:0; font-size: 18px;">MIS NOTAS</h3>
             <button class="btn-red" onclick="cerrarSesion()">SALIR</button>
         </div>
         
-        <div style="display:flex; gap:5px;">
-            <input type="text" id="campo-tarea" placeholder="Nueva nota..." style="margin:0; font-size: 14px;">
+        <div style="display:flex; gap:8px;">
+            <input type="text" id="campo-tarea" placeholder="Nueva nota..." style="margin:0; font-size: 14px; flex-grow:1;">
             <button class="btn-blue" style="width:45px; margin:0;" onclick="añadirTarea()">+</button>
         </div>
 
         <div id="lista-tareas" class="task-list"></div>
-        <button style="background:transparent; color:#bbb; border:1px solid #555; width: 100%; margin-top: 15px; font-size: 9px; cursor:pointer;" onclick="borrarMarcados()">LIMPIAR</button>
+        <button style="background:transparent; color:#888; border:1px solid #444; width: 100%; margin-top: 20px; font-size: 10px; cursor:pointer; padding: 5px; border-radius: 5px;" onclick="borrarMarcados()">LIMPIAR COMPLETADAS</button>
     </div>
 
     <script>
@@ -162,7 +166,6 @@
             const p = document.getElementById('pass-in').value.trim();
             const savedPass = localStorage.getItem('user_' + u);
             if ((u === 'admin' && p === '1234') || savedPass === p) {
-                // CAMBIO A FONDO1.JPG Y CAPA AZUL
                 document.getElementById('cuerpo').style.backgroundImage = "url('fondo1.jpg')"; 
                 document.getElementById('cuerpo').classList.add('interior'); 
                 mostrarVista('vista-agenda');
@@ -205,7 +208,7 @@
                 lista.innerHTML += `
                     <div class="task-item">
                         <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
-                        <div class="task-text" style="${t.done ? 'text-decoration: line-through; color: #aaa;' : ''}">${t.text}</div>
+                        <div class="task-text" style="${t.done ? 'text-decoration: line-through; color: #888;' : ''}">${t.text}</div>
                     </div>`;
             });
         }
@@ -226,3 +229,4 @@
     </script>
 </body>
 </html>
+
