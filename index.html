@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIENVENIDOS AL EDÉN (ULTRA GAME)</title>
     <style>
-        /* MANTENEMOS TODO TU ESTILO ORIGINAL INTACTO */
+        /* ESTILO ORIGINAL INTACTO */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             height: 100vh; display: flex; justify-content: center; align-items: center;
@@ -23,7 +23,7 @@
         .btn-exit-fixed { position: fixed; top: 25px; right: 25px; color: #ff4444; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1000; transition: 0.3s; }
         .btn-exit-fixed:hover { transform: scale(1.2); filter: drop-shadow(0 0 10px #ff0000); }
         
-        /* CORRECCIÓN ALINEACIÓN + */
+        /* ALINEACIÓN + */
         .task-input-group { display: flex; gap: 10px; margin-top: 10px; align-items: center; }
         .task-input-group input { margin: 0; flex: 1; }
         .btn-blue { background: #00FFFF; color: black; width: 55px; font-size: 24px; border-radius: 10px; border: none; cursor: pointer; height: 45px; flex-shrink: 0; }
@@ -38,20 +38,23 @@
         .arrugando { animation: borrarVuelo 0.6s ease-in forwards; pointer-events: none; }
         .papelera-atrapando { animation: inclinarPapelera 0.6s ease-out forwards; }
 
-        /* JUEGO Y RANKING */
+        /* JUEGO */
         .btn-game-flotante { position: fixed; bottom: 30px; left: 30px; background: none; color: #00FFFF; font-size: 40px; border: none; filter: drop-shadow(0 0 10px #00FFFF); cursor: pointer; z-index: 101; transition: 0.3s; }
+        .btn-rank-flotante { position: fixed; bottom: 30px; left: 90px; background: none; color: #FFD700; font-size: 40px; border: none; filter: drop-shadow(0 0 10px #FFD700); cursor: pointer; z-index: 101; transition: 0.3s; }
+        
         #vista-juego { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('fondo-nubes.jpg'); background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
         #gameCanvas { border: 3px solid #00FFFF; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 30px #00FFFF; cursor: none; }
         .btn-game-return { position: absolute; top: 20px; left: 20px; color: #00FFFF; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1002; }
         #game-score { font-size: 24px; color: #00FFFF; text-shadow: 0 0 10px #00FFFF; margin-bottom: 10px; font-weight: bold; }
         
-        #game-over-menu, #difficulty-menu { position: absolute; background: rgba(0,0,0,0.9); border: 2px solid #00FFFF; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 50px #00FFFF; z-index: 1010; max-width: 90%; }
-        .game-btn-neon { background: none; border: 1px solid #00FFFF; color: #00FFFF; padding: 10px 20px; margin: 10px auto; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; display: block; width: 200px; }
+        #game-over-menu, #difficulty-menu, #rank-menu { position: absolute; background: rgba(0,0,0,0.9); border: 2px solid #00FFFF; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 50px #00FFFF; z-index: 1010; width: 320px; }
+        .game-btn-neon { background: none; border: 1px solid #00FFFF; color: #00FFFF; padding: 10px 20px; margin: 10px auto; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; display: block; width: 100%; }
         .game-btn-neon:hover { background: #00FFFF; color: black; box-shadow: 0 0 20px #00FFFF; }
 
-        /* ESTILO RANKING */
-        #ranking-container { margin-top: 20px; border-top: 1px solid #00FFFF; padding-top: 10px; font-size: 14px; max-height: 150px; overflow-y: auto; }
-        .ranking-item { display: flex; justify-content: space-between; padding: 3px 10px; color: #00FFFF; }
+        /* RANKING DIVIDIDO */
+        .rank-section { margin-top: 15px; text-align: left; border-bottom: 1px solid rgba(0,255,255,0.2); padding-bottom: 10px; }
+        .rank-title { color: #FFD700; font-size: 14px; font-weight: bold; margin-bottom: 5px; text-align: center; }
+        .rank-item { display: flex; justify-content: space-between; font-size: 12px; color: #00FFFF; padding: 2px 0; }
     </style>
 </head>
 <body>
@@ -62,7 +65,9 @@
         <span style="font-size:32px">🚪</span><span style="font-size:10px; font-weight:bold">EXIT</span>
     </button>
     <button class="btn-trash-central hidden" id="btn-borrar" onclick="borrarMarcados()">🗑️</button>
+    
     <button id="game-btn" class="btn-game-flotante hidden" onclick="abrirMenuDificultad()">🎮</button>
+    <button id="rank-btn" class="btn-rank-flotante hidden" onclick="abrirRanking()">🏆</button>
 
     <div id="vista-login" class="container">
         <h1 id="titulo-eden"></h1>
@@ -102,11 +107,16 @@
             <button class="game-btn-neon" onclick="iniciarJuegoEden('terrestre')">Nivel terrestre</button>
             <button class="game-btn-neon" onclick="iniciarJuegoEden('semidios')">Nivel semidios</button>
             <button class="game-btn-neon" onclick="iniciarJuegoEden('eden')">Nivel del edén</button>
-            
-            <div id="ranking-container">
-                <p style="font-weight:bold; margin-bottom:5px;">🏆 TOP EDÉN 🏆</p>
-                <div id="lista-ranking"></div>
+        </div>
+
+        <div id="rank-menu" class="hidden">
+            <h2 style="color:#FFD700; margin-bottom:10px;">🏆 RANKING 🏆</h2>
+            <div style="max-height: 300px; overflow-y: auto;">
+                <div class="rank-section"><div class="rank-title">🌱 TERRESTRE</div><div id="rank-terrestre"></div></div>
+                <div class="rank-section"><div class="rank-title">⚡ SEMIDIOS</div><div id="rank-semidios"></div></div>
+                <div class="rank-section"><div class="rank-title">✨ EDÉN</div><div id="rank-eden"></div></div>
             </div>
+            <button class="game-btn-neon" style="margin-top:15px;" onclick="cerrarRanking()">CERRAR</button>
         </div>
 
         <div id="game-over-menu" class="hidden">
@@ -133,7 +143,6 @@
         const db = firebase.database();
         let currentUser = "";
 
-        // ANIMACIONES Y VISTAS
         const tituloEden = document.getElementById('titulo-eden');
         const lineas = ["BIENVENIDOS", "AL", "EDÉN"];
         let timer;
@@ -145,11 +154,13 @@
                 if(l < lineas.length){ spans[l].innerText += lineas[l][c]; c++; if(c >= lineas[l].length){ l++; c=0; } } else clearInterval(timer);
             }, 100);
         }
+
         function mostrarVista(id) {
             document.querySelectorAll('.container, #vista-juego').forEach(c => c.classList.add('hidden'));
             document.getElementById('btn-borrar').classList.add('hidden');
             document.getElementById('exit-btn').classList.add('hidden');
             document.getElementById('game-btn').classList.add('hidden');
+            document.getElementById('rank-btn').classList.add('hidden');
             const overlay = document.getElementById('pantalla-oscura');
             document.getElementById(id).classList.remove('hidden');
             if(id === 'vista-login') animar();
@@ -157,11 +168,11 @@
                 document.getElementById('btn-borrar').classList.remove('hidden');
                 document.getElementById('exit-btn').classList.remove('hidden');
                 document.getElementById('game-btn').classList.remove('hidden');
+                document.getElementById('rank-btn').classList.remove('hidden');
                 overlay.classList.add('hidden'); cargarTareas();
             } else { overlay.classList.remove('hidden'); }
         }
 
-        // LOGIN Y REGISTRO
         function validarAcceso() {
             const u = document.getElementById('user-in').value.trim();
             const p = document.getElementById('pass-in').value.trim();
@@ -178,7 +189,6 @@
         }
         function cerrarSesion() { currentUser = ""; mostrarVista('vista-login'); }
 
-        // NOTAS
         function añadirTarea() {
             const input = document.getElementById('campo-tarea');
             if(input.value.trim()) {
@@ -204,32 +214,34 @@
         function borrarMarcados() {
             let t = JSON.parse(localStorage.getItem('tareas_' + currentUser) || '[]');
             const papelera = document.getElementById('btn-borrar');
-            let marcados = false;
-            t.forEach((tarea, i) => { if(tarea.done) { document.getElementById(`nota-${i}`).classList.add('arrugando'); marcados = true; } });
-            if(!marcados) return;
+            let m = false; t.forEach((tarea, i) => { if(tarea.done) { document.getElementById(`nota-${i}`).classList.add('arrugando'); m = true; } });
+            if(!m) return;
             papelera.classList.add('papelera-atrapando');
             setTimeout(() => { 
                 papelera.classList.remove('papelera-atrapando');
-                t = t.filter(tarea => !tarea.done); 
-                localStorage.setItem('tareas_' + currentUser, JSON.stringify(t)); 
-                cargarTareas(); 
+                t = t.filter(tarea => !tarea.done); localStorage.setItem('tareas_' + currentUser, JSON.stringify(t)); cargarTareas(); 
             }, 600);
         }
 
-        // --- RANKING ---
-        function cargarRanking() {
-            db.ref('ranking').orderByValue().limitToLast(10).once('value', (s) => {
-                const lista = document.getElementById('lista-ranking');
-                lista.innerHTML = '';
-                let scores = [];
-                s.forEach(child => { scores.push({name: child.key, points: child.val()}); });
-                scores.reverse().forEach((u, i) => {
-                    lista.innerHTML += `<div class="ranking-item"><span>${i+1}. ${u.name}</span> <span>${u.points} pts</span></div>`;
+        // RANKING POR DIFICULTAD
+        function abrirRanking() {
+            mostrarVista('vista-juego');
+            document.getElementById('rank-menu').classList.remove('hidden');
+            document.getElementById('difficulty-menu').classList.add('hidden');
+            ['terrestre', 'semidios', 'eden'].forEach(diff => {
+                db.ref('ranking/' + diff).orderByValue().limitToLast(5).once('value', (s) => {
+                    const div = document.getElementById('rank-' + diff);
+                    div.innerHTML = '';
+                    let scores = [];
+                    s.forEach(c => { scores.push({name: c.key, pts: c.val()}); });
+                    scores.reverse().forEach((u, i) => {
+                        div.innerHTML += `<div class="rank-item"><span>${i+1}. ${u.name}</span><span>${u.pts} pts</span></div>`;
+                    });
                 });
             });
         }
+        function cerrarRanking() { document.getElementById('rank-menu').classList.add('hidden'); mostrarVista('vista-agenda'); }
 
-        // --- MINIJUEGO (IDÉNTICO A TU VERSIÓN) ---
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         const menuGameOver = document.getElementById("game-over-menu");
@@ -239,20 +251,20 @@
         function abrirMenuDificultad() {
             mostrarVista('vista-juego');
             menuGameOver.classList.add('hidden');
+            document.getElementById('rank-menu').classList.add('hidden');
             menuDifficulty.classList.remove('hidden');
-            cargarRanking();
         }
 
         function resetVariablesJuego(diff) {
             currentDifficulty = diff; menuDifficulty.classList.add("hidden"); menuGameOver.classList.add("hidden");
             canvas.style.cursor = "none"; paddleWidth = 90; paddleX = (canvas.width - paddleWidth) / 2;
             isFireBall = false; score = 0; document.getElementById("game-score").innerText = "SCORE: 0";
-            let ballRadius = (diff === 'eden') ? 5 : 8;
-            balls = [{ x: canvas.width/2, y: canvas.height-100, dx: 2.1, dy: -2.1, radius: ballRadius }];
+            let rad = (diff === 'eden') ? 5 : 8;
+            balls = [{ x: canvas.width/2, y: canvas.height-100, dx: 2.1, dy: -2.1, radius: rad }];
             bricks = [];
             let rows = (diff === 'terrestre') ? 5 : (diff === 'semidios' ? 8 : 12);
             let cols = (diff === 'terrestre') ? 7 : (diff === 'semidios' ? 12 : 18);
-            let bWidth = (canvas.width - 40) / cols; let bHeight = (diff === 'terrestre') ? 20 : 12;
+            let bw = (canvas.width - 40) / cols; let bh = (diff === 'terrestre') ? 20 : 12;
             for (let c = 0; c < cols; c++) {
                 bricks[c] = [];
                 for (let r = 0; r < rows; r++) {
@@ -263,7 +275,7 @@
                         else if(Math.random() < 0.3) { type = "hard"; life = 2; }
                         if(Math.random() < 0.1) life = 0; 
                     }
-                    bricks[c][r] = { x: 0, y: 0, status: life, type: type, w: bWidth - 4, h: bHeight - 4 };
+                    bricks[c][r] = { x: 0, y: 0, status: life, type: type, w: bw - 4, h: bh - 4 };
                 }
             }
             powerUps = [];
@@ -284,25 +296,27 @@
                 if (b.status > 0) {
                     if(b.type !== "wall") allBroken = false;
                     b.x = c * (b.w + 4) + 15; b.y = r * (b.h + 4) + 50;
-                    ctx.shadowBlur = 5;
-                    if(b.type === "wall") { ctx.fillStyle = "#888"; ctx.shadowColor = "#555"; }
-                    else if(b.type === "hard") { ctx.fillStyle = (b.status === 2) ? "#FFD700" : "#FF4444"; ctx.shadowColor = ctx.fillStyle; }
-                    else { ctx.fillStyle = "#FF4444"; ctx.shadowColor = "#FF4444"; }
+                    if(b.type === "wall") { ctx.fillStyle = "#888"; }
+                    else if(b.type === "hard") { ctx.fillStyle = (b.status === 2) ? "#FFD700" : "#FF4444"; }
+                    else { ctx.fillStyle = "#FF4444"; }
                     ctx.fillRect(b.x, b.y, b.w, b.h);
                 }
             }); });
             if(allBroken) endPartida("¡EL REY DEL EDÉN!");
 
             powerUps.forEach((p, i) => {
-                p.y += 2;
-                ctx.beginPath(); ctx.arc(p.x, p.y, 10, 0, Math.PI*2);
+                p.y += 2; ctx.beginPath(); ctx.arc(p.x, p.y, 10, 0, Math.PI*2);
                 ctx.fillStyle = p.type === 'P' ? "#00FFFF" : (p.type === '2' ? "#00FF00" : "#FFA500");
                 ctx.fill(); ctx.closePath();
-                if(p.y > canvas.height-75 && p.x > paddleX && p.x < paddleX + paddleWidth) { activarPowerUp(p.type); powerUps.splice(i, 1); }
+                if(p.y > canvas.height-75 && p.x > paddleX && p.x < paddleX + paddleWidth) { 
+                    if(p.type === 'P') { paddleWidth = 180; setTimeout(() => paddleWidth = 90, 8000); }
+                    if(p.type === '2') { let r = (currentDifficulty === 'eden') ? 5 : 8; balls.push({ x: paddleX + paddleWidth/2, y: canvas.height-100, dx: -2.1, dy: -2.1, radius: r }); }
+                    if(p.type === 'F') { isFireBall = true; setTimeout(() => isFireBall = false, 3000); }
+                    powerUps.splice(i, 1); 
+                }
             });
 
-            ctx.fillStyle = "#00FFFF"; ctx.shadowBlur = 15; ctx.shadowColor = "#00FFFF";
-            ctx.fillRect(paddleX, canvas.height - 70, paddleWidth, 12);
+            ctx.fillStyle = "#00FFFF"; ctx.fillRect(paddleX, canvas.height - 70, paddleWidth, 12);
 
             balls.forEach((b, index) => {
                 ctx.beginPath(); ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
@@ -315,10 +329,7 @@
                             if(brick.status === 0) {
                                 score++; document.getElementById("game-score").innerText = "SCORE: " + score;
                                 let prob = (currentDifficulty === 'terrestre') ? 0.15 : (currentDifficulty === 'semidios' ? 0.07 : 0.03);
-                                if(Math.random() < prob) {
-                                    let types = ['P', '2', 'F'];
-                                    powerUps.push({x: brick.x + (brick.w/2), y: brick.y, type: types[Math.floor(Math.random()*3)]});
-                                }
+                                if(Math.random() < prob) powerUps.push({x: brick.x + (brick.w/2), y: brick.y, type: ['P', '2', 'F'][Math.floor(Math.random()*3)]});
                             }
                         }
                     }
@@ -334,20 +345,13 @@
             if(balls.length === 0) endPartida("GAME OVER");
         }
 
-        function activarPowerUp(type) {
-            if(type === 'P') { paddleWidth = 180; setTimeout(() => paddleWidth = 90, 8000); }
-            if(type === '2') { let bRad = (currentDifficulty === 'eden') ? 5 : 8; balls.push({ x: paddleX + paddleWidth/2, y: canvas.height-100, dx: -2.1, dy: -2.1, radius: bRad }); }
-            if(type === 'F') { isFireBall = true; setTimeout(() => isFireBall = false, 3000); }
-        }
-
         function endPartida(msg) {
             gameActive = false; clearInterval(gameInterval); canvas.style.cursor = "auto";
             document.getElementById("end-title").innerText = msg;
             menuGameOver.classList.remove("hidden");
-            // GUARDAR EN RANKING SI NO ES ADMIN
             if(currentUser && currentUser !== 'admin') {
-                db.ref('ranking/' + currentUser).once('value', (s) => {
-                    if(!s.exists() || s.val() < score) { db.ref('ranking/' + currentUser).set(score); }
+                db.ref('ranking/' + currentDifficulty + '/' + currentUser).once('value', (s) => {
+                    if(!s.exists() || s.val() < score) { db.ref('ranking/' + currentDifficulty + '/' + currentUser).set(score); }
                 });
             }
         }
