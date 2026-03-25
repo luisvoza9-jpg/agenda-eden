@@ -5,54 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIENVENIDOS AL EDÉN (ULTRA GAME GLOBAL)</title>
     <style>
+        /* ESTILO ORIGINAL INTACTO */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             height: 100vh; display: flex; justify-content: center; align-items: center;
-            font-family: 'Segoe UI', sans-serif; 
-            background-image: url('fondo1.jpg'); /* Tu fondo personalizado */
+            font-family: 'Segoe UI', sans-serif; background-image: url('fondo-nubes.jpg');
             background-size: cover; background-position: center; overflow: hidden; color: white;
         }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 1; }
         .container { width: 380px; text-align: center; position: relative; z-index: 10; }
         h1 { color: #00FFFF; margin-bottom: 20px; font-size: 32px; text-shadow: 0 0 15px #00FFFF; display: flex; flex-direction: column; align-items: center; letter-spacing: 2px; font-weight: bold; line-height: 1.1; min-height: 110px; }
         h1 span { display: block; width: 100%; }
+        .frase-neon { color: #00FFFF; font-size: 14px; text-shadow: 0 0 10px #00FFFF; display: block; margin-top: 20px; text-align: center; }
         input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00FFFF; background: rgba(0, 0, 0, 0.7); color: white; font-size: 16px; outline: none; text-align: center; }
         .btn-exit-fixed { position: fixed; top: 25px; right: 25px; color: #ff4444; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1000; transition: 0.3s; }
         .btn-blue { background: #00FFFF; color: black; width: 55px; font-size: 24px; border-radius: 10px; border: none; cursor: pointer; height: 45px; }
         .task-list { text-align: left; margin-top: 20px; max-height: 250px; overflow-y: auto; }
-        .task-item { background: rgba(0, 0, 0, 0.6); margin-bottom: 8px; padding: 12px; border-radius: 10px; display: flex; align-items: center; border: 1px solid rgba(0, 255, 255, 0.2); transition: transform 0.3s ease-out, opacity 0.3s ease-out; }
+        .task-item { background: rgba(0, 0, 0, 0.6); margin-bottom: 8px; padding: 12px; border-radius: 10px; display: flex; align-items: center; border: 1px solid rgba(0, 255, 255, 0.2); }
         .task-text { flex: 1; margin-left: 10px; color: white; word-break: break-word; }
+        .btn-trash-central { position: fixed; bottom: 30px; right: 30px; background: none; color: #ff4444; font-size: 50px; border: none; filter: drop-shadow(0 0 10px #ff4444); cursor: pointer; z-index: 100; }
         .hidden { display: none !important; }
         
-        .btn-game-flotante { position: fixed; bottom: 30px; left: 30px; background: none; color: #00FFFF; font-size: 40px; border: none; filter: drop-shadow(0 0 10px #00FFFF); cursor: pointer; z-index: 101; transition: 0.3s; }
+        /* BOTÓN RANKING */
         .btn-rank-flotante { position: fixed; bottom: 30px; left: 100px; background: none; color: #FFD700; font-size: 40px; border: none; filter: drop-shadow(0 0 10px #FFD700); cursor: pointer; z-index: 101; transition: 0.3s; }
-        .btn-trash-central { position: fixed; bottom: 30px; right: 30px; background: none; color: #ff4444; font-size: 50px; border: none; filter: drop-shadow(0 0 10px #ff4444); cursor: pointer; z-index: 100; }
-        
-        @keyframes vibrarPapelera {
-            0% { transform: rotate(0deg); } 25% { transform: rotate(15deg); }
-            50% { transform: rotate(-15deg); } 75% { transform: rotate(15deg); } 100% { transform: rotate(0deg); }
-        }
-        .borrando-papelera { animation: vibrarPapelera 0.5s linear; }
+        .btn-game-flotante { position: fixed; bottom: 30px; left: 30px; background: none; color: #00FFFF; font-size: 40px; border: none; filter: drop-shadow(0 0 10px #00FFFF); cursor: pointer; z-index: 101; transition: 0.3s; }
 
-        @keyframes succionarAlTrash { to { transform: translate(60vw, 80vh) scale(0); opacity: 0; } }
-        .succionando { animation: succionarAlTrash 0.6s ease-in forwards; pointer-events: none; }
-
+        /* VISTA JUEGO Y MENÚS */
         #vista-juego { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
         #gameCanvas { border: 3px solid #00FFFF; box-shadow: 0 0 30px #00FFFF; background: #000; }
         #difficulty-menu, #game-over-menu, #vista-ranking { position: absolute; background: rgba(0,0,0,0.95); border: 2px solid #00FFFF; padding: 25px; border-radius: 20px; text-align: center; z-index: 1010; width: 320px; }
         .game-btn-neon { background: none; border: 1px solid #00FFFF; color: #00FFFF; padding: 10px; margin: 5px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; }
         
+        /* TABLAS RANKING */
         .rank-table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 14px; }
         .rank-table th { color: #00FFFF; border-bottom: 1px solid #00FFFF; padding: 5px; }
         .rank-table td { padding: 5px; border-bottom: 1px solid rgba(0,255,255,0.1); }
         .rank-title { color: #FFD700; font-size: 16px; margin-top: 15px; text-transform: uppercase; }
+        
+        @keyframes borrarVuelo { to { transform: scale(0) translate(20vw, 50vh); opacity: 0; } }
+        .arrugando { animation: borrarVuelo 0.6s ease-in forwards; }
     </style>
 </head>
 <body>
+
     <div id="pantalla-oscura" class="overlay"></div>
+
     <button id="exit-btn" class="btn-exit-fixed hidden" onclick="cerrarSesion()">
         <span style="font-size:32px">🚪</span><span style="font-size:10px; font-weight:bold">EXIT</span>
     </button>
+    
     <button class="btn-trash-central hidden" id="btn-borrar" onclick="borrarMarcados()">🗑️</button>
     <button id="game-btn" class="btn-game-flotante hidden" onclick="abrirMenuDificultad()">🎮</button>
     <button id="rank-btn" class="btn-rank-flotante hidden" onclick="abrirRanking()">🏆</button>
@@ -85,6 +86,7 @@
     <div id="vista-juego" class="hidden">
         <div id="game-score" style="position:absolute; top:20px; color:#00FFFF; font-size:20px;">SCORE: 0</div>
         <canvas id="gameCanvas" width="500" height="500"></canvas>
+
         <div id="difficulty-menu" class="hidden">
             <h2 style="color:#00FFFF; margin-bottom:15px;">DIFICULTAD</h2>
             <button class="game-btn-neon" onclick="iniciarJuegoEden('terrestre')">Nivel terrestre</button>
@@ -92,11 +94,13 @@
             <button class="game-btn-neon" onclick="iniciarJuegoEden('eden')">Nivel del edén</button>
             <button class="game-btn-neon" style="border-color:#ff4444; color:#ff4444;" onclick="salirDelJuego()">SALIR</button>
         </div>
+
         <div id="game-over-menu" class="hidden">
             <h2 id="end-title" style="color:#00FFFF; margin-bottom:20px;">FIN</h2>
             <button class="game-btn-neon" onclick="abrirMenuDificultad()">¿Otra?</button>
             <button class="game-btn-neon" onclick="salirDelJuego()">Volver a Agenda</button>
         </div>
+
         <div id="vista-ranking" class="hidden">
             <h2 style="color:#FFD700;">SALÓN DE LA FAMA</h2>
             <div style="max-height: 350px; overflow-y: auto;">
@@ -115,6 +119,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <script>
+        // CONFIGURACIÓN DE LUIS (Extraída de tu imagen)
         const firebaseConfig = {
             apiKey: "AIzaSyCod7qKXcefhTqa40EVWbl32dygU9G10Aw",
             authDomain: "edengame-5a40c.firebaseapp.com",
@@ -125,10 +130,12 @@
             appId: "1:837651200703:web:0c3e237c36e1bb37b6640a",
             measurementId: "G-TKMSN7EF9"
         };
+
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         let currentUser = "";
 
+        // --- LÓGICA DE INTERFAZ ---
         const tituloEden = document.getElementById('titulo-eden');
         const lineas = ["BIENVENIDOS", "AL", "EDÉN"];
         function animar() {
@@ -170,11 +177,12 @@
 
         function cerrarSesion() { currentUser = ""; mostrarVista('vista-login'); }
 
+        // --- AGENDA ---
         function añadirTarea() {
             const input = document.getElementById('campo-tarea');
             if(input.value.trim()) {
                 let t = JSON.parse(localStorage.getItem('tareas_'+currentUser) || '[]');
-                t.unshift({text: input.value.trim(), done: false, id: Date.now()}); 
+                t.unshift({text: input.value.trim(), done: false});
                 localStorage.setItem('tareas_'+currentUser, JSON.stringify(t));
                 input.value = ''; cargarTareas();
             }
@@ -183,7 +191,7 @@
             const lista = document.getElementById('lista-tareas'); lista.innerHTML = '';
             let t = JSON.parse(localStorage.getItem('tareas_'+currentUser) || '[]');
             t.forEach((tarea, i) => {
-                const item = document.createElement('div'); item.className = 'task-item'; item.id = `nota-${tarea.id}`;
+                const item = document.createElement('div'); item.className = 'task-item'; item.id = `nota-${i}`;
                 item.innerHTML = `<input type="checkbox" ${tarea.done?'checked':''} onchange="toggle(${i})"><div class="task-text" style="${tarea.done?'text-decoration:line-through;opacity:0.5':''}">${tarea.text}</div>`;
                 lista.appendChild(item);
             });
@@ -193,23 +201,16 @@
             localStorage.setItem('tareas_'+currentUser, JSON.stringify(t)); cargarTareas();
         }
         function borrarMarcados() {
-            const btnTrash = document.getElementById('btn-borrar');
             let t = JSON.parse(localStorage.getItem('tareas_'+currentUser) || '[]');
-            btnTrash.classList.add('borrando-papelera');
-            setTimeout(() => btnTrash.classList.remove('borrando-papelera'), 500);
-            let tareasABorrar = t.filter(tarea => tarea.done);
-            let tareasAQuedar = t.filter(tarea => !tarea.done);
-            if(tareasABorrar.length === 0) return;
-            tareasABorrar.forEach(tarea => {
-                const elementoNota = document.getElementById(`nota-${tarea.id}`);
-                if(elementoNota) elementoNota.classList.add('succionando');
-            });
+            t.forEach((tarea, i) => { if(tarea.done) document.getElementById(`nota-${i}`).classList.add('arrugando'); });
             setTimeout(() => { 
-                localStorage.setItem('tareas_'+currentUser, JSON.stringify(tareasAQuedar)); 
+                t = t.filter(tarea => !tarea.done); 
+                localStorage.setItem('tareas_'+currentUser, JSON.stringify(t)); 
                 cargarTareas(); 
             }, 600);
         }
 
+        // --- RANKING FIREBASE ---
         function abrirRanking() {
             mostrarVista('vista-juego');
             document.getElementById('vista-ranking').classList.remove('hidden');
@@ -219,7 +220,9 @@
 
         function registrarVictoria(nivel) {
             const ref = db.ref('ranking/' + nivel + '/' + currentUser);
-            ref.transaction((currentWins) => { return (currentWins || 0) + 1; });
+            ref.transaction((currentWins) => {
+                return (currentWins || 0) + 1;
+            });
         }
 
         function actualizarTablasRanking() {
@@ -237,6 +240,7 @@
             });
         }
 
+        // --- JUEGO (Lógica Mejorada) ---
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         let balls = [], bricks = [], powerUps = [], gameInterval, gameActive = false;
@@ -255,11 +259,13 @@
             isFireBall = false;
             let ballRadius = (diff === 'eden') ? 5 : 8;
             balls = [{ x: canvas.width/2, y: canvas.height-100, dx: 2.1, dy: -2.1, radius: ballRadius }];
+            
             bricks = [];
             let rows = (diff === 'terrestre') ? 5 : (diff === 'semidios' ? 8 : 12);
             let cols = (diff === 'terrestre') ? 7 : (diff === 'semidios' ? 12 : 18);
             let bW = (canvas.width - 40) / cols;
             let bH = (diff === 'terrestre') ? 20 : 12;
+
             for(let c=0; c<cols; c++) {
                 bricks[c] = [];
                 for(let r=0; r<rows; r++) {
@@ -268,6 +274,7 @@
                     if(diff === 'eden') {
                         if(Math.random() < 0.15) { type = "wall"; life = 999; }
                         else if(Math.random() < 0.3) { type = "hard"; life = 2; }
+                        if(Math.random() < 0.1) life = 0;
                     }
                     bricks[c][r] = { x: c*(bW+4)+15, y: r*(bH+4)+50, w: bW-4, h: bH-4, status: life, type: type };
                 }
@@ -282,13 +289,14 @@
 
             bricks.forEach(col => col.forEach(b => {
                 if(b.status > 0) {
-                    if(b.type !== "wall") win = false; // Solo se gana si se rompen todos los NO-wall
+                    if(b.type !== "wall") win = false;
+                    ctx.shadowBlur = 5;
                     ctx.fillStyle = b.type==="wall"?"#888":(b.status===2?"#FFD700":"#FF4444");
                     ctx.fillRect(b.x, b.y, b.w, b.h);
                 }
             }));
 
-            if(win) { endPartida("¡VICTORIA!"); registrarVictoria(currentDiff); return; }
+            if(win) { endPartida("¡VICTORIA!"); registrarVictoria(currentDiff); }
 
             balls.forEach((b, i) => {
                 ctx.beginPath(); ctx.arc(b.x, b.y, b.radius, 0, Math.PI*2);
@@ -310,11 +318,7 @@
                             if(br.status===0) {
                                 score++; document.getElementById("game-score").innerText = "SCORE: "+score;
                                 let prob = (currentDiff==='terrestre')?0.15:(currentDiff==='semidios'?0.07:0.03);
-                                if(Math.random()<prob) {
-                                    let types = [{t:'↔️', v:'P'}, {t:'🎾', v:'2'}, {t:'🔥', v:'F'}];
-                                    let sel = types[Math.floor(Math.random()*3)];
-                                    powerUps.push({x:br.x+br.w/2, y:br.y, type:sel.t, val:sel.v});
-                                }
+                                if(Math.random()<prob) powerUps.push({x:br.x+br.w/2, y:br.y, type:['P','2','F'][Math.floor(Math.random()*3)]});
                             }
                         }
                     }
@@ -324,12 +328,11 @@
 
             powerUps.forEach((p, i) => {
                 p.y += 2;
-                ctx.font = "20px Arial";
-                ctx.fillText(p.type, p.x, p.y);
+                ctx.fillStyle = "#00FFFF"; ctx.fillText(p.type, p.x, p.y);
                 if(p.y > canvas.height-75 && p.x > paddleX && p.x < paddleX+paddleWidth) {
-                    if(p.val==='P') { paddleWidth=180; setTimeout(()=>paddleWidth=90, 8000); }
-                    if(p.val==='2') balls.push({x:paddleX+paddleWidth/2, y:canvas.height-100, dx:2.1, dy:-2.1, radius:balls[0].radius});
-                    if(p.val==='F') { isFireBall=true; setTimeout(()=>isFireBall=false, 3000); }
+                    if(p.type==='P') { paddleWidth=180; setTimeout(()=>paddleWidth=90, 8000); }
+                    if(p.type==='2') balls.push({x:paddleX+paddleWidth/2, y:canvas.height-100, dx:2.1, dy:-2.1, radius:balls[0].radius});
+                    if(p.type==='F') { isFireBall=true; setTimeout(()=>isFireBall=false, 3000); }
                     powerUps.splice(i,1);
                 }
             });
