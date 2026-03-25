@@ -40,7 +40,6 @@
         }
         h1 span { display: block; width: 100%; }
 
-        /* LA FRASE QUE FALTABA */
         .frase-neon {
             color: #00FFFF; font-size: 14px; text-shadow: 0 0 10px #00FFFF;
             display: block; margin-top: 20px; text-align: center;
@@ -62,7 +61,6 @@
         .door-icon { font-size: 32px; }
         .exit-text { font-size: 10px; font-weight: bold; }
 
-        /* NOTAS A LA IZQUIERDA (SENTIDO ESCRITURA) */
         .task-input-group { display: flex; gap: 10px; margin-top: 10px; }
         .btn-blue { background: #00FFFF; color: black; width: 55px; font-size: 24px; border-radius: 10px; border: none; cursor: pointer; height: 45px; }
 
@@ -71,7 +69,8 @@
             background: rgba(0, 0, 0, 0.6); margin-bottom: 8px; padding: 12px;
             border-radius: 10px; display: flex; align-items: center;
             border: 1px solid rgba(0, 255, 255, 0.2);
-            text-align: left; 
+            text-align: left;
+            transition: transform 0.6s ease-in; 
         }
         .task-text { flex: 1; margin-left: 10px; color: white; word-break: break-word; text-align: left; }
 
@@ -79,14 +78,34 @@
             position: fixed; bottom: 30px; right: 30px;
             background: none; color: #ff4444; font-size: 50px; border: none; 
             filter: drop-shadow(0 0 10px #ff4444); cursor: pointer; z-index: 100;
+            transform-origin: bottom right; /* Base de la inclinación */
         }
 
         .hidden { display: none !important; }
 
+        /* === 1. ANIMACIÓN DE VUELO (Ligeramente más rápida para coordinar) === */
         @keyframes borrarVuelo {
-            to { transform: scale(0) translate(20vw, 50vh); opacity: 0; }
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            50% { transform: translate(50px, -20px) scale(0.8); opacity: 0.8; }
+            /* === Trayectoria curva hacia la esquina === */
+            100% { transform: translate(150px, 350px) scale(0); opacity: 0; } 
         }
-        .arrugando { animation: borrarVuelo 0.6s forwards; }
+        .arrugando { 
+            animation: borrarVuelo 0.6s ease-in forwards; /* Tiempo ajustado a 0.6s */
+            pointer-events: none; 
+        }
+
+        /* === 2. NUEVA ANIMACIÓN: LA PAPELERA HACE LA CANASTA === */
+        @keyframes inclinarPapelera {
+            0% { transform: rotate(0deg) scale(1); }
+            /* === Justo cuando llega la nota (0.4s - 0.6s), se inclina === */
+            60% { transform: rotate(-15deg) scale(1.1); filter: drop-shadow(0 0 20px #ff4444); } 
+            100% { transform: rotate(0deg) scale(1); } /* Vuelve a su sitio */
+        }
+        .papelera-atrapando {
+            animation: inclinarPapelera 0.6s ease-out forwards; /* Misma duración que el vuelo */
+        }
+
     </style>
 </head>
 <body>
@@ -222,12 +241,33 @@
 
         function borrarMarcados() {
             let t = JSON.parse(localStorage.getItem('tareas_eden') || '[]');
-            t.forEach((tarea, i) => { if(tarea.done) document.getElementById(`nota-${i}`).classList.add('arrugando'); });
+            let hayMarcados = false;
+            const papelera = document.getElementById('btn-borrar'); // Obtenemos la papelera
+
+            t.forEach((tarea, i) => { 
+                if(tarea.done) {
+                    document.getElementById(`nota-${i}`).classList.add('arrugando'); 
+                    hayMarcados = true;
+                }
+            });
+
+            if(!hayMarcados) return;
+
+            // === JS: ACTIVAMOS LA INCLINACIÓN DE LA PAPELERA ===
+            papelera.classList.add('papelera-atrapando');
+
+            // === JS: TIEMPOS AJUSTADOS ===
+            // 1. Limpiamos la inclinación un poco antes de que termine el vuelo
+            setTimeout(() => {
+                papelera.classList.remove('papelera-atrapando');
+            }, 550); // Un poco antes del final (0.6s)
+
+            // 2. Borramos los datos y refrescamos la lista
             setTimeout(() => {
                 t = t.filter(tarea => !tarea.done);
                 localStorage.setItem('tareas_eden', JSON.stringify(t));
                 cargarTareas();
-            }, 600);
+            }, 600); // Coincide con el final de la animación de vuelo
         }
 
         mostrarVista('vista-login');
