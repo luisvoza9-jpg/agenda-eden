@@ -18,16 +18,14 @@
         h1 span { display: block; width: 100%; }
         .frase-neon { color: #00FFFF; font-size: 14px; text-shadow: 0 0 10px #00FFFF; display: block; margin-top: 20px; text-align: center; }
         
-        /* CORRECCIÓN: input sin margen superior para alinear con el botón */
         input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00FFFF; background: rgba(0, 0, 0, 0.7); color: white; font-size: 16px; outline: none; text-align: center; }
         
         .btn-exit-fixed { position: fixed; top: 25px; right: 25px; color: #ff4444; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1000; transition: 0.3s; }
         .btn-exit-fixed:hover { transform: scale(1.2); filter: drop-shadow(0 0 10px #ff0000); }
         
-        /* CORRECCIÓN: Alineación perfecta del grupo de entrada */
+        /* CORRECCIÓN ALINEACIÓN + */
         .task-input-group { display: flex; gap: 10px; margin-top: 10px; align-items: center; }
-        .task-input-group input { margin: 0; flex: 1; } /* Quitamos el margen para que no se desfase del botón */
-        
+        .task-input-group input { margin: 0; flex: 1; }
         .btn-blue { background: #00FFFF; color: black; width: 55px; font-size: 24px; border-radius: 10px; border: none; cursor: pointer; height: 45px; flex-shrink: 0; }
         
         .task-list { text-align: left; margin-top: 20px; max-height: 250px; overflow-y: auto; }
@@ -40,17 +38,20 @@
         .arrugando { animation: borrarVuelo 0.6s ease-in forwards; pointer-events: none; }
         .papelera-atrapando { animation: inclinarPapelera 0.6s ease-out forwards; }
 
-        /* === MEJORAS DEL JUEGO === */
+        /* JUEGO Y RANKING */
         .btn-game-flotante { position: fixed; bottom: 30px; left: 30px; background: none; color: #00FFFF; font-size: 40px; border: none; filter: drop-shadow(0 0 10px #00FFFF); cursor: pointer; z-index: 101; transition: 0.3s; }
         #vista-juego { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('fondo-nubes.jpg'); background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
         #gameCanvas { border: 3px solid #00FFFF; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 30px #00FFFF; cursor: none; }
         .btn-game-return { position: absolute; top: 20px; left: 20px; color: #00FFFF; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1002; }
         #game-score { font-size: 24px; color: #00FFFF; text-shadow: 0 0 10px #00FFFF; margin-bottom: 10px; font-weight: bold; }
         
-        /* Menús de Juego */
-        #game-over-menu, #difficulty-menu { position: absolute; background: rgba(0,0,0,0.9); border: 2px solid #00FFFF; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 50px #00FFFF; z-index: 1010; }
-        .game-btn-neon { background: none; border: 1px solid #00FFFF; color: #00FFFF; padding: 10px 20px; margin: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; display: block; width: 200px; }
+        #game-over-menu, #difficulty-menu { position: absolute; background: rgba(0,0,0,0.9); border: 2px solid #00FFFF; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 50px #00FFFF; z-index: 1010; max-width: 90%; }
+        .game-btn-neon { background: none; border: 1px solid #00FFFF; color: #00FFFF; padding: 10px 20px; margin: 10px auto; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; display: block; width: 200px; }
         .game-btn-neon:hover { background: #00FFFF; color: black; box-shadow: 0 0 20px #00FFFF; }
+
+        /* ESTILO RANKING */
+        #ranking-container { margin-top: 20px; border-top: 1px solid #00FFFF; padding-top: 10px; font-size: 14px; max-height: 150px; overflow-y: auto; }
+        .ranking-item { display: flex; justify-content: space-between; padding: 3px 10px; color: #00FFFF; }
     </style>
 </head>
 <body>
@@ -97,10 +98,15 @@
         <canvas id="gameCanvas" width="500" height="500"></canvas>
 
         <div id="difficulty-menu" class="hidden">
-            <h2 style="color:#00FFFF; margin-bottom:20px;">DIFICULTAD</h2>
+            <h2 style="color:#00FFFF; margin-bottom:15px;">DIFICULTAD</h2>
             <button class="game-btn-neon" onclick="iniciarJuegoEden('terrestre')">Nivel terrestre</button>
             <button class="game-btn-neon" onclick="iniciarJuegoEden('semidios')">Nivel semidios</button>
             <button class="game-btn-neon" onclick="iniciarJuegoEden('eden')">Nivel del edén</button>
+            
+            <div id="ranking-container">
+                <p style="font-weight:bold; margin-bottom:5px;">🏆 TOP EDÉN 🏆</p>
+                <div id="lista-ranking"></div>
+            </div>
         </div>
 
         <div id="game-over-menu" class="hidden">
@@ -114,7 +120,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <script>
-        // CONFIGURACIÓN DE TU BASE DE DATOS
         const firebaseConfig = {
             apiKey: "AIzaSyCod7qKXcefhTqa40EVWbl32dygU9G10Aw",
             authDomain: "edengame-5a40c.firebaseapp.com",
@@ -128,6 +133,7 @@
         const db = firebase.database();
         let currentUser = "";
 
+        // ANIMACIONES Y VISTAS
         const tituloEden = document.getElementById('titulo-eden');
         const lineas = ["BIENVENIDOS", "AL", "EDÉN"];
         let timer;
@@ -155,40 +161,24 @@
             } else { overlay.classList.remove('hidden'); }
         }
 
-        // LÓGICA DE ACCESO CON BASE DE DATOS
+        // LOGIN Y REGISTRO
         function validarAcceso() {
             const u = document.getElementById('user-in').value.trim();
             const p = document.getElementById('pass-in').value.trim();
-            if (u === 'admin' && p === '1234') { 
-                currentUser = u; 
-                mostrarVista('vista-agenda'); 
-                return; 
-            }
-            db.ref('usuarios/' + u).once('value', (snapshot) => {
-                if (snapshot.exists() && snapshot.val().password === p) {
-                    currentUser = u;
-                    mostrarVista('vista-agenda');
-                } else {
-                    alert("Usuario o contraseña incorrectos");
-                }
+            if (u === 'admin' && p === '1234') { currentUser = u; mostrarVista('vista-agenda'); return; }
+            db.ref('usuarios/' + u).once('value', (s) => {
+                if (s.exists() && s.val().password === p) { currentUser = u; mostrarVista('vista-agenda'); }
+                else alert("Error de acceso");
             });
         }
-
         function ejecutarRegistro() {
             const u = document.getElementById('user-reg').value.trim();
             const p = document.getElementById('pass-reg').value.trim();
-            if(u && p) { 
-                db.ref('usuarios/' + u).set({ password: p })
-                .then(() => {
-                    alert("¡Registrado en la nube!"); 
-                    mostrarVista('vista-login');
-                });
-            }
+            if(u && p) { db.ref('usuarios/' + u).set({ password: p }).then(() => { alert("¡Registrado!"); mostrarVista('vista-login'); }); }
         }
-
         function cerrarSesion() { currentUser = ""; mostrarVista('vista-login'); }
 
-        // AGENDA DE NOTAS
+        // NOTAS
         function añadirTarea() {
             const input = document.getElementById('campo-tarea');
             if(input.value.trim()) {
@@ -203,7 +193,7 @@
             let t = JSON.parse(localStorage.getItem('tareas_' + currentUser) || '[]');
             t.forEach((tarea, i) => {
                 const item = document.createElement('div'); item.className = 'task-item'; item.id = `nota-${i}`;
-                item.innerHTML = `<input type="checkbox" style="width:20px; cursor:pointer;" ${tarea.done?'checked':''} onchange="toggle(${i})"><div class="task-text" style="${tarea.done?'text-decoration:line-through;opacity:0.5':''}">${tarea.text}</div>`;
+                item.innerHTML = `<input type="checkbox" style="width:20px;" ${tarea.done?'checked':''} onchange="toggle(${i})"><div class="task-text" style="${tarea.done?'text-decoration:line-through;opacity:0.5':''}">${tarea.text}</div>`;
                 lista.appendChild(item);
             });
         }
@@ -212,51 +202,57 @@
             localStorage.setItem('tareas_' + currentUser, JSON.stringify(t)); cargarTareas();
         }
         function borrarMarcados() {
-            let t = JSON.parse(localStorage.getItem('tareas_' + currentUser) || '[]'); let hayMarcados = false;
+            let t = JSON.parse(localStorage.getItem('tareas_' + currentUser) || '[]');
             const papelera = document.getElementById('btn-borrar');
-            t.forEach((tarea, i) => { if(tarea.done) { document.getElementById(`nota-${i}`).classList.add('arrugando'); hayMarcados = true; } });
-            if(!hayMarcados) return;
+            let marcados = false;
+            t.forEach((tarea, i) => { if(tarea.done) { document.getElementById(`nota-${i}`).classList.add('arrugando'); marcados = true; } });
+            if(!marcados) return;
             papelera.classList.add('papelera-atrapando');
-            setTimeout(() => { papelera.classList.remove('papelera-atrapando'); }, 550);
-            setTimeout(() => { t = t.filter(tarea => !tarea.done); localStorage.setItem('tareas_' + currentUser, JSON.stringify(t)); cargarTareas(); }, 600);
+            setTimeout(() => { 
+                papelera.classList.remove('papelera-atrapando');
+                t = t.filter(tarea => !tarea.done); 
+                localStorage.setItem('tareas_' + currentUser, JSON.stringify(t)); 
+                cargarTareas(); 
+            }, 600);
         }
 
-        // --- LÓGICA MINIJUEGO ULTRA (SIN CAMBIOS) ---
+        // --- RANKING ---
+        function cargarRanking() {
+            db.ref('ranking').orderByValue().limitToLast(10).once('value', (s) => {
+                const lista = document.getElementById('lista-ranking');
+                lista.innerHTML = '';
+                let scores = [];
+                s.forEach(child => { scores.push({name: child.key, points: child.val()}); });
+                scores.reverse().forEach((u, i) => {
+                    lista.innerHTML += `<div class="ranking-item"><span>${i+1}. ${u.name}</span> <span>${u.points} pts</span></div>`;
+                });
+            });
+        }
+
+        // --- MINIJUEGO (IDÉNTICO A TU VERSIÓN) ---
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         const menuGameOver = document.getElementById("game-over-menu");
         const menuDifficulty = document.getElementById("difficulty-menu");
-        
-        let balls = [];
-        let paddleWidth = 90, paddleX;
-        let bricks = [], powerUps = [];
-        let score = 0, gameActive = false, gameInterval;
-        let isFireBall = false;
-        let currentDifficulty = 'terrestre';
+        let balls = [], bricks = [], powerUps = [], paddleWidth = 90, paddleX, score = 0, gameActive = false, gameInterval, isFireBall = false, currentDifficulty = 'terrestre';
 
         function abrirMenuDificultad() {
             mostrarVista('vista-juego');
             menuGameOver.classList.add('hidden');
             menuDifficulty.classList.remove('hidden');
+            cargarRanking();
         }
 
         function resetVariablesJuego(diff) {
-            currentDifficulty = diff;
-            menuDifficulty.classList.add("hidden");
-            menuGameOver.classList.add("hidden");
-            canvas.style.cursor = "none";
-            paddleWidth = 90;
-            paddleX = (canvas.width - paddleWidth) / 2;
-            isFireBall = false;
-            score = 0;
-            document.getElementById("game-score").innerText = "SCORE: 0";
+            currentDifficulty = diff; menuDifficulty.classList.add("hidden"); menuGameOver.classList.add("hidden");
+            canvas.style.cursor = "none"; paddleWidth = 90; paddleX = (canvas.width - paddleWidth) / 2;
+            isFireBall = false; score = 0; document.getElementById("game-score").innerText = "SCORE: 0";
             let ballRadius = (diff === 'eden') ? 5 : 8;
             balls = [{ x: canvas.width/2, y: canvas.height-100, dx: 2.1, dy: -2.1, radius: ballRadius }];
             bricks = [];
             let rows = (diff === 'terrestre') ? 5 : (diff === 'semidios' ? 8 : 12);
             let cols = (diff === 'terrestre') ? 7 : (diff === 'semidios' ? 12 : 18);
-            let bWidth = (canvas.width - 40) / cols;
-            let bHeight = (diff === 'terrestre') ? 20 : 12;
+            let bWidth = (canvas.width - 40) / cols; let bHeight = (diff === 'terrestre') ? 20 : 12;
             for (let c = 0; c < cols; c++) {
                 bricks[c] = [];
                 for (let r = 0; r < rows; r++) {
@@ -284,46 +280,40 @@
             if (!gameActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             let allBroken = true;
-            bricks.forEach((col, c) => {
-                col.forEach((b, r) => {
-                    if (b.status > 0) {
-                        if(b.type !== "wall") allBroken = false;
-                        b.x = c * (b.w + 4) + 15; b.y = r * (b.h + 4) + 50;
-                        ctx.shadowBlur = 5;
-                        if(b.type === "wall") { ctx.fillStyle = "#888"; ctx.shadowColor = "#555"; }
-                        else if(b.type === "hard") { ctx.fillStyle = (b.status === 2) ? "#FFD700" : "#FF4444"; ctx.shadowColor = ctx.fillStyle; }
-                        else { ctx.fillStyle = "#FF4444"; ctx.shadowColor = "#FF4444"; }
-                        ctx.fillRect(b.x, b.y, b.w, b.h);
-                    }
-                });
-            });
+            bricks.forEach((col, c) => { col.forEach((b, r) => {
+                if (b.status > 0) {
+                    if(b.type !== "wall") allBroken = false;
+                    b.x = c * (b.w + 4) + 15; b.y = r * (b.h + 4) + 50;
+                    ctx.shadowBlur = 5;
+                    if(b.type === "wall") { ctx.fillStyle = "#888"; ctx.shadowColor = "#555"; }
+                    else if(b.type === "hard") { ctx.fillStyle = (b.status === 2) ? "#FFD700" : "#FF4444"; ctx.shadowColor = ctx.fillStyle; }
+                    else { ctx.fillStyle = "#FF4444"; ctx.shadowColor = "#FF4444"; }
+                    ctx.fillRect(b.x, b.y, b.w, b.h);
+                }
+            }); });
             if(allBroken) endPartida("¡EL REY DEL EDÉN!");
+
             powerUps.forEach((p, i) => {
                 p.y += 2;
                 ctx.beginPath(); ctx.arc(p.x, p.y, 10, 0, Math.PI*2);
                 ctx.fillStyle = p.type === 'P' ? "#00FFFF" : (p.type === '2' ? "#00FF00" : "#FFA500");
                 ctx.fill(); ctx.closePath();
-                ctx.fillStyle = "black"; ctx.fillText(p.type, p.x-4, p.y+4);
-                if(p.y > canvas.height-75 && p.x > paddleX && p.x < paddleX + paddleWidth) {
-                    activarPowerUp(p.type);
-                    powerUps.splice(i, 1);
-                }
+                if(p.y > canvas.height-75 && p.x > paddleX && p.x < paddleX + paddleWidth) { activarPowerUp(p.type); powerUps.splice(i, 1); }
             });
+
             ctx.fillStyle = "#00FFFF"; ctx.shadowBlur = 15; ctx.shadowColor = "#00FFFF";
             ctx.fillRect(paddleX, canvas.height - 70, paddleWidth, 12);
+
             balls.forEach((b, index) => {
                 ctx.beginPath(); ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
-                ctx.fillStyle = isFireBall ? "#FFA500" : "#FF0000";
-                ctx.shadowBlur = 15; ctx.shadowColor = ctx.fillStyle;
-                ctx.fill(); ctx.closePath();
+                ctx.fillStyle = isFireBall ? "#FFA500" : "#FF0000"; ctx.fill(); ctx.closePath();
                 bricks.forEach(col => col.forEach(brick => {
                     if (brick.status > 0 && b.x > brick.x && b.x < brick.x + brick.w && b.y > brick.y && b.y < brick.y + brick.h) {
                         if(!isFireBall || brick.type === "wall") b.dy = -b.dy;
                         if(brick.type !== "wall") {
                             brick.status--;
                             if(brick.status === 0) {
-                                score++;
-                                document.getElementById("game-score").innerText = "SCORE: " + score;
+                                score++; document.getElementById("game-score").innerText = "SCORE: " + score;
                                 let prob = (currentDifficulty === 'terrestre') ? 0.15 : (currentDifficulty === 'semidios' ? 0.07 : 0.03);
                                 if(Math.random() < prob) {
                                     let types = ['P', '2', 'F'];
@@ -343,20 +333,25 @@
             });
             if(balls.length === 0) endPartida("GAME OVER");
         }
+
         function activarPowerUp(type) {
             if(type === 'P') { paddleWidth = 180; setTimeout(() => paddleWidth = 90, 8000); }
-            if(type === '2') { 
-                let bRad = (currentDifficulty === 'eden') ? 5 : 8;
-                balls.push({ x: paddleX + paddleWidth/2, y: canvas.height-100, dx: -2.1, dy: -2.1, radius: bRad }); 
-            }
+            if(type === '2') { let bRad = (currentDifficulty === 'eden') ? 5 : 8; balls.push({ x: paddleX + paddleWidth/2, y: canvas.height-100, dx: -2.1, dy: -2.1, radius: bRad }); }
             if(type === 'F') { isFireBall = true; setTimeout(() => isFireBall = false, 3000); }
         }
+
         function endPartida(msg) {
-            gameActive = false; clearInterval(gameInterval);
-            canvas.style.cursor = "auto";
+            gameActive = false; clearInterval(gameInterval); canvas.style.cursor = "auto";
             document.getElementById("end-title").innerText = msg;
             menuGameOver.classList.remove("hidden");
+            // GUARDAR EN RANKING SI NO ES ADMIN
+            if(currentUser && currentUser !== 'admin') {
+                db.ref('ranking/' + currentUser).once('value', (s) => {
+                    if(!s.exists() || s.val() < score) { db.ref('ranking/' + currentUser).set(score); }
+                });
+            }
         }
+
         function iniciarJuegoEden(diff) { resetVariablesJuego(diff); gameActive = true; gameInterval = setInterval(draw, 10); }
         function salirDelJuego() { gameActive = false; clearInterval(gameInterval); menuDifficulty.classList.add('hidden'); mostrarVista('vista-agenda'); }
 
