@@ -5,101 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIENVENIDOS AL EDÉN</title>
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            margin: 0; padding: 0; height: 100vh;
+            height: 100vh;
             display: flex; justify-content: center; align-items: center;
             font-family: 'Segoe UI', sans-serif;
             background-image: url('fondo-nubes.jpg');
             background-size: cover;
             background-position: center;
             overflow: hidden;
-            position: relative;
         }
 
-        /* Capa oscura para el Login/Registro */
+        /* Capa sutil para que el neón resalte en el login */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.3);
             z-index: 1;
         }
 
         .container {
-            width: 350px; 
+            width: 380px; 
             text-align: center;
-            padding: 25px;
             position: relative;
             z-index: 10;
         }
 
-        /* Títulos centrados y Neón Cyan */
+        /* TITULOS NEÓN CENTRADOS */
         h1, h2 { 
-            color: #00FFFF; margin-bottom: 20px; font-size: 28px; 
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
-            text-align: center; width: 100%;
-        }
-
-        input {
-            width: 90%; padding: 12px; margin: 10px auto; border-radius: 10px;
-            border: 1px solid rgba(0, 255, 255, 0.3); 
-            background: rgba(0, 0, 0, 0.7);
-            color: white; font-size: 16px; outline: none; display: block;
+            color: #00FFFF; margin-bottom: 15px; font-size: 32px; 
+            text-shadow: 0 0 15px #00FFFF;
             text-align: center;
         }
 
-        input:focus { border-color: #00FFFF; box-shadow: 0 0 10px #00FFFF; }
-        
-        button { padding: 12px; cursor: pointer; border: none; border-radius: 10px; font-weight: bold; transition: 0.3s; }
-        .btn-cyan { background: #00FFFF; color: black; width: 100%; }
-        .hidden { display: none !important; }
+        /* FRASE DEL EDÉN NEÓN */
+        .frase-neon {
+            color: #00FFFF;
+            font-size: 14px;
+            text-shadow: 0 0 10px #00FFFF;
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
 
-        /* Agenda */
+        input {
+            width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px;
+            border: 1px solid #00FFFF; 
+            background: rgba(0, 0, 0, 0.6);
+            color: white; font-size: 16px; outline: none;
+            text-align: center;
+        }
+
+        /* AGENDA TOTALMENTE TRANSPARENTE (SIN EL CUADRO BLANCO DE TU FOTO) */
         #vista-agenda {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px; color: #333;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            padding: 30px; width: 380px;
+            background: transparent !important;
+            box-shadow: none !important;
+            padding: 20px;
         }
 
-        /* PUERTA ROJA + EXIT PEQUEÑO */
-        .btn-exit-container {
-            float: right;
-            display: flex; flex-direction: column; align-items: center;
-            background: transparent; border: none; cursor: pointer;
-            color: #ff4444; margin-top: -10px; transition: 0.3s;
-            text-decoration: none;
+        #vista-agenda h3 { 
+            color: #00FFFF; text-shadow: 0 0 10px #00FFFF; 
+            text-align: left; margin-bottom: 20px;
         }
-        .btn-exit-container:hover { transform: scale(1.1); color: #ff0000; filter: drop-shadow(0 0 5px #ff4444); }
-        .door-icon { font-size: 26px; }
-        .exit-text { font-size: 9px; font-weight: bold; margin-top: -2px; }
 
-        #vista-agenda h3 { color: #2196F3; margin: 0; text-align: left; }
-        
-        .task-input-group { display: flex; gap: 5px; margin-top: 15px; }
+        /* ENTRADA DE NOTAS A LA IZQUIERDA */
+        .task-input-group { display: flex; gap: 10px; }
         #campo-tarea { 
-            flex: 1; margin: 0; background: white; color: #333; 
-            border: 1px solid #ddd; text-align: left; 
+            text-align: left; /* Volvemos a la izquierda */
+            padding-left: 15px;
+            flex: 1;
         }
-        .btn-blue { background: #2196F3; color: white; width: 50px; }
 
-        .task-list { text-align: left; max-height: 300px; overflow-y: auto; margin-top: 20px; }
+        .btn-blue { background: #00FFFF; color: black; width: 60px; font-size: 20px; border-radius: 10px; }
+
+        /* LISTA DE TAREAS */
+        .task-list { text-align: left; margin-top: 20px; max-height: 300px; overflow-y: auto; }
         .task-item { 
-            background: white; margin-bottom: 8px; padding: 12px;
+            background: rgba(0, 0, 0, 0.5); /* Fondo oscuro sutil para leer bien */
+            margin-bottom: 10px; padding: 15px;
             border-radius: 10px; display: flex; align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
         }
+        .task-text { flex: 1; margin-left: 10px; color: white; font-size: 16px; }
 
-        /* PAPELERA NEÓN CENTRAL */
-        .btn-trash-central {
-            position: fixed; bottom: 30px; left: 50%;
-            transform: translateX(-50%);
-            background: transparent; color: #ff4444; 
-            font-size: 45px; border: none; cursor: pointer;
-            filter: drop-shadow(0 0 10px #ff4444);
-            z-index: 100; transition: 0.3s;
+        /* EXIT Y PAPELERA ROJOS */
+        .btn-exit-container {
+            float: right; color: #ff4444; cursor: pointer; border: none; background: none;
+            display: flex; flex-direction: column; align-items: center;
         }
-        .btn-trash-central:hover { transform: translateX(-50%) scale(1.2); filter: drop-shadow(0 0 20px #ff0000); }
+        .exit-text { font-size: 10px; font-weight: bold; }
+
+        .btn-trash-central {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: none; color: #ff4444; font-size: 50px; border: none; 
+            filter: drop-shadow(0 0 10px #ff4444); cursor: pointer;
+        }
+        
+        .hidden { display: none !important; }
+        button:hover { opacity: 0.8; transform: scale(1.05); transition: 0.2s; }
     </style>
 </head>
 <body>
@@ -107,24 +110,25 @@
     <div id="pantalla-oscura" class="overlay"></div>
 
     <div id="vista-login" class="container">
-        <h1>BIENVENIDOS AL EDÉN</h1>
+        <h1>EDÉN</h1>
         <input type="text" id="user-in" placeholder="Usuario">
         <input type="password" id="pass-in" placeholder="Contraseña">
-        <button class="btn-cyan" onclick="validarAcceso()">ENTRAR</button>
-        <p style="cursor:pointer; color:#00FFFF; font-size: 12px; margin-top: 20px; text-shadow: 0 0 5px #00FFFF;" onclick="mostrarVista('vista-eden')">¿Eres nuevo? REGÍSTRATE</p>
+        <button style="background:#00FFFF; color:black; width:100%; padding:12px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="validarAcceso()">ENTRAR</button>
+        <span class="frase-neon">(Un paraíso para tus secretos te espera en el edén)</span>
+        <p style="cursor:pointer; color:#ccc; font-size: 12px; margin-top: 20px;" onclick="mostrarVista('vista-eden')">Registrarse</p>
     </div>
 
     <div id="vista-eden" class="container hidden">
         <h2>REGISTRO</h2>
         <input type="text" id="user-reg" placeholder="Nuevo usuario">
         <input type="password" id="pass-reg" placeholder="Contraseña">
-        <button class="btn-cyan" onclick="ejecutarRegistro()">GUARDAR</button>
-        <p style="cursor:pointer; color:#ccc; margin-top:20px; font-size: 12px;" onclick="mostrarVista('vista-login')">← Volver</p>
+        <button style="background:#00FFFF; color:black; width:100%; padding:12px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="ejecutarRegistro()">GUARDAR</button>
+        <p style="cursor:pointer; color:#ccc; margin-top:20px; font-size: 12px;" onclick="mostrarVista('vista-login')">Volver</p>
     </div>
 
     <div id="vista-agenda" class="container hidden">
         <button class="btn-exit-container" onclick="cerrarSesion()">
-            <span class="door-icon">🚪</span>
+            <span style="font-size:30px;">🚪</span>
             <span class="exit-text">EXIT</span>
         </button>
         <h3>MIS NOTAS</h3>
@@ -146,25 +150,22 @@
             document.getElementById('vista-eden').classList.add('hidden');
             document.getElementById('vista-agenda').classList.add('hidden');
             btnBorrar.classList.add('hidden');
-
             document.getElementById(id).classList.remove('hidden');
             
             if (id === 'vista-agenda') {
                 overlay.classList.add('hidden'); 
                 btnBorrar.classList.remove('hidden');
-            } else {
-                overlay.classList.remove('hidden');
-            }
+            } else { overlay.classList.remove('hidden'); }
         }
 
         function validarAcceso() {
             const u = document.getElementById('user-in').value.trim();
             const p = document.getElementById('pass-in').value.trim();
             const savedPass = localStorage.getItem('user_' + u);
-            if ((u === 'admin' && p === '1234') || (savedPass && savedPass === p)) {
+            if ((u === 'admin' && p === '1234') || (savedPass === p)) {
                 mostrarVista('vista-agenda');
                 cargarTareas();
-            } else { alert("Datos incorrectos"); }
+            } else { alert("Error"); }
         }
 
         function cerrarSesion() { mostrarVista('vista-login'); }
@@ -174,7 +175,7 @@
             const p = document.getElementById('pass-reg').value.trim();
             if(u && p) {
                 localStorage.setItem('user_' + u, p);
-                alert("Usuario registrado");
+                alert("Registrado");
                 mostrarVista('vista-login');
             }
         }
@@ -198,8 +199,8 @@
                 const item = document.createElement('div');
                 item.className = 'task-item';
                 item.innerHTML = `
-                    <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
-                    <div class="task-text" style="margin-left:10px; ${t.done ? 'text-decoration:line-through; color:gray;' : ''}">${t.text}</div>`;
+                    <input type="checkbox" style="width:20px; margin:0;" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
+                    <div class="task-text" style="${t.done ? 'text-decoration:line-through; opacity:0.5;' : ''}">${t.text}</div>`;
                 lista.appendChild(item);
             });
         }
