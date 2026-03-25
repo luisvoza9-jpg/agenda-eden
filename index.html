@@ -3,48 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIENVENIDOS AL EDÉN (ULTRA GAME GLOBAL)</title>
+    <title>BIENVENIDOS AL EDÉN (ULTRA GAME)</title>
     <style>
+        /* MANTENEMOS TODO TU ESTILO ORIGINAL INTACTO */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             height: 100vh; display: flex; justify-content: center; align-items: center;
-            font-family: 'Segoe UI', sans-serif; 
-            background-size: cover; background-position: center; 
-            background-repeat: no-repeat;
-            transition: background-image 0.5s ease;
-            overflow: hidden; color: white;
+            font-family: 'Segoe UI', sans-serif; background-image: url('fondo-nubes.jpg');
+            background-size: cover; background-position: center; overflow: hidden; color: white;
         }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 1; }
         .container { width: 380px; text-align: center; position: relative; z-index: 10; }
         h1 { color: #00FFFF; margin-bottom: 20px; font-size: 32px; text-shadow: 0 0 15px #00FFFF; display: flex; flex-direction: column; align-items: center; letter-spacing: 2px; font-weight: bold; line-height: 1.1; min-height: 110px; }
         h1 span { display: block; width: 100%; }
-        
+        .frase-neon { color: #00FFFF; font-size: 14px; text-shadow: 0 0 10px #00FFFF; display: block; margin-top: 20px; text-align: center; }
         input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00FFFF; background: rgba(0, 0, 0, 0.7); color: white; font-size: 16px; outline: none; text-align: center; }
-        
-        .btn-exit-fixed { position: fixed; top: 25px; right: 25px; color: #ff4444; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1000; }
+        .btn-exit-fixed { position: fixed; top: 25px; right: 25px; color: #ff4444; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1000; transition: 0.3s; }
+        .btn-exit-fixed:hover { transform: scale(1.2); filter: drop-shadow(0 0 10px #ff0000); }
+        .task-input-group { display: flex; gap: 10px; margin-top: 10px; }
         .btn-blue { background: #00FFFF; color: black; width: 55px; font-size: 24px; border-radius: 10px; border: none; cursor: pointer; height: 45px; }
-        
-        .task-list { text-align: left; margin-top: 20px; max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .task-item { background: rgba(0, 0, 0, 0.6); padding: 12px; border-radius: 10px; display: flex; align-items: center; border: 1px solid rgba(0, 255, 255, 0.2); width: 100%; }
-        .task-text { flex: 1; margin-left: 10px; color: white; word-break: break-word; }
-        
-        .btn-trash-central { position: fixed; bottom: 30px; right: 30px; background: none; color: #ff4444; font-size: 50px; border: none; filter: drop-shadow(0 0 10px #ff4444); cursor: pointer; z-index: 100; }
+        .task-list { text-align: left; margin-top: 20px; max-height: 250px; overflow-y: auto; }
+        .task-item { background: rgba(0, 0, 0, 0.6); margin-bottom: 8px; padding: 12px; border-radius: 10px; display: flex; align-items: center; border: 1px solid rgba(0, 255, 255, 0.2); text-align: left; }
+        .task-text { flex: 1; margin-left: 10px; color: white; word-break: break-word; text-align: left; }
+        .btn-trash-central { position: fixed; bottom: 30px; right: 30px; background: none; color: #ff4444; font-size: 50px; border: none; filter: drop-shadow(0 0 10px #ff4444); cursor: pointer; z-index: 100; transform-origin: bottom right; }
         .hidden { display: none !important; }
-        
-        .btn-rank-flotante { position: fixed; bottom: 30px; left: 100px; background: none; color: #FFD700; font-size: 40px; border: none; filter: drop-shadow(0 0 10px #FFD700); cursor: pointer; z-index: 101; }
-        .btn-game-flotante { position: fixed; bottom: 30px; left: 30px; background: none; color: #00FFFF; font-size: 40px; border: none; filter: drop-shadow(0 0 10px #00FFFF); cursor: pointer; z-index: 101; }
-
-        #vista-juego { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
-        #gameCanvas { border: 3px solid #00FFFF; box-shadow: 0 0 30px #00FFFF; background: rgba(0,0,0,0.8); }
-        #difficulty-menu, #game-over-menu, #vista-ranking { position: absolute; background: rgba(0,0,0,0.95); border: 2px solid #00FFFF; padding: 25px; border-radius: 20px; text-align: center; z-index: 1010; width: 320px; }
-        .game-btn-neon { background: none; border: 1px solid #00FFFF; color: #00FFFF; padding: 10px; margin: 5px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; }
-        
-        .rank-table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 14px; }
-        .rank-table th { color: #00FFFF; border-bottom: 1px solid #00FFFF; padding: 5px; }
-        .rank-table td { padding: 5px; border-bottom: 1px solid rgba(0,255,255,0.1); }
-        
         @keyframes borrarVuelo { to { transform: scale(0) translate(20vw, 50vh); opacity: 0; } }
-        .arrugando { animation: borrarVuelo 0.6s ease-in forwards; }
+        @keyframes inclinarPapelera { 0% { transform: rotate(0deg) scale(1); } 60% { transform: rotate(-15deg) scale(1.1); filter: drop-shadow(0 0 20px #ff4444); } 100% { transform: rotate(0deg) scale(1); } }
+        .arrugando { animation: borrarVuelo 0.6s ease-in forwards; pointer-events: none; }
+        .papelera-atrapando { animation: inclinarPapelera 0.6s ease-out forwards; }
+
+        /* === MEJORAS DEL JUEGO === */
+        .btn-game-flotante { position: fixed; bottom: 30px; left: 30px; background: none; color: #00FFFF; font-size: 40px; border: none; filter: drop-shadow(0 0 10px #00FFFF); cursor: pointer; z-index: 101; transition: 0.3s; }
+        #vista-juego { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('fondo-nubes.jpg'); background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
+        #gameCanvas { border: 3px solid #00FFFF; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 30px #00FFFF; cursor: none; }
+        .btn-game-return { position: absolute; top: 20px; left: 20px; color: #00FFFF; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1002; }
+        #game-score { font-size: 24px; color: #00FFFF; text-shadow: 0 0 10px #00FFFF; margin-bottom: 10px; font-weight: bold; }
+        
+        /* Menú de Fin de Juego */
+        #game-over-menu { position: absolute; background: rgba(0,0,0,0.9); border: 2px solid #00FFFF; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 50px #00FFFF; z-index: 1010; }
+        .game-btn-neon { background: none; border: 1px solid #00FFFF; color: #00FFFF; padding: 10px 20px; margin: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .game-btn-neon:hover { background: #00FFFF; color: black; box-shadow: 0 0 20px #00FFFF; }
     </style>
 </head>
 <body>
@@ -52,18 +50,17 @@
     <div id="pantalla-oscura" class="overlay"></div>
 
     <button id="exit-btn" class="btn-exit-fixed hidden" onclick="cerrarSesion()">
-        <span style="font-size:32px">🚪</span><span style="font-size:10px; font-weight:bold; color:white;">EXIT</span>
+        <span style="font-size:32px">🚪</span><span style="font-size:10px; font-weight:bold">EXIT</span>
     </button>
-    
     <button class="btn-trash-central hidden" id="btn-borrar" onclick="borrarMarcados()">🗑️</button>
-    <button id="game-btn" class="btn-game-flotante hidden" onclick="abrirMenuDificultad()">🎮</button>
-    <button id="rank-btn" class="btn-rank-flotante hidden" onclick="abrirRanking()">🏆</button>
+    <button id="game-btn" class="btn-game-flotante hidden" onclick="iniciarJuegoEden()">🎮</button>
 
     <div id="vista-login" class="container">
         <h1 id="titulo-eden"></h1>
         <input type="text" id="user-in" placeholder="Usuario">
         <input type="password" id="pass-in" placeholder="Contraseña">
         <button style="background:#00FFFF; color:black; width:100%; height:45px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="validarAcceso()">ENTRAR</button>
+        <span class="frase-neon">¡Un paraíso para tus secretos te espera en el edén!</span>
         <p style="cursor:pointer; color:#ccc; font-size: 12px; margin-top: 20px;" onclick="mostrarVista('vista-eden')">Registrarse</p>
     </div>
 
@@ -77,7 +74,7 @@
 
     <div id="vista-agenda" class="container hidden">
         <h3 style="color:#00FFFF; text-align:left; margin-bottom:10px;">MIS NOTAS</h3>
-        <div style="display:flex; gap:10px;">
+        <div class="task-input-group">
             <input type="text" id="campo-tarea" placeholder="Escribe algo..." style="text-align:left; padding-left:15px;">
             <button class="btn-blue" onclick="añadirTarea()">+</button>
         </div>
@@ -85,256 +82,214 @@
     </div>
 
     <div id="vista-juego" class="hidden">
-        <div id="game-score" style="position:absolute; top:20px; color:#00FFFF; font-size:20px; font-weight:bold;">SCORE: 0</div>
+        <button class="btn-game-return" onclick="salirDelJuego()">
+            <span style="font-size:26px">🚪</span><span style="font-size:9px; font-weight:bold; color:#00FFFF">RETORNAR</span>
+        </button>
+        <div id="game-score">SCORE: 0</div>
         <canvas id="gameCanvas" width="500" height="500"></canvas>
 
-        <div id="difficulty-menu" class="hidden">
-            <h2 style="color:#00FFFF; margin-bottom:15px;">DIFICULTAD</h2>
-            <button class="game-btn-neon" onclick="iniciarJuegoEden('terrestre')">Nivel terrestre</button>
-            <button class="game-btn-neon" onclick="iniciarJuegoEden('semidios')">Nivel semidios</button>
-            <button class="game-btn-neon" onclick="iniciarJuegoEden('eden')">Nivel del edén</button>
-            <button class="game-btn-neon" style="border-color:#ff4444; color:#ff4444;" onclick="salirDelJuego()">SALIR</button>
-        </div>
-
         <div id="game-over-menu" class="hidden">
-            <h2 id="end-title" style="color:#00FFFF; margin-bottom:20px;">FIN</h2>
-            <button class="game-btn-neon" onclick="abrirMenuDificultad()">¿Otra?</button>
-            <button class="game-btn-neon" onclick="salirDelJuego()">Volver a Agenda</button>
-        </div>
-
-        <div id="vista-ranking" class="hidden">
-            <h2 style="color:#FFD700;">SALÓN DE LA FAMA</h2>
-            <div style="max-height: 350px; overflow-y: auto;">
-                <div class="rank-title" style="color:#00FFFF">🌍 Terrestre</div>
-                <table class="rank-table" id="tabla-terrestre"><thead><tr><th>User</th><th>Wins</th></tr></thead><tbody></tbody></table>
-                <div class="rank-title" style="color:#FFD700">⚡ Semidios</div>
-                <table class="rank-table" id="tabla-semidios"><thead><tr><th>User</th><th>Wins</th></tr></thead><tbody></tbody></table>
-                <div class="rank-title" style="color:#FF4444">💎 Edén</div>
-                <table class="rank-table" id="tabla-eden"><thead><tr><th>User</th><th>Wins</th></tr></thead><tbody></tbody></table>
-            </div>
-            <button class="game-btn-neon" style="margin-top:15px;" onclick="cerrarRanking()">CERRAR</button>
+            <h2 id="end-title" style="color:#00FFFF; margin-bottom:20px;">FIN DE LA PARTIDA</h2>
+            <button class="game-btn-neon" onclick="iniciarJuegoEden()">¡Repetir!</button>
+            <button class="game-btn-neon" onclick="salirDelJuego()">¿Salir:(</button>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCod7qKXcefhTqa40EVWbl32dygU9G10Aw",
-            authDomain: "edengame-5a40c.firebaseapp.com",
-            databaseURL: "https://edengame-5a40c-default-rtdb.firebaseio.com",
-            projectId: "edengame-5a40c",
-            storageBucket: "edengame-5a40c.firebasestorage.app",
-            messagingSenderId: "837651200703",
-            appId: "1:837651200703:web:0c3e237c36e1bb37b6640a"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        let currentUser = "";
-
         const tituloEden = document.getElementById('titulo-eden');
         const lineas = ["BIENVENIDOS", "AL", "EDÉN"];
+        let timer;
         function animar() {
-            tituloEden.innerHTML = ""; let l=0, c=0;
+            tituloEden.innerHTML = ""; let l=0, c=0; clearInterval(timer);
             lineas.forEach(() => { let s = document.createElement('span'); tituloEden.appendChild(s); });
             let spans = tituloEden.querySelectorAll("span");
-            let t = setInterval(() => {
-                if(l < lineas.length){ spans[l].innerText += lineas[l][c]; c++; if(c >= lineas[l].length){ l++; c=0; } } else clearInterval(t);
+            timer = setInterval(() => {
+                if(l < lineas.length){ spans[l].innerText += lineas[l][c]; c++; if(c >= lineas[l].length){ l++; c=0; } } else clearInterval(timer);
             }, 100);
         }
-
         function mostrarVista(id) {
             document.querySelectorAll('.container, #vista-juego').forEach(c => c.classList.add('hidden'));
-            document.querySelectorAll('#btn-borrar, #exit-btn, #game-btn, #rank-btn').forEach(b => b.classList.add('hidden'));
+            document.getElementById('btn-borrar').classList.add('hidden');
+            document.getElementById('exit-btn').classList.add('hidden');
+            document.getElementById('game-btn').classList.add('hidden');
+            const overlay = document.getElementById('pantalla-oscura');
             document.getElementById(id).classList.remove('hidden');
-
-            if(id === 'vista-juego') {
-                document.body.style.backgroundImage = "url('logo1.jpg')";
-            } else {
-                document.body.style.backgroundImage = "url('fondo-nubes.jpg')";
-            }
-
             if(id === 'vista-login') animar();
             if(id === 'vista-agenda') {
-                document.querySelectorAll('#btn-borrar, #exit-btn, #game-btn, #rank-btn').forEach(b => b.classList.remove('hidden'));
-                document.getElementById('pantalla-oscura').classList.add('hidden');
-                cargarTareas();
-            } else { document.getElementById('pantalla-oscura').classList.remove('hidden'); }
+                document.getElementById('btn-borrar').classList.remove('hidden');
+                document.getElementById('exit-btn').classList.remove('hidden');
+                document.getElementById('game-btn').classList.remove('hidden');
+                overlay.classList.add('hidden'); cargarTareas();
+            } else { overlay.classList.remove('hidden'); }
         }
-
         function validarAcceso() {
             const u = document.getElementById('user-in').value.trim();
             const p = document.getElementById('pass-in').value.trim();
             const saved = localStorage.getItem('user_' + u);
-            if ((u === 'admin' && p === '1234') || (saved !== null && saved === p)) { 
-                currentUser = u; mostrarVista('vista-agenda'); 
-            } else { alert("Acceso denegado"); }
+            if ((u === 'admin' && p === '1234') || (saved !== null && saved === p)) { mostrarVista('vista-agenda'); }
+            else { alert("Usuario o contraseña incorrectos"); }
         }
-
         function ejecutarRegistro() {
             const u = document.getElementById('user-reg').value.trim();
             const p = document.getElementById('pass-reg').value.trim();
             if(u && p) { localStorage.setItem('user_' + u, p); alert("¡Registrado!"); mostrarVista('vista-login'); }
         }
-
-        function cerrarSesion() { currentUser = ""; mostrarVista('vista-login'); }
-
+        function cerrarSesion() { mostrarVista('vista-login'); }
         function añadirTarea() {
             const input = document.getElementById('campo-tarea');
             if(input.value.trim()) {
-                let t = JSON.parse(localStorage.getItem('tareas_'+currentUser) || '[]');
-                t.push({text: input.value.trim(), done: false}); 
-                localStorage.setItem('tareas_'+currentUser, JSON.stringify(t));
+                let t = JSON.parse(localStorage.getItem('tareas_eden') || '[]');
+                t.unshift({text: input.value.trim(), done: false});
+                localStorage.setItem('tareas_eden', JSON.stringify(t));
                 input.value = ''; cargarTareas();
             }
         }
         function cargarTareas() {
             const lista = document.getElementById('lista-tareas'); lista.innerHTML = '';
-            let t = JSON.parse(localStorage.getItem('tareas_'+currentUser) || '[]');
+            let t = JSON.parse(localStorage.getItem('tareas_eden') || '[]');
             t.forEach((tarea, i) => {
                 const item = document.createElement('div'); item.className = 'task-item'; item.id = `nota-${i}`;
-                item.innerHTML = `<input type="checkbox" ${tarea.done?'checked':''} onchange="toggle(${i})"><div class="task-text" style="${tarea.done?'text-decoration:line-through;opacity:0.5':''}">${tarea.text}</div>`;
+                item.innerHTML = `<input type="checkbox" style="width:20px; cursor:pointer;" ${tarea.done?'checked':''} onchange="toggle(${i})"><div class="task-text" style="${tarea.done?'text-decoration:line-through;opacity:0.5':''}">${tarea.text}</div>`;
                 lista.appendChild(item);
             });
         }
         function toggle(i) {
-            let t = JSON.parse(localStorage.getItem('tareas_'+currentUser)); t[i].done = !t[i].done;
-            localStorage.setItem('tareas_'+currentUser, JSON.stringify(t)); cargarTareas();
+            let t = JSON.parse(localStorage.getItem('tareas_eden')); t[i].done = !t[i].done;
+            localStorage.setItem('tareas_eden', JSON.stringify(t)); cargarTareas();
         }
         function borrarMarcados() {
-            let t = JSON.parse(localStorage.getItem('tareas_'+currentUser) || '[]');
-            t.forEach((tarea, i) => { if(tarea.done) document.getElementById(`nota-${i}`).classList.add('arrugando'); });
-            setTimeout(() => { 
-                t = t.filter(tarea => !tarea.done); 
-                localStorage.setItem('tareas_'+currentUser, JSON.stringify(t)); 
-                cargarTareas(); 
-            }, 600);
-        }
-
-        function abrirRanking() {
-            mostrarVista('vista-juego');
-            document.getElementById('vista-ranking').classList.remove('hidden');
-            actualizarTablasRanking();
-        }
-        function cerrarRanking() { document.getElementById('vista-ranking').classList.add('hidden'); salirDelJuego(); }
-
-        function registrarVictoria(nivel) {
-            db.ref('ranking/' + nivel + '/' + currentUser).transaction((w) => (w || 0) + 1);
-        }
-
-        function actualizarTablasRanking() {
-            ['terrestre', 'semidios', 'eden'].forEach(nivel => {
-                db.ref('ranking/' + nivel).orderByValue().limitToLast(10).once('value', snap => {
-                    const tbody = document.querySelector(`#tabla-${nivel} tbody`);
-                    tbody.innerHTML = "";
-                    let p = []; snap.forEach(c => { p.push({name: c.key, wins: c.val()}); });
-                    p.reverse().forEach(x => {
-                        tbody.innerHTML += `<tr><td>${x.name}</td><td>${x.wins}</td></tr>`;
-                    });
-                });
-            });
+            let t = JSON.parse(localStorage.getItem('tareas_eden') || '[]'); let hayMarcados = false;
+            const papelera = document.getElementById('btn-borrar');
+            t.forEach((tarea, i) => { if(tarea.done) { document.getElementById(`nota-${i}`).classList.add('arrugando'); hayMarcados = true; } });
+            if(!hayMarcados) return;
+            papelera.classList.add('papelera-atrapando');
+            setTimeout(() => { papelera.classList.remove('papelera-atrapando'); }, 550);
+            setTimeout(() => { t = t.filter(tarea => !tarea.done); localStorage.setItem('tareas_eden', JSON.stringify(t)); cargarTareas(); }, 600);
         }
 
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
-        let balls = [], bricks = [], powerUps = [], gameInterval, gameActive = false;
-        let paddleX, paddleWidth = 90, score = 0, currentDiff = 'terrestre', isFireBall = false;
+        const menu = document.getElementById("game-over-menu");
+        
+        let balls = [];
+        let paddleWidth = 90, paddleX;
+        let bricks = [], powerUps = [];
+        let score = 0, gameActive = false, gameInterval;
+        let isFireBall = false;
 
-        function abrirMenuDificultad() {
-            mostrarVista('vista-juego');
-            document.getElementById('difficulty-menu').classList.remove('hidden');
-            document.getElementById('game-over-menu').classList.add('hidden');
-        }
-
-        function resetJuego(diff) {
-            currentDiff = diff; score = 0; document.getElementById("game-score").innerText = "SCORE: 0";
-            paddleWidth = 90; paddleX = (canvas.width - paddleWidth) / 2; isFireBall = false;
-            let ballRadius = (diff === 'eden') ? 5 : 8;
-            balls = [{ x: canvas.width/2, y: canvas.height-100, dx: 2.2, dy: -2.2, radius: ballRadius }];
+        function resetVariablesJuego() {
+            menu.classList.add("hidden");
+            canvas.style.cursor = "none";
+            paddleWidth = 90;
+            paddleX = (canvas.width - paddleWidth) / 2;
+            isFireBall = false;
+            score = 0;
+            document.getElementById("game-score").innerText = "SCORE: 0";
+            
+            // VELOCIDAD RETOCADA A 2.1
+            balls = [{ x: canvas.width/2, y: canvas.height-100, dx: 2.1, dy: -2.1, radius: 8 }];
+            
             bricks = [];
-            let rows = (diff === 'terrestre') ? 5 : (diff === 'semidios' ? 8 : 12);
-            let cols = (diff === 'terrestre') ? 7 : (diff === 'semidios' ? 12 : 18);
-            let bW = (canvas.width - 40) / cols, bH = (diff === 'terrestre') ? 20 : 12;
-            for(let c=0; c<cols; c++) {
+            for (let c = 0; c < 7; c++) {
                 bricks[c] = [];
-                for(let r=0; r<rows; r++) {
-                    let type = "normal", life = 1;
-                    if(diff === 'semidios' && Math.random() < 0.2) { type = "hard"; life = 2; }
-                    if(diff === 'eden') {
-                        if(Math.random() < 0.15) { type = "wall"; life = 999; }
-                        else if(Math.random() < 0.3) { type = "hard"; life = 2; }
-                    }
-                    bricks[c][r] = { x: c*(bW+4)+15, y: r*(bH+4)+50, w: bW-4, h: bH-4, status: life, type: type };
-                }
+                for (let r = 0; r < 5; r++) { bricks[c][r] = { x: 0, y: 0, status: 1 }; }
             }
             powerUps = [];
         }
 
-        function draw() {
-            if(!gameActive) return;
-            ctx.clearRect(0,0, canvas.width, canvas.height);
-            let win = true;
-            bricks.forEach(col => col.forEach(b => {
-                if(b.status > 0) {
-                    if(b.type !== "wall") win = false;
-                    ctx.fillStyle = b.type==="wall"?"#888":(b.status===2?"#FFD700":"#FF4444");
-                    ctx.fillRect(b.x, b.y, b.w, b.h);
-                }
-            }));
-            if(win) { endPartida("¡VICTORIA!"); registrarVictoria(currentDiff); return; }
+        document.addEventListener("mousemove", (e) => {
+            if (!gameActive) return;
+            let rect = canvas.getBoundingClientRect();
+            let relX = e.clientX - rect.left;
+            if (relX > 0 && relX < canvas.width) paddleX = relX - paddleWidth / 2;
+        });
 
-            balls.forEach((b, i) => {
-                ctx.beginPath(); ctx.arc(b.x, b.y, b.radius, 0, Math.PI*2);
-                ctx.fillStyle = isFireBall ? "#FFA500" : "#FF0000";
-                ctx.fill(); ctx.closePath();
-                if(b.x + b.dx > canvas.width-b.radius || b.x + b.dx < b.radius) b.dx = -b.dx;
-                if(b.y + b.dy < b.radius) b.dy = -b.dy;
-                else if(b.y + b.dy > canvas.height-80) {
-                    if(b.x > paddleX && b.x < paddleX+paddleWidth) b.dy = -Math.abs(b.dy);
-                    else if(b.y > canvas.height) balls.splice(i, 1);
+        function draw() {
+            if (!gameActive) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            let allBroken = true;
+            for (let c = 0; c < 7; c++) {
+                for (let r = 0; r < 5; r++) {
+                    let b = bricks[c][r];
+                    if (b.status === 1) {
+                        allBroken = false;
+                        b.x = c * 70 + 10; b.y = r * 25 + 50;
+                        ctx.fillStyle = "#FF4444"; ctx.shadowBlur = 8; ctx.shadowColor = "#FF4444";
+                        ctx.fillRect(b.x, b.y, 60, 20);
+                    }
                 }
-                bricks.forEach(col => col.forEach(br => {
-                    if(br.status > 0 && b.x > br.x && b.x < br.x+br.w && b.y > br.y && b.y < br.y+br.h) {
-                        if(!isFireBall || br.type==="wall") b.dy = -b.dy;
-                        if(br.type!=="wall") {
-                            br.status--;
-                            if(br.status===0) {
-                                score++; document.getElementById("game-score").innerText = "SCORE: "+score;
-                                let prob = (currentDiff==='terrestre')?0.15:(currentDiff==='semidios'?0.08:0.04);
-                                if(Math.random()<prob) powerUps.push({x:br.x+br.w/2, y:br.y, type:['P','2','F'][Math.floor(Math.random()*3)]});
-                            }
+            }
+            if(allBroken) endPartida("¡EL REY DEL EDÉN!");
+
+            powerUps.forEach((p, i) => {
+                p.y += 2;
+                ctx.beginPath(); ctx.arc(p.x, p.y, 10, 0, Math.PI*2);
+                ctx.fillStyle = p.type === 'P' ? "#00FFFF" : (p.type === '2' ? "#00FF00" : "#FFA500");
+                ctx.fill(); ctx.closePath();
+                ctx.fillStyle = "black"; ctx.fillText(p.type, p.x-4, p.y+4);
+
+                // RECOGER POWER-UP EN POSICIÓN ELEVADA
+                if(p.y > canvas.height-75 && p.x > paddleX && p.x < paddleX + paddleWidth) {
+                    activarPowerUp(p.type);
+                    powerUps.splice(i, 1);
+                }
+            });
+
+            // PALA SUBIDA A -70px
+            ctx.fillStyle = "#00FFFF"; ctx.shadowBlur = 15; ctx.shadowColor = "#00FFFF";
+            ctx.fillRect(paddleX, canvas.height - 70, paddleWidth, 12);
+
+            balls.forEach((b, index) => {
+                ctx.beginPath(); ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+                ctx.fillStyle = isFireBall ? "#FFA500" : "#FF0000";
+                ctx.shadowBlur = 15; ctx.shadowColor = ctx.fillStyle;
+                ctx.fill(); ctx.closePath();
+
+                bricks.forEach(col => col.forEach(brick => {
+                    if (brick.status === 1 && b.x > brick.x && b.x < brick.x + 60 && b.y > brick.y && b.y < brick.y + 20) {
+                        if(!isFireBall) b.dy = -b.dy;
+                        brick.status = 0;
+                        score++;
+                        document.getElementById("game-score").innerText = "SCORE: " + score;
+                        if(Math.random() < 0.15) {
+                            let types = ['P', '2', 'F'];
+                            powerUps.push({x: brick.x+30, y: brick.y, type: types[Math.floor(Math.random()*3)]});
                         }
                     }
                 }));
+
+                if (b.x + b.dx > canvas.width - b.radius || b.x + b.dx < b.radius) b.dx = -b.dx;
+                if (b.y + b.dy < b.radius) b.dy = -b.dy;
+                // REBOTE EN PALA SUBIDA
+                else if (b.y + b.dy > canvas.height - 80) {
+                    if (b.x > paddleX && b.x < paddleX + paddleWidth) b.dy = -Math.abs(b.dy);
+                    else if (b.y > canvas.height) balls.splice(index, 1);
+                }
                 b.x += b.dx; b.y += b.dy;
             });
 
-            powerUps.forEach((p, i) => {
-                p.y += 2.5; ctx.font = "bold 16px Arial"; ctx.fillStyle = "#00FFFF"; ctx.fillText(p.type, p.x, p.y);
-                if(p.y > canvas.height-75 && p.x > paddleX && p.x < paddleX+paddleWidth) {
-                    if(p.type==='P') { paddleWidth=180; setTimeout(()=>paddleWidth=90, 8000); }
-                    if(p.type==='2') balls.push({x:paddleX+paddleWidth/2, y:canvas.height-100, dx:2.2, dy:-2.2, radius:balls[0].radius});
-                    if(p.type==='F') { isFireBall=true; setTimeout(()=>isFireBall=false, 4000); }
-                    powerUps.splice(i,1);
-                }
-            });
-
-            ctx.fillStyle = "#00FFFF"; ctx.fillRect(paddleX, canvas.height-70, paddleWidth, 12);
             if(balls.length === 0) endPartida("GAME OVER");
         }
 
-        document.addEventListener("mousemove", e => {
-            let r = canvas.getBoundingClientRect();
-            paddleX = e.clientX - r.left - paddleWidth/2;
-        });
-
-        function iniciarJuegoEden(diff) {
-            document.getElementById('difficulty-menu').classList.add('hidden');
-            resetJuego(diff); gameActive = true; gameInterval = setInterval(draw, 10);
+        function activarPowerUp(type) {
+            if(type === 'P') { paddleWidth = 180; setTimeout(() => paddleWidth = 90, 8000); }
+            if(type === '2') { balls.push({ x: paddleX + paddleWidth/2, y: canvas.height-100, dx: -2.1, dy: -2.1, radius: 8 }); }
+            if(type === 'F') { 
+                isFireBall = true; 
+                // BOLA DE FUEGO REDUCIDA A 3 SEG
+                setTimeout(() => isFireBall = false, 3000); 
+            }
         }
 
-        function endPartida(msg) { gameActive = false; clearInterval(gameInterval); document.getElementById("end-title").innerText = msg; document.getElementById("game-over-menu").classList.remove("hidden"); }
+        function endPartida(msg) {
+            gameActive = false; clearInterval(gameInterval);
+            canvas.style.cursor = "auto";
+            document.getElementById("end-title").innerText = msg;
+            menu.classList.remove("hidden");
+        }
+
+        function iniciarJuegoEden() { mostrarVista('vista-juego'); resetVariablesJuego(); gameActive = true; gameInterval = setInterval(draw, 10); }
         function salirDelJuego() { gameActive = false; clearInterval(gameInterval); mostrarVista('vista-agenda'); }
 
         mostrarVista('vista-login');
