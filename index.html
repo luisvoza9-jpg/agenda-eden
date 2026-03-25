@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SISTEMA EDEN</title>
     <style>
-        /* CONFIGURACIÓN DEL FONDO CON TU IMAGEN */
+        /* FONDO CON TU IMAGEN */
         body {
             margin: 0;
             padding: 0;
@@ -13,46 +13,31 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             color: white;
-            /* Imagen de fondo */
+            /* IMPORTANTE: La foto debe llamarse fondo.jpg y estar al lado de este archivo */
             background-image: url('fondo.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             background-repeat: no-repeat;
+            background-color: #121212; /* Color de respaldo por si la foto tarda en cargar */
         }
 
-        /* CAPA OSCURA PARA MEJORAR LEGIBILIDAD */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.3); /* Oscurece un poco la imagen para que el texto resalte */
-            z-index: -1;
-        }
-
-        /* CONTENEDORES (LOGIN, REGISTRO, AGENDA) */
+        /* CAPA PARA QUE EL TEXTO SE LEA BIEN */
         .container {
-            width: 380px;
+            width: 360px;
             text-align: center;
-            background: rgba(20, 20, 20, 0.85); /* Fondo negro traslúcido */
+            background: rgba(15, 15, 15, 0.85); 
             padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px); /* Efecto de cristal esmerilado */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        h1 { margin-top: 0; letter-spacing: 2px; }
-        #vista-login h1 { color: #2196F3; }
-        .eden-title { 
-            color: #00FFFF; 
-            font-style: italic; 
-            font-size: 32px; 
-            font-weight: bold;
-            text-shadow: 2px 2px 10px rgba(0,255,255,0.3);
-        }
+        h1 { margin-top: 0; color: #2196F3; }
+        .eden-title { color: #00FFFF; font-style: italic; font-size: 30px; font-weight: bold; }
 
         input {
             width: 90%;
@@ -60,15 +45,14 @@
             margin: 10px 0;
             border-radius: 10px;
             border: 1px solid #444;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             font-size: 16px;
             outline: none;
         }
-        input:focus { border-color: #2196F3; }
 
         button {
-            width: 97%;
+            width: 98%;
             padding: 12px;
             margin: 15px 0 5px;
             cursor: pointer;
@@ -76,28 +60,15 @@
             border-radius: 10px;
             font-weight: bold;
             font-size: 16px;
-            transition: transform 0.2s, opacity 0.2s;
         }
-        button:active { transform: scale(0.98); }
 
         .btn-blue { background: #2196F3; color: white; }
         .btn-cyan { background: #00FFFF; color: black; }
-        .btn-red { background: #ff4444; color: white; width: auto; padding: 5px 15px; margin: 0; }
+        .btn-red { background: #ff4444; color: white; width: auto; padding: 5px 15px; }
 
         .hidden { display: none; }
-        
-        /* ESTILOS AGENDA */
-        .task-list { text-align: left; max-height: 300px; overflow-y: auto; margin-top: 20px; width: 100%; }
-        .task-item { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            background: rgba(255,255,255,0.05); 
-            padding: 10px; 
-            margin-bottom: 8px; 
-            border-radius: 8px;
-        }
-        .task-item input[type="checkbox"] { width: auto; margin: 0; }
+        .task-list { text-align: left; max-height: 300px; overflow-y: auto; margin-top: 20px; }
+        .task-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -107,28 +78,28 @@
         <input type="text" id="user-in" placeholder="Usuario">
         <input type="password" id="pass-in" placeholder="Contraseña">
         <button class="btn-blue" onclick="validarAcceso()">ENTRAR</button>
-        <p style="cursor:pointer; color:#2196F3; font-size: 14px; margin-top:15px;" onclick="mostrarVista('vista-eden')">¿No tienes cuenta? REGÍSTRATE AQUÍ</p>
+        <p style="cursor:pointer; color:#2196F3; font-size: 14px;" onclick="mostrarVista('vista-eden')">¿No tienes cuenta? REGÍSTRATE AQUÍ</p>
     </div>
 
     <div id="vista-eden" class="container hidden">
         <div class="eden-title">BIENVENIDOS AL EDEN</div>
-        <h3 style="color:#00FFFF; margin-bottom: 20px;">CREAR CUENTA</h3>
+        <h3 style="color:#00FFFF;">REGÍSTRATE</h3>
         <input type="text" id="user-reg" placeholder="Nuevo Usuario">
         <input type="password" id="pass-reg" placeholder="Nueva Contraseña">
-        <button class="btn-cyan" onclick="ejecutarRegistro()">REGISTRAR</button>
+        <button class="btn-cyan" onclick="ejecutarRegistro()">CREAR CUENTA</button>
         <p style="cursor:pointer; color:#00FFFF; font-size: 14px;" onclick="mostrarVista('vista-login')">Volver al Login</p>
     </div>
 
-    <div id="vista-agenda" class="container hidden" style="width: 450px;">
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div id="vista-agenda" class="container hidden" style="width: 420px; background: rgba(10, 10, 10, 0.9);">
+        <div style="display:flex; justify-content: space-between; align-items: center;">
             <h2 style="color:#2196F3; margin:0;">MIS TAREAS</h2>
             <button class="btn-red" onclick="mostrarVista('vista-login')">SALIR</button>
         </div>
-        <div style="display:flex; gap:10px;">
-            <input type="text" id="campo-tarea" placeholder="¿Qué hay que hacer?" style="margin:0;">
+        <div style="display:flex; gap:10px; margin-top:15px;">
+            <input type="text" id="campo-tarea" placeholder="Nueva tarea..." style="margin:0;">
             <button class="btn-blue" style="width:60px; margin:0;" onclick="añadirTarea()">+</button>
         </div>
-        <button style="background:orange; color:white; width: 100%; margin-top: 15px;" onclick="borrarMarcados()">BORRAR COMPLETADAS</button>
+        <button style="background:orange; color:white; width: 100%; margin-top: 10px;" onclick="borrarMarcados()">BORRAR MARCADOS</button>
         <div id="lista-tareas" class="task-list"></div>
     </div>
 
@@ -145,9 +116,7 @@
             const p = document.getElementById('pass-reg').value.trim();
             if(u && p) {
                 localStorage.setItem('user_' + u, p);
-                alert("¡Usuario registrado en este navegador!");
-                document.getElementById('user-reg').value = '';
-                document.getElementById('pass-reg').value = '';
+                alert("¡Cuenta creada!");
                 mostrarVista('vista-login');
             }
         }
@@ -159,7 +128,7 @@
             if ((u === 'admin' && p === '1234') || savedPass === p) {
                 mostrarVista('vista-agenda');
                 cargarTareas();
-            } else { alert("Usuario o contraseña incorrectos"); }
+            } else { alert("Datos incorrectos"); }
         }
 
         function añadirTarea() {
@@ -178,11 +147,7 @@
             lista.innerHTML = '';
             let tareas = JSON.parse(localStorage.getItem('tareas_eden') || '[]');
             tareas.forEach((t, i) => {
-                lista.innerHTML += `
-                    <div class="task-item">
-                        <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
-                        <span style="${t.done ? 'text-decoration: line-through; color: #888;' : ''}">${t.text}</span>
-                    </div>`;
+                lista.innerHTML += `<div class="task-item"><input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">${t.text}</div>`;
             });
         }
 
@@ -190,7 +155,6 @@
             let tareas = JSON.parse(localStorage.getItem('tareas_eden'));
             tareas[i].done = !tareas[i].done;
             localStorage.setItem('tareas_eden', JSON.stringify(tareas));
-            cargarTareas();
         }
 
         function borrarMarcados() {
