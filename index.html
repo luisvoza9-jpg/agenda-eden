@@ -31,22 +31,20 @@
             z-index: 10;
         }
 
-        /* === TÍTULO MODO PELÍCULA (CORREGIDO) === */
         h1 { 
-            color: #00FFFF; 
-            margin-bottom: 20px; 
-            font-size: 32px; 
+            color: #00FFFF; margin-bottom: 20px; font-size: 32px; 
             text-shadow: 0 0 15px #00FFFF;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-            letter-spacing: 2px; 
-            font-weight: bold;
-            line-height: 1.1; 
-            min-height: 110px; 
+            display: flex; flex-direction: column; align-items: center;
+            letter-spacing: 2px; font-weight: bold;
+            line-height: 1.1; min-height: 110px; 
         }
-        /* Forzamos que cada palabra ocupe su propia línea */
         h1 span { display: block; width: 100%; }
+
+        /* LA FRASE QUE FALTABA */
+        .frase-neon {
+            color: #00FFFF; font-size: 14px; text-shadow: 0 0 10px #00FFFF;
+            display: block; margin-top: 20px; text-align: center;
+        }
 
         input {
             width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px;
@@ -54,25 +52,17 @@
             color: white; font-size: 16px; outline: none; text-align: center;
         }
 
-        /* === PUERTA EXIT: FIJA EN EL SITIO DEL PAPELITO === */
         .btn-exit-fixed {
-            position: fixed; 
-            top: 25px; 
-            right: 25px; 
-            color: #ff4444; 
-            cursor: pointer; 
-            border: none; 
-            background: none;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-            z-index: 1000;
-            transition: 0.3s;
+            position: fixed; top: 25px; right: 25px; 
+            color: #ff4444; cursor: pointer; border: none; background: none;
+            display: flex; flex-direction: column; align-items: center;
+            z-index: 1000; transition: 0.3s;
         }
         .btn-exit-fixed:hover { transform: scale(1.2); filter: drop-shadow(0 0 10px #ff0000); }
         .door-icon { font-size: 32px; }
         .exit-text { font-size: 10px; font-weight: bold; }
 
+        /* NOTAS A LA IZQUIERDA (SENTIDO ESCRITURA) */
         .task-input-group { display: flex; gap: 10px; margin-top: 10px; }
         .btn-blue { background: #00FFFF; color: black; width: 55px; font-size: 24px; border-radius: 10px; border: none; cursor: pointer; height: 45px; }
 
@@ -81,8 +71,9 @@
             background: rgba(0, 0, 0, 0.6); margin-bottom: 8px; padding: 12px;
             border-radius: 10px; display: flex; align-items: center;
             border: 1px solid rgba(0, 255, 255, 0.2);
+            text-align: left; 
         }
-        .task-text { flex: 1; margin-left: 10px; }
+        .task-text { flex: 1; margin-left: 10px; color: white; word-break: break-word; text-align: left; }
 
         .btn-trash-central {
             position: fixed; bottom: 30px; right: 30px;
@@ -112,6 +103,7 @@
         <input type="text" id="user-in" placeholder="Usuario">
         <input type="password" id="pass-in" placeholder="Contraseña">
         <button style="background:#00FFFF; color:black; width:100%; height:45px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="validarAcceso()">ENTRAR</button>
+        <span class="frase-neon">¡Un paraíso para tus secretos te espera en el edén!</span>
         <p style="cursor:pointer; color:#ccc; font-size: 12px; margin-top: 20px;" onclick="mostrarVista('vista-eden')">Registrarse</p>
     </div>
 
@@ -143,7 +135,6 @@
             tituloEden.innerHTML = "";
             let l=0, c=0;
             clearInterval(timer);
-            // Pre-creamos los contenedores de línea para que no haya saltos
             lineas.forEach(() => {
                 let s = document.createElement('span');
                 tituloEden.appendChild(s);
@@ -181,13 +172,9 @@
             const u = document.getElementById('user-in').value.trim();
             const p = document.getElementById('pass-in').value.trim();
             const saved = localStorage.getItem('user_' + u);
-
-            // Verificación limpia
             if ((u === 'admin' && p === '1234') || (saved !== null && saved === p)) {
                 mostrarVista('vista-agenda');
-            } else { 
-                alert("Usuario o contraseña incorrectos"); 
-            }
+            } else { alert("Usuario o contraseña incorrectos"); }
         }
 
         function ejecutarRegistro() {
@@ -221,7 +208,7 @@
                 const item = document.createElement('div');
                 item.className = 'task-item';
                 item.id = `nota-${i}`;
-                item.innerHTML = `<input type="checkbox" ${tarea.done?'checked':''} onchange="toggle(${i})"><div class="task-text" style="${tarea.done?'text-decoration:line-through;opacity:0.5':''}">${tarea.text}</div>`;
+                item.innerHTML = `<input type="checkbox" style="width:20px; cursor:pointer;" ${tarea.done?'checked':''} onchange="toggle(${i})"><div class="task-text" style="${tarea.done?'text-decoration:line-through;opacity:0.5':''}">${tarea.text}</div>`;
                 lista.appendChild(item);
             });
         }
