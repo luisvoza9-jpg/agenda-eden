@@ -30,133 +30,83 @@
             z-index: 10;
         }
 
-        /* === ESTILOS DEL TÍTULO GEOMÉTRICO (3 LÍNEAS) === */
+        /* === TÍTULO MODO PELÍCULA === */
         h1 { 
             color: #00FFFF; margin-bottom: 25px; font-size: 28px; 
             text-shadow: 0 0 15px #00FFFF;
             text-align: center;
-            display: flex; flex-direction: column; align-items: center; /* === GEOMETRÍA === */
+            display: flex; flex-direction: column; align-items: center;
             letter-spacing: 2px;
             font-weight: bold;
-        }
-
-        h2 { 
-            color: #00FFFF; margin-bottom: 15px; font-size: 32px; 
-            text-shadow: 0 0 15px #00FFFF;
-            text-align: center;
+            min-height: 4em; 
         }
 
         .frase-neon {
-            color: #00FFFF;
-            font-size: 14px;
-            text-shadow: 0 0 10px #00FFFF;
-            display: block;
-            margin-top: 20px;
-            text-align: center;
+            color: #00FFFF; font-size: 14px; text-shadow: 0 0 10px #00FFFF;
+            display: block; margin-top: 20px; text-align: center;
         }
 
         input {
             width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px;
-            border: 1px solid #00FFFF; 
-            background: rgba(0, 0, 0, 0.6);
-            color: white; font-size: 16px; outline: none;
-            text-align: center;
+            border: 1px solid #00FFFF; background: rgba(0, 0, 0, 0.6);
+            color: white; font-size: 16px; outline: none; text-align: center;
+            height: 45px;
         }
-
-        input:focus { border-color: #00FFFF; box-shadow: 0 0 10px #00FFFF; }
 
         #vista-agenda {
             background: transparent !important;
-            box-shadow: none !important;
             padding: 20px;
+            position: relative;
         }
 
-        #vista-agenda h3 { 
-            color: #00FFFF; text-shadow: 0 0 10px #00FFFF; 
-            text-align: left; margin-bottom: 20px;
+        /* === PUERTA EXIT (DONDE SEÑALASTE) === */
+        .btn-exit-fixed {
+            position: absolute; top: -10px; right: 0px; 
+            color: #ff4444; cursor: pointer; border: none; background: none;
+            display: flex; flex-direction: column; align-items: center;
+            z-index: 100; transition: 0.3s;
         }
+        .btn-exit-fixed:hover { transform: scale(1.1); color: #ff0000; filter: drop-shadow(0 0 5px #ff4444); }
+        .door-icon { font-size: 30px; }
+        .exit-text { font-size: 10px; font-weight: bold; margin-top: -2px; }
 
-        .task-input-group { display: flex; gap: 10px; }
-        #campo-tarea { 
-            text-align: left; 
-            padding-left: 15px;
-            flex: 1;
-            margin: 0;
-        }
-
+        .task-input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        #campo-tarea { text-align: left; padding-left: 15px; flex: 1; margin: 0; }
         .btn-blue { background: #00FFFF; color: black; width: 60px; font-size: 20px; border-radius: 10px; border: none; cursor: pointer; height: 45px; display: flex; justify-content: center; align-items: center; }
 
         .task-list { text-align: left; margin-top: 20px; max-height: 300px; overflow-y: auto; position: relative; }
-        
         .task-item { 
-            background: rgba(0, 0, 0, 0.5); 
-            margin-bottom: 10px; padding: 15px;
+            background: rgba(0, 0, 0, 0.5); margin-bottom: 10px; padding: 15px;
             border-radius: 10px; display: flex; align-items: center;
             border: 1px solid rgba(0, 255, 255, 0.2);
-            transition: all 0.2s ease-out;
-            opacity: 1;
-            transform: scale(1);
         }
         .task-text { flex: 1; margin-left: 10px; color: white; font-size: 16px; }
 
-        .btn-exit-container {
-            float: right; color: #ff4444; cursor: pointer; border: none; background: none;
-            display: flex; flex-direction: column; align-items: center;
-            margin-top: -10px; text-decoration: none;
-        }
-        .btn-exit-container:hover { transform: scale(1.1); color: #ff0000; filter: drop-shadow(0 0 5px #ff4444); }
-        .door-icon { font-size: 26px; }
-        .exit-text { font-size: 9px; font-weight: bold; margin-top: -2px; }
-
-        @keyframes pulsoNeon {
-            0% { filter: drop-shadow(0 0 10px #ff4444); }
-            50% { filter: drop-shadow(0 0 20px #ff0000); }
-            100% { filter: drop-shadow(0 0 10px #ff4444); }
-        }
-
-        /* === PAPELERA FIJA EN ESQUINA INFERIOR DERECHA (PULSO ROJO) === */
+        /* === PAPELERA (PULSO ROJO) === */
         .btn-trash-central {
-            position: fixed; bottom: 30px; right: 30px; /* === UBICACIÓN SEÑALADA === */
+            position: fixed; bottom: 30px; right: 30px;
             background: none; color: #ff4444; font-size: 50px; border: none; 
-            filter: drop-shadow(0 0 10px #ff4444); cursor: pointer;
-            z-index: 100;
-            transition: 0.3s;
+            filter: drop-shadow(0 0 10px #ff4444); cursor: pointer; z-index: 100;
         }
-        .btn-trash-central:hover { 
-            animation: pulsoNeon 1.5s infinite; 
-            transform: scale(1.1); /* === NO SE MUEVE DE SITIO, SOLO AGRANDA === */
-        }
-        
-        .hidden { display: none !important; }
-        button:hover { opacity: 0.8; transition: 0.2s; }
 
-        /* === ANIMACIONES DE LA BOLA DE PAPEL REVISADAS === */
+        .hidden { display: none !important; }
+
+        /* === ANIMACIÓN DE VUELO REAL (CORREGIDA) === */
         @keyframes arrugar {
-            0% { opacity: 1; transform: scale(1); border-radius: 10px; }
-            50% { opacity: 0.9; transform: scale(0.6) rotate(15deg); border-radius: 50%; background: #fff; border-color: #ccc; }
-            100% { opacity: 1; transform: scale(0.2) rotate(0deg); border-radius: 50%; background: #fff; }
+            0% { transform: scale(1); }
+            100% { transform: scale(0.2); border-radius: 50%; background: #fff; }
         }
 
         @keyframes volarALaBasura {
             0% { transform: scale(0.2) translate(0, 0); opacity: 1; }
-            /* Volamos en diagonal hacia abajo-derecha, donde está la papelera */
-            80% { transform: scale(0.15) translate(40vw, 40vh); opacity: 0.8; } 
-            100% { transform: scale(0.0) translate(50vw, 50vh); opacity: 0; }
+            100% { transform: scale(0) translate(0, 70vh); opacity: 0; } /* Vuelo largo hacia la papelera */
         }
 
         .arrugando {
-            /* Primero arrugamos (0.4s) y LUEGO volamos (0.4s) */
-            animation: arrugar 0.4s ease-in-out forwards, volarALaBasura 0.4s ease-in-out 0.4s forwards;
-            position: relative;
-            z-index: 20;
-            overflow: hidden;
-            border-collapse: collapse; /* Ayuda visual al encoger */
+            animation: arrugar 0.4s forwards, volarALaBasura 0.5s 0.4s forwards;
+            position: relative; z-index: 20;
         }
-        
-        .task-list.borrando {
-            overflow: visible; /* Necesario para que la bola "vuele" fuera de la agenda */
-        }
-
+        .borrando { overflow: visible; }
     </style>
 </head>
 <body>
@@ -164,32 +114,20 @@
     <div id="pantalla-oscura" class="overlay"></div>
 
     <div id="vista-login" class="container">
-        <h1>
-            <span>BIENVENIDOS</span>
-            <span>AL</span>
-            <span>EDÉN</span>
-        </h1>
+        <h1 id="titulo-eden"></h1>
         <input type="text" id="user-in" placeholder="Usuario">
         <input type="password" id="pass-in" placeholder="Contraseña">
-        <button style="background:#00FFFF; color:black; width:100%; padding:12px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="validarAcceso()">ENTRAR</button>
+        <button style="background:#00FFFF; color:black; width:100%; height:45px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="validarAcceso()">ENTRAR</button>
         <span class="frase-neon">¡Un paraíso para tus secretos te espera en el edén!</span>
         <p style="cursor:pointer; color:#ccc; font-size: 12px; margin-top: 20px;" onclick="mostrarVista('vista-eden')">Registrarse</p>
     </div>
 
-    <div id="vista-eden" class="container hidden">
-        <h2>REGISTRO</h2>
-        <input type="text" id="user-reg" placeholder="Nuevo usuario">
-        <input type="password" id="pass-reg" placeholder="Contraseña">
-        <button style="background:#00FFFF; color:black; width:100%; padding:12px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="ejecutarRegistro()">GUARDAR</button>
-        <p style="cursor:pointer; color:#ccc; margin-top:20px; font-size: 12px;" onclick="mostrarVista('vista-login')">Volver</p>
-    </div>
-
     <div id="vista-agenda" class="container hidden">
-        <button class="btn-exit-container" onclick="cerrarSesion()">
-            <span style="font-size:30px;">🚪</span>
+        <button class="btn-exit-fixed" onclick="cerrarSesion()">
+            <span class="door-icon">🚪</span>
             <span class="exit-text">EXIT</span>
         </button>
-        <h3>MIS NOTAS</h3>
+        <h3 style="color:#00FFFF; text-align:left; margin-bottom:15px;">MIS NOTAS</h3>
         <div class="task-input-group">
             <input type="text" id="campo-tarea" placeholder="Escribe algo...">
             <button class="btn-blue" onclick="añadirTarea()">+</button>
@@ -203,41 +141,44 @@
         const btnBorrar = document.getElementById('btn-borrar');
         const overlay = document.getElementById('pantalla-oscura');
         const listaTareas = document.getElementById('lista-tareas');
+        const tituloEden = document.getElementById('titulo-eden');
+
+        const lineasTexto = ["BIENVENIDOS", "AL", "EDÉN"];
+        let timerEscritura;
+
+        function animarTitulo() {
+            tituloEden.innerHTML = "";
+            let l = 0, c = 0;
+            clearInterval(timerEscritura);
+            timerEscritura = setInterval(() => {
+                if (l < lineasTexto.length) {
+                    if (c === 0) tituloEden.innerHTML += "<span></span>";
+                    let spans = tituloEden.querySelectorAll("span");
+                    spans[l].innerText += lineasTexto[l][c];
+                    c++;
+                    if (c >= lineasTexto[l].length) { l++; c = 0; if(l < lineasTexto.length) tituloEden.innerHTML += "<br>"; }
+                } else { clearInterval(timerEscritura); }
+            }, 100);
+        }
 
         function mostrarVista(id) {
             document.getElementById('vista-login').classList.add('hidden');
-            document.getElementById('vista-eden').classList.add('hidden');
             document.getElementById('vista-agenda').classList.add('hidden');
             btnBorrar.classList.add('hidden');
             document.getElementById(id).classList.remove('hidden');
-            
-            if (id === 'vista-agenda') {
-                overlay.classList.add('hidden'); 
-                btnBorrar.classList.remove('hidden');
-            } else { overlay.classList.remove('hidden'); }
+            if (id === 'vista-login') animarTitulo();
+            if (id === 'vista-agenda') { overlay.classList.add('hidden'); btnBorrar.classList.remove('hidden'); }
+            else { overlay.classList.remove('hidden'); }
         }
 
         function validarAcceso() {
             const u = document.getElementById('user-in').value.trim();
             const p = document.getElementById('pass-in').value.trim();
-            const savedPass = localStorage.getItem('user_' + u);
-            if ((u === 'admin' && p === '1234') || (savedPass && savedPass === p)) {
-                mostrarVista('vista-agenda');
-                cargarTareas();
-            } else { alert("Error"); }
+            if ((u === 'admin' && p === '1234')) { mostrarVista('vista-agenda'); cargarTareas(); }
+            else { alert("Error"); }
         }
 
         function cerrarSesion() { mostrarVista('vista-login'); }
-
-        function ejecutarRegistro() {
-            const u = document.getElementById('user-reg').value.trim();
-            const p = document.getElementById('pass-reg').value.trim();
-            if(u && p) {
-                localStorage.setItem('user_' + u, p);
-                alert("Registrado");
-                mostrarVista('vista-login');
-            }
-        }
 
         function añadirTarea() {
             const input = document.getElementById('campo-tarea');
@@ -257,9 +198,7 @@
                 const item = document.createElement('div');
                 item.className = 'task-item';
                 item.id = `nota-${i}`; 
-                item.innerHTML = `
-                    <input type="checkbox" style="width:20px; margin:0; cursor:pointer;" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
-                    <div class="task-text" style="${t.done ? 'text-decoration:line-through; opacity:0.5;' : ''}">${t.text}</div>`;
+                item.innerHTML = `<input type="checkbox" style="width:20px; cursor:pointer;" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})"><div class="task-text" style="${t.done ? 'text-decoration:line-through; opacity:0.5;' : ''}">${t.text}</div>`;
                 listaTareas.appendChild(item);
             });
         }
@@ -273,30 +212,16 @@
 
         function borrarMarcados() {
             let tareas = JSON.parse(localStorage.getItem('tareas_eden') || '[]');
-            const indicesABorrar = tareas.reduce((acc, t, i) => {
-                if (t.done) acc.push(i);
-                return acc;
-            }, []);
-
-            if (indicesABorrar.length === 0) return;
-
+            const indices = tareas.reduce((acc, t, i) => { if (t.done) acc.push(i); return acc; }, []);
+            if (indices.length === 0) return;
             listaTareas.classList.add('borrando');
-
-            indicesABorrar.forEach(index => {
-                const elementoNota = document.getElementById(`nota-${index}`);
-                if (elementoNota) {
-                    elementoNota.classList.add('arrugando');
-                }
-            });
-
-            // Esperamos el tiempo total de las dos animaciones encadenadas (0.4s + 0.4s = 0.8s)
+            indices.forEach(idx => document.getElementById(`nota-${idx}`).classList.add('arrugando'));
             setTimeout(() => {
                 tareas = tareas.filter(t => !t.done);
                 localStorage.setItem('tareas_eden', JSON.stringify(tareas));
                 cargarTareas();
                 listaTareas.classList.remove('borrando');
-                
-            }, 800); 
+            }, 900);
         }
 
         mostrarVista('vista-login');
