@@ -35,8 +35,8 @@
             color: #00FFFF; margin-bottom: 20px; font-size: 28px; 
             text-shadow: 0 0 15px #00FFFF;
             text-align: center;
-            min-height: 1.2em; /* Mantiene el espacio mientras se escribe */
-            letter-spacing: 1px; /* Un poco de aire entre letras estilo peli */
+            min-height: 1.2em;
+            letter-spacing: 1.5px; /* === CORRECCIÓN: UN PELÍN MÁS DE ESPACIO GENERAL === */
         }
 
         h2 { 
@@ -54,12 +54,14 @@
             text-align: center;
         }
 
+        /* === ALTURA DEFINIDA PARA INPUTS === */
         input {
             width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px;
             border: 1px solid #00FFFF; 
             background: rgba(0, 0, 0, 0.6);
             color: white; font-size: 16px; outline: none;
             text-align: center;
+            height: 45px; /* === ALTURA ESTÁNDAR PARA INPUTS === */
         }
 
         #vista-agenda {
@@ -73,14 +75,21 @@
             text-align: left; margin-bottom: 20px;
         }
 
-        .task-input-group { display: flex; gap: 10px; }
+        .task-input-group { display: flex; gap: 10px; align-items: center; /* === CENTRAMOS ELEMENTOS VERTICALMENTE === */ }
         #campo-tarea { 
             text-align: left; 
             padding-left: 15px;
             flex: 1;
+            height: 45px; /* === CORRECCIÓN: MISMO GROSOR QUE EL BOTÓN === */
+            margin: 0; /* === QUITAMOS MARGINS AQUÍ PARA NO DESCUADRAR === */
         }
 
-        .btn-blue { background: #00FFFF; color: black; width: 60px; font-size: 20px; border-radius: 10px; border: none; cursor: pointer; }
+        /* === BOTÓN BLUE: MISMO GROSOR QUE EL INPUT === */
+        .btn-blue { 
+            background: #00FFFF; color: black; width: 60px; font-size: 20px; border-radius: 10px; border: none; cursor: pointer; 
+            height: 45px; /* === CORRECCIÓN: MISMO GROSOR QUE EL INPUT === */
+            display: flex; justify-content: center; align-items: center; /* === CENTRAMOS EL + DENTRO === */
+        }
 
         .task-list { text-align: left; margin-top: 20px; max-height: 300px; overflow-y: auto; position: relative; }
         
@@ -95,11 +104,16 @@
         }
         .task-text { flex: 1; margin-left: 10px; color: white; font-size: 16px; }
 
+        /* === BOTÓN EXIT: MÁS GRANDE === */
         .btn-exit-container {
             float: right; color: #ff4444; cursor: pointer; border: none; background: none;
             display: flex; flex-direction: column; align-items: center;
+            margin-top: -10px; /* === UN POQUITO MÁS DE AIRE ARRIBA === */
+            transform: scale(1.5); /* === CORRECCIÓN: UN 50% MÁS GRANDE === */
         }
-        .exit-text { font-size: 10px; font-weight: bold; }
+        .btn-exit-container:hover { transform: scale(1.6); opacity: 0.9; }
+        .door-icon { font-size: 30px; } /* === EMOJI MÁS GRANDE === */
+        .exit-text { font-size: 8px; font-weight: bold; margin-top: -1px; }
 
         @keyframes pulsoNeon {
             0% { filter: drop-shadow(0 0 10px #ff4444); }
@@ -122,7 +136,7 @@
         .hidden { display: none !important; }
         button:hover { opacity: 0.8; transition: 0.2s; }
 
-        /* === ANIMACIONES DE LA BOLA DE PAPEL REVISADAS === */
+        /* === ANIMACIONES DE LA BOLA DE PAPEL === */
         @keyframes arrugar {
             0% { opacity: 1; transform: scale(1); border-radius: 10px; }
             50% { opacity: 0.9; transform: scale(0.6) rotate(15deg); border-radius: 50%; background: #fff; border-color: #ccc; }
@@ -157,7 +171,7 @@
         <h1 id="titulo-eden"></h1>
         <input type="text" id="user-in" placeholder="Usuario">
         <input type="password" id="pass-in" placeholder="Contraseña">
-        <button style="background:#00FFFF; color:black; width:100%; padding:12px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="validarAcceso()">ENTRAR</button>
+        <button style="background:#00FFFF; color:black; width:100%; height: 45px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="validarAcceso()">ENTRAR</button>
         <span class="frase-neon">¡Un paraíso para tus secretos te espera en el edén!</span>
         <p style="cursor:pointer; color:#ccc; font-size: 12px; margin-top: 20px;" onclick="mostrarVista('vista-eden')">Registrarse</p>
     </div>
@@ -166,13 +180,13 @@
         <h2>REGISTRO</h2>
         <input type="text" id="user-reg" placeholder="Nuevo usuario">
         <input type="password" id="pass-reg" placeholder="Contraseña">
-        <button style="background:#00FFFF; color:black; width:100%; padding:12px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="ejecutarRegistro()">GUARDAR</button>
+        <button style="background:#00FFFF; color:black; width:100%; height: 45px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="ejecutarRegistro()">GUARDAR</button>
         <p style="cursor:pointer; color:#ccc; margin-top:20px; font-size: 12px;" onclick="mostrarVista('vista-login')">Volver</p>
     </div>
 
     <div id="vista-agenda" class="container hidden">
-        <button class="btn-exit-container" onclick="cerrarSesion()">
-            <span style="font-size:30px;">🚪</span>
+        <button class="btn-exit-container" onclick="cerrarSesion()" title="Cerrar Sesión">
+            <span class="door-icon">🚪</span>
             <span class="exit-text">EXIT</span>
         </button>
         <h3>MIS NOTAS</h3>
@@ -191,31 +205,27 @@
         const listaTareas = document.getElementById('lista-tareas');
         const tituloEden = document.getElementById('titulo-eden');
 
-        // === NUEVA FUNCIÓN: ANIMACIÓN CINEMATOGRÁFICA DE ESCRITURA ===
-        const textoAEEscribir = "BIENVENIDO AL EDÉN";
+        // === NUEVA FUNCIÓN: ANIMACIÓN CINEMATOGRÁFICA DE ESCRITURA CON ESPACIOS CORREGIDOS ===
+        const textoAEEscribir = "B I E N V E N I D O S   A L   E D É N"; // === CORRECCIÓN: ESPACIOS AÑADIDOS ===
         let indiceLetra = 0;
         let timerEscritura;
 
         function animarTitulo() {
-            // Limpiamos el título y el timer antes de empezar
             tituloEden.innerText = "";
             indiceLetra = 0;
             clearInterval(timerEscritura);
 
-            // Creamos el timer para escribir letra por letra
             timerEscritura = setInterval(() => {
                 if (indiceLetra < textoAEEscribir.length) {
                     tituloEden.innerText += textoAEEscribir[indiceLetra];
                     indiceLetra++;
                     
-                    // Pequeño efecto de brillo neón en cada letra (opcional, pero queda top)
                     tituloEden.style.textShadow = `0 0 ${15 + (indiceLetra)}px #00FFFF`;
                 } else {
-                    // Fin de la escritura, mantenemos el neón potente
                     clearInterval(timerEscritura);
                     tituloEden.style.textShadow = "0 0 15px #00FFFF";
                 }
-            }, 80); // Velocidad de escritura (80ms por letra está bien para peli)
+            }, 80); 
         }
 
         function mostrarVista(id) {
@@ -226,7 +236,7 @@
             document.getElementById(id).classList.remove('hidden');
             
             if (id === 'vista-login') {
-                animarTitulo(); // Arrancamos la animación cinematográfica al volver al login
+                animarTitulo(); 
             }
 
             if (id === 'vista-agenda') {
@@ -307,7 +317,6 @@
                 }
             });
 
-            // Esperamos el tiempo total de las dos animaciones encadenadas (0.4s + 0.4s = 0.8s)
             setTimeout(() => {
                 tareas = tareas.filter(t => !t.done);
                 localStorage.setItem('tareas_eden', JSON.stringify(tareas));
@@ -317,7 +326,6 @@
             }, 800); 
         }
 
-        // Inicializar mostrando login y arrancando la animación cinematográfica
         mostrarVista('vista-login');
     </script>
 </body>
