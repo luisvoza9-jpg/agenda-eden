@@ -38,8 +38,9 @@
         .btn-trash-central { position: fixed; bottom: 30px; right: 30px; background: none; color: #ff4444; font-size: 50px; border: none; filter: drop-shadow(0 0 10px #ff4444); cursor: pointer; z-index: 100; }
         .hidden { display: none !important; }
         
-        /* AJUSTES NUEVOS */
-        .settings-card { background: rgba(0,0,0,0.85); padding: 20px; border-radius: 20px; border: 1px solid #00FFFF; text-align: left; }
+        /* AJUSTES */
+        .settings-card { background: rgba(0,0,0,0.85); padding: 20px; border-radius: 20px; border: 1px solid #00FFFF; text-align: left; position: relative; }
+        .btn-close-settings { position: absolute; top: 10px; right: 15px; color: #ff4444; font-size: 24px; cursor: pointer; font-weight: bold; }
         .setting-row { margin: 15px 0; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
         .social-btn { width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; }
         
@@ -51,6 +52,7 @@
         
         #vista-juego { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('fondo-nubes.jpg'); background-size: cover; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
         #gameCanvas { border: 3px solid #00FFFF; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 30px #00FFFF; cursor: none; }
+        .btn-game-return { position: fixed; top: 25px; left: 25px; color: #00FFFF; cursor: pointer; border: none; background: none; z-index: 1002; }
         .menu-eden { position: absolute; background: rgba(0,0,0,0.95); border: 2px solid #00FFFF; padding: 30px; border-radius: 20px; text-align: center; z-index: 1010; width: 340px; }
         .game-btn-neon { background: none; border: 1px solid #00FFFF; color: #00FFFF; padding: 10px 20px; margin: 10px auto; border-radius: 10px; cursor: pointer; width: 100%; }
     </style>
@@ -93,7 +95,7 @@
         <h2 style="color:#00FFFF; margin-bottom:15px;">REGISTRO</h2>
         <input type="text" id="user-reg" placeholder="Nuevo usuario">
         <input type="password" id="pass-reg" placeholder="Contraseña">
-        <input type="number" id="age-reg" placeholder="Tu edad">
+        <input type="number" id="age-reg" placeholder="Edad (opcional)" onfocus="this.placeholder=''" onblur="this.placeholder='Edad (opcional)'">
         <button style="background:#00FFFF; color:black; width:100%; height:45px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="ejecutarRegistro()">GUARDAR</button>
         <p style="cursor:pointer; color:#ccc; margin-top:20px;" onclick="mostrarVista('vista-login')">Volver</p>
     </div>
@@ -108,8 +110,9 @@
     </div>
 
     <div id="vista-ajustes" class="container hidden">
-        <h2 style="color:#00FFFF; margin-bottom:20px;">AJUSTES</h2>
         <div class="settings-card">
+            <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
+            <h2 style="color:#00FFFF; margin-bottom:20px; text-align:center;">AJUSTES</h2>
             <div class="setting-row">
                 <span>Volumen Sonido</span>
                 <input type="range" id="vol-range" min="0" max="1" step="0.1" value="0.5" style="width:100px;" onchange="ajustarVolumen(this.value)">
@@ -122,15 +125,14 @@
             <p style="font-size:12px; color:#00FFFF; margin-bottom:5px;">Editar Perfil</p>
             <input type="text" id="edit-user" placeholder="Cambiar nombre">
             <input type="password" id="edit-pass" placeholder="Nueva contraseña">
-            <input type="number" id="edit-age" placeholder="Edad">
+            <input type="number" id="edit-age" placeholder="Edad (opcional)" onfocus="this.placeholder=''" onblur="this.placeholder='Edad (opcional)'">
             <button class="game-btn-neon" onclick="actualizarPerfil()">GUARDAR CAMBIOS</button>
         </div>
-        <p style="cursor:pointer; color:#ccc; margin-top:20px;" onclick="mostrarVista('vista-agenda')">Volver a Notas</p>
     </div>
 
     <div id="vista-juego" class="hidden">
         <button class="btn-game-return" onclick="salirDelJuego()">
-            <span style="font-size:26px">🚪</span><span style="font-size:9px; font-weight:bold; color:#00FFFF">RETORNAR</span>
+            <span style="font-size:32px">🚪</span>
         </button>
         <div id="game-score">€Eden€: 0</div>
         <canvas id="gameCanvas" width="500" height="500"></canvas>
@@ -255,13 +257,11 @@
         }
 
         function actualizarPerfil() {
-            const newU = document.getElementById('edit-user').value.trim();
             const newP = document.getElementById('edit-pass').value.trim();
             const newA = document.getElementById('edit-age').value;
             let updates = {};
             if(newP) updates.password = newP;
             if(newA) updates.age = newA;
-            
             if(Object.keys(updates).length > 0) {
                 db.ref('usuarios/' + currentUser).update(updates).then(() => {
                     alert("Perfil actualizado");
@@ -272,7 +272,6 @@
 
         function cerrarSesion() { reproducir('click'); currentUser = ""; mostrarVista('vista-login'); }
 
-        // --- FUNCIONES AGENDA (No tocadas) ---
         function añadirTarea() {
             reproducir('click');
             const input = document.getElementById('campo-tarea');
@@ -308,7 +307,6 @@
             }, 600);
         }
 
-        // --- FUNCIONES JUEGO (No tocadas) ---
         function abrirRanking() {
             reproducir('click'); mostrarVista('vista-juego');
             document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden'));
@@ -327,7 +325,7 @@
         const ctx = canvas.getContext("2d");
         const menuGameOver = document.getElementById("game-over-menu");
         const menuDifficulty = document.getElementById("difficulty-menu");
-        let balls = [], bricks = [], powerUps = [], paddleWidth = 90, paddleX, score = 0, gameActive = false, gameInterval, isFireBall = false, currentDifficulty = 'terrestre';
+        let balls = [], bricks = [], paddleWidth = 90, paddleX, score = 0, gameActive = false, gameInterval, isFireBall = false, currentDifficulty = 'terrestre';
 
         function abrirMenuDificultad() { reproducir('click'); mostrarVista('vista-juego'); document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden')); menuDifficulty.classList.remove('hidden'); }
         function iniciarJuegoEden(diff) { reproducir('click'); resetVariablesJuego(diff); gameActive = true; gameInterval = setInterval(draw, 10); }
@@ -355,7 +353,6 @@
                     bricks[c][r] = { x: 0, y: 0, status: life, type: type, w: bw - 4, h: bh - 4 };
                 }
             }
-            powerUps = [];
         }
 
         document.addEventListener("mousemove", (e) => {
