@@ -14,131 +14,139 @@
             align-items: center;
             font-family: 'Segoe UI', sans-serif;
             color: white;
-            /* Fondo inicial */
             background-image: url('fondo.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            background-color: #000;
-            transition: background-image 1s ease-in-out, filter 1.2s ease-in-out;
+            transition: background-image 1s ease;
+            position: relative;
         }
 
-        /* ESTO HACE QUE EL FONDO SE VUELVA AZUL AL ENTRAR */
-        .tinte-azul {
-            filter: hue-rotate(160deg) saturate(1.5) brightness(0.8);
+        /* CAPA AZUL SUAVE PARA EL INTERIOR */
+        body.interior::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 20, 50, 0.4); /* Azul marino muy transparente */
+            z-index: -1;
         }
 
+        /* CONTENEDOR GRIS CLARITO */
         .container {
-            width: 380px; 
+            width: 350px; 
             text-align: center;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 30px;
-            border-radius: 25px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.9);
-            backdrop-filter: blur(12px);
+            background: rgba(60, 60, 60, 0.85); 
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1;
         }
 
-        h1 { color: #00FFFF; margin-bottom: 25px; letter-spacing: 2px; }
+        h1 { color: #00FFFF; margin-bottom: 20px; font-size: 22px; }
         
         input {
             width: 85%;
-            padding: 14px;
+            padding: 10px;
             margin: 10px 0;
-            border-radius: 12px;
-            border: 1px solid #333;
-            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            font-size: 16px; /* TAMAÑO ORIGINAL */
+            font-size: 16px;
             outline: none;
         }
 
         button {
-            padding: 14px;
+            padding: 10px;
             cursor: pointer;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
             transition: 0.3s;
         }
 
         .btn-blue { background: #2196F3; color: white; width: 100%; }
         .btn-cyan { background: #00FFFF; color: black; width: 100%; }
-        .btn-red { background: #ff4444; color: white; padding: 6px 15px; font-size: 11px; border-radius: 8px; }
+        .btn-red { background: #ff4444; color: white; padding: 4px 10px; font-size: 10px; }
 
         .hidden { display: none; }
 
         .task-list { 
             text-align: left; 
-            max-height: 380px; 
+            max-height: 350px; 
             overflow-y: auto; 
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
+        /* NOTA COMPACTA Y ALINEADA A LA IZQUIERDA */
         .task-item { 
             display: flex; 
             align-items: center; 
-            background: rgba(255, 255, 255, 0.07);
-            margin-bottom: 10px;
-            padding: 14px;
-            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 6px;
+            padding: 8px 12px;
+            border-radius: 8px;
             border-left: 3px solid #00FFFF;
-            animation: slideInLeft 0.5s ease-out forwards;
+            animation: slideIn 0.3s ease-out forwards;
         }
 
         .task-text {
-            font-size: 18px; /* TAMAÑO ORIGINAL */
-            margin-left: 15px;
+            font-size: 18px; 
+            text-align: left; /* Todo a la izquierda */
+            margin-left: 10px;
             flex-grow: 1;
             word-break: break-word;
+            color: #fff;
         }
 
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-50px); }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
             to { opacity: 1; transform: translateX(0); }
         }
 
         input[type="checkbox"] {
-            transform: scale(1.4);
+            transform: scale(1.1);
             cursor: pointer;
         }
 
-        .task-list::-webkit-scrollbar { width: 4px; }
-        .task-list::-webkit-scrollbar-thumb { background: #00FFFF; border-radius: 10px; }
+        .task-list::-webkit-scrollbar { width: 3px; }
+        .task-list::-webkit-scrollbar-thumb { background: #00FFFF; }
     </style>
 </head>
-<body>
+<body id="cuerpo">
 
     <div id="vista-login" class="container">
         <h1>SISTEMA EDEN</h1>
         <input type="text" id="user-in" placeholder="Usuario">
         <input type="password" id="pass-in" placeholder="Contraseña">
         <button class="btn-cyan" onclick="validarAcceso()">ENTRAR</button>
-        <p style="cursor:pointer; color:#2196F3; margin-top:20px; font-size: 13px;" onclick="mostrarVista('vista-eden')">¿No tienes cuenta? REGÍSTRATE</p>
+        <p style="cursor:pointer; color:#2196F3; margin-top:15px; font-size: 12px;" onclick="mostrarVista('vista-eden')">REGISTRARSE</p>
     </div>
 
     <div id="vista-eden" class="container hidden">
-        <h2 style="color:#00FFFF;">REGISTRO</h2>
+        <h2 style="color:#00FFFF; font-size: 20px;">REGISTRO</h2>
         <input type="text" id="user-reg" placeholder="Nuevo usuario">
         <input type="password" id="pass-reg" placeholder="Contraseña">
         <button class="btn-blue" onclick="ejecutarRegistro()">GUARDAR</button>
-        <p style="cursor:pointer; color:#00FFFF; margin-top:15px; font-size: 13px;" onclick="mostrarVista('vista-login')">Volver</p>
+        <p style="cursor:pointer; color:#ccc; margin-top:15px; font-size: 12px;" onclick="mostrarVista('vista-login')">Volver</p>
     </div>
 
     <div id="vista-agenda" class="container hidden">
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="color:#00FFFF; margin:0;">MIS NOTAS</h3>
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="color:#00FFFF; margin:0; font-size: 16px;">MIS NOTAS</h3>
             <button class="btn-red" onclick="cerrarSesion()">SALIR</button>
         </div>
         
-        <div style="display:flex; gap:8px;">
-            <input type="text" id="campo-tarea" placeholder="¿Qué hay de nuevo?" style="margin:0;">
-            <button class="btn-blue" style="width:55px; margin:0;" onclick="añadirTarea()">+</button>
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="campo-tarea" placeholder="Nueva nota..." style="margin:0; font-size: 14px;">
+            <button class="btn-blue" style="width:45px; margin:0;" onclick="añadirTarea()">+</button>
         </div>
 
         <div id="lista-tareas" class="task-list"></div>
-        <button style="background:transparent; color:#666; border:1px solid #333; width: 100%; margin-top: 15px; font-size: 10px;" onclick="borrarMarcados()">BORRAR TAREAS LISTAS</button>
+        <button style="background:transparent; color:#bbb; border:1px solid #555; width: 100%; margin-top: 15px; font-size: 9px; cursor:pointer;" onclick="borrarMarcados()">LIMPIAR</button>
     </div>
 
     <script>
@@ -153,20 +161,18 @@
             const u = document.getElementById('user-in').value.trim();
             const p = document.getElementById('pass-in').value.trim();
             const savedPass = localStorage.getItem('user_' + u);
-            
             if ((u === 'admin' && p === '1234') || savedPass === p) {
-                // CAMBIO A FONDO GALÁCTICO Y TINTE AZULADO
-                document.body.style.backgroundImage = "url('fondo1.jpg')"; 
-                document.body.classList.add('tinte-azul'); 
+                // CAMBIO A FONDO1.JPG Y CAPA AZUL
+                document.getElementById('cuerpo').style.backgroundImage = "url('fondo1.jpg')"; 
+                document.getElementById('cuerpo').classList.add('interior'); 
                 mostrarVista('vista-agenda');
                 cargarTareas();
-            } else { alert("Usuario o contraseña incorrectos"); }
+            } else { alert("Datos incorrectos"); }
         }
 
         function cerrarSesion() {
-            // VOLVER AL FONDO DEL ATARDECER Y QUITAR AZUL
-            document.body.style.backgroundImage = "url('fondo.jpg')";
-            document.body.classList.remove('tinte-azul');
+            document.getElementById('cuerpo').style.backgroundImage = "url('fondo.jpg')";
+            document.getElementById('cuerpo').classList.remove('interior'); 
             mostrarVista('vista-login');
         }
 
@@ -175,7 +181,7 @@
             const p = document.getElementById('pass-reg').value.trim();
             if(u && p) {
                 localStorage.setItem('user_' + u, p);
-                alert("¡Usuario registrado con éxito!");
+                alert("Usuario guardado");
                 mostrarVista('vista-login');
             }
         }
@@ -199,7 +205,7 @@
                 lista.innerHTML += `
                     <div class="task-item">
                         <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
-                        <div class="task-text" style="${t.done ? 'text-decoration: line-through; color: #555;' : ''}">${t.text}</div>
+                        <div class="task-text" style="${t.done ? 'text-decoration: line-through; color: #aaa;' : ''}">${t.text}</div>
                     </div>`;
             });
         }
