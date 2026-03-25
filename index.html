@@ -8,60 +8,103 @@
         body {
             margin: 0; padding: 0; height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            font-family: 'Segoe UI', sans-serif; color: white;
-            background-image: url('fondo.jpg'); background-size: cover;
-            background-position: center; background-attachment: fixed;
-            transition: background-image 1s ease; position: relative;
+            font-family: 'Segoe UI', sans-serif;
+            /* CAMBIA AQUÍ TU FONDO A NUBES/CIELO */
+            background-image: url('fondo-nubes.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            transition: background-image 1s ease;
+            position: relative;
             overflow: hidden;
         }
 
-        body.interior::before {
+        /* Capa sutil para aclarar el fondo si es necesario */
+        body::before {
             content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 20, 50, 0.4); z-index: -1;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: -1;
         }
 
-        /* --- CONTENEDOR TRANSPARENTE PARA LOGIN --- */
+        /* --- CONTENEDOR TOTALMENTE INVISIBLE --- */
         .container {
-            width: 350px; text-align: center;
-            background: rgba(0, 0, 0, 0); /* TRANSPARENTE TOTAL */
-            padding: 25px; border-radius: 20px;
+            width: 350px; 
+            text-align: center;
+            background: transparent !important;
+            padding: 25px;
             z-index: 1;
         }
 
-        /* CONTENEDOR CON FONDO (Solo para la agenda, para que se lea bien) */
-        .container-agenda {
-            background: rgba(45, 45, 45, 0.9) !important;
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-        }
+        h1 { color: #2196F3; margin-bottom: 20px; font-size: 26px; text-shadow: 1px 1px 3px rgba(255,255,255,0.8); }
+        h3 { color: #2196F3 !important; margin: 0; font-size: 18px; }
 
-        h1 { color: #00FFFF; margin-bottom: 20px; font-size: 26px; text-shadow: 0 0 10px rgba(0,255,255,0.4); }
-        
         input {
-            width: 85%; padding: 10px; margin: 10px 0; border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.2); background: rgba(255, 255, 255, 0.1);
-            color: white; font-size: 16px; outline: none;
+            width: 85%; padding: 12px; margin: 10px 0; border-radius: 10px;
+            border: 1px solid rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.8) !important;
+            color: #333; font-size: 16px; outline: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         button { padding: 10px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; transition: 0.3s; }
-        .btn-blue { background: #2196F3; color: white; width: 100%; }
-        .btn-cyan { background: #00FFFF; color: black; width: 100%; }
-        .btn-red { background: #ff4444; color: white; padding: 6px 12px; font-size: 11px; }
+        .btn-blue { background: #2196F3; color: white; width: 100%; box-shadow: 0 4px 10px rgba(33, 150, 243, 0.2); }
+        .btn-cyan { background: #00BCD4; color: white; width: 100%; }
+        .btn-red { background: #ff4444; color: white; padding: 6px 12px; font-size: 11px; border-radius: 20px; }
 
         .hidden { display: none; }
 
-        /* ESTILOS AGENDA (LOS QUE ARREGLAMOS) */
-        .task-list { text-align: left !important; max-height: 320px; overflow-y: auto; margin-top: 15px; }
+        /* === ESTILOS DE LAS NOTAS FLOTANTES === */
+        .task-list { 
+            text-align: left !important; 
+            max-height: 400px; 
+            overflow-y: auto; margin-top: 20px; 
+        }
+
         .task-item { 
             display: flex !important; align-items: center !important; justify-content: flex-start !important;
-            background: rgba(255, 255, 255, 0.1); margin-bottom: 8px; padding: 12px !important;
-            border-radius: 10px; border-left: 4px solid #00FFFF;
+            background: white !important; 
+            margin-bottom: 12px; 
+            padding: 14px !important;
+            border-radius: 12px;
+            /* SOMBRA PARA QUE FLOTEN SOBRE EL CIELO */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.07) !important;
+            border: 1px solid rgba(0,0,0,0.02) !important;
+            transition: 0.3s;
         }
-        .task-text { flex: 1 !important; text-align: left !important; margin-left: 12px !important; font-size: 15px !important; line-height: 1.5 !important; word-break: break-word !important; color: #fff !important; }
-        input[type="checkbox"] { width: 18px !important; height: 18px !important; flex-shrink: 0 !important; cursor: pointer; }
 
-        .frase-secreta { font-size: 12px; color: #bbb; margin-top: 25px; margin-bottom: 10px; font-style: italic; }
+        .task-item:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important; }
+
+        .task-text { 
+            flex: 1 !important; text-align: left !important; 
+            margin-left: 12px !important; font-size: 15px !important; 
+            line-height: 1.4 !important; word-break: break-word !important; 
+            color: #444 !important; 
+        }
+
+        input[type="checkbox"] { 
+            width: 18px !important; height: 18px !important; 
+            flex-shrink: 0 !important; cursor: pointer; 
+            accent-color: #2196F3;
+        }
+
+        .frase-secreta { font-size: 12px; color: #555; margin-top: 25px; margin-bottom: 10px; font-style: italic; }
+
+        /* === ICONO BASURA 🗑️ === */
+        .btn-trash {
+            background: transparent !important;
+            color: #ff4444 !important;
+            font-size: 28px !important;
+            padding: 10px !important;
+            width: fit-content;
+            margin: 20px auto 0 auto !important;
+            display: block;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .btn-trash:hover { transform: scale(1.2) rotate(10deg); filter: drop-shadow(0 0 5px rgba(255,0,0,0.2)); }
+
+        .task-list::-webkit-scrollbar { width: 4px; }
+        .task-list::-webkit-scrollbar-thumb { background: #2196F3; border-radius: 10px; }
     </style>
 </head>
 <body id="cuerpo">
@@ -75,27 +118,28 @@
         <p style="cursor:pointer; color:#2196F3; font-size: 12px;" onclick="mostrarVista('vista-eden')">REGISTRARSE</p>
     </div>
 
-    <div id="vista-eden" class="container">
-        <div class="hidden" id="reg-box">
-            <h2 style="color:#00FFFF; font-size: 20px;">REGISTRO</h2>
-            <input type="text" id="user-reg" placeholder="Nuevo usuario">
-            <input type="password" id="pass-reg" placeholder="Contraseña">
-            <button class="btn-blue" onclick="ejecutarRegistro()">GUARDAR</button>
-            <p style="cursor:pointer; color:#ccc; margin-top:15px; font-size: 12px;" onclick="mostrarVista('vista-login')">Volver</p>
-        </div>
+    <div id="vista-eden" class="container hidden">
+        <h2 style="color:#2196F3; font-size: 20px;">REGISTRO</h2>
+        <input type="text" id="user-reg" placeholder="Nuevo usuario">
+        <input type="password" id="pass-reg" placeholder="Contraseña">
+        <button class="btn-blue" onclick="ejecutarRegistro()">GUARDAR</button>
+        <p style="cursor:pointer; color:#777; margin-top:15px; font-size: 12px;" onclick="mostrarVista('vista-login')">Volver</p>
     </div>
 
-    <div id="vista-agenda" class="container container-agenda hidden">
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="color:#00FFFF; margin:0; font-size: 18px;">MIS NOTAS</h3>
+    <div id="vista-agenda" class="container hidden">
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="margin:0;">MIS NOTAS</h3>
             <button class="btn-red" onclick="cerrarSesion()">SALIR</button>
         </div>
+        
         <div style="display:flex; gap:8px;">
-            <input type="text" id="campo-tarea" placeholder="Nueva nota..." style="margin:0; font-size: 14px; flex-grow:1;">
+            <input type="text" id="campo-tarea" placeholder="Nueva nota..." style="margin:0; flex-grow:1;">
             <button class="btn-blue" style="width:45px; margin:0;" onclick="añadirTarea()">+</button>
         </div>
+
         <div id="lista-tareas" class="task-list"></div>
-        <button style="background:transparent; color:#888; border:1px solid #444; width: 100%; margin-top: 20px; font-size: 10px; cursor:pointer; padding: 5px;" onclick="borrarMarcados()">LIMPIAR COMPLETADAS</button>
+        
+        <button class="btn-trash" onclick="borrarMarcados()" title="Limpiar notas">🗑️</button>
     </div>
 
     <script>
@@ -103,11 +147,7 @@
             document.getElementById('vista-login').classList.add('hidden');
             document.getElementById('vista-eden').classList.add('hidden');
             document.getElementById('vista-agenda').classList.add('hidden');
-            document.getElementById('reg-box').classList.add('hidden');
-            
-            const target = document.getElementById(id);
-            target.classList.remove('hidden');
-            if(id === 'vista-eden') document.getElementById('reg-box').classList.remove('hidden');
+            document.getElementById(id).classList.remove('hidden');
         }
 
         function validarAcceso() {
@@ -116,15 +156,13 @@
             const savedPass = localStorage.getItem('user_' + u);
             if ((u === 'admin' && p === '1234') || savedPass === p) {
                 document.getElementById('cuerpo').style.backgroundImage = "url('fondo1.jpg')"; 
-                document.getElementById('cuerpo').classList.add('interior'); 
                 mostrarVista('vista-agenda');
                 cargarTareas();
             } else { alert("Datos incorrectos"); }
         }
 
         function cerrarSesion() {
-            document.getElementById('cuerpo').style.backgroundImage = "url('fondo.jpg')";
-            document.getElementById('cuerpo').classList.remove('interior'); 
+            document.getElementById('cuerpo').style.backgroundImage = "url('fondo-nubes.jpg')";
             mostrarVista('vista-login');
         }
 
@@ -156,7 +194,8 @@
             tareas.forEach((t, i) => {
                 const item = document.createElement('div');
                 item.className = 'task-item';
-                item.innerHTML = `<input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
+                item.innerHTML = `
+                    <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
                     <div class="task-text" style="${t.done ? 'text-decoration: line-through; color: #888;' : ''}">${t.text}</div>`;
                 lista.appendChild(item);
             });
