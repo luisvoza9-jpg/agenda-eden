@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIENVENIDOS AL EDÉN</title>
     <style>
-        /* Animación para que el login aparezca suave */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -15,7 +14,7 @@
             margin: 0; padding: 0; height: 100vh;
             display: flex; justify-content: center; align-items: center;
             font-family: 'Segoe UI', sans-serif;
-            background: black;
+            background: #000; /* Fondo negro puro */
             overflow: hidden;
             position: relative;
             background-size: cover;
@@ -23,6 +22,7 @@
             transition: background-image 1.2s ease-in-out;
         }
 
+        /* Vídeo de fondo */
         #video-fondo {
             position: fixed;
             top: 0; left: 0;
@@ -30,7 +30,7 @@
             object-fit: cover;
             z-index: -1;
             transition: opacity 1s ease-in-out;
-            background: black; 
+            background: black;
         }
 
         .container {
@@ -48,7 +48,7 @@
 
         #vista-login input, #vista-eden input {
             width: 85%; padding: 12px; margin: 10px 0; border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.3); background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255,255,255,0.3); background: rgba(0, 0, 0, 0.6);
             color: white; font-size: 16px; outline: none; transition: 0.3s;
         }
 
@@ -62,7 +62,7 @@
         .frase-secreta { font-size: 12px; color: #ccc; margin-top: 25px; font-style: italic; }
         .hidden { display: none; }
 
-        /* Estilo Agenda (Nubes) */
+        /* Estilo Agenda */
         #vista-agenda {
             background: rgba(255,255,255,0.9);
             border-radius: 20px;
@@ -100,14 +100,14 @@
             z-index: 100; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.2));
             transition: 0.3s;
         }
-        .btn-trash:hover { transform: scale(1.2) rotate(10deg); }
     </style>
 </head>
 <body id="cuerpo">
 
-    <video id="video-fondo" autoplay muted playsinline loop preload="auto">
+    <video id="video-fondo" autoplay muted playsinline preload="auto">
         <source src="intro.mp4" type="video/mp4">
-        </video>
+        Tu navegador no soporta el vídeo.
+    </video>
 
     <div id="vista-login" class="container">
         <h1>BIENVENIDOS AL EDÉN</h1>
@@ -145,19 +145,14 @@
         const cuerpo = document.getElementById('cuerpo');
         const btnBorrar = document.getElementById('btn-borrar');
 
-        // Función para forzar la reproducción (algunos navegadores lo necesitan)
-        function forzarVideo() {
-            video.play().catch(e => console.log("Esperando interacción..."));
-        }
+        // Intento forzado de reproducción al cargar
+        window.addEventListener('load', () => {
+            video.play().catch(() => {
+                console.log("El vídeo necesita un clic para arrancar en algunos navegadores.");
+            });
+        });
 
-        window.addEventListener('load', forzarVideo);
-        window.addEventListener('click', forzarVideo, {once: true}); // Al primer click se asegura de sonar/verse
-
-        video.onended = () => {
-             // Si quieres que se quede quieto al final, deja esto. 
-             // Si quieres que se repita, quita esta línea y pon 'loop' arriba.
-             video.pause(); 
-        };
+        video.onended = () => { video.pause(); };
 
         function mostrarVista(id) {
             document.getElementById('vista-login').classList.add('hidden');
@@ -174,7 +169,7 @@
             } else {
                 video.style.opacity = '1';
                 cuerpo.style.backgroundImage = "none";
-                video.play();
+                video.play().catch(() => {});
             }
         }
 
