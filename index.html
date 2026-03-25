@@ -3,69 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ULTRA GAME GLOBAL - EL EDÉN</title>
+    <title>EL EDÉN - ULTRA GAME</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
         body {
             height: 100vh; display: flex; justify-content: center; align-items: center;
-            font-family: 'Arial', sans-serif; 
-            background-size: cover; background-position: center; 
-            background-repeat: no-repeat;
-            transition: background-image 0.5s ease;
-            overflow: hidden; color: white;
+            font-family: 'Arial', sans-serif; background-size: cover; background-position: center;
+            transition: background-image 0.5s ease; overflow: hidden; color: white;
         }
-
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1; }
         .container { width: 380px; text-align: center; position: relative; z-index: 10; }
         
         /* TÍTULO ANIMADO */
-        h1 { color: #00FFFF; margin-bottom: 20px; font-size: 32px; text-shadow: 0 0 15px #00FFFF; min-height: 120px; line-height: 1.2; }
-        h1 span { display: block; }
+        h1 { color: #00FFFF; margin-bottom: 20px; font-size: 32px; text-shadow: 0 0 15px #00FFFF; min-height: 110px; }
+        h1 span { display: block; height: 35px; }
 
-        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00FFFF; background: rgba(0, 0, 0, 0.8); color: white; text-align: center; font-size: 16px; outline: none; }
-        
-        /* BOTONES PRINCIPALES */
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00FFFF; background: rgba(0, 0, 0, 0.8); color: white; text-align: center; outline: none; }
         .btn-main { background: #00FFFF; color: black; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; margin-top: 10px; }
-        .btn-blue { background: #00FFFF; color: black; width: 50px; height: 45px; border-radius: 10px; border: none; font-size: 24px; cursor: pointer; }
-
-        /* --- NOTAS: ORDEN DE ESCRITURA (ARRIBA HACIA ABAJO) --- */
-        .task-list { 
-            text-align: left; 
-            margin-top: 20px; 
-            max-height: 350px; 
-            overflow-y: auto; 
-            display: flex;
-            flex-direction: column; /* Columna estándar */
-            gap: 10px;
-        }
-        .task-item { 
-            background: rgba(0, 0, 0, 0.7); 
-            padding: 15px; 
-            border-radius: 10px; 
-            display: flex; 
-            align-items: center; 
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            width: 100%;
-        }
-        .task-text { flex: 1; margin-left: 10px; font-size: 16px; word-break: break-word; }
+        
+        /* NOTAS - ORDEN NATURAL */
+        .task-list { text-align: left; margin-top: 20px; max-height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .task-item { background: rgba(0, 0, 0, 0.7); padding: 15px; border-radius: 10px; display: flex; align-items: center; border: 1px solid rgba(0, 255, 255, 0.3); }
+        .task-text { flex: 1; margin-left: 10px; word-break: break-word; }
 
         .hidden { display: none !important; }
 
-        /* INTERFAZ FLOTANTE */
+        /* ICONOS FLOTANTES */
         .btn-trash { position: fixed; bottom: 30px; right: 30px; font-size: 50px; background: none; border: none; cursor: pointer; filter: drop-shadow(0 0 10px red); z-index: 100; }
         .btn-game { position: fixed; bottom: 30px; left: 30px; font-size: 40px; background: none; border: none; cursor: pointer; z-index: 100; }
         .btn-rank { position: fixed; bottom: 30px; left: 100px; font-size: 40px; background: none; border: none; cursor: pointer; z-index: 100; }
-        .btn-exit { position: fixed; top: 20px; right: 20px; background: none; border: none; color: #ff4444; cursor: pointer; z-index: 100; text-align: center; }
+        .btn-exit { position: fixed; top: 20px; right: 20px; background: none; border: none; color: white; cursor: pointer; z-index: 100; text-align: center; }
 
-        /* ANIMACIONES */
         @keyframes suction { to { transform: translate(40vw, 40vh) scale(0); opacity: 0; } }
         .delete-anim { animation: suction 0.5s forwards; }
 
-        /* VISTA JUEGO */
-        #game-ui { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
-        canvas { border: 3px solid #00FFFF; background: black; box-shadow: 0 0 20px #00FFFF; }
-        .menu-box { background: rgba(0,0,0,0.9); border: 2px solid #00FFFF; padding: 20px; border-radius: 15px; text-align: center; width: 320px; position: absolute; }
+        #game-ui { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; background: rgba(0,0,0,0.8); }
+        canvas { border: 3px solid #00FFFF; background: black; }
+        .menu-box { background: black; border: 2px solid #00FFFF; padding: 25px; border-radius: 15px; text-align: center; width: 320px; position: absolute; }
     </style>
 </head>
 <body>
@@ -85,26 +59,25 @@
     </div>
 
     <div id="view-register" class="container hidden">
-        <h2 style="color:#00FFFF; margin-bottom:20px;">CREAR CUENTA</h2>
+        <h2 style="color:#00FFFF; margin-bottom:20px;">REGISTRO</h2>
         <input type="text" id="user-reg" placeholder="Nuevo Usuario">
-        <input type="password" id="pass-reg" placeholder="Nueva Contraseña">
-        <button class="btn-main" onclick="register()">REGISTRAR</button>
-        <p style="margin-top:15px; font-size:12px; cursor:pointer;" onclick="changeView('view-login')">Volver al inicio</p>
+        <input type="password" id="pass-reg" placeholder="Contraseña">
+        <button class="btn-main" onclick="register()">GUARDAR</button>
+        <p style="margin-top:15px; font-size:12px; cursor:pointer;" onclick="changeView('view-login')">Volver</p>
     </div>
 
     <div id="view-notes" class="container hidden">
         <h3 style="text-align:left; color:#00FFFF; margin-bottom:10px;">MIS NOTAS</h3>
         <div style="display:flex; gap:10px;">
-            <input type="text" id="note-input" placeholder="Escribir nota..." style="text-align:left; padding-left:15px;">
-            <button class="btn-blue" onclick="addNote()">+</button>
+            <input type="text" id="note-input" placeholder="Escribir..." style="text-align:left; padding-left:15px; border:1px solid #00FFFF;">
+            <button style="background:#00FFFF; width:50px; border-radius:10px; border:none; font-size:24px; cursor:pointer;" onclick="addNote()">+</button>
         </div>
         <div id="notes-container" class="task-list"></div>
     </div>
 
     <div id="game-ui" class="hidden">
-        <div id="score-board" style="color:#00FFFF; font-size:20px; margin-bottom:10px; font-weight:bold;">PUNTOS: 0</div>
+        <div id="score-board" style="color:#00FFFF; font-size:20px; margin-bottom:10px;">SCORE: 0</div>
         <canvas id="gameCanvas" width="480" height="500"></canvas>
-        
         <div id="diff-menu" class="menu-box hidden">
             <h2 style="color:#00FFFF; margin-bottom:15px;">DIFICULTAD</h2>
             <button class="btn-main" onclick="startGame('easy')">TERRESTRE</button>
@@ -112,16 +85,14 @@
             <button class="btn-main" onclick="startGame('hard')">EDÉN</button>
             <button class="btn-main" style="background:red;" onclick="closeGame()">SALIR</button>
         </div>
-
         <div id="game-over" class="menu-box hidden">
-            <h2 id="result-text" style="color:#00FFFF;">FIN DEL JUEGO</h2>
+            <h2 id="result-text" style="color:#00FFFF;">FIN</h2>
             <button class="btn-main" onclick="showGameMenu()">REINTENTAR</button>
             <button class="btn-main" onclick="closeGame()">VOLVER</button>
         </div>
-
-        <div id="ranking-box" class="menu-box hidden" style="width:350px;">
-            <h2 style="color:#FFD700;">RANKING GLOBAL</h2>
-            <div id="rank-content" style="max-height:300px; overflow-y:auto; font-size:14px; margin:15px 0;"></div>
+        <div id="ranking-box" class="menu-box hidden">
+            <h2 style="color:#FFD700;">RANKING</h2>
+            <div id="rank-content" style="margin:15px 0; max-height:200px; overflow-y:auto;"></div>
             <button class="btn-main" onclick="closeRanking()">CERRAR</button>
         </div>
     </div>
@@ -143,7 +114,6 @@
         const db = firebase.database();
         let user = "";
 
-        // ANIMACIÓN TÍTULO
         function typeTitle() {
             const el = document.getElementById('main-title');
             const lines = ["BIENVENIDOS", "AL", "EDÉN"];
@@ -159,12 +129,10 @@
             });
         }
 
-        // CAMBIO DE VISTAS Y FOTOS
         function changeView(id) {
             document.querySelectorAll('.container, #game-ui').forEach(v => v.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
 
-            // Lógica de fondos
             if(id === 'game-ui') {
                 document.body.style.backgroundImage = "url('logo1.jpg')";
             } else {
@@ -183,25 +151,31 @@
         function login() {
             const u = document.getElementById('user-in').value.trim();
             const p = document.getElementById('pass-in').value.trim();
-            if((u === 'admin' && p === '1234') || localStorage.getItem('u_'+u) === p) {
+            const storedPass = localStorage.getItem('u_' + u);
+            
+            if((u === 'admin' && p === '1234') || (storedPass && storedPass === p)) {
                 user = u; changeView('view-notes');
-            } else alert("Datos incorrectos");
+            } else {
+                alert("Usuario o Contraseña incorrectos");
+            }
         }
 
         function register() {
             const u = document.getElementById('user-reg').value.trim();
             const p = document.getElementById('pass-reg').value.trim();
-            if(u && p) { localStorage.setItem('u_'+u, p); alert("Usuario Creado"); changeView('view-login'); }
+            if(u && p) {
+                localStorage.setItem('u_' + u, p);
+                alert("Registrado correctamente");
+                changeView('view-login');
+            }
         }
 
         function logout() { user = ""; changeView('view-login'); }
 
-        // LÓGICA DE NOTAS (ESCRITURA NATURAL)
         function addNote() {
             const input = document.getElementById('note-input');
             if(input.value.trim()) {
                 let notes = JSON.parse(localStorage.getItem('notes_'+user) || '[]');
-                // .push añade al FINAL (abajo) para mantener orden de escritura
                 notes.push({ id: Date.now(), text: input.value, done: false });
                 localStorage.setItem('notes_'+user, JSON.stringify(notes));
                 input.value = ""; loadNotes();
@@ -233,9 +207,7 @@
 
         function deleteTasks() {
             let notes = JSON.parse(localStorage.getItem('notes_'+user) || '[]');
-            notes.forEach(n => {
-                if(n.done) document.getElementById('note-'+n.id).classList.add('delete-anim');
-            });
+            notes.forEach(n => { if(n.done) document.getElementById('note-'+n.id).classList.add('delete-anim'); });
             setTimeout(() => {
                 let remain = notes.filter(n => !n.done);
                 localStorage.setItem('notes_'+user, JSON.stringify(remain));
@@ -243,31 +215,28 @@
             }, 500);
         }
 
-        // --- JUEGO ---
+        // JUEGO
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let ball, paddle, bricks, score, gameRunning = false;
+
         function showGameMenu() { 
             changeView('game-ui'); 
             document.getElementById('diff-menu').classList.remove('hidden');
             document.getElementById('game-over').classList.add('hidden');
             document.getElementById('ranking-box').classList.add('hidden');
         }
-        function closeGame() { gameRunning = false; changeView('view-notes'); }
-
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        let ball, paddle, bricks, score, gameRunning = false;
 
         function startGame(d) {
             document.getElementById('diff-menu').classList.add('hidden');
-            score = 0; document.getElementById('score-board').innerText = "PUNTOS: 0";
-            ball = { x: 240, y: 440, dx: 3, dy: -3, r: (d==='hard'?6:8) };
+            score = 0; ball = { x: 240, y: 440, dx: 3, dy: -3, r: 8 };
             paddle = { w: 90, h: 12, x: 200 };
             bricks = [];
             let rows = (d==='easy'?5:(d==='medium'?7:10)), cols = (d==='easy'?6:9);
             for(let c=0; c<cols; c++) {
                 bricks[c] = [];
                 for(let r=0; r<rows; r++) {
-                    let type = "norm";
-                    if(d==='hard' && Math.random() < 0.2) type = "wall";
+                    let type = (d==='hard' && Math.random()<0.2) ? "wall" : "norm";
                     bricks[c][r] = { x: c*52+15, y: r*25+50, w: 45, h: 18, status: 1, type: type };
                 }
             }
@@ -277,7 +246,6 @@
         function play() {
             if(!gameRunning) return;
             ctx.clearRect(0,0,480,500);
-            // Dibujar
             ctx.fillStyle = "#00FFFF"; ctx.fillRect(paddle.x, 470, paddle.w, paddle.h);
             ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2); ctx.fillStyle="red"; ctx.fill(); ctx.closePath();
             
@@ -292,12 +260,11 @@
                     }
                 }
             }));
-            document.getElementById('score-board').innerText = "PUNTOS: " + score;
-
-            if(win) { finish("VICTORIA"); saveWin(); return; }
-            if(ball.x + ball.dx > 480-ball.r || ball.x + ball.dx < ball.r) ball.dx *= -1;
-            if(ball.y + ball.dy < ball.r) ball.dy *= -1;
-            else if(ball.y + ball.dy > 465) {
+            document.getElementById('score-board').innerText = "SCORE: " + score;
+            if(win) { gameRunning = false; saveWin(); finish("¡VICTORIA!"); return; }
+            if(ball.x+ball.dx > 480-ball.r || ball.x+ball.dx < ball.r) ball.dx *= -1;
+            if(ball.y+ball.dy < ball.r) ball.dy *= -1;
+            else if(ball.y+ball.dy > 465) {
                 if(ball.x > paddle.x && ball.x < paddle.x+paddle.w) ball.dy *= -1;
                 else if(ball.y > 500) { finish("GAME OVER"); return; }
             }
@@ -312,15 +279,14 @@
 
         function finish(m) { gameRunning = false; document.getElementById('result-text').innerText = m; document.getElementById('game-over').classList.remove('hidden'); }
         function saveWin() { db.ref('ranking/'+user).transaction(s => (s||0)+1); }
+        function closeGame() { gameRunning = false; changeView('view-notes'); }
 
         function showRanking() {
             changeView('game-ui');
-            const box = document.getElementById('ranking-box');
-            box.classList.remove('hidden');
+            document.getElementById('ranking-box').classList.remove('hidden');
             db.ref('ranking').orderByValue().limitToLast(10).once('value', s => {
-                let html = "<table>";
-                s.forEach(child => { html = `<tr><td>${child.key}</td><td>${child.val()} victorias</td></tr>` + html; });
-                document.getElementById('rank-content').innerHTML = html + "</table>";
+                let h = ""; s.forEach(c => { h = `<div>${c.key}: ${c.val()} victorias</div>` + h; });
+                document.getElementById('rank-content').innerHTML = h;
             });
         }
         function closeRanking() { document.getElementById('ranking-box').classList.add('hidden'); changeView('view-notes'); }
