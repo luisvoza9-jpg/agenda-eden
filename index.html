@@ -1,155 +1,317 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="es">
 <head>
-  <base href="/agenda-eden/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIENVENIDOS AL EDÉN (ULTRA GAME)</title>
+    
+    <link rel="icon" type="image/png" href="icono.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icono.png">
+    <meta name="theme-color" content="#00FFFF">
 
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Flet application.">
-
-  <!-- iOS meta tags & icons -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="agenda-eden">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon-192.png">
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png" />
-
-  <title>agenda-eden</title>
-  <link rel="manifest" href="manifest.json">
-
-  <script>
-    var flet = {
-      pyodide: false,
-      multiView: false,
-      noCdn: false,
-      webSocketEndpoint: "/ws",
-      entrypointBaseUrl: "/",
-      assetBase: "/",
-      routeUrlStrategy: "path",
-      canvasKitBaseUrl: "/canvaskit/",
-      pyodideUrl: "/pyodide/pyodide.js",
-      webRenderer: "auto",
-      fontFallbackBaseUrl: "assets/fonts/", // for Noto Emoji, use Google CDN
-      appPackageUrl: "app.tar.gz"
-    }
-
-    flet.flutterAppLoaded = new Promise((resolve) => {
-      flet.flutterAppResolve = resolve;
-    });
-
-    flet.flutterAppLoaded.then((flutterApp) => {
-      console.log("Flutter app loaded");
-      if (flet.multiView) {
-        console.log(flutterApp.addView({
-          hostElement: document.querySelector('#view-1'),
-          initialData: {
-            script: 'print("Hello from view 1")',
-            randomValue: Math.floor(Math.random() * 100),
-          },
-          viewConstraints: {
-            //maxWidth: Infinity,
-            maxHeight: Infinity,
-            minHeight: 300,
-            minWidth: 620
-          }
-        }));
-        console.log(flutterApp.addView({
-          hostElement: document.querySelector('#view-2'),
-          initialData: {
-            script: 'print("Hello from view 2")',
-            bar: "baz"
-          },
-          viewConstraints: {
-            minWidth: 620,
-            //maxWidth: 320,
-            //minHeight: 400,
-            maxHeight: 400,
-          }
-        }));
-      }
-    });
-  </script>
-
-  <script>
-flet.pyodide = true;
-flet.micropipIncludePre = false;
-flet.pythonModuleName = "main";
-flet.noCdn=false;
-flet.webRenderer="auto";
-flet.routeUrlStrategy="path";
-flet.entrypointBaseUrl="/agenda-eden/";
-flet.assetBase="/agenda-eden/";
-</script>
-
-  <script src="python.js"></script>
-</head>
-
-<body>
-  <div id="loading">
     <style>
-      body {
-        inset: 0;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-        position: fixed;
-      }
-
-      #loading {
-        align-items: center;
-        display: flex;
-        height: 100%;
-        justify-content: center;
-        width: 100%;
-      }
-
-      #loading img {
-        animation: 1s ease-in-out 0s infinite alternate breathe;
-        opacity: .66;
-        transition: opacity .4s;
-      }
-
-      #loading.main_done img {
-        opacity: 1;
-      }
-
-      #loading.init_done img {
-        animation: .33s ease-in-out 0s 1 forwards zooooom;
-        opacity: .05;
-      }
-
-      @keyframes breathe {
-        from {
-          transform: scale(0.4);
-          opacity: 1.0;
+        /* AQUÍ ESTÁN TODOS TUS ESTILOS INTACTOS */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            height: 100vh; display: flex; justify-content: center; align-items: center;
+            font-family: 'Segoe UI', sans-serif; background-image: url('fondo-nubes.jpg');
+            background-size: cover; background-position: center; overflow: hidden; color: white;
         }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 1; }
+        .container { width: 380px; text-align: center; position: relative; z-index: 10; }
+        h1 { color: #00FFFF; margin-bottom: 20px; font-size: 32px; text-shadow: 0 0 15px #00FFFF; display: flex; flex-direction: column; align-items: center; letter-spacing: 2px; font-weight: bold; line-height: 1.1; min-height: 110px; }
+        h1 span { display: block; width: 100%; }
+        
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00FFFF; background: rgba(0, 0, 0, 0.7); color: white; font-size: 16px; outline: none; text-align: center; }
+        
+        .btn-exit-fixed { position: fixed; top: 25px; right: 25px; color: #ff4444; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1000; transition: 0.3s; }
+        .btn-settings-fixed { position: fixed; top: 25px; left: 25px; color: #fff; text-shadow: 0 0 10px #00FFFF; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1000; transition: 0.3s; }
 
-        to {
-          transform: scale(0.35);
-          opacity: .7;
-        }
-      }
+        .task-input-group { display: flex; gap: 10px; margin-top: 10px; align-items: center; }
+        .btn-blue { background: #00FFFF; color: black; width: 55px; font-size: 24px; border-radius: 10px; border: none; cursor: pointer; height: 45px; flex-shrink: 0; }
+        
+        .task-list { text-align: left; margin-top: 20px; max-height: 250px; overflow-y: auto; }
+        .task-item { background: rgba(0, 0, 0, 0.6); margin-bottom: 8px; padding: 12px; border-radius: 10px; display: flex; align-items: center; border: 1px solid rgba(0, 255, 255, 0.2); gap: 10px; transition: 0.3s; }
+        
+        .task-text { flex: 1; color: white; word-break: break-word; font-size: 14px; }
+        .task-item.editing { border-color: #FFD700; box-shadow: 0 0 10px #FFD700; background: rgba(0, 0, 0, 0.8); }
+        .edit-input { flex: 1; padding: 5px; border-radius: 5px; border: 1px solid #FFD700; background: rgba(255,255,255,0.1); color: white; font-size: 14px; outline: none; }
+        .btn-edit-note, .btn-save-note { background: none; border: none; cursor: pointer; font-size: 16px; opacity: 0.7; transition: 0.3s; }
 
-      @keyframes zooooom {
-        from {
-          transform: scale(0.4)
-        }
+        .btn-trash-central { position: fixed; bottom: 30px; right: 30px; background: none; color: #ff4444; font-size: 50px; border: none; filter: drop-shadow(0 0 10px #ff4444); cursor: pointer; z-index: 100; }
+        .hidden { display: none !important; }
+        
+        .settings-card { background: rgba(0,0,0,0.85); padding: 20px; border-radius: 20px; border: 1px solid #00FFFF; text-align: left; position: relative; }
+        .btn-close-settings { position: absolute; top: 10px; right: 15px; color: #ff4444; font-size: 24px; cursor: pointer; font-weight: bold; }
+        
+        .shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+        .shop-item { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; text-align: center; border: 1px solid rgba(0,255,255,0.3); cursor: pointer; transition: 0.3s; }
+        .shop-price { display: block; font-size: 10px; color: #FFD700; margin-top: 5px; }
+        .shop-label { font-size: 11px; font-weight: bold; display: block; margin-top: 15px; color: #00FFFF; border-bottom: 1px solid rgba(0,255,255,0.2); }
 
-        to {
-          transform: scale(10)
-        }
-      }
+        .btn-game-flotante { position: fixed; bottom: 30px; left: 30px; background: none; color: #00FFFF; font-size: 40px; border: none; cursor: pointer; z-index: 101; }
+        .btn-rank-flotante { position: fixed; bottom: 30px; left: 90px; background: none; color: #FFD700; font-size: 40px; border: none; cursor: pointer; z-index: 101; }
+        .btn-shop-flotante { position: fixed; bottom: 30px; left: 150px; background: none; color: #FFD700; font-size: 40px; border: none; cursor: pointer; z-index: 101; display: flex; flex-direction: column; align-items: center; }
+        .btn-chat-flotante { position: fixed; bottom: 30px; left: 210px; background: none; color: #00FF00; font-size: 40px; border: none; cursor: pointer; z-index: 101; display: flex; flex-direction: column; align-items: center; }
+        .btn-shop-label { font-size: 10px; font-weight: bold; margin-top: -5px; }
+
+        #avatar-preview { width: 90px; height: 90px; border-radius: 50%; border: 2px solid #00FFFF; box-shadow: 0 0 15px #00FFFF; overflow: hidden; background: #000; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; }
+        
+        /* ESTILO DEL CHAT QUE HEMOS HABLADO */
+        .chat-box { height: 250px; overflow-y: auto; background: rgba(0,0,0,0.6); border-radius: 10px; padding: 10px; margin-bottom: 10px; border: 1px solid rgba(0,255,255,0.2); }
+        .chat-msg { text-align: left; margin-bottom: 8px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; }
+        .chat-av-img { width: 18px; height: 18px; vertical-align: middle; border-radius: 50%; margin-right: 5px; }
+
+        @keyframes borrarVuelo { to { transform: scale(0) translate(20vw, 50vh); opacity: 0; } }
+        .arrugando { animation: borrarVuelo 0.6s ease-in forwards; }
+        #vista-juego { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('fondo-nubes.jpg'); background-size: cover; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
+        #gameCanvas { border: 3px solid #00FFFF; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 30px #00FFFF; cursor: none; }
     </style>
-    <img src="icons/loading-animation.png" alt="Loading..." />
-  </div>
-  <script src="flutter_bootstrap.js" async></script>
+</head>
+<body>
 
-  <!-- <h1>View 1</h1>
-  <div id="view-1" style="display: flex; justify-content: center;"></div>
-  <h1>View 2</h1>
-  <div id="view-2"></div> -->
+    <div id="pantalla-oscura" class="overlay"></div>
+
+    <button id="settings-btn" class="btn-settings-fixed hidden" onclick="mostrarVista('vista-ajustes')">⚙️</button>
+    <button id="exit-btn" class="btn-exit-fixed hidden" onclick="cerrarSesion()">🚪<span style="font-size:10px; font-weight:bold">EXIT</span></button>
+    <button class="btn-trash-central hidden" id="btn-borrar" onclick="borrarMarcados()">🗑️</button>
+    <button id="game-btn" class="btn-game-flotante hidden" onclick="abrirMenuDificultad()">🎮</button>
+    <button id="rank-btn" class="btn-rank-flotante hidden" onclick="abrirRanking()">🏆</button>
+    <button id="shop-btn" class="btn-shop-flotante hidden" onclick="mostrarVista('vista-tienda')">🏠<span class="btn-shop-label">TIENDA</span></button>
+    
+    <button id="chat-btn" class="btn-chat-flotante hidden" onclick="mostrarVista('vista-chat')">💬<span class="btn-shop-label">CHAT</span></button>
+
+    <div id="vista-login" class="container">
+        <h1 id="titulo-eden"></h1>
+        <input type="text" id="user-in" placeholder="Usuario">
+        <input type="password" id="pass-in" placeholder="Contraseña">
+        <button style="background:#00FFFF; color:black; width:100%; height:45px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="validarAcceso()">ENTRAR</button>
+        <button style="width:100%; padding:10px; margin-top:10px; border-radius:8px; border:none; cursor:pointer; font-weight:bold; background:white; color:black;" onclick="entrarConGoogle()">Google</button>
+        <p style="cursor:pointer; color:#ccc; font-size: 12px; margin-top: 20px;" onclick="mostrarVista('vista-eden')">Registrarse</p>
+    </div>
+
+    <div id="vista-eden" class="container hidden">
+        <h2 style="color:#00FFFF; margin-bottom:15px;">REGISTRO</h2>
+        <input type="text" id="user-reg" placeholder="Nuevo usuario">
+        <input type="password" id="pass-reg" placeholder="Contraseña">
+        <input type="number" id="age-reg" placeholder="Edad (opcional)">
+        <button style="background:#00FFFF; color:black; width:100%; height:45px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="ejecutarRegistro()">GUARDAR</button>
+        <p style="cursor:pointer; color:#ccc; margin-top:20px;" onclick="mostrarVista('vista-login')">Volver</p>
+    </div>
+
+    <div id="vista-agenda" class="container hidden">
+        <h3 style="color:#00FFFF; text-align:left; margin-bottom:10px;">MIS NOTAS</h3>
+        <div class="task-input-group">
+            <input type="text" id="campo-tarea" placeholder="Escribe algo..." style="text-align:left; padding-left:15px;">
+            <button class="btn-blue" onclick="añadirTarea()">+</button>
+        </div>
+        <div id="lista-tareas" class="task-list"></div>
+    </div>
+
+    <div id="vista-ajustes" class="container hidden">
+        <div class="settings-card">
+            <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
+            <h2 style="color:#00FFFF; margin-bottom:15px; text-align:center;">PERFIL</h2>
+            <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 15px;">
+                <div id="avatar-preview"><span id="avatar-img" style="font-size: 45px;">👤</span></div>
+                <div style="display: flex; gap: 8px;">
+                    <button onclick="cambiarAvatar('🥷')">🥷</button>
+                    <button onclick="cambiarAvatar('🤖')">🤖</button>
+                    <label for="upload-photo" style="background:white; color:black; padding:2px 5px; border-radius:5px; cursor:pointer;">📷</label>
+                    <input type="file" id="upload-photo" accept="image/*" style="display:none" onchange="subirFotoLocal(this)">
+                </div>
+            </div>
+            <p id="perfil-nombre">Usuario: -</p>
+            <p id="perfil-edad">Edad: -</p>
+            <p id="perfil-puntos" style="color: #FFD700;">Récord Edén: 0 pts</p>
+            <div style="margin: 15px 0;">
+                <span>Volumen:</span>
+                <input type="range" min="0" max="1" step="0.1" onchange="ajustarVolumen(this.value)">
+            </div>
+            <input type="password" id="edit-pass" placeholder="Nueva contraseña">
+            <input type="number" id="edit-age" placeholder="Cambiar edad">
+            <button style="background:none; border:1px solid #00FFFF; color:#00FFFF; width:100%; padding:10px; border-radius:10px;" onclick="actualizarPerfil()">GUARDAR CAMBIOS</button>
+        </div>
+    </div>
+
+    <div id="vista-chat" class="container hidden">
+        <div class="settings-card">
+            <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
+            <h2 style="color:#00FF00; text-align:center; margin-bottom:10px;">CHAT GLOBAL</h2>
+            <div id="chat-box" class="chat-box"></div>
+            <div class="task-input-group">
+                <input type="text" id="chat-input" placeholder="Mensaje...">
+                <button class="btn-blue" style="background:#00FF00;" onclick="enviarMensaje()">></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="vista-tienda" class="container hidden">
+        <div class="settings-card">
+            <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
+            <h2 style="color:#FFD700; text-align:center;">EDÉN SHOP</h2>
+            <span id="shop-balance">Saldo: 0 €Eden€</span>
+            <div class="shop-grid">
+                <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
+                <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="vista-juego" class="hidden">
+        <button class="btn-game-return" onclick="salirDelJuego()">🚪</button>
+        <canvas id="gameCanvas" width="500" height="500"></canvas>
+        <div id="difficulty-menu" class="menu-eden hidden">
+            <button onclick="iniciarJuegoEden('terrestre')">Terrestre</button>
+            <button onclick="iniciarJuegoEden('eden')">Edén</button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
+    <script>
+        // TUS CONFIGURACIONES
+        const firebaseConfig = {
+            apiKey: "AIzaSyCod7qKXcefhTqa40EVWbl32dygU9G10Aw",
+            authDomain: "edengame-5a40c.firebaseapp.com",
+            databaseURL: "https://edengame-5a40c-default-rtdb.firebaseio.com",
+            projectId: "edengame-5a40c",
+            storageBucket: "edengame-5a40c.firebasestorage.app",
+            messagingSenderId: "837651200703",
+            appId: "1:837651200703:web:0c3e237c36e1bb37b6640a"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const auth = firebase.auth();
+        let currentUser = "";
+        let userBalance = 0;
+        let masterVolume = 0.5;
+        let userAvatar = "👤";
+
+        // LÓGICA DEL CHAT GLOBAL (AÑADIDA)
+        function enviarMensaje() {
+            const inp = document.getElementById('chat-input');
+            if(inp.value.trim() && currentUser) {
+                db.ref('chat_global').push({ user: currentUser, text: inp.value.trim(), avatar: userAvatar });
+                inp.value = "";
+            }
+        }
+        function escucharChat() {
+            db.ref('chat_global').limitToLast(20).on('value', s => {
+                const box = document.getElementById('chat-box'); box.innerHTML = "";
+                s.forEach(c => {
+                    const m = c.val();
+                    const av = m.avatar && m.avatar.includes('data:image') ? `<img src="${m.avatar}" class="chat-av-img">` : `<span>${m.avatar || '👤'}</span>`;
+                    box.innerHTML += `<div class="chat-msg">${av} <b>${m.user}:</b> ${m.text}</div>`;
+                });
+                box.scrollTop = box.scrollHeight;
+            });
+        }
+
+        // TUS FUNCIONES DE ACCESO (GOOGLE, LOGIN, ETC)
+        function entrarConGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).then((result) => {
+                const userKey = result.user.email.replace(/[.@]/g, '_');
+                db.ref('usuarios/' + userKey).once('value', (s) => {
+                    if (!s.exists()) db.ref('usuarios/' + userKey).set({ password: "google_user", saldo: 0 });
+                    currentUser = userKey; configurarCarteraYEntrar(s.val()?.saldo || 0);
+                });
+            });
+        }
+
+        function ajustarVolumen(v) { masterVolume = v; }
+
+        // TU FUNCIÓN DE NOTAS ORIGINAL (CON EL CHECK ✅)
+        function modificarTareaInline(i) {
+            const item = document.getElementById(`nota-${i}`);
+            const textDiv = item.querySelector('.task-text');
+            const editBtn = item.querySelector('.btn-edit-note');
+            if (item.classList.contains('editing')) return;
+            item.classList.add('editing');
+            const currentText = textDiv.innerText;
+            textDiv.innerHTML = `<input type="text" class="edit-input" value="${currentText}">`;
+            editBtn.innerHTML = '✅';
+            const input = textDiv.querySelector('.edit-input');
+            input.focus();
+            editBtn.onclick = () => {
+                let t = JSON.parse(localStorage.getItem('tareas_' + currentUser));
+                t[i].text = input.value.trim();
+                localStorage.setItem('tareas_' + currentUser, JSON.stringify(t));
+                cargarTareas();
+            };
+        }
+
+        // TU LÓGICA DE VISTAS Y NAVEGACIÓN
+        function mostrarVista(id) {
+            document.querySelectorAll('.container, #vista-juego').forEach(c => c.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            const menu = ['vista-agenda', 'vista-ajustes', 'vista-tienda', 'vista-chat'].includes(id);
+            ['exit-btn', 'settings-btn', 'game-btn', 'rank-btn', 'shop-btn', 'chat-btn'].forEach(b => document.getElementById(b).classList.toggle('hidden', !menu));
+            if(id === 'vista-agenda') { document.getElementById('btn-borrar').classList.remove('hidden'); cargarTareas(); }
+            if(id === 'vista-chat') escucharChat();
+            if(id === 'vista-ajustes') {
+                db.ref('usuarios/' + currentUser).once('value', s => {
+                    const d = s.val();
+                    document.getElementById('perfil-nombre').innerText = "Usuario: " + currentUser;
+                    document.getElementById('perfil-edad').innerText = "Edad: " + (d.age || "-");
+                    if(d.avatar) {
+                        userAvatar = d.avatar;
+                        document.getElementById('avatar-img').innerHTML = d.avatar.includes('data:image') ? `<img src="${d.avatar}" style="width:100%; height:100%; object-fit:cover;">` : d.avatar;
+                    }
+                });
+            }
+        }
+
+        function configurarCarteraYEntrar(s) { userBalance = s; mostrarVista('vista-agenda'); }
+
+        function validarAcceso() {
+            const u = document.getElementById('user-in').value.trim();
+            const p = document.getElementById('pass-in').value.trim();
+            db.ref('usuarios/' + u).once('value', s => {
+                if (s.exists() && s.val().password === p) { currentUser = u; configurarCarteraYEntrar(s.val().saldo || 0); }
+            });
+        }
+
+        // TUS FUNCIONES DE PERFIL Y JUEGO
+        function cambiarAvatar(emoji) { userAvatar = emoji; document.getElementById('avatar-img').innerText = emoji; db.ref('usuarios/'+currentUser).update({avatar:emoji}); }
+        function subirFotoLocal(i) {
+            const r = new FileReader();
+            r.onload = e => { userAvatar = e.target.result; document.getElementById('avatar-img').innerHTML = `<img src="${userAvatar}" style="width:100%;height:100%;object-fit:cover;">`; db.ref('usuarios/'+currentUser).update({avatar:userAvatar}); };
+            r.readAsDataURL(i.files[0]);
+        }
+        function actualizarPerfil() {
+            const newP = document.getElementById('edit-pass').value.trim();
+            const newA = document.getElementById('edit-age').value;
+            let up = {}; if(newP) up.password = newP; if(newA) up.age = newA;
+            db.ref('usuarios/'+currentUser).update(up).then(() => alert("OK"));
+        }
+
+        function cargarTareas() {
+            const lista = document.getElementById('lista-tareas'); lista.innerHTML = '';
+            let t = JSON.parse(localStorage.getItem('tareas_' + currentUser) || '[]');
+            t.forEach((tarea, i) => {
+                lista.innerHTML += `<div class="task-item" id="nota-${i}"><input type="checkbox" ${tarea.done?'checked':''} onchange="toggle(${i})"><div class="task-text" style="${tarea.done?'text-decoration:line-through;opacity:0.5':''}">${tarea.text}</div><button class="btn-edit-note" onclick="modificarTareaInline(${i})">✏️</button></div>`;
+            });
+        }
+
+        function toggle(i) {
+            let t = JSON.parse(localStorage.getItem('tareas_' + currentUser)); t[i].done = !t[i].done;
+            localStorage.setItem('tareas_' + currentUser, JSON.stringify(t)); cargarTareas();
+        }
+
+        function borrarMarcados() {
+            let t = JSON.parse(localStorage.getItem('tareas_' + currentUser) || '[]');
+            t = t.filter(x => !x.done); localStorage.setItem('tareas_' + currentUser, JSON.stringify(t)); cargarTareas();
+        }
+
+        function cerrarSesion() { currentUser = ""; mostrarVista('vista-login'); }
+
+        mostrarVista('vista-login');
+    </script>
 </body>
 </html>
+
