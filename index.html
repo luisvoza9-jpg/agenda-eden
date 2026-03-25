@@ -3,129 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIENVENIDOS AL EDÉN (GAME ED.)</title>
+    <title>BIENVENIDOS AL EDÉN (ULTRA GAME)</title>
     <style>
+        /* MANTENEMOS TODO TU ESTILO ORIGINAL INTACTO */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
         body {
-            height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-            font-family: 'Segoe UI', sans-serif;
-            background-image: url('fondo-nubes.jpg');
-            background-size: cover;
-            background-position: center;
-            overflow: hidden;
-            color: white;
+            height: 100vh; display: flex; justify-content: center; align-items: center;
+            font-family: 'Segoe UI', sans-serif; background-image: url('fondo-nubes.jpg');
+            background-size: cover; background-position: center; overflow: hidden; color: white;
         }
-
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 1;
-        }
-
-        .container {
-            width: 380px; 
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        h1 { 
-            color: #00FFFF; margin-bottom: 20px; font-size: 32px; 
-            text-shadow: 0 0 15px #00FFFF;
-            display: flex; flex-direction: column; align-items: center;
-            letter-spacing: 2px; font-weight: bold;
-            line-height: 1.1; min-height: 110px; 
-        }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 1; }
+        .container { width: 380px; text-align: center; position: relative; z-index: 10; }
+        h1 { color: #00FFFF; margin-bottom: 20px; font-size: 32px; text-shadow: 0 0 15px #00FFFF; display: flex; flex-direction: column; align-items: center; letter-spacing: 2px; font-weight: bold; line-height: 1.1; min-height: 110px; }
         h1 span { display: block; width: 100%; }
-
-        .frase-neon {
-            color: #00FFFF; font-size: 14px; text-shadow: 0 0 10px #00FFFF;
-            display: block; margin-top: 20px; text-align: center;
-        }
-
-        input {
-            width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px;
-            border: 1px solid #00FFFF; background: rgba(0, 0, 0, 0.7);
-            color: white; font-size: 16px; outline: none; text-align: center;
-        }
-
-        .btn-exit-fixed {
-            position: fixed; top: 25px; right: 25px; 
-            color: #ff4444; cursor: pointer; border: none; background: none;
-            display: flex; flex-direction: column; align-items: center;
-            z-index: 1000; transition: 0.3s;
-        }
+        .frase-neon { color: #00FFFF; font-size: 14px; text-shadow: 0 0 10px #00FFFF; display: block; margin-top: 20px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00FFFF; background: rgba(0, 0, 0, 0.7); color: white; font-size: 16px; outline: none; text-align: center; }
+        .btn-exit-fixed { position: fixed; top: 25px; right: 25px; color: #ff4444; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1000; transition: 0.3s; }
         .btn-exit-fixed:hover { transform: scale(1.2); filter: drop-shadow(0 0 10px #ff0000); }
-        .door-icon { font-size: 32px; }
-        .exit-text { font-size: 10px; font-weight: bold; }
-
         .task-input-group { display: flex; gap: 10px; margin-top: 10px; }
         .btn-blue { background: #00FFFF; color: black; width: 55px; font-size: 24px; border-radius: 10px; border: none; cursor: pointer; height: 45px; }
-
         .task-list { text-align: left; margin-top: 20px; max-height: 250px; overflow-y: auto; }
-        .task-item { 
-            background: rgba(0, 0, 0, 0.6); margin-bottom: 8px; padding: 12px;
-            border-radius: 10px; display: flex; align-items: center;
-            border: 1px solid rgba(0, 255, 255, 0.2);
-            text-align: left; 
-        }
+        .task-item { background: rgba(0, 0, 0, 0.6); margin-bottom: 8px; padding: 12px; border-radius: 10px; display: flex; align-items: center; border: 1px solid rgba(0, 255, 255, 0.2); text-align: left; }
         .task-text { flex: 1; margin-left: 10px; color: white; word-break: break-word; text-align: left; }
-
-        .btn-trash-central {
-            position: fixed; bottom: 30px; right: 30px;
-            background: none; color: #ff4444; font-size: 50px; border: none; 
-            filter: drop-shadow(0 0 10px #ff4444); cursor: pointer; z-index: 100;
-            transform-origin: bottom right;
-        }
-
+        .btn-trash-central { position: fixed; bottom: 30px; right: 30px; background: none; color: #ff4444; font-size: 50px; border: none; filter: drop-shadow(0 0 10px #ff4444); cursor: pointer; z-index: 100; transform-origin: bottom right; }
         .hidden { display: none !important; }
-
-        @keyframes borrarVuelo {
-            to { transform: scale(0) translate(20vw, 50vh); opacity: 0; }
-        }
-        @keyframes inclinarPapelera {
-            0% { transform: rotate(0deg) scale(1); }
-            60% { transform: rotate(-15deg) scale(1.1); filter: drop-shadow(0 0 20px #ff4444); } 
-            100% { transform: rotate(0deg) scale(1); }
-        }
+        @keyframes borrarVuelo { to { transform: scale(0) translate(20vw, 50vh); opacity: 0; } }
+        @keyframes inclinarPapelera { 0% { transform: rotate(0deg) scale(1); } 60% { transform: rotate(-15deg) scale(1.1); filter: drop-shadow(0 0 20px #ff4444); } 100% { transform: rotate(0deg) scale(1); } }
         .arrugando { animation: borrarVuelo 0.6s ease-in forwards; pointer-events: none; }
         .papelera-atrapando { animation: inclinarPapelera 0.6s ease-out forwards; }
 
-        /* === MINIJUEGO === */
-        .btn-game-flotante {
-            position: fixed; bottom: 30px; left: 30px;
-            background: none; color: #00FFFF; font-size: 40px; border: none; 
-            filter: drop-shadow(0 0 10px #00FFFF); cursor: pointer;
-            z-index: 101; transition: 0.3s;
-        }
-
-        #vista-juego {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('fondo-nubes.jpg'); background-size: cover; background-position: center;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; /* Centrado vertical */
-            z-index: 1000;
-        }
-
-        #gameCanvas {
-            border: 3px solid #00FFFF;
-            background: rgba(0, 0, 0, 0.85);
-            box-shadow: 0 0 30px #00FFFF;
-            cursor: none;
-            margin-top: 20px;
-        }
-
-        .btn-game-return {
-            position: absolute; top: 20px; left: 20px;
-            color: #00FFFF; cursor: pointer; border: none; background: none;
-            display: flex; flex-direction: column; align-items: center;
-        }
-
-        #game-score {
-            font-size: 24px; color: #00FFFF; text-shadow: 0 0 10px #00FFFF;
-            margin-bottom: 10px;
-        }
+        /* === MEJORAS DEL JUEGO === */
+        .btn-game-flotante { position: fixed; bottom: 30px; left: 30px; background: none; color: #00FFFF; font-size: 40px; border: none; filter: drop-shadow(0 0 10px #00FFFF); cursor: pointer; z-index: 101; transition: 0.3s; }
+        #vista-juego { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('fondo-nubes.jpg'); background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
+        #gameCanvas { border: 3px solid #00FFFF; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 30px #00FFFF; cursor: none; }
+        .btn-game-return { position: absolute; top: 20px; left: 20px; color: #00FFFF; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; }
+        #game-score { font-size: 24px; color: #00FFFF; text-shadow: 0 0 10px #00FFFF; margin-bottom: 10px; font-weight: bold; }
+        
+        /* Menú de Fin de Juego */
+        #game-over-menu { position: absolute; background: rgba(0,0,0,0.9); border: 2px solid #00FFFF; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 50px #00FFFF; }
+        .game-btn-neon { background: none; border: 1px solid #00FFFF; color: #00FFFF; padding: 10px 20px; margin: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .game-btn-neon:hover { background: #00FFFF; color: black; box-shadow: 0 0 20px #00FFFF; }
     </style>
 </head>
 <body>
@@ -133,8 +50,7 @@
     <div id="pantalla-oscura" class="overlay"></div>
 
     <button id="exit-btn" class="btn-exit-fixed hidden" onclick="cerrarSesion()">
-        <span class="door-icon">🚪</span>
-        <span class="exit-text">EXIT</span>
+        <span style="font-size:32px">🚪</span><span style="font-size:10px; font-weight:bold">EXIT</span>
     </button>
     <button class="btn-trash-central hidden" id="btn-borrar" onclick="borrarMarcados()">🗑️</button>
     <button id="game-btn" class="btn-game-flotante hidden" onclick="iniciarJuegoEden()">🎮</button>
@@ -167,37 +83,31 @@
 
     <div id="vista-juego" class="hidden">
         <button class="btn-game-return" onclick="salirDelJuego()">
-            <span class="door-icon">🚪</span>
-            <span class="exit-text">RETORNAR</span>
+            <span style="font-size:26px">🚪</span><span style="font-size:9px; font-weight:bold; color:#00FFFF">RETORNAR</span>
         </button>
         <div id="game-score">SCORE: 0</div>
-        <canvas id="gameCanvas" width="480" height="400"></canvas>
+        <canvas id="gameCanvas" width="500" height="500"></canvas>
+
+        <div id="game-over-menu" class="hidden">
+            <h2 id="end-title" style="color:#00FFFF; margin-bottom:20px;">FIN DE LA PARTIDA</h2>
+            <button class="game-btn-neon" onclick="iniciarJuegoEden()">¡Repetir!</button>
+            <button class="game-btn-neon" onclick="salirDelJuego()">¿Salir:(</button>
+        </div>
     </div>
 
     <script>
-        // --- Lógica del Edén (Login/Agenda) ---
+        // --- LÓGICA EDÉN (SIN CAMBIOS) ---
         const tituloEden = document.getElementById('titulo-eden');
         const lineas = ["BIENVENIDOS", "AL", "EDÉN"];
         let timer;
-
         function animar() {
-            tituloEden.innerHTML = "";
-            let l=0, c=0;
-            clearInterval(timer);
-            lineas.forEach(() => {
-                let s = document.createElement('span');
-                tituloEden.appendChild(s);
-            });
+            tituloEden.innerHTML = ""; let l=0, c=0; clearInterval(timer);
+            lineas.forEach(() => { let s = document.createElement('span'); tituloEden.appendChild(s); });
             let spans = tituloEden.querySelectorAll("span");
             timer = setInterval(() => {
-                if(l < lineas.length){
-                    spans[l].innerText += lineas[l][c];
-                    c++;
-                    if(c >= lineas[l].length){ l++; c=0; }
-                } else clearInterval(timer);
+                if(l < lineas.length){ spans[l].innerText += lineas[l][c]; c++; if(c >= lineas[l].length){ l++; c=0; } } else clearInterval(timer);
             }, 100);
         }
-
         function mostrarVista(id) {
             document.querySelectorAll('.container, #vista-juego').forEach(c => c.classList.add('hidden'));
             document.getElementById('btn-borrar').classList.add('hidden');
@@ -210,11 +120,9 @@
                 document.getElementById('btn-borrar').classList.remove('hidden');
                 document.getElementById('exit-btn').classList.remove('hidden');
                 document.getElementById('game-btn').classList.remove('hidden');
-                overlay.classList.add('hidden');
-                cargarTareas();
+                overlay.classList.add('hidden'); cargarTareas();
             } else { overlay.classList.remove('hidden'); }
         }
-
         function validarAcceso() {
             const u = document.getElementById('user-in').value.trim();
             const p = document.getElementById('pass-in').value.trim();
@@ -222,184 +130,171 @@
             if ((u === 'admin' && p === '1234') || (saved !== null && saved === p)) { mostrarVista('vista-agenda'); }
             else { alert("Usuario o contraseña incorrectos"); }
         }
-
         function ejecutarRegistro() {
             const u = document.getElementById('user-reg').value.trim();
             const p = document.getElementById('pass-reg').value.trim();
             if(u && p) { localStorage.setItem('user_' + u, p); alert("¡Registrado!"); mostrarVista('vista-login'); }
         }
-
         function cerrarSesion() { mostrarVista('vista-login'); }
-
         function añadirTarea() {
             const input = document.getElementById('campo-tarea');
             if(input.value.trim()) {
                 let t = JSON.parse(localStorage.getItem('tareas_eden') || '[]');
                 t.unshift({text: input.value.trim(), done: false});
                 localStorage.setItem('tareas_eden', JSON.stringify(t));
-                input.value = '';
-                cargarTareas();
+                input.value = ''; cargarTareas();
             }
         }
-
         function cargarTareas() {
-            const lista = document.getElementById('lista-tareas');
-            lista.innerHTML = '';
+            const lista = document.getElementById('lista-tareas'); lista.innerHTML = '';
             let t = JSON.parse(localStorage.getItem('tareas_eden') || '[]');
             t.forEach((tarea, i) => {
-                const item = document.createElement('div');
-                item.className = 'task-item';
-                item.id = `nota-${i}`;
+                const item = document.createElement('div'); item.className = 'task-item'; item.id = `nota-${i}`;
                 item.innerHTML = `<input type="checkbox" style="width:20px; cursor:pointer;" ${tarea.done?'checked':''} onchange="toggle(${i})"><div class="task-text" style="${tarea.done?'text-decoration:line-through;opacity:0.5':''}">${tarea.text}</div>`;
                 lista.appendChild(item);
             });
         }
-
         function toggle(i) {
-            let t = JSON.parse(localStorage.getItem('tareas_eden'));
-            t[i].done = !t[i].done;
-            localStorage.setItem('tareas_eden', JSON.stringify(t));
-            cargarTareas();
+            let t = JSON.parse(localStorage.getItem('tareas_eden')); t[i].done = !t[i].done;
+            localStorage.setItem('tareas_eden', JSON.stringify(t)); cargarTareas();
         }
-
         function borrarMarcados() {
-            let t = JSON.parse(localStorage.getItem('tareas_eden') || '[]');
-            let hayMarcados = false;
+            let t = JSON.parse(localStorage.getItem('tareas_eden') || '[]'); let hayMarcados = false;
             const papelera = document.getElementById('btn-borrar');
             t.forEach((tarea, i) => { if(tarea.done) { document.getElementById(`nota-${i}`).classList.add('arrugando'); hayMarcados = true; } });
             if(!hayMarcados) return;
             papelera.classList.add('papelera-atrapando');
             setTimeout(() => { papelera.classList.remove('papelera-atrapando'); }, 550);
-            setTimeout(() => {
-                t = t.filter(tarea => !tarea.done);
-                localStorage.setItem('tareas_eden', JSON.stringify(t));
-                cargarTareas();
-            }, 600);
+            setTimeout(() => { t = t.filter(tarea => !tarea.done); localStorage.setItem('tareas_eden', JSON.stringify(t)); cargarTareas(); }, 600);
         }
 
-        // --- Lógica del Minijuego (ARKANOID REAL) ---
+        // --- LÓGICA MINIJUEGO ULTRA CON POWER-UPS ---
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
-        const scoreElement = document.getElementById("game-score");
+        const menu = document.getElementById("game-over-menu");
         
-        let ballRadius = 8;
-        let x, y, dx, dy;
-        let paddleHeight = 12;
-        let paddleWidth = 90;
-        let paddleX;
-        let brickRowCount = 5; // Más filas
-        let brickColumnCount = 6;
-        let brickWidth = 65;
-        let brickHeight = 20;
-        let brickPadding = 10;
-        let brickOffsetTop = 40;
-        let brickOffsetLeft = 20;
-        let bricks = [];
-        let score = 0;
-        let gameActive = false;
-        let gameInterval;
+        let balls = [];
+        let paddleWidth = 90, paddleX;
+        let bricks = [], powerUps = [];
+        let score = 0, gameActive = false, gameInterval;
+        let isFireBall = false;
 
         function resetVariablesJuego() {
-            x = canvas.width / 2;
-            y = canvas.height - 40;
-            dx = 2.5; // Velocidad más lenta
-            dy = -2.5; 
+            menu.classList.add("hidden");
+            canvas.style.cursor = "none";
+            paddleWidth = 90;
             paddleX = (canvas.width - paddleWidth) / 2;
-            bricks = [];
-            for (let c = 0; c < brickColumnCount; c++) {
-                bricks[c] = [];
-                for (let r = 0; r < brickRowCount; r++) {
-                    bricks[c][r] = { x: 0, y: 0, status: 1 };
-                }
-            }
+            isFireBall = false;
             score = 0;
-            scoreElement.innerText = "SCORE: 0";
+            document.getElementById("game-score").innerText = "SCORE: 0";
+            
+            // Iniciamos con una bola
+            balls = [{ x: canvas.width/2, y: canvas.height-40, dx: 2.5, dy: -2.5, radius: 8 }];
+            
+            // Ladrillos
+            bricks = [];
+            for (let c = 0; c < 7; c++) {
+                bricks[c] = [];
+                for (let r = 0; r < 5; r++) { bricks[c][r] = { x: 0, y: 0, status: 1 }; }
+            }
+            powerUps = [];
         }
 
         document.addEventListener("mousemove", (e) => {
             if (!gameActive) return;
             let rect = canvas.getBoundingClientRect();
-            let relativeX = e.clientX - rect.left;
-            if (relativeX > 0 && relativeX < canvas.width) {
-                paddleX = relativeX - paddleWidth / 2;
-            }
+            let relX = e.clientX - rect.left;
+            if (relX > 0 && relX < canvas.width) paddleX = relX - paddleWidth / 2;
         });
-
-        function collisionDetection() {
-            for (let c = 0; c < brickColumnCount; c++) {
-                for (let r = 0; r < brickRowCount; r++) {
-                    let b = bricks[c][r];
-                    if (b.status === 1) {
-                        if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
-                            dy = -dy;
-                            b.status = 0;
-                            score++;
-                            scoreElement.innerText = "SCORE: " + score;
-                            if (score === brickRowCount * brickColumnCount) {
-                                alert("¡ERES EL REY DEL EDÉN!");
-                                salirDelJuego();
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         function draw() {
             if (!gameActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Ladrillos Neón
-            for (let c = 0; c < brickColumnCount; c++) {
-                for (let r = 0; r < brickRowCount; r++) {
-                    if (bricks[c][r].status === 1) {
-                        let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
-                        let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
-                        bricks[c][r].x = brickX; bricks[c][r].y = brickY;
-                        ctx.fillStyle = "#FF4444";
-                        ctx.shadowBlur = 10; ctx.shadowColor = "#FF4444";
-                        ctx.fillRect(brickX, brickY, brickWidth, brickHeight);
+
+            // 1. Dibujar Ladrillos
+            let allBroken = true;
+            for (let c = 0; c < 7; c++) {
+                for (let r = 0; r < 5; r++) {
+                    let b = bricks[c][r];
+                    if (b.status === 1) {
+                        allBroken = false;
+                        b.x = c * 70 + 10; b.y = r * 25 + 50;
+                        ctx.fillStyle = "#FF4444"; ctx.shadowBlur = 8; ctx.shadowColor = "#FF4444";
+                        ctx.fillRect(b.x, b.y, 60, 20);
                     }
                 }
             }
+            if(allBroken) endPartida("¡EL REY DEL EDÉN!");
 
-            // Bola
-            ctx.beginPath(); ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-            ctx.fillStyle = "#FF0000"; ctx.shadowBlur = 15; ctx.shadowColor = "#FF0000";
-            ctx.fill(); ctx.closePath();
+            // 2. Dibujar Power-ups
+            powerUps.forEach((p, i) => {
+                p.y += 2;
+                ctx.beginPath(); ctx.arc(p.x, p.y, 10, 0, Math.PI*2);
+                ctx.fillStyle = p.type === 'P' ? "#00FFFF" : (p.type === '2' ? "#00FF00" : "#FFA500");
+                ctx.fill(); ctx.closePath();
+                ctx.fillStyle = "black"; ctx.fillText(p.type, p.x-4, p.y+4);
 
-            // Pala Cyan
-            ctx.fillStyle = "#00FFFF"; ctx.shadowBlur = 15; ctx.shadowColor = "#00FFFF";
-            ctx.fillRect(paddleX, canvas.height - paddleHeight - 10, paddleWidth, paddleHeight);
-
-            collisionDetection();
-
-            if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) dx = -dx;
-            if (y + dy < ballRadius) dy = -dy;
-            else if (y + dy > canvas.height - paddleHeight - 20) {
-                if (x > paddleX && x < paddleX + paddleWidth) {
-                    dy = -dy;
-                } else if (y + dy > canvas.height) {
-                    alert("GAME OVER");
-                    salirDelJuego();
+                // Recoger Power-up
+                if(p.y > canvas.height-30 && p.x > paddleX && p.x < paddleX + paddleWidth) {
+                    activarPowerUp(p.type);
+                    powerUps.splice(i, 1);
                 }
-            }
+            });
 
-            x += dx; y += dy;
+            // 3. Dibujar Pala
+            ctx.fillStyle = "#00FFFF"; ctx.shadowBlur = 15; ctx.shadowColor = "#00FFFF";
+            ctx.fillRect(paddleX, canvas.height - 25, paddleWidth, 12);
+
+            // 4. Dibujar y Mover Bolas
+            balls.forEach((b, index) => {
+                ctx.beginPath(); ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+                ctx.fillStyle = isFireBall ? "#FFA500" : "#FF0000";
+                ctx.shadowBlur = 15; ctx.shadowColor = ctx.fillStyle;
+                ctx.fill(); ctx.closePath();
+
+                // Colisión Ladrillos
+                bricks.forEach(col => col.forEach(brick => {
+                    if (brick.status === 1 && b.x > brick.x && b.x < brick.x + 60 && b.y > brick.y && b.y < brick.y + 20) {
+                        if(!isFireBall) b.dy = -b.dy;
+                        brick.status = 0;
+                        score++;
+                        document.getElementById("game-score").innerText = "SCORE: " + score;
+                        // Soltar Power-up (15% probabilidad)
+                        if(Math.random() < 0.15) {
+                            let types = ['P', '2', 'F'];
+                            powerUps.push({x: brick.x+30, y: brick.y, type: types[Math.floor(Math.random()*3)]});
+                        }
+                    }
+                }));
+
+                // Rebotes Paredes
+                if (b.x + b.dx > canvas.width - b.radius || b.x + b.dx < b.radius) b.dx = -b.dx;
+                if (b.y + b.dy < b.radius) b.dy = -b.dy;
+                else if (b.y + b.dy > canvas.height - 35) {
+                    if (b.x > paddleX && b.x < paddleX + paddleWidth) b.dy = -Math.abs(b.dy);
+                    else if (b.y > canvas.height) balls.splice(index, 1);
+                }
+                b.x += b.dx; b.y += b.dy;
+            });
+
+            if(balls.length === 0) endPartida("GAME OVER");
         }
 
-        function iniciarJuegoEden() {
-            mostrarVista('vista-juego');
-            resetVariablesJuego();
-            gameActive = true;
-            gameInterval = setInterval(draw, 10);
+        function activarPowerUp(type) {
+            if(type === 'P') { paddleWidth = 180; setTimeout(() => paddleWidth = 90, 8000); }
+            if(type === '2') { balls.push({ x: paddleX + paddleWidth/2, y: canvas.height-50, dx: -2.5, dy: -2.5, radius: 8 }); }
+            if(type === 'F') { isFireBall = true; setTimeout(() => isFireBall = false, 5000); }
         }
 
-        function salirDelJuego() {
-            gameActive = false;
-            clearInterval(gameInterval);
-            mostrarVista('vista-agenda');
+        function endPartida(msg) {
+            gameActive = false; clearInterval(gameInterval);
+            canvas.style.cursor = "auto";
+            document.getElementById("end-title").innerText = msg;
+            menu.classList.remove("hidden");
         }
+
+        function iniciarJuegoEden() { mostrarVista('vista-juego'); resetVariablesJuego(); gameActive = true; gameInterval = setInterval(draw, 10); }
+        function salirDelJuego() { gameActive = false; clearInterval(gameInterval); mostrarVista('vista-agenda'); }
 
         mostrarVista('vista-login');
     </script>
