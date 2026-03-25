@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA EDEN</title>
+    <title>BIENVENIDOS AL EDÉN</title>
     <style>
         body {
             margin: 0; padding: 0; height: 100vh;
@@ -20,15 +20,24 @@
             background: rgba(0, 20, 50, 0.4); z-index: -1;
         }
 
+        /* --- CONTENEDOR TRANSPARENTE PARA LOGIN --- */
         .container {
-            width: 350px; background: rgba(45, 45, 45, 0.9); 
+            width: 350px; text-align: center;
+            background: rgba(0, 0, 0, 0); /* TRANSPARENTE TOTAL */
             padding: 25px; border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 1;
         }
 
-        h1 { color: #00FFFF; margin-bottom: 20px; font-size: 22px; }
+        /* CONTENEDOR CON FONDO (Solo para la agenda, para que se lea bien) */
+        .container-agenda {
+            background: rgba(45, 45, 45, 0.9) !important;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+
+        h1 { color: #00FFFF; margin-bottom: 20px; font-size: 26px; text-shadow: 0 0 10px rgba(0,255,255,0.4); }
+        
         input {
             width: 85%; padding: 10px; margin: 10px 0; border-radius: 8px;
             border: 1px solid rgba(255,255,255,0.2); background: rgba(255, 255, 255, 0.1);
@@ -42,72 +51,49 @@
 
         .hidden { display: none; }
 
-        .task-list { 
-            text-align: left !important; 
-            max-height: 320px; overflow-y: auto; margin-top: 15px;
-        }
-
-        /* --- FUERZA BRUTA PARA ALINEACIÓN IZQUIERDA --- */
+        /* ESTILOS AGENDA (LOS QUE ARREGLAMOS) */
+        .task-list { text-align: left !important; max-height: 320px; overflow-y: auto; margin-top: 15px; }
         .task-item { 
-            display: flex !important; 
-            flex-direction: row !important; /* Asegura que van en fila */
-            align-items: flex-start !important; /* Checkbox arriba si hay mucho texto */
-            justify-content: flex-start !important; /* TODO A LA IZQUIERDA */
-            background: rgba(255, 255, 255, 0.08);
-            margin-bottom: 8px; padding: 12px !important;
+            display: flex !important; align-items: center !important; justify-content: flex-start !important;
+            background: rgba(255, 255, 255, 0.1); margin-bottom: 8px; padding: 12px !important;
             border-radius: 10px; border-left: 4px solid #00FFFF;
         }
+        .task-text { flex: 1 !important; text-align: left !important; margin-left: 12px !important; font-size: 15px !important; line-height: 1.5 !important; word-break: break-word !important; color: #fff !important; }
+        input[type="checkbox"] { width: 18px !important; height: 18px !important; flex-shrink: 0 !important; cursor: pointer; }
 
-        .task-text {
-            flex: 1 !important; /* Ocupa todo el espacio a la derecha del check */
-            text-align: left !important; 
-            margin-left: 12px !important; 
-            font-size: 15px !important; 
-            line-height: 1.5 !important; /* Espacio entre líneas */
-            word-break: break-word !important; 
-            color: #fff !important;
-            white-space: normal !important; /* Permite saltos de línea */
-        }
-
-        input[type="checkbox"] {
-            width: 18px !important; height: 18px !important;
-            margin-top: 3px !important; flex-shrink: 0 !important;
-            cursor: pointer;
-        }
-
-        .task-list::-webkit-scrollbar { width: 4px; }
-        .task-list::-webkit-scrollbar-thumb { background: #00FFFF; border-radius: 10px; }
+        .frase-secreta { font-size: 12px; color: #bbb; margin-top: 25px; margin-bottom: 10px; font-style: italic; }
     </style>
 </head>
 <body id="cuerpo">
 
     <div id="vista-login" class="container">
-        <h1>SISTEMA EDEN</h1>
+        <h1>BIENVENIDOS AL EDÉN</h1>
         <input type="text" id="user-in" placeholder="Usuario">
         <input type="password" id="pass-in" placeholder="Contraseña">
         <button class="btn-cyan" onclick="validarAcceso()">ENTRAR</button>
-        <p style="cursor:pointer; color:#2196F3; margin-top:15px; font-size: 12px;" onclick="mostrarVista('vista-eden')">REGISTRARSE</p>
+        <p class="frase-secreta">(Un paraíso para tus secretos te espera en el edén)</p>
+        <p style="cursor:pointer; color:#2196F3; font-size: 12px;" onclick="mostrarVista('vista-eden')">REGISTRARSE</p>
     </div>
 
-    <div id="vista-eden" class="container hidden">
-        <h2 style="color:#00FFFF; font-size: 20px;">REGISTRO</h2>
-        <input type="text" id="user-reg" placeholder="Nuevo usuario">
-        <input type="password" id="pass-reg" placeholder="Contraseña">
-        <button class="btn-blue" onclick="ejecutarRegistro()">GUARDAR</button>
-        <p style="cursor:pointer; color:#ccc; margin-top:15px; font-size: 12px;" onclick="mostrarVista('vista-login')">Volver</p>
+    <div id="vista-eden" class="container">
+        <div class="hidden" id="reg-box">
+            <h2 style="color:#00FFFF; font-size: 20px;">REGISTRO</h2>
+            <input type="text" id="user-reg" placeholder="Nuevo usuario">
+            <input type="password" id="pass-reg" placeholder="Contraseña">
+            <button class="btn-blue" onclick="ejecutarRegistro()">GUARDAR</button>
+            <p style="cursor:pointer; color:#ccc; margin-top:15px; font-size: 12px;" onclick="mostrarVista('vista-login')">Volver</p>
+        </div>
     </div>
 
-    <div id="vista-agenda" class="container hidden">
+    <div id="vista-agenda" class="container container-agenda hidden">
         <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
             <h3 style="color:#00FFFF; margin:0; font-size: 18px;">MIS NOTAS</h3>
             <button class="btn-red" onclick="cerrarSesion()">SALIR</button>
         </div>
-        
         <div style="display:flex; gap:8px;">
             <input type="text" id="campo-tarea" placeholder="Nueva nota..." style="margin:0; font-size: 14px; flex-grow:1;">
             <button class="btn-blue" style="width:45px; margin:0;" onclick="añadirTarea()">+</button>
         </div>
-
         <div id="lista-tareas" class="task-list"></div>
         <button style="background:transparent; color:#888; border:1px solid #444; width: 100%; margin-top: 20px; font-size: 10px; cursor:pointer; padding: 5px;" onclick="borrarMarcados()">LIMPIAR COMPLETADAS</button>
     </div>
@@ -117,7 +103,11 @@
             document.getElementById('vista-login').classList.add('hidden');
             document.getElementById('vista-eden').classList.add('hidden');
             document.getElementById('vista-agenda').classList.add('hidden');
-            document.getElementById(id).classList.remove('hidden');
+            document.getElementById('reg-box').classList.add('hidden');
+            
+            const target = document.getElementById(id);
+            target.classList.remove('hidden');
+            if(id === 'vista-eden') document.getElementById('reg-box').classList.remove('hidden');
         }
 
         function validarAcceso() {
@@ -166,10 +156,8 @@
             tareas.forEach((t, i) => {
                 const item = document.createElement('div');
                 item.className = 'task-item';
-                item.innerHTML = `
-                    <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
-                    <div class="task-text" style="${t.done ? 'text-decoration: line-through; color: #888;' : ''}">${t.text}</div>
-                `;
+                item.innerHTML = `<input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
+                    <div class="task-text" style="${t.done ? 'text-decoration: line-through; color: #888;' : ''}">${t.text}</div>`;
                 lista.appendChild(item);
             });
         }
