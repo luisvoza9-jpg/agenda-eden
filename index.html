@@ -36,11 +36,11 @@
         .btn-game-flotante { position: fixed; bottom: 30px; left: 30px; background: none; color: #00FFFF; font-size: 40px; border: none; filter: drop-shadow(0 0 10px #00FFFF); cursor: pointer; z-index: 101; transition: 0.3s; }
         #vista-juego { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('fondo-nubes.jpg'); background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
         #gameCanvas { border: 3px solid #00FFFF; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 30px #00FFFF; cursor: none; }
-        .btn-game-return { position: absolute; top: 20px; left: 20px; color: #00FFFF; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; }
+        .btn-game-return { position: absolute; top: 20px; left: 20px; color: #00FFFF; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1002; }
         #game-score { font-size: 24px; color: #00FFFF; text-shadow: 0 0 10px #00FFFF; margin-bottom: 10px; font-weight: bold; }
         
         /* Menú de Fin de Juego */
-        #game-over-menu { position: absolute; background: rgba(0,0,0,0.9); border: 2px solid #00FFFF; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 50px #00FFFF; }
+        #game-over-menu { position: absolute; background: rgba(0,0,0,0.9); border: 2px solid #00FFFF; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 50px #00FFFF; z-index: 1010; }
         .game-btn-neon { background: none; border: 1px solid #00FFFF; color: #00FFFF; padding: 10px 20px; margin: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .game-btn-neon:hover { background: #00FFFF; color: black; box-shadow: 0 0 20px #00FFFF; }
     </style>
@@ -96,7 +96,6 @@
     </div>
 
     <script>
-        // --- LÓGICA EDÉN (SIN CAMBIOS) ---
         const tituloEden = document.getElementById('titulo-eden');
         const lineas = ["BIENVENIDOS", "AL", "EDÉN"];
         let timer;
@@ -168,7 +167,6 @@
             setTimeout(() => { t = t.filter(tarea => !tarea.done); localStorage.setItem('tareas_eden', JSON.stringify(t)); cargarTareas(); }, 600);
         }
 
-        // --- LÓGICA MINIJUEGO ULTRA CON POWER-UPS ---
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         const menu = document.getElementById("game-over-menu");
@@ -188,10 +186,9 @@
             score = 0;
             document.getElementById("game-score").innerText = "SCORE: 0";
             
-            // Iniciamos con una bola
-            balls = [{ x: canvas.width/2, y: canvas.height-40, dx: 2.5, dy: -2.5, radius: 8 }];
+            // VELOCIDAD RETOCADA A 2.1
+            balls = [{ x: canvas.width/2, y: canvas.height-100, dx: 2.1, dy: -2.1, radius: 8 }];
             
-            // Ladrillos
             bricks = [];
             for (let c = 0; c < 7; c++) {
                 bricks[c] = [];
@@ -211,7 +208,6 @@
             if (!gameActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 1. Dibujar Ladrillos
             let allBroken = true;
             for (let c = 0; c < 7; c++) {
                 for (let r = 0; r < 5; r++) {
@@ -226,7 +222,6 @@
             }
             if(allBroken) endPartida("¡EL REY DEL EDÉN!");
 
-            // 2. Dibujar Power-ups
             powerUps.forEach((p, i) => {
                 p.y += 2;
                 ctx.beginPath(); ctx.arc(p.x, p.y, 10, 0, Math.PI*2);
@@ -234,32 +229,29 @@
                 ctx.fill(); ctx.closePath();
                 ctx.fillStyle = "black"; ctx.fillText(p.type, p.x-4, p.y+4);
 
-                // Recoger Power-up
-                if(p.y > canvas.height-30 && p.x > paddleX && p.x < paddleX + paddleWidth) {
+                // RECOGER POWER-UP EN POSICIÓN ELEVADA
+                if(p.y > canvas.height-75 && p.x > paddleX && p.x < paddleX + paddleWidth) {
                     activarPowerUp(p.type);
                     powerUps.splice(i, 1);
                 }
             });
 
-            // 3. Dibujar Pala
+            // PALA SUBIDA A -70px
             ctx.fillStyle = "#00FFFF"; ctx.shadowBlur = 15; ctx.shadowColor = "#00FFFF";
-            ctx.fillRect(paddleX, canvas.height - 25, paddleWidth, 12);
+            ctx.fillRect(paddleX, canvas.height - 70, paddleWidth, 12);
 
-            // 4. Dibujar y Mover Bolas
             balls.forEach((b, index) => {
                 ctx.beginPath(); ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
                 ctx.fillStyle = isFireBall ? "#FFA500" : "#FF0000";
                 ctx.shadowBlur = 15; ctx.shadowColor = ctx.fillStyle;
                 ctx.fill(); ctx.closePath();
 
-                // Colisión Ladrillos
                 bricks.forEach(col => col.forEach(brick => {
                     if (brick.status === 1 && b.x > brick.x && b.x < brick.x + 60 && b.y > brick.y && b.y < brick.y + 20) {
                         if(!isFireBall) b.dy = -b.dy;
                         brick.status = 0;
                         score++;
                         document.getElementById("game-score").innerText = "SCORE: " + score;
-                        // Soltar Power-up (15% probabilidad)
                         if(Math.random() < 0.15) {
                             let types = ['P', '2', 'F'];
                             powerUps.push({x: brick.x+30, y: brick.y, type: types[Math.floor(Math.random()*3)]});
@@ -267,10 +259,10 @@
                     }
                 }));
 
-                // Rebotes Paredes
                 if (b.x + b.dx > canvas.width - b.radius || b.x + b.dx < b.radius) b.dx = -b.dx;
                 if (b.y + b.dy < b.radius) b.dy = -b.dy;
-                else if (b.y + b.dy > canvas.height - 35) {
+                // REBOTE EN PALA SUBIDA
+                else if (b.y + b.dy > canvas.height - 80) {
                     if (b.x > paddleX && b.x < paddleX + paddleWidth) b.dy = -Math.abs(b.dy);
                     else if (b.y > canvas.height) balls.splice(index, 1);
                 }
@@ -282,8 +274,12 @@
 
         function activarPowerUp(type) {
             if(type === 'P') { paddleWidth = 180; setTimeout(() => paddleWidth = 90, 8000); }
-            if(type === '2') { balls.push({ x: paddleX + paddleWidth/2, y: canvas.height-50, dx: -2.5, dy: -2.5, radius: 8 }); }
-            if(type === 'F') { isFireBall = true; setTimeout(() => isFireBall = false, 5000); }
+            if(type === '2') { balls.push({ x: paddleX + paddleWidth/2, y: canvas.height-100, dx: -2.1, dy: -2.1, radius: 8 }); }
+            if(type === 'F') { 
+                isFireBall = true; 
+                // BOLA DE FUEGO REDUCIDA A 3 SEG
+                setTimeout(() => isFireBall = false, 3000); 
+            }
         }
 
         function endPartida(msg) {
