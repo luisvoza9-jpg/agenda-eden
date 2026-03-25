@@ -6,68 +6,36 @@
     <title>SISTEMA EDEN</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', sans-serif;
-            color: white;
-            background-image: url('fondo.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            transition: background-image 1s ease;
-            position: relative;
+            margin: 0; padding: 0; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Segoe UI', sans-serif; color: white;
+            background-image: url('fondo.jpg'); background-size: cover;
+            background-position: center; background-attachment: fixed;
+            transition: background-image 1s ease; position: relative;
+            overflow: hidden;
         }
 
-        /* CAPA AZUL SUAVE PARA EL INTERIOR */
         body.interior::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 20, 50, 0.4); 
-            z-index: -1;
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 20, 50, 0.4); z-index: -1;
         }
 
-        /* CONTENEDOR PRINCIPAL */
         .container {
-            width: 350px; 
-            text-align: center;
-            background: rgba(45, 45, 45, 0.9); 
-            padding: 25px;
-            border-radius: 20px;
+            width: 350px; background: rgba(45, 45, 45, 0.9); 
+            padding: 25px; border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 1;
         }
 
         h1 { color: #00FFFF; margin-bottom: 20px; font-size: 22px; }
-        
         input {
-            width: 85%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 16px;
-            outline: none;
+            width: 85%; padding: 10px; margin: 10px 0; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2); background: rgba(255, 255, 255, 0.1);
+            color: white; font-size: 16px; outline: none;
         }
 
-        button {
-            padding: 10px;
-            cursor: pointer;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-
+        button { padding: 10px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; transition: 0.3s; }
         .btn-blue { background: #2196F3; color: white; width: 100%; }
         .btn-cyan { background: #00FFFF; color: black; width: 100%; }
         .btn-red { background: #ff4444; color: white; padding: 6px 12px; font-size: 11px; }
@@ -75,45 +43,36 @@
         .hidden { display: none; }
 
         .task-list { 
-            text-align: left; 
-            max-height: 380px; 
-            overflow-y: auto; 
-            margin-top: 15px;
+            text-align: left !important; 
+            max-height: 320px; overflow-y: auto; margin-top: 15px;
         }
 
-        /* --- CORRECCIÓN DE ALINEACIÓN A LA IZQUIERDA --- */
+        /* --- FUERZA BRUTA PARA ALINEACIÓN IZQUIERDA --- */
         .task-item { 
-            display: flex; 
-            align-items: center; /* Centra verticalmente check y texto */
-            justify-content: flex-start; /* PEGA TODO A LA IZQUIERDA */
-            background: rgba(255, 255, 255, 0.1);
-            margin-bottom: 8px;
-            padding: 12px;
-            border-radius: 10px;
-            border-left: 4px solid #00FFFF;
-            animation: slideIn 0.3s ease-out forwards;
+            display: flex !important; 
+            flex-direction: row !important; /* Asegura que van en fila */
+            align-items: flex-start !important; /* Checkbox arriba si hay mucho texto */
+            justify-content: flex-start !important; /* TODO A LA IZQUIERDA */
+            background: rgba(255, 255, 255, 0.08);
+            margin-bottom: 8px; padding: 12px !important;
+            border-radius: 10px; border-left: 4px solid #00FFFF;
         }
 
         .task-text {
-            font-size: 16px; 
-            line-height: 1.4; /* Espacio para que no se amontone el texto */
-            text-align: left; 
-            margin-left: 12px; /* Espacio después del checkbox */
-            flex-grow: 1; /* Ocupa el resto del ancho */
-            word-break: break-word; 
-            color: #fff;
+            flex: 1 !important; /* Ocupa todo el espacio a la derecha del check */
+            text-align: left !important; 
+            margin-left: 12px !important; 
+            font-size: 15px !important; 
+            line-height: 1.5 !important; /* Espacio entre líneas */
+            word-break: break-word !important; 
+            color: #fff !important;
+            white-space: normal !important; /* Permite saltos de línea */
         }
 
         input[type="checkbox"] {
-            transform: scale(1.2);
+            width: 18px !important; height: 18px !important;
+            margin-top: 3px !important; flex-shrink: 0 !important;
             cursor: pointer;
-            flex-shrink: 0; /* Evita que el checkbox se deforme */
-        }
-        /* ----------------------------------------------- */
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
         }
 
         .task-list::-webkit-scrollbar { width: 4px; }
@@ -150,7 +109,7 @@
         </div>
 
         <div id="lista-tareas" class="task-list"></div>
-        <button style="background:transparent; color:#888; border:1px solid #444; width: 100%; margin-top: 20px; font-size: 10px; cursor:pointer; padding: 5px; border-radius: 5px;" onclick="borrarMarcados()">LIMPIAR COMPLETADAS</button>
+        <button style="background:transparent; color:#888; border:1px solid #444; width: 100%; margin-top: 20px; font-size: 10px; cursor:pointer; padding: 5px;" onclick="borrarMarcados()">LIMPIAR COMPLETADAS</button>
     </div>
 
     <script>
@@ -205,11 +164,13 @@
             lista.innerHTML = '';
             let tareas = JSON.parse(localStorage.getItem('tareas_eden') || '[]');
             tareas.forEach((t, i) => {
-                lista.innerHTML += `
-                    <div class="task-item">
-                        <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
-                        <div class="task-text" style="${t.done ? 'text-decoration: line-through; color: #888;' : ''}">${t.text}</div>
-                    </div>`;
+                const item = document.createElement('div');
+                item.className = 'task-item';
+                item.innerHTML = `
+                    <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
+                    <div class="task-text" style="${t.done ? 'text-decoration: line-through; color: #888;' : ''}">${t.text}</div>
+                `;
+                lista.appendChild(item);
             });
         }
 
