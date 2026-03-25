@@ -17,7 +17,6 @@
             overflow: hidden;
         }
 
-        /* Capa sutil para que el neón resalte en el login */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.3);
@@ -31,14 +30,12 @@
             z-index: 10;
         }
 
-        /* TITULOS NEÓN CENTRADOS */
         h1, h2 { 
             color: #00FFFF; margin-bottom: 15px; font-size: 32px; 
             text-shadow: 0 0 15px #00FFFF;
             text-align: center;
         }
 
-        /* FRASE DEL EDÉN NEÓN */
         .frase-neon {
             color: #00FFFF;
             font-size: 14px;
@@ -56,7 +53,6 @@
             text-align: center;
         }
 
-        /* AGENDA TOTALMENTE TRANSPARENTE (SIN EL CUADRO BLANCO DE TU FOTO) */
         #vista-agenda {
             background: transparent !important;
             box-shadow: none !important;
@@ -68,23 +64,26 @@
             text-align: left; margin-bottom: 20px;
         }
 
-        /* ENTRADA DE NOTAS A LA IZQUIERDA */
         .task-input-group { display: flex; gap: 10px; }
         #campo-tarea { 
-            text-align: left; /* Volvemos a la izquierda */
+            text-align: left; 
             padding-left: 15px;
             flex: 1;
         }
 
-        .btn-blue { background: #00FFFF; color: black; width: 60px; font-size: 20px; border-radius: 10px; }
+        .btn-blue { background: #00FFFF; color: black; width: 60px; font-size: 20px; border-radius: 10px; border: none; cursor: pointer; }
 
-        /* LISTA DE TAREAS */
-        .task-list { text-align: left; margin-top: 20px; max-height: 300px; overflow-y: auto; }
+        .task-list { text-align: left; margin-top: 20px; max-height: 300px; overflow-y: auto; position: relative; }
+        
+        /* ESTILO TAREA NORMAL */
         .task-item { 
-            background: rgba(0, 0, 0, 0.5); /* Fondo oscuro sutil para leer bien */
+            background: rgba(0, 0, 0, 0.5); 
             margin-bottom: 10px; padding: 15px;
             border-radius: 10px; display: flex; align-items: center;
             border: 1px solid rgba(0, 255, 255, 0.2);
+            transition: all 0.2s ease-out; /* Para los checks normales */
+            opacity: 1;
+            transform: scale(1);
         }
         .task-text { flex: 1; margin-left: 10px; color: white; font-size: 16px; }
 
@@ -95,14 +94,53 @@
         }
         .exit-text { font-size: 10px; font-weight: bold; }
 
+        /* === PAPELERA QUIETA Y CON PULSO NEÓN === */
+        @keyframes pulsoNeon {
+            0% { filter: drop-shadow(0 0 10px #ff4444); }
+            50% { filter: drop-shadow(0 0 20px #ff0000); }
+            100% { filter: drop-shadow(0 0 10px #ff4444); }
+        }
+
         .btn-trash-central {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             background: none; color: #ff4444; font-size: 50px; border: none; 
             filter: drop-shadow(0 0 10px #ff4444); cursor: pointer;
+            transition: all 0.3s ease; /* Para el hover */
+        }
+        
+        /* Papelera al poner el ratón: solo brilla más, NO se mueve */
+        .btn-trash-central:hover { 
+            animation: pulsoNeon 1.5s infinite; 
+            transform: translateX(-50%) scale(1.05); /* Un pelín más grande, pero centrada */
         }
         
         .hidden { display: none !important; }
-        button:hover { opacity: 0.8; transform: scale(1.05); transition: 0.2s; }
+        button:hover { opacity: 0.8; transition: 0.2s; }
+
+        /* === ANIMACIONES DE LA BOLA DE PAPEL === */
+        @keyframes arrugar {
+            0% { opacity: 1; transform: scale(1); border-radius: 10px; }
+            50% { opacity: 0.7; transform: scale(0.6) rotate(15deg); border-radius: 50%; background: #fff; border-color: #ccc; }
+            100% { opacity: 0.3; transform: scale(0.1) rotate(0deg); border-radius: 50%; background: #fff; }
+        }
+
+        @keyframes volarALaBasura {
+            0% { transform: translateY(0) scale(0.1); }
+            100% { transform: translateY(50vh) scale(0); opacity: 0; }
+        }
+
+        /* Clase que se aplica a la nota que vamos a borrar */
+        .arrugando {
+            animation: arrugar 0.6s ease-in-out forwards;
+            position: relative;
+            z-index: 20;
+            overflow: hidden; /* Oculta el texto al arrugarse */
+        }
+        
+        .task-list.borrando {
+            overflow: visible; /* Necesario para que la bola "vuele" fuera de la agenda */
+        }
+
     </style>
 </head>
 <body>
@@ -144,6 +182,7 @@
     <script>
         const btnBorrar = document.getElementById('btn-borrar');
         const overlay = document.getElementById('pantalla-oscura');
+        const listaTareas = document.getElementById('lista-tareas');
 
         function mostrarVista(id) {
             document.getElementById('vista-login').classList.add('hidden');
@@ -192,16 +231,16 @@
         }
 
         function cargarTareas() {
-            const lista = document.getElementById('lista-tareas');
-            lista.innerHTML = '';
+            listaTareas.innerHTML = '';
             let tareas = JSON.parse(localStorage.getItem('tareas_eden') || '[]');
             tareas.forEach((t, i) => {
                 const item = document.createElement('div');
                 item.className = 'task-item';
+                item.id = `nota-${i}`; // ID único para poder animar
                 item.innerHTML = `
-                    <input type="checkbox" style="width:20px; margin:0;" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
+                    <input type="checkbox" style="width:20px; margin:0; cursor:pointer;" ${t.done ? 'checked' : ''} onchange="toggleTarea(${i})">
                     <div class="task-text" style="${t.done ? 'text-decoration:line-through; opacity:0.5;' : ''}">${t.text}</div>`;
-                lista.appendChild(item);
+                listaTareas.appendChild(item);
             });
         }
 
@@ -212,11 +251,42 @@
             cargarTareas();
         }
 
+        // === NUEVA FUNCIÓN DE BORRADO CON ANIMACIÓN "BOLA DE PAPEL" ===
         function borrarMarcados() {
             let tareas = JSON.parse(localStorage.getItem('tareas_eden') || '[]');
-            tareas = tareas.filter(t => !t.done);
-            localStorage.setItem('tareas_eden', JSON.stringify(tareas));
-            cargarTareas();
+            
+            // 1. Identificar qué índices están marcados (t.done es true)
+            const indicesABorrar = tareas.reduce((acc, t, i) => {
+                if (t.done) acc.push(i);
+                return acc;
+            }, []);
+
+            if (indicesABorrar.length === 0) return; // Nada que borrar
+
+            // 2. Activar modo "vuelo" en la lista
+            listaTareas.classList.add('borrando');
+
+            // 3. Aplicar la animación de arrugado a cada nota marcada
+            indicesABorrar.forEach(index => {
+                const elementoNota = document.getElementById(`nota-${index}`);
+                if (elementoNota) {
+                    elementoNota.classList.add('arrugando');
+                }
+            });
+
+            // 4. Esperar a que termine la animación de arrugado (0.6s)
+            setTimeout(() => {
+                // 5. Borrar los datos REALES del localStorage
+                tareas = tareas.filter(t => !t.done);
+                localStorage.setItem('tareas_eden', JSON.stringify(tareas));
+
+                // 6. Recargar la lista (ahora ya sin las notas borradas)
+                cargarTareas();
+
+                // 7. Desactivar modo "vuelo"
+                listaTareas.classList.remove('borrando');
+                
+            }, 600); // 600 milisegundos es el tiempo de la animación .arrugando
         }
 
         mostrarVista('vista-login');
