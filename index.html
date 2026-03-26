@@ -721,7 +721,7 @@ function mostrarVista(id){
     ['exit-btn','settings-btn','chat-btn'].forEach(b=>document.getElementById(b).classList.remove('hidden'));
     if(id==='vista-agenda'){
       document.getElementById('pantalla-oscura').classList.add('hidden');
-      dibujarPreviewLadrillos();dibujarPreviewFlappy();
+      dibujarPreviewLadrillos();dibujarPreviewFlappy();dibujarPreviewCandy();
     }else if(id==='vista-chat'){
       document.getElementById('pantalla-oscura').classList.remove('hidden');escucharChat();
     }else if(id==='vista-ajustes'){
@@ -1803,14 +1803,16 @@ function dibujarPreviewFlappy(){
 /* ═════════════════════════════════════════════════════
    JUEGO 3 — CANDY EDEN
 ═══════════════════════════════════════════════════════ */
-const cCvs=document.getElementById('candyCanvas'),cCtx=cCvs.getContext('2d');
-const CANDY_SIZE=40,CANDY_ROWS=8,CANDY_COLS=8;
-let candyGrid=[],candyNivel=1,candyPuntos=0,candyMovimientos=30;
-let candySeleccionado=null,candyActivo=false;
-let candyPowerUps={};
+const cCvs=document.getElementById('candyCanvas');
+if(cCvs){
+  const cCtx=cCvs.getContext('2d');
+  const CANDY_SIZE=40,CANDY_ROWS=8,CANDY_COLS=8;
+  let candyGrid=[],candyNivel=1,candyPuntos=0,candyMovimientos=30;
+  let candySeleccionado=null,candyActivo=false;
+  let candyPowerUps={};
 
-const CANDY_TYPES=['🍬','🍭','🍫','🍪','🍯','🍮','🍧','🍨'];
-const CANDY_COLORS=['#FF0000','#00FF00','#0000FF','#FFFF00','#FF00FF','#00FFFF','#FFA500','#800080','#FFC0CB'];
+  const CANDY_TYPES=['🍬','🍭','🍫','🍪','🍯','🍮','🍧','🍨'];
+  const CANDY_COLORS=['#FF0000','#00FF00','#0000FF','#FFFF00','#FF00FF','#00FFFF','#FFA500','#800080','#FFC0CB'];
 
 function iniciarCandyEden(){
   mostrarVista('vista-candy');
@@ -1907,6 +1909,42 @@ cCvs.onclick=function(e){
   const rect=cCvs.getBoundingClientRect();
   const x=e.clientX-rect.left;
   const y=e.clientY-rect.top-60; // Ajustar por el offset del header
+  
+  const c=Math.floor(x/CANDY_SIZE);
+  const r=Math.floor(y/CANDY_SIZE);
+  
+  if(r>=0&&r<CANDY_ROWS&&c>=0&&c<CANDY_COLS){
+    const candy=candyGrid[r][c];
+    if(!candy.eliminado){
+      if(!candySeleccionado){
+        candySeleccionado=candy;
+        dibujarCandy();
+      }else if(candySeleccionado===candy){
+        candySeleccionado=null;
+        dibujarCandy();
+      }else{
+        // Intentar intercambiar
+        if(sonAdyacentes(candySeleccionado,candy)){
+          intercambiarCandy(candySeleccionado,candy);
+          candySeleccionado=null;
+        }else{
+          candySeleccionado=candy;
+          dibujarCandy();
+        }
+      }
+    }
+  }
+};
+
+// Soporte para touch en móvil
+cCvs.ontouchstart=function(e){
+  if(candyActivo)return;
+  e.preventDefault();
+  
+  const rect=cCvs.getBoundingClientRect();
+  const touch=e.touches[0];
+  const x=touch.clientX-rect.left;
+  const y=touch.clientY-rect.top-60; // Ajustar por el offset del header
   
   const c=Math.floor(x/CANDY_SIZE);
   const r=Math.floor(y/CANDY_SIZE);
@@ -2220,6 +2258,7 @@ function dibujarPreviewCandy(){
     }
   }
 }
+}
 
 /* ═══════════════════ INIT ═══════════════════ */
 if(!cargarSesionLocal()){
@@ -2228,5 +2267,3 @@ if(!cargarSesionLocal()){
 </script>
 </body>
 </html>
-
-
