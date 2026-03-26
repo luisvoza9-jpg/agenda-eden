@@ -53,6 +53,8 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   border:1px solid rgba(0,255,255,.3);cursor:pointer;transition:.3s}
 .shop-item:hover{background:rgba(0,255,255,.2);border-color:#00FFFF}
 .shop-price{display:block;font-size:10px;color:#FFD700;margin-top:5px}
+.equipar-btn{background:linear-gradient(135deg,#00FF00,#00AA00);color:white;border:1px solid #00FF00;border-radius:8px;padding:8px 12px;cursor:pointer;transition:.3s;font-size:11px;font-weight:bold;margin-top:5px;width:100%}
+.equipar-btn:hover{background:linear-gradient(135deg,#00DD00,#008800);box-shadow:0 0 10px rgba(0,255,0,.3)}
 .shop-label{font-size:11px;font-weight:bold;display:block;margin-top:15px;
   color:#00FFFF;border-bottom:1px solid rgba(0,255,255,.2)}
 /* Notas */
@@ -317,17 +319,26 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <span class="shop-label">PAJAROS</span>
     <div class="shop-grid">
       <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('pajaro','red')">Equipar 🦜</button>
       <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🦩</span><span class="shop-price">750 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('pajaro','pink')">Equipar 🦩</button>
       <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">�</span><span class="shop-price">1000 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('pajaro','yellow')">Equipar �</button>
       <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🦅</span><span class="shop-price">600 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('pajaro','blue')">Equipar 🦅</button>
       <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🦚</span><span class="shop-price">800 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('pajaro','green')">Equipar 🦚</button>
       <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('pajaro','purple')">Equipar 🦢</button>
     </div>
     <span class="shop-label">PELOTAS</span>
     <div class="shop-grid">
       <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('bola','blue')">Equipar ● Azul</button>
       <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('bola','pink')">Equipar ● Rosa</button>
       <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('bola','yellow')">Equipar ● Amarilla</button>
     </div>
     <span class="shop-label">VIDAS EXTRAS</span>
     <div class="shop-grid">
