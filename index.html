@@ -610,8 +610,11 @@ function entrarConGoogle(){
       if(user.photoURL){flappyAvatarData=user.photoURL;cargarFlappyAvatar(user.photoURL);}
       currentUser=userKey;
       guardarSesionLocal(userKey,user.uid);
-      // Entrar directamente al juego sin mostrar login
-      configurarCarteraYEntrar(s.exists()?(s.val().saldo||0):0);
+      // Verificar premio primer habitante del año antes de entrar
+      verificarPrimerHabitanteAno().then(() => {
+        // Entrar directamente al juego sin mostrar login
+        configurarCarteraYEntrar(s.exists()?(s.val().saldo||0):0);
+      });
     });
   }).catch(e=>alert("Error Google: "+e.message));
 }
@@ -635,9 +638,9 @@ function mostrarVista(id){
       document.getElementById('pantalla-oscura').classList.remove('hidden');
       db.ref('usuarios/'+currentUser).once('value',s=>{
         const d=s.val()||{};
-        document.getElementById('perfil-nombre').innerText="Usuario: "+currentUID;
+        document.getElementById('perfil-nombre').innerText="Usuario: "+currentUser;
         document.getElementById('perfil-edad').innerText="Edad: "+(d.age||"No definida");
-        document.getElementById('uid-box').innerText=currentUID||"—";
+        document.getElementById('uid-box').innerText=currentUser||"—";
         if(d.avatar){
           if(d.avatar.includes('data:image')||d.avatar.startsWith('http'))
             document.getElementById('avatar-img').innerHTML='<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover;">';
@@ -848,7 +851,10 @@ function cargarSesionLocal(){
         const d=s.val();
         if(d.foto&&(d.foto.startsWith('http')||d.foto.includes('data:image'))){flappyAvatarData=d.foto;cargarFlappyAvatar(d.foto);}
         else if(d.avatar&&(d.avatar.startsWith('http')||d.avatar.includes('data:image'))){flappyAvatarData=d.avatar;cargarFlappyAvatar(d.avatar);}
-        configurarCarteraYEntrar(d.saldo||0);
+        // Verificar premio primer habitante del año antes de entrar
+        verificarPrimerHabitanteAno().then(() => {
+          configurarCarteraYEntrar(d.saldo||0);
+        });
       }else{
         limpiarSesionLocal();
         mostrarVista('vista-login');
@@ -874,7 +880,10 @@ function validarAcceso(){
       const d=s.val();
       if(d.foto&&(d.foto.startsWith('http')||d.foto.includes('data:image'))){flappyAvatarData=d.foto;cargarFlappyAvatar(d.foto);}
       else if(d.avatar&&(d.avatar.startsWith('http')||d.avatar.includes('data:image'))){flappyAvatarData=d.avatar;cargarFlappyAvatar(d.avatar);}
-      configurarCarteraYEntrar(d.saldo||0);
+      // Verificar premio primer habitante del año antes de entrar
+      verificarPrimerHabitanteAno().then(() => {
+        configurarCarteraYEntrar(d.saldo||0);
+      });
     }else alert("Error de acceso");
   });
 }
@@ -949,13 +958,18 @@ function cargarInventario(){
   const container=document.getElementById('inventario-container');
   if(!container)return;
   
-  db.ref('usuarios/'+currentUser+'/inventario').once('value',snap=>{
+  // Obtener tanto el inventario como las vidas disponibles directamente
+  Promise.all([
+    db.ref('usuarios/'+currentUser+'/inventario').once('value'),
+    db.ref('usuarios/'+currentUser+'/vidas_disponibles').once('value')
+  ]).then(([snapInv, snapVidas])=>{
     let html='';
-    const inventario=snap.val()||{};
+    const inventario=snapInv.val()||{};
+    const vidasDisponibles=snapVidas.val()||0;
     
     // Mostrar vidas extra
-    if(inventario.vidas && inventario.vidas>0){
-      html+='<div style="color:#FFD700;font-size:12px;margin-bottom:5px">❤️ Vidas extra: '+inventario.vidas+'</div>';
+    if(vidasDisponibles>0){
+      html+='<div style="color:#FFD700;font-size:12px;margin-bottom:5px">❤️ Vidas extra: '+vidasDisponibles+'</div>';
     }
     
     // Mostrar paletas
@@ -1022,10 +1036,10 @@ function comprar(tipo,valor){
       
       // Guardar objeto comprado en el inventario
       if(tipo==='vida'){
-        // Guardar vidas adicionales
-        db.ref('usuarios/'+currentUser+'/inventario/vidas').once('value',s=>{
+        // Guardar vidas adicionales en el campo vidas_disponibles
+        db.ref('usuarios/'+currentUser+'/vidas_disponibles').once('value',s=>{
           const vidasActuales=s.val()||0;
-          db.ref('usuarios/'+currentUser+'/inventario/vidas').set(vidasActuales+valor);
+          db.ref('usuarios/'+currentUser+'/vidas_disponibles').set(vidasActuales+valor);
         });
       }else{
         // Guardar objetos cosméticos (paletas, pájaros, pelotas)
@@ -1040,6 +1054,88 @@ function comprar(tipo,valor){
       alert('¡Gracias por tu compra! Objeto guardado en tu inventario.');
     });
   }else{reproducir('fail');alert("No tienes suficiente €Eden€");}
+}
+
+/* ═══════════════════ PREMIO PRIMER HABITANTE DEL AÑO ═══════════════════ */
+function verificarPrimerHabitanteAno(){
+  if(!currentUser||currentUser==='admin')return Promise.resolve(false);
+  
+  const anoActual = new Date().getFullYear();
+  const controlRef = db.ref('sistema/control_anual/ultimo_ano_premiado');
+  
+  return controlRef.transaction(function(ultimoAnoPremiado) {
+    // Si no existe el valor, inicializarlo en 2025
+    if(ultimoAnoPremiado === null){
+      return 2025;
+    }
+    
+    // Si el año actual es mayor que el último premiado, otorgar premio
+    if(anoActual > ultimoAnoPremiado){
+      // Retornar el año actual para actualizarlo
+      return anoActual;
+    }
+    
+    // Si no hay premio, retornar el mismo valor
+    return ultimoAnoPremiado;
+  }).then(function(result) {
+    const nuevoValor = result.snapshot.val();
+    const valorAnterior = result.committed ? (anoActual - 1) : nuevoValor;
+    
+    // Si el valor cambió, significa que este usuario recibió el premio
+    if(nuevoValor > valorAnterior && nuevoValor === anoActual){
+      // Otorgar premio de 100,000 €Eden€
+      return db.ref('usuarios/'+currentUser+'/saldo').transaction(function(saldoActual) {
+        return (saldoActual || 0) + 100000;
+      }).then(function() {
+        // Mostrar alerta de premio
+        setTimeout(() => {
+          alert('🎉 ¡ENHORABUENA! Eres el primer habitante de Eden en el año ' + anoActual + '.\n\nHas recibido un regalo de 100,000 €Eden€.\n\n¡Disfruta de tu premio! 🎊');
+          reproducir('coin');
+        }, 1000);
+        return true;
+      });
+    }
+    
+    return false;
+  }).catch(function(error) {
+    console.error('Error en verificación de primer habitante:', error);
+    return false;
+  });
+}
+
+/* ═══════════════════ SISTEMA DE VIDAS ═══════════════════ */
+function usarVida(juego){
+  if(!currentUser||currentUser==='admin')return;
+  
+  db.ref('usuarios/'+currentUser+'/vidas_disponibles').once('value',s=>{
+    const vidas=s.val()||0;
+    if(vidas>0){
+      // Restar 1 vida
+      db.ref('usuarios/'+currentUser+'/vidas_disponibles').set(vidas-1).then(()=>{
+        reproducir('coin');
+        
+        if(juego==='ladrillos'){
+          // Continuar juego de ladrillos
+          menuGameOver.classList.add('hidden');
+          gameActive=true;
+          // Reponer una pelota y continuar
+          let rad=(currentDifficulty==='eden')?5:8;
+          balls=[{x:canvas.width/2,y:canvas.height-100,dx:4.5,dy:-4.5,radius:rad}];
+          function gameLoop(){if(gameActive){draw();gameInterval=requestAnimationFrame(gameLoop);}}
+          gameLoop();
+        }else if(juego==='flappy'){
+          // Continuar juego de flappy
+          document.getElementById('flappy-over-menu').classList.add('hidden');
+          fBird={x:70,y:FH/2,vy:0,r:20};
+          fActive=true;
+          fLoop();
+        }
+      });
+    }else{
+      reproducir('fail');
+      alert('No tienes vidas disponibles. Compra más en la tienda.');
+    }
+  });
 }
 
 /* ═══════════════════ OVERLAYS COMPARTIDOS ═══════════════════ */
@@ -1299,15 +1395,50 @@ function draw(){
   if(balls.length===0){reproducir('fail');gameActive=false;endPartida();}
 }
 function endPartida(){
-  menuGameOver.classList.remove("hidden");
-  document.getElementById('end-score-txt').innerText='Puntuación: '+score+' €Eden€';
   if(currentUser&&currentUser!=='admin'){
-    // Dar XP por jugar
-    darXPporJuego(score);
-    
-    db.ref('usuarios/'+currentUser).update({saldo:userBalance+score});
-    db.ref('usuarios/'+currentUser+'/puntos').once('value',s=>{if(score>(s.val()||0))db.ref('usuarios/'+currentUser+'/puntos').set(score);});
-    db.ref('ranking/'+currentDifficulty+'/'+currentUser).once('value',s=>{if(!s.exists()||score>s.val())db.ref('ranking/'+currentDifficulty+'/'+currentUser).set(score);});
+    // Comprobar si hay vidas disponibles antes de mostrar Game Over
+    db.ref('usuarios/'+currentUser+'/vidas_disponibles').once('value',s=>{
+      const vidas=s.val()||0;
+      
+      if(vidas>0){
+        // Mostrar menú con opción de usar vida
+        menuGameOver.classList.remove("hidden");
+        document.getElementById('end-score-txt').innerHTML='Puntuación: '+score+' €Eden€<br><span style="color:#00FF00;font-size:12px">❤️ Tienes '+vidas+' vida(s) disponible(s)</span>';
+        
+        // Modificar botones del menú Game Over
+        menuGameOver.innerHTML = `
+          <h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2>
+          <p id="end-score-txt" style="color:#FFD700;font-size:13px;margin-bottom:12px">Puntuación: ${score} €Eden€</p>
+          <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="usarVida('ladrillos')">❤️ Usar 1 Vida para continuar</button>
+          <button class="game-btn-neon" onclick="abrirMenuDificultad()">🔄 Reiniciar nivel</button>
+          <button class="game-btn-neon" onclick="toggleShopIngame('ladrillos')">🛒 Tienda</button>
+          <button class="game-btn-neon" onclick="salirDelJuego()">🚪 Salir</button>
+        `;
+      }else{
+        // No hay vidas, mostrar Game Over normal
+        menuGameOver.classList.remove("hidden");
+        document.getElementById('end-score-txt').innerText='Puntuación: '+score+' €Eden€';
+        
+        // Restaurar botones normales
+        menuGameOver.innerHTML = `
+          <h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2>
+          <p id="end-score-txt" style="color:#FFD700;font-size:13px;margin-bottom:12px">Puntuación: ${score} €Eden€</p>
+          <button class="game-btn-neon" onclick="abrirMenuDificultad()">¡Repetir!</button>
+          <button class="game-btn-neon" onclick="toggleShopIngame('ladrillos')">🛒 Tienda</button>
+          <button class="game-btn-neon" onclick="salirDelJuego()">Salir</button>
+        `;
+        
+        // Dar XP y guardar puntuación solo si no hay vidas
+        darXPporJuego(score);
+        db.ref('usuarios/'+currentUser).update({saldo:userBalance+score});
+        db.ref('usuarios/'+currentUser+'/puntos').once('value',s=>{if(score>(s.val()||0))db.ref('usuarios/'+currentUser+'/puntos').set(score);});
+        db.ref('ranking/'+currentDifficulty+'/'+currentUser).once('value',s=>{if(!s.exists()||score>s.val())db.ref('ranking/'+currentDifficulty+'/'+currentUser).set(score);});
+      }
+    });
+  }else{
+    // Usuario admin o sin login
+    menuGameOver.classList.remove("hidden");
+    document.getElementById('end-score-txt').innerText='Puntuación: '+score+' €Eden€';
   }
 }
 
@@ -1448,18 +1579,55 @@ function _drawFlappyBird(){
 }
 
 function fEndGame(){
-  document.getElementById('flappy-over-menu').classList.remove('hidden');
-  document.getElementById('flappy-score-txt').innerText='Puntuación: '+fScore+' €Eden€';
   if(currentUser&&currentUser!=='admin'){
-    // Dar XP por jugar
-    darXPporJuego(fScore);
-    
-    db.ref('usuarios/'+currentUser+'/puntosFlappy').once('value',s=>{
-      if(fScore>(s.val()||0))db.ref('usuarios/'+currentUser+'/puntosFlappy').set(fScore);
+    // Comprobar si hay vidas disponibles antes de mostrar Game Over
+    db.ref('usuarios/'+currentUser+'/vidas_disponibles').once('value',s=>{
+      const vidas=s.val()||0;
+      
+      if(vidas>0){
+        // Mostrar menú con opción de usar vida
+        const overMenu=document.getElementById('flappy-over-menu');
+        overMenu.classList.remove('hidden');
+        document.getElementById('flappy-score-txt').innerHTML='Puntuación: '+fScore+' €Eden€<br><span style="color:#00FF00;font-size:12px">❤️ Tienes '+vidas+' vida(s) disponible(s)</span>';
+        
+        // Modificar botones del menú Game Over
+        overMenu.innerHTML = `
+          <h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2>
+          <p id="flappy-score-txt" style="color:#FFD700;font-size:14px;margin-bottom:12px">Puntuación: ${fScore} €Eden€</p>
+          <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="usarVida('flappy')">❤️ Usar 1 Vida para continuar</button>
+          <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">🔄 Reiniciar</button>
+          <button class="game-btn-neon" onclick="toggleShopIngame('flappy')">🛒 Tienda</button>
+          <button class="game-btn-neon" onclick="salirFlappy()">🚪 Salir</button>
+        `;
+      }else{
+        // No hay vidas, mostrar Game Over normal
+        const overMenu=document.getElementById('flappy-over-menu');
+        overMenu.classList.remove('hidden');
+        document.getElementById('flappy-score-txt').innerText='Puntuación: '+fScore+' €Eden€';
+        
+        // Restaurar botones normales
+        overMenu.innerHTML = `
+          <h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2>
+          <p id="flappy-score-txt" style="color:#FFD700;font-size:14px;margin-bottom:12px">Puntuación: ${fScore} €Eden€</p>
+          <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">¡Repetir!</button>
+          <button class="game-btn-neon" onclick="toggleShopIngame('flappy')">🛒 Tienda</button>
+          <button class="game-btn-neon" onclick="salirFlappy()">Salir</button>
+        `;
+        
+        // Dar XP y guardar puntuación solo si no hay vidas
+        darXPporJuego(fScore);
+        db.ref('usuarios/'+currentUser+'/puntosFlappy').once('value',s=>{
+          if(fScore>(s.val()||0))db.ref('usuarios/'+currentUser+'/puntosFlappy').set(fScore);
+        });
+        db.ref('ranking/flappy/'+currentUser).once('value',s=>{
+          if(!s.exists()||fScore>s.val())db.ref('ranking/flappy/'+currentUser).set(fScore);
+        });
+      }
     });
-    db.ref('ranking/flappy/'+currentUser).once('value',s=>{
-      if(!s.exists()||fScore>s.val())db.ref('ranking/flappy/'+currentUser).set(fScore);
-    });
+  }else{
+    // Usuario admin o sin login
+    document.getElementById('flappy-over-menu').classList.remove('hidden');
+    document.getElementById('flappy-score-txt').innerText='Puntuación: '+fScore+' €Eden€';
   }
 }
 
@@ -1509,4 +1677,6 @@ if(!cargarSesionLocal()){
 </script>
 </body>
 </html>
+
+
 
