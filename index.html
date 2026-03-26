@@ -294,11 +294,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <button class="game-btn-neon" style="margin-top:8px" onclick="toggleListaAmigos()">Ver mis amigos 👥</button>
     <div id="lista-amigos-wrap"><div id="lista-amigos" style="margin-top:8px"></div></div>
     <hr style="border:0;border-top:1px solid rgba(0,255,255,.2);margin:15px 0">
-    <p style="font-size:12px;color:#00FFFF;margin-bottom:5px">🎒 Mi Inventario</p>
-    <div id="inventario-container" style="background:rgba(0,255,255,.05);border:1px solid rgba(0,255,255,.2);border-radius:10px;padding:10px;margin-bottom:10px;max-height:150px;overflow-y:auto">
-      <p style="color:#aaa;font-size:11px;text-align:center">Cargando inventario...</p>
-    </div>
-    <hr style="border:0;border-top:1px solid rgba(0,255,255,.2);margin:15px 0">
     <button class="game-btn-neon" onclick="mostrarPremiosDiarios()">🎁 Ver Premios Diarios</button>
     <hr style="border:0;border-top:1px solid rgba(0,255,255,.2);margin:15px 0">
     <p style="font-size:12px;color:#00FFFF;margin-bottom:5px">Editar Datos</p>
@@ -650,7 +645,6 @@ function mostrarVista(id){
         db.ref('ranking/eden/'+currentUser).once('value',r=>{
           document.getElementById('perfil-puntos').innerText="Récord Edén: "+(r.val()||0)+" pts";
         });
-        cargarInventario();
         actualizarUIPerfil();
       });
     }else document.getElementById('pantalla-oscura').classList.remove('hidden');
@@ -955,69 +949,7 @@ function modificarTareaInline(i){
 }
 
 function cargarInventario(){
-  const container=document.getElementById('inventario-container');
-  if(!container)return;
-  
-  // Obtener tanto el inventario como las vidas disponibles directamente
-  Promise.all([
-    db.ref('usuarios/'+currentUser+'/inventario').once('value'),
-    db.ref('usuarios/'+currentUser+'/vidas_disponibles').once('value')
-  ]).then(([snapInv, snapVidas])=>{
-    let html='';
-    const inventario=snapInv.val()||{};
-    const vidasDisponibles=snapVidas.val()||0;
-    
-    // Mostrar vidas extra
-    if(vidasDisponibles>0){
-      html+='<div style="color:#FFD700;font-size:12px;margin-bottom:5px">❤️ Vidas extra: '+vidasDisponibles+'</div>';
-    }
-    
-    // Mostrar paletas
-    if(inventario.paletas){
-      const paletas=Object.keys(inventario.paletas);
-      if(paletas.length>0){
-        html+='<div style="color:#00FFFF;font-size:12px;margin-bottom:5px">🏓 Paletas: ';
-        paletas.forEach(color=>{html+='<span style="color:'+color+'">▬</span> ';});
-        html+='</div>';
-      }
-    }
-    
-    // Mostrar pájaros
-    if(inventario.pajaros){
-      const pajaros=Object.keys(inventario.pajaros);
-      if(pajaros.length>0){
-        html+='<div style="color:#00FF00;font-size:12px;margin-bottom:5px">🐦 Pájaros: ';
-        pajaros.forEach(color=>{html+='<span style="color:'+color+'">🐦</span> ';});
-        html+='</div>';
-      }
-    }
-    
-    // Mostrar pelotas
-    if(inventario.pelotas){
-      const pelotas=Object.keys(inventario.pelotas);
-      if(pelotas.length>0){
-        html+='<div style="color:#FF69B4;font-size:12px;margin-bottom:5px">⚪ Pelotas: ';
-        pelotas.forEach(color=>{html+='<span style="color:'+color+'">●</span> ';});
-        html+='</div>';
-      }
-    }
-    
-    // Mostrar avatares ganados
-    if(inventario.avatars){
-      const avatars=Object.keys(inventario.avatars);
-      if(avatars.length>0){
-        html+='<div style="color:#FFD700;font-size:12px;margin-bottom:5px">🎭 Avatares ganados: ';
-        avatars.forEach(avatar=>{html+=avatar+' ';});
-        html+='</div>';
-      }
-    }
-    
-    if(html===''){
-      html='<p style="color:#aaa;font-size:11px;text-align:center">No tienes objetos en tu inventario</p>';
-    }
-    
-    container.innerHTML=html;
-  });
+  // Función eliminada - el inventario ahora se maneja dinámicamente en la tienda in-game
 }
 
 /* ═══════════════════ TIENDA ═══════════════════ */
@@ -1052,6 +984,8 @@ function comprar(tipo,valor){
       }
       
       alert('¡Gracias por tu compra! Objeto guardado en tu inventario.');
+      // Actualizar tienda in-game para mostrar botón de equipar
+      actualizarTiendaIngame();
     });
   }else{reproducir('fail');alert("No tienes suficiente €Eden€");}
 }
@@ -1100,6 +1034,119 @@ function verificarPrimerHabitanteAno(){
   }).catch(function(error) {
     console.error('Error en verificación de primer habitante:', error);
     return false;
+  });
+}
+
+/* ═══════════════════ SISTEMA DE EQUIPAMIENTO ═══════════════════ */
+let inventarioUsuario = {}; // Cache del inventario
+
+function cargarInventarioTienda(){
+  if(!currentUser)return Promise.resolve({});
+  
+  return db.ref('usuarios/'+currentUser+'/inventario').once('value').then(snap => {
+    inventarioUsuario = snap.val() || {};
+    return inventarioUsuario;
+  });
+}
+
+function tieneItem(tipo, valor){
+  const tipoInventario = tipo === 'paleta' ? 'paletas' : 
+                         tipo === 'pajaro' ? 'pajaros' : 
+                         tipo === 'bola' ? 'pelotas' : tipo;
+  return inventarioUsuario[tipoInventario] && inventarioUsuario[tipoInventario][valor];
+}
+
+function equiparItem(tipo, valor){
+  if(!tieneItem(tipo, valor)){
+    alert('No tienes este ítem en tu inventario.');
+    return;
+  }
+  
+  // Guardar el ítem equipado en el perfil del usuario
+  const equipamientoKey = tipo === 'paleta' ? 'paletaEquipada' : 
+                         tipo === 'pajaro' ? 'pajaroEquipado' : 
+                         tipo === 'bola' ? 'bolaEquipada' : '';
+  
+  if(equipamientoKey){
+    db.ref('usuarios/'+currentUser).update({
+      [equipamientoKey]: valor
+    }).then(() => {
+      alert('✅ ' + tipo + ' ' + valor + ' equipado correctamente.');
+      reproducir('coin');
+      // Actualizar tienda para reflejar el cambio
+      actualizarTiendaIngame();
+    });
+  }
+}
+
+function actualizarTiendaIngame(){
+  cargarInventarioTienda().then(() => {
+    // Actualizar tienda de ladrillos
+    actualizarBotonesTienda('ladrillos');
+    // Actualizar tienda de flappy
+    actualizarBotonesTienda('flappy');
+  });
+}
+
+function actualizarBotonesTienda(juego){
+  const shopId = 'shop-ingame-' + (juego === 'ladrillos' ? 'l' : 'f');
+  const shopElement = document.getElementById(shopId);
+  if(!shopElement)return;
+  
+  // Actualizar botones de pájaros (solo en Flappy)
+  if(juego === 'flappy'){
+    const coloresPajaros = ['red', 'pink', 'yellow', 'blue', 'green', 'purple'];
+    const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'', blue:'🦅', green:'🦚', purple:'🦢'};
+    
+    coloresPajaros.forEach(color => {
+      const boton = shopElement.querySelector(`[onclick*="pajaro','${color}'"]`);
+      if(boton){
+        if(tieneItem('pajaro', color)){
+          boton.innerHTML = `<span style="color:${color}">${emojisPajaros[color]}</span><span class="shop-price">Equipar</span>`;
+          boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
+        }else{
+          const precio = color === 'red' ? 500 : (color === 'pink' ? 750 : (color === 'yellow' ? 1000 : (color === 'blue' ? 600 : (color === 'green' ? 800 : 1200))));
+          boton.innerHTML = `<span style="color:${color}">${emojisPajaros[color]}</span><span class="shop-price">${precio} pts</span>`;
+          boton.setAttribute('onclick', `comprar('pajaro','${color}')`);
+        }
+      }
+    });
+  }
+  
+  // Actualizar botones de paletas (solo en Ladrillos)
+  if(juego === 'ladrillos'){
+    const coloresPaletas = ['red', 'pink', 'yellow'];
+    
+    coloresPaletas.forEach(color => {
+      const boton = shopElement.querySelector(`[onclick*="paleta','${color}'"]`);
+      if(boton){
+        if(tieneItem('paleta', color)){
+          boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">Equipar</span>`;
+          boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
+        }else{
+          const precio = color === 'red' ? 500 : (color === 'pink' ? 750 : 1000);
+          boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">${precio} pts</span>`;
+          boton.setAttribute('onclick', `comprar('paleta','${color}')`);
+        }
+      }
+    });
+  }
+  
+  // Actualizar botones de pelotas (ambos juegos)
+  const coloresPelotas = ['blue', 'pink', 'yellow'];
+  
+  coloresPelotas.forEach(color => {
+    const boton = shopElement.querySelector(`[onclick*="bola','${color}'"]`);
+    if(boton){
+      if(tieneItem('bola', color)){
+        boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">Equipar</span>`;
+        boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
+      }else{
+        const precio = color === 'blue' ? 400 : (color === 'pink' ? 600 : 900);
+        boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">${precio} pts</span>`;
+        boton.setAttribute('onclick', `comprar('bola','${color}')`);
+      }
+    }
   });
 }
 
@@ -1155,6 +1202,8 @@ function toggleShopIngame(juego){
     m.classList.remove('hidden');
     const el=document.getElementById('saldo-ingame-'+(juego==='ladrillos'?'l':'f'));
     if(el)el.innerText='Saldo: '+userBalance+' €Eden€';
+    // Cargar inventario y actualizar botones
+    actualizarTiendaIngame();
   }else m.classList.add('hidden');
 }
 function cerrarShopIngame(juego){document.getElementById('shop-ingame-'+juego).classList.add('hidden');}
