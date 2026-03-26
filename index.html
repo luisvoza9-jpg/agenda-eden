@@ -1032,32 +1032,31 @@ function tieneItem(tipo, valor){
                          tipo === 'pajaro' ? 'pajaros' : 
                          tipo === 'bola' ? 'pelotas' : tipo;
   
-  // Verificar en el inventario cargado en la UI (más rápido)
-  const inventarioContainer = document.getElementById('inventario-container');
-  if(inventarioContainer){
-    const textoInventario = inventarioContainer.innerText;
-    if(tipo === 'paleta' && textoInventario.includes('Paletas:')){
-      return textoInventario.includes(valor);
-    } else if(tipo === 'pajaro' && textoInventario.includes('Pájaros:')){
-      return textoInventario.includes(valor);
-    } else if(tipo === 'bola' && textoInventario.includes('Pelotas:')){
-      return textoInventario.includes(valor);
-    }
-  }
-  
-  // Fallback: verificar directamente en Firebase
+  // Verificar directamente en Firebase (más confiable)
   return db.ref('usuarios/'+currentUser+'/inventario/'+tipoInventario+'/'+valor).once('value').then(snap => snap.val() === true).catch(() => false);
 }
 
 function comprar(tipo,valor){
   reproducir('click');
   
-  // VALIDACIÓN: Bloquear re-compra (solo 1 vez)
-  if(tipo !== 'vida' && tieneItem(tipo, valor)){
-    alert('Ya tienes este objeto');
-    return;
+  // VALIDACIÓN: Bloquear re-compra (solo 1 vez) - manejar Promise
+  if(tipo !== 'vida'){
+    return tieneItem(tipo, valor).then(yaTiene => {
+      if(yaTiene){
+        alert('Ya tienes este objeto');
+        return;
+      }
+      
+      // Continuar con la compra si no tiene el objeto
+      procesarCompra(tipo, valor);
+    });
   }
   
+  // Para vidas, procesar directamente
+  procesarCompra(tipo, valor);
+}
+
+function procesarCompra(tipo, valor){
   let precio=0;
   if(tipo==='paleta')precio=(valor==='red'?500:(valor==='pink'?750:1000));
   else if(tipo==='pajaro')precio=(valor==='red'?500:(valor==='pink'?750:(valor==='yellow'?1000:(valor==='blue'?600:(valor==='green'?800:1200)))));
