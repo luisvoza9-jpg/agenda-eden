@@ -445,6 +445,9 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
       <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🐦</span><span class="shop-price">500 pts</span></div>
       <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🐦</span><span class="shop-price">750 pts</span></div>
       <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">🐦</span><span class="shop-price">1000 pts</span></div>
+      <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🐦</span><span class="shop-price">600 pts</span></div>
+      <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🐦</span><span class="shop-price">800 pts</span></div>
+      <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🐦</span><span class="shop-price">1200 pts</span></div>
     </div>
     <span class="shop-label">VIDAS EXTRAS</span>
     <div class="shop-grid">
@@ -570,6 +573,7 @@ function entrarConGoogle(){
       if(user.photoURL){flappyAvatarData=user.photoURL;cargarFlappyAvatar(user.photoURL);}
       currentUser=userKey;
       guardarSesionLocal(userKey,user.uid);
+      // Entrar directamente al juego sin mostrar login
       configurarCarteraYEntrar(s.exists()?(s.val().saldo||0):0);
     });
   }).catch(e=>alert("Error Google: "+e.message));
@@ -619,6 +623,53 @@ function configurarCarteraYEntrar(saldoBase){
     if(!snap.exists())db.ref('usuarios/'+currentUser+'/saldo').set(saldoBase);
   });
   mostrarVista('vista-agenda');reproducir('coin');
+  // Verificar recompensa diaria
+  verificarRecompensaDiaria();
+}
+
+/* ═══════════════════ SISTEMA DE RECOMPENSAS DIARIAS ═══════════════════ */
+function verificarRecompensaDiaria(){
+  if(!currentUser)return;
+  
+  const hoy=new Date().toDateString();
+  db.ref('usuarios/'+currentUser+'/ultimoLogin').once('value',s=>{
+    const ultimoLogin=s.val();
+    
+    if(ultimoLogin!==hoy){
+      // Es un nuevo día, dar recompensa
+      db.ref('usuarios/'+currentUser+'/saldo').transaction(v=>(v||0)+500).then(()=>{
+        db.ref('usuarios/'+currentUser+'/ultimoLogin').set(hoy);
+        
+        // Incrementar días consecutivos
+        db.ref('usuarios/'+currentUser+'/diasConsecutivos').transaction(v=>(v||0)+1).then(result=>{
+          const diasConsecutivos=result.snapshot.val()||0;
+          
+          alert('🎉 ¡Recompensa diaria recibida! +500 €Eden€\n🔥 Días consecutivos: '+diasConsecutivos);
+          
+          // Verificar si corresponde avatar gratis (cada 5 días)
+          if(diasConsecutivos%5===0){
+            darAvatarGratis();
+          }
+        });
+        
+        // Actualizar saldo en pantalla
+        ['shop-balance','saldo-ingame-l','saldo-ingame-f'].forEach(id=>{
+          const el=document.getElementById(id);
+          if(el)el.innerText='Saldo: '+(userBalance+500)+' €Eden€';
+        });
+      });
+    }
+  });
+}
+
+function darAvatarGratis(){
+  const avataresGratis=['🎭','🎪','🎨','🎯','🎲','🎸','🎺','🥁','🎻','🎹'];
+  const avatarAleatorio=avataresGratis[Math.floor(Math.random()*avataresGratis.length)];
+  
+  db.ref('usuarios/'+currentUser+'/inventario/avatars/'+avatarAleatorio).set(true).then(()=>{
+    alert('🎁 ¡FELICIDADES! Has ganado un avatar gratis: '+avatarAleatorio+'\n📂 Revisa tu inventario en Ajustes.');
+    reproducir('coin');
+  });
 }
 
 /* ═══════════════════ INICIO DE SESIÓN PERSISTENTE ═══════════════════ */
@@ -776,6 +827,16 @@ function cargarInventario(){
       }
     }
     
+    // Mostrar avatares ganados
+    if(inventario.avatars){
+      const avatars=Object.keys(inventario.avatars);
+      if(avatars.length>0){
+        html+='<div style="color:#FFD700;font-size:12px;margin-bottom:5px">🎭 Avatares ganados: ';
+        avatars.forEach(avatar=>{html+=avatar+' ';});
+        html+='</div>';
+      }
+    }
+    
     if(html===''){
       html='<p style="color:#aaa;font-size:11px;text-align:center">No tienes objetos en tu inventario</p>';
     }
@@ -789,7 +850,7 @@ function comprar(tipo,valor){
   reproducir('click');
   let precio=0;
   if(tipo==='paleta')precio=(valor==='red'?500:(valor==='pink'?750:1000));
-  else if(tipo==='pajaro')precio=(valor==='red'?500:(valor==='pink'?750:1000));
+  else if(tipo==='pajaro')precio=(valor==='red'?500:(valor==='pink'?750:(valor==='yellow'?1000:(valor==='blue'?600:(valor==='green'?800:1200)))));
   else if(tipo==='bola')precio=(valor==='blue'?400:(valor==='pink'?600:900));
   else if(tipo==='vida')precio=(valor===1?5000:(valor===3?12000:20000));
   if(userBalance>=precio){
