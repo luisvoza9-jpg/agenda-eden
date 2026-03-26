@@ -270,20 +270,62 @@
         let masterVolume = 0.5;
         let userBalance = 0;
 
-        const sonidos = {
-            hit: new Audio('hit.mp3'), bounce: new Audio('bounce.mp3'),
-            coin: new Audio('coin.mp3'), fail: new Audio('fail.mp3'),
-            click: new Audio('click.mp3'), trash: new Audio('trash.mp3')
+        // ============================================================
+        // SISTEMA DE SONIDO CON WEB AUDIO API — SIN LAG EN MÓVIL
+        // Los buffers se decodifican una sola vez al cargar la página.
+        // reproducir() dispara el sonido instantáneamente desde memoria.
+        // ============================================================
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const audioBuffers = {};
+
+        const archivosAudio = {
+            hit:    'hit.mp3',
+            bounce: 'bounce.mp3',
+            coin:   'coin.mp3',
+            fail:   'fail.mp3',
+            click:  'click.mp3',
+            trash:  'trash.mp3'
         };
 
-        function reproducir(n) { 
-            if(isMuted) return;
-            if(sonidos[n]) { 
-                sonidos[n].volume = masterVolume;
-                sonidos[n].currentTime = 0; 
-                sonidos[n].play().catch(() => {}); 
+        // Carga y decodifica todos los archivos de audio al inicio
+        async function precargarSonidos() {
+            for (const [nombre, ruta] of Object.entries(archivosAudio)) {
+                try {
+                    const resp = await fetch(ruta);
+                    const arrayBuffer = await resp.arrayBuffer();
+                    audioBuffers[nombre] = await audioCtx.decodeAudioData(arrayBuffer);
+                } catch (e) {
+                    // Si no existe el archivo, se ignora silenciosamente
+                }
             }
         }
+
+        // Desbloquea el AudioContext en móvil con el primer toque del usuario
+        function desbloquearAudio() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            document.removeEventListener('touchstart', desbloquearAudio);
+            document.removeEventListener('mousedown', desbloquearAudio);
+        }
+        document.addEventListener('touchstart', desbloquearAudio, { once: true });
+        document.addEventListener('mousedown', desbloquearAudio, { once: true });
+
+        // Reproduce un sonido desde buffer (cero latencia)
+        function reproducir(n) {
+            if (isMuted || !audioBuffers[n]) return;
+            const source = audioCtx.createBufferSource();
+            source.buffer = audioBuffers[n];
+            const gainNode = audioCtx.createGain();
+            gainNode.gain.value = masterVolume;
+            source.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            source.start(0);
+        }
+
+        // Iniciar precarga
+        precargarSonidos();
+        // ============================================================
 
         function cambiarAvatar(emoji) {
             document.getElementById('avatar-img').innerHTML = emoji;
@@ -691,4 +733,3 @@
     </script>
 </body>
 </html>
-
