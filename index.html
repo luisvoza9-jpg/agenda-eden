@@ -262,6 +262,14 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   </div>
 </div>
 
+<!-- Botón Ruleta Diaria -->
+<div style="text-align:center;margin-top:20px">
+  <button onclick="abrirRuletaDiaria()" style="background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;padding:15px 30px;border-radius:15px;font-weight:bold;font-size:18px;border:2px solid #FFD700;cursor:pointer;box-shadow:0 4px 15px rgba(255,215,0,0.3);transition:all 0.3s ease">
+    🎰 RULETA DIARA 🎰
+    <div style="font-size:12px;margin-top:5px">¡Premios exclusivos!</div>
+  </button>
+</div>
+
 <!-- ══ AJUSTES / PERFIL ══ -->
 <div id="vista-ajustes" class="container hidden">
   <div class="settings-card" style="max-height:85vh;overflow-y:auto">
@@ -835,7 +843,7 @@ const premiosRuleta = [
   {texto: "200 €Eden€", valor: 200, color: "#FFA500", probabilidad: 25},
   {texto: "500 €Eden€", valor: 500, color: "#FF69B4", probabilidad: 20},
   {texto: "Avatar Exclusivo 🎭", valor: "avatar", color: "#00FFFF", probabilidad: 15},
-  {texto: "Marco Dorado ✨", valor: "marco", color: "#FFD700", probabilidad: 8},
+  {texto: "Marco Misterioso ?", valor: "marco", color: "#9400D3", probabilidad: 8},
   {texto: "1000 €Eden€", valor: 1000, color: "#00FF00", probabilidad: 1},
   {texto: "10.000 €Eden€ 💎", valor: 10000, color: "#FF00FF", probabilidad: 0.1}
 ];
@@ -1014,8 +1022,8 @@ function entregarPremioRuleta(premio){
     const marcos=['dorado','plateado','bronce','neon','arcoiris','fuego','hielo'];
     const marcoAleatorio=marcos[Math.floor(Math.random()*marcos.length)];
     
-    db.ref('usuarios/'+currentUser+'/marcoPerfil').set(marcoAleatorio).then(()=>{
-      premioTexto.innerHTML=`🎉 ¡Ganaste un marco ${marcoAleatorio} para tu perfil!`;
+    db.ref('usuarios/'+currentUser+'/inventario/marcos/'+marcoAleatorio).set(true).then(()=>{
+      premioTexto.innerHTML=`🎉 ¡Ganaste un marco ${marcoAleatorio}!<br><button onclick="equiparMarco('${marcoAleatorio}')" style="background:#FFD700;color:#000;padding:5px 10px;border-radius:5px;margin-top:10px;border:none;cursor:pointer">Equipar Marco</button>`;
       resultadoDiv.style.display='block';
       reproducir('coin');
     });
@@ -1024,6 +1032,13 @@ function entregarPremioRuleta(premio){
   // Actualizar estado
   const estadoEl=document.getElementById('estado-ruleta');
   estadoEl.innerHTML='<span style="color:#FF0000">❌ Ya giraste la ruleta hoy</span><br><span style="color:#FFD700">Vuelve mañana</span>';
+}
+
+function equiparMarco(marco){
+  db.ref('usuarios/'+currentUser+'/marcoPerfil').set(marco).then(()=>{
+    alert(`¡Marco ${marco} equipado correctamente!`);
+    actualizarUIPerfil(); // Actualizar la vista del perfil
+  });
 }
 
 /* ═══════════════════ SISTEMA DE RECOMPENSAS DIARIAS ═══════════════════ */
@@ -1804,15 +1819,19 @@ function dibujarPreviewFlappy(){
    JUEGO 3 — CANDY EDEN
 ═══════════════════════════════════════════════════════ */
 const cCvs=document.getElementById('candyCanvas');
-if(cCvs){
-  const cCtx=cCvs.getContext('2d');
-  const CANDY_SIZE=40,CANDY_ROWS=8,CANDY_COLS=8;
-  let candyGrid=[],candyNivel=1,candyPuntos=0,candyMovimientos=30;
-  let candySeleccionado=null,candyActivo=false;
-  let candyPowerUps={};
+const CANDY_SIZE=40,CANDY_ROWS=8,CANDY_COLS=8;
+const CANDY_TYPES=['🍬','🍭','🍫','🍪','🍯','🍮','🍧','🍨'];
+const CANDY_COLORS=['#FF0000','#00FF00','#0000FF','#FFFF00','#FF00FF','#00FFFF','#FFA500','#800080','#FFC0CB'];
 
-  const CANDY_TYPES=['🍬','🍭','🍫','🍪','🍯','🍮','🍧','🍨'];
-  const CANDY_COLORS=['#FF0000','#00FF00','#0000FF','#FFFF00','#FF00FF','#00FFFF','#FFA500','#800080','#FFC0CB'];
+let candyGrid=[],candyNivel=1,candyPuntos=0,candyMovimientos=30;
+let candySeleccionado=null,candyActivo=false;
+let candyPowerUps={};
+let cCtx=null;
+
+// Inicializar contexto del canvas cuando esté disponible
+if(cCvs){
+  cCtx=cCvs.getContext('2d');
+}
 
 function iniciarCandyEden(){
   mostrarVista('vista-candy');
@@ -2258,6 +2277,9 @@ function dibujarPreviewCandy(){
     }
   }
 }
+
+function abrirRuletaDiaria(){
+  mostrarRuletaDiaria();
 }
 
 /* ═══════════════════ INIT ═══════════════════ */
@@ -2267,3 +2289,5 @@ if(!cargarSesionLocal()){
 </script>
 </body>
 </html>
+
+
