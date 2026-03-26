@@ -1999,7 +1999,7 @@ function encontrarCombinaciones(){
       
       if(candy1&&candy2&&candy3&&!candy1.eliminado&&!candy2.eliminado&&!candy3.eliminado){
         if(candy1.tipo===candy2.tipo&&candy2.tipo===candy3.tipo){
-          combinaciones.push([{r,c},{r,c+1},{r,c+2}]);
+          combinaciones.push([{r:r,c:c},{r:r,c:c+1},{r:r,c:c+2}]);
         }
       }
     }
@@ -2014,7 +2014,7 @@ function encontrarCombinaciones(){
       
       if(candy1&&candy2&&candy3&&!candy1.eliminado&&!candy2.eliminado&&!candy3.eliminado){
         if(candy1.tipo===candy2.tipo&&candy2.tipo===candy3.tipo){
-          combinaciones.push([{r,c},{r+1,c},{r+2,c}]);
+          combinaciones.push([{r:r,c:c},{r:r+1,c:c},{r:r+2,c:c}]);
         }
       }
     }
@@ -2026,7 +2026,9 @@ function encontrarCombinaciones(){
 function eliminarCombinacion(combinacion){
   let puntosGanados=0;
   
-  combinacion.forEach(({r,c})=>{
+  combinacion.forEach(posicion=>{
+    const r=posicion.r;
+    const c=posicion.c;
     const candy=candyGrid[r][c];
     if(candy&&!candy.eliminado){
       candy.eliminado=true;
@@ -2157,7 +2159,9 @@ function cargarPowerUpsCandy(){
     if(Object.keys(powerUps).length===0){
       html='<span style="color:#aaa">No tienes power-ups</span>';
     }else{
-      Object.entries(powerUps).forEach(([key,cantidad])=>{
+      Object.entries(powerUps).forEach(entrada=>{
+        const key=entrada[0];
+        const cantidad=entrada[1];
         const icono=key==='bomba'?'💣':key==='rayo-vertical'?'⚡':key==='rayo-horizontal'?'↔️':'🌈';
         html+=`${icono} x${cantidad} `;
       });
