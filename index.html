@@ -1,1686 +1,211 @@
- <!DOCTYPE html>
-  <html lang="es">
-  <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-  <title>EL EDÉN | Luis Boza Solanes</title>
-  <meta name="author" content="Luis Boza Solanes">
-  <link rel="icon" type="image/png" href="icono.png">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#00FFFF">
-  <style>
-  /* ═══════════════ RESET & BASE ═══════════════ */
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html,body{width:100%;height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;background:#000;color:#fff}
-  canvas{display:block}
-  .hidden{display:none!important}
-  ::-webkit-scrollbar{width:6px}
-  ::-webkit-scrollbar-track{background:rgba(0,0,0,.3)}
-  ::-webkit-scrollbar-thumb{background:rgba(0,255,255,.3);border-radius:3px}
-  
-  /* ═══════════════ GLASSMORPHISM BASE ═══════════════ */
-  .glass{background:rgba(255,255,255,.06);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,.12);border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,.4)}
-  .glass-dark{background:rgba(0,0,0,.55);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-    border:1px solid rgba(0,255,255,.15);border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.6)}
-  .neon-text{color:#00FFFF;text-shadow:0 0 10px #00FFFF,0 0 30px rgba(0,255,255,.4)}
-  .neon-gold{color:#FFD700;text-shadow:0 0 10px #FFD700,0 0 25px rgba(255,215,0,.3)}
-  
-  /* ═══════════════ LOADING SCREEN ═══════════════ */
-  #loading-screen{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    background:radial-gradient(ellipse at center,#0a1628 0%,#000510 70%)}
-  #loading-screen h1{font-size:48px;letter-spacing:6px;color:#00FFFF;
-    text-shadow:0 0 20px #00FFFF,0 0 60px rgba(0,255,255,.5),0 0 100px rgba(0,255,255,.2);
-    animation:loadPulse 2s ease-in-out infinite}
-  #loading-screen .author{color:rgba(255,255,255,.5);font-size:12px;margin-top:12px;letter-spacing:2px}
-  #loading-screen .load-bar-wrap{width:240px;height:4px;background:rgba(255,255,255,.1);
-    border-radius:2px;margin-top:30px;overflow:hidden}
-  #loading-screen .load-bar{height:100%;width:0;background:linear-gradient(90deg,#00FFFF,#7B2FFF,#FFD700);
-    border-radius:2px;transition:width .3s}
-  @keyframes loadPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(1.03)}}
-  @keyframes fadeOut{to{opacity:0;pointer-events:none}}
-  
-  /* ═══════════════ AUTH SCREENS ═══════════════ */
-  .auth-overlay{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;
-    background:radial-gradient(ellipse at 30% 40%,#0a1628,#000510)}
-  .auth-card{width:360px;padding:36px 28px;text-align:center}
-  .auth-card h2{font-size:28px;margin-bottom:6px}
-  .auth-card .subtitle{color:rgba(255,255,255,.4);font-size:11px;margin-bottom:24px}
-  .auth-input{width:100%;padding:14px 16px;margin:6px 0;border-radius:14px;
-    border:1px solid rgba(0,255,255,.25);background:rgba(0,0,0,.5);color:#fff;
-    font-size:15px;outline:none;transition:.3s;text-align:center}
-  .auth-input:focus{border-color:#00FFFF;box-shadow:0 0 15px rgba(0,255,255,.2)}
-  .auth-btn{width:100%;padding:14px;margin-top:14px;border:none;border-radius:14px;
-    font-size:16px;font-weight:bold;cursor:pointer;transition:.3s;letter-spacing:1px}
-  .auth-btn-primary{background:linear-gradient(135deg,#00FFFF,#0088FF);color:#000}
-  .auth-btn-primary:hover{box-shadow:0 0 25px rgba(0,255,255,.5);transform:translateY(-1px)}
-  .auth-btn-secondary{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6)}
-  .auth-btn-secondary:hover{border-color:#00FFFF;color:#00FFFF}
-  .auth-link{color:rgba(0,255,255,.6);font-size:13px;cursor:pointer;margin-top:16px;display:inline-block}
-  .auth-link:hover{color:#00FFFF}
-  
-  /* ═══════════════ CHARACTER CREATION ═══════════════ */
-  .create-overlay{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;
-    background:radial-gradient(ellipse at 50% 30%,#0a1628,#000510)}
-  .create-card{width:380px;padding:30px 24px;text-align:center;max-height:90vh;overflow-y:auto}
-  .create-card h2{font-size:24px;margin-bottom:20px}
-  .option-row{display:flex;justify-content:center;gap:12px;margin:10px 0 20px;flex-wrap:wrap}
-  .option-btn{padding:12px 20px;border-radius:14px;border:2px solid rgba(255,255,255,.15);
-    background:rgba(255,255,255,.05);color:#fff;cursor:pointer;transition:.3s;font-size:14px}
-  .option-btn:hover,.option-btn.selected{border-color:#00FFFF;background:rgba(0,255,255,.12);
-    box-shadow:0 0 15px rgba(0,255,255,.3)}
-  .skin-btn{width:44px;height:44px;border-radius:50%;border:3px solid rgba(255,255,255,.15);
-    cursor:pointer;transition:.3s}
-  .skin-btn:hover,.skin-btn.selected{border-color:#00FFFF;box-shadow:0 0 12px rgba(0,255,255,.4);transform:scale(1.1)}
-  .color-btn{width:36px;height:36px;border-radius:10px;border:2px solid rgba(255,255,255,.15);
-    cursor:pointer;transition:.3s}
-  .color-btn:hover,.color-btn.selected{border-color:#FFD700;box-shadow:0 0 10px rgba(255,215,0,.4)}
-  .char-preview{width:100px;height:100px;margin:16px auto;border-radius:50%;
-    border:3px solid #00FFFF;box-shadow:0 0 25px rgba(0,255,255,.4);
-    display:flex;align-items:center;justify-content:center;font-size:50px;
-    background:rgba(0,0,0,.5)}
-  
-  /* ═══════════════ MAIN CANVAS ═══════════════ */
-  #mainCanvas{position:fixed;inset:0;z-index:1}
-  
-  /* ═══════════════ HUD OVERLAY ═══════════════ */
-  .hud{position:fixed;z-index:100;pointer-events:none}
-  .hud>*{pointer-events:auto}
-  .hud-top{top:0;left:0;right:0;padding:12px 16px;display:flex;justify-content:space-between;align-items:flex-start}
-  .hud-top-left{display:flex;flex-direction:column;gap:6px}
-  .hud-top-right{display:flex;gap:8px}
-  .hud-bottom{bottom:0;left:0;right:0;padding:12px 16px;display:flex;justify-content:space-between;align-items:flex-end}
-  
-  /* Status bars */
-  .stat-bar-wrap{display:flex;align-items:center;gap:6px}
-  .stat-bar-wrap .icon{font-size:16px}
-  .stat-bar-wrap .bar{width:100px;height:8px;background:rgba(0,0,0,.5);border-radius:4px;overflow:hidden;
-    border:1px solid rgba(255,255,255,.1)}
-  .stat-bar-wrap .bar-fill{height:100%;border-radius:4px;transition:width .5s}
-  .stat-bar-wrap .bar-val{font-size:10px;color:rgba(255,255,255,.6);min-width:28px}
-  .bar-hp .bar-fill{background:linear-gradient(90deg,#ff4444,#ff6666)}
-  .bar-hunger .bar-fill{background:linear-gradient(90deg,#FF8C00,#FFD700)}
-  .bar-hygiene .bar-fill{background:linear-gradient(90deg,#00BFFF,#00FFFF)}
-  .bar-xp .bar-fill{background:linear-gradient(90deg,#7B2FFF,#FF00FF)}
-  
-  /* Level badge */
-  .level-badge{background:rgba(0,0,0,.6);backdrop-filter:blur(10px);border:1px solid rgba(0,255,255,.3);
-    border-radius:12px;padding:4px 12px;font-size:12px;font-weight:bold;color:#00FFFF;
-    text-shadow:0 0 8px #00FFFF;display:flex;align-items:center;gap:4px}
-  
-  /* HUD buttons */
-  .hud-btn{width:48px;height:48px;border-radius:16px;border:1px solid rgba(255,255,255,.15);
-    background:rgba(0,0,0,.4);backdrop-filter:blur(10px);color:#fff;font-size:20px;
-    cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.3s}
-  .hud-btn:hover{border-color:#00FFFF;background:rgba(0,255,255,.1);box-shadow:0 0 15px rgba(0,255,255,.3)}
-  .hud-btn-label{font-size:8px;text-align:center;color:rgba(255,255,255,.5);margin-top:2px}
-  
-  /* Balance display */
-  .balance-display{background:rgba(0,0,0,.5);backdrop-filter:blur(10px);border:1px solid rgba(255,215,0,.25);
-    border-radius:12px;padding:4px 12px;font-size:12px;color:#FFD700;font-weight:bold;
-    text-shadow:0 0 6px rgba(255,215,0,.4)}
-  
-  /* ═══════════════ MODAL PANELS ═══════════════ */
-  .modal-overlay{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.6);
-    backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center}
-  .modal-panel{width:380px;max-height:85vh;overflow-y:auto;padding:28px 22px}
-  .modal-panel h3{font-size:20px;margin-bottom:16px;text-align:center}
-  .modal-close{position:absolute;top:12px;right:16px;background:none;border:none;
-    color:#ff4444;font-size:22px;cursor:pointer}
-  .modal-panel .setting-row{display:flex;justify-content:space-between;align-items:center;
-    padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px}
-  
-  /* Chat panel */
-  .chat-panel{position:fixed;bottom:0;right:0;width:360px;height:60vh;z-index:3000;
-    border-radius:20px 20px 0 0;border-bottom:none;display:flex;flex-direction:column}
-  .chat-header{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.08);
-    display:flex;justify-content:space-between;align-items:center}
-  .chat-messages{flex:1;overflow-y:auto;padding:12px 16px}
-  .chat-messages .msg{margin-bottom:10px;font-size:13px}
-  .chat-messages .msg .name{color:#00FFFF;font-weight:bold;font-size:11px}
-  .chat-messages .msg .text{color:rgba(255,255,255,.85);margin-top:2px}
-  .chat-input-row{display:flex;gap:8px;padding:12px 16px;border-top:1px solid rgba(255,255,255,.08)}
-  .chat-input-row input{flex:1;padding:10px 14px;border-radius:12px;border:1px solid rgba(0,255,255,.2);
-    background:rgba(0,0,0,.4);color:#fff;font-size:14px;outline:none}
-  .chat-input-row button{padding:10px 16px;border-radius:12px;border:none;
-    background:linear-gradient(135deg,#00FFFF,#0088FF);color:#000;font-weight:bold;cursor:pointer}
-  
-  /* Notes panel */
-  .notes-panel{position:fixed;bottom:0;left:0;width:360px;height:60vh;z-index:3000;
-    border-radius:20px 20px 0 0;display:flex;flex-direction:column}
-  .note-item{display:flex;align-items:center;gap:10px;padding:10px 12px;margin:4px 0;
-    background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.06)}
-  .note-item input[type=checkbox]{width:18px;height:18px;accent-color:#00FFFF}
-  .note-item .note-text{flex:1;font-size:13px;color:rgba(255,255,255,.8)}
-  .note-item.done .note-text{text-decoration:line-through;opacity:.4}
-  
-  /* ═══════════════ GAME OVERLAYS ═══════════════ */
-  .game-overlay{position:fixed;inset:0;z-index:4000;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;background:rgba(0,0,0,.95)}
-  .game-canvas{border:2px solid rgba(0,255,255,.4);border-radius:8px;
-    box-shadow:0 0 30px rgba(0,255,255,.2),0 0 60px rgba(0,255,255,.1)}
-  .game-hud{display:flex;justify-content:space-between;align-items:center;width:100%;
-    max-width:500px;padding:8px 4px;font-size:13px}
-  .game-menu{position:absolute;text-align:center;padding:32px;width:320px}
-  .game-menu h2{font-size:24px;margin-bottom:10px}
-  .game-menu p{color:rgba(255,255,255,.5);font-size:12px;margin-bottom:18px}
-  .game-menu-btn{width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid rgba(0,255,255,.3);
-    background:rgba(0,255,255,.08);color:#00FFFF;font-size:15px;cursor:pointer;transition:.3s}
-  .game-menu-btn:hover{background:rgba(0,255,255,.18);border-color:#00FFFF;
-    box-shadow:0 0 15px rgba(0,255,255,.3)}
-  .game-menu-btn.primary{background:linear-gradient(135deg,#00FFFF,#0088FF);color:#000;border:none;font-weight:bold}
-  .game-back-btn{position:fixed;top:16px;left:16px;z-index:4001}
-  
-  /* ═══════════════ VIRTUAL JOYSTICK ═══════════════ */
-  .joystick-zone{position:fixed;bottom:24px;left:24px;z-index:200;width:120px;height:120px;
-    border-radius:50%;border:2px solid rgba(0,255,255,.2);background:rgba(0,0,0,.2);
-    backdrop-filter:blur(4px);touch-action:none}
-  .joystick-knob{width:50px;height:50px;border-radius:50%;background:rgba(0,255,255,.3);
-    border:2px solid rgba(0,255,255,.5);position:absolute;top:50%;left:50%;
-    transform:translate(-50%,-50%);transition:none;pointer-events:none}
-  
-  /* ═══════════════ RESPONSIVE ═══════════════ */
-  @media(max-width:420px){
-    .auth-card,.create-card,.modal-panel{width:95vw;padding:24px 16px}
-    .chat-panel,.notes-panel{width:100%}
-    .stat-bar-wrap .bar{width:70px}
-  }
-  @media(max-width:360px){
-    .option-row{gap:8px}
-    .option-btn{padding:8px 14px;font-size:12px}
-  }
-  
-  /* ═══════════════ ANIMATIONS ═══════════════ */
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-  @keyframes glow{0%,100%{box-shadow:0 0 15px rgba(0,255,255,.3)}50%{box-shadow:0 0 30px rgba(0,255,255,.6)}}
-  @keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
-  .animate-slide-up{animation:slideUp .3s ease-out}
-  </style>
-  </head>
-  <body>
-  
-  <!-- ═══════════════ LOADING SCREEN ═══════════════ -->
-  <div id="loading-screen">
-    <h1>EL EDÉN</h1>
-    <div class="author">Creado por LUIS BOZA SOLANES</div>
-    <div class="load-bar-wrap"><div class="load-bar" id="load-bar"></div></div>
-  </div>
-  
-  <!-- ═══════════════ LOGIN ═══════════════ -->
-  <div id="screen-login" class="auth-overlay hidden">
-    <div class="auth-card glass-dark">
-      <h2 class="neon-text">EL EDÉN</h2>
-      <div class="subtitle">✦ Tu paraíso digital ✦</div>
-      <input class="auth-input" id="login-user" placeholder="Usuario" autocomplete="off">
-      <input class="auth-input" id="login-pass" placeholder="Contraseña" type="password">
-      <button class="auth-btn auth-btn-primary" onclick="doLogin()">ENTRAR</button>
-      <button class="auth-btn auth-btn-secondary" onclick="showScreen('screen-register')">Crear Cuenta</button>
-      <div class="auth-link" onclick="doGoogleLogin()">🔑 Entrar con Google</div>
-    </div>
-  </div>
-  
-  <!-- ═══════════════ REGISTER ═══════════════ -->
-  <div id="screen-register" class="auth-overlay hidden">
-    <div class="auth-card glass-dark">
-      <h2 class="neon-text">REGISTRO</h2>
-      <div class="subtitle">Únete al Edén</div>
-      <input class="auth-input" id="reg-user" placeholder="Usuario" autocomplete="off">
-      <input class="auth-input" id="reg-pass" placeholder="Contraseña" type="password">
-      <input class="auth-input" id="reg-age" placeholder="Edad" type="number" min="1" max="120">
-      <button class="auth-btn auth-btn-primary" onclick="doRegister()">REGISTRARSE</button>
-      <button class="auth-btn auth-btn-secondary" onclick="showScreen('screen-login')">← Volver</button>
-    </div>
-  </div>
-  
-  <!-- ═══════════════ CHARACTER CREATION ═══════════════ -->
-  <div id="screen-create" class="create-overlay hidden">
-    <div class="create-card glass-dark">
-      <h2 class="neon-text">CREA TU ÁNGEL</h2>
-      <div class="char-preview" id="char-preview">👤</div>
-      <p style="color:rgba(255,255,255,.5);font-size:12px;margin-bottom:16px">Elige tu apariencia celestial</p>
-      <p style="font-size:13px;color:#00FFFF;margin-bottom:6px">Género</p>
-      <div class="option-row" id="gender-row">
-        <div class="option-btn" onclick="selectGender('boy')" data-v="boy">👦 Chico</div>
-        <div class="option-btn" onclick="selectGender('girl')" data-v="girl">👧 Chica</div>
-      </div>
-      <p style="font-size:13px;color:#00FFFF;margin-bottom:6px">Color de Piel</p>
-      <div class="option-row" id="skin-row">
-        <div class="skin-btn" style="background:#FDEBD0" onclick="selectSkin('#FDEBD0')" data-v="#FDEBD0"></div>
-        <div class="skin-btn" style="background:#F5CBA7" onclick="selectSkin('#F5CBA7')" data-v="#F5CBA7"></div>
-        <div class="skin-btn" style="background:#DC7633" onclick="selectSkin('#DC7633')" data-v="#DC7633"></div>
-        <div class="skin-btn" style="background:#A04000" onclick="selectSkin('#A04000')" data-v="#A04000"></div>
-        <div class="skin-btn" style="background:#6E2C00" onclick="selectSkin('#6E2C00')" data-v="#6E2C00"></div>
-      </div>
-      <p style="font-size:13px;color:#00FFFF;margin-bottom:6px">Color de Ropa</p>
-      <div class="option-row" id="cloth-row">
-        <div class="color-btn" style="background:#00FFFF" onclick="selectCloth('#00FFFF')" data-v="#00FFFF"></div>
-        <div class="color-btn" style="background:#FF69B4" onclick="selectCloth('#FF69B4')" data-v="#FF69B4"></div>
-        <div class="color-btn" style="background:#7B2FFF" onclick="selectCloth('#7B2FFF')" data-v="#7B2FFF"></div>
-        <div class="color-btn" style="background:#FFD700" onclick="selectCloth('#FFD700')" data-v="#FFD700"></div>
-        <div class="color-btn" style="background:#00FF00" onclick="selectCloth('#00FF00')" data-v="#00FF00"></div>
-        <div class="color-btn" style="background:#FF4444" onclick="selectCloth('#FF4444')" data-v="#FF4444"></div>
-      </div>
-      <button class="auth-btn auth-btn-primary" style="margin-top:20px" onclick="confirmCharacter()">✨ ENTRAR AL EDÉN ✨</button>
-    </div>
-  </div>
-  
-  <!-- ═══════════════ MAIN CANVAS ═══════════════ -->
-  <canvas id="mainCanvas" class="hidden"></canvas>
-  
-  <!-- ═══════════════ HUD ═══════════════ -->
-  <div id="hud" class="hud hidden" style="inset:0">
-    <div class="hud-top">
-      <div class="hud-top-left">
-        <div class="level-badge" id="hud-level">⭐ Nv.1</div>
-        <div class="stat-bar-wrap bar-hp"><span class="icon">❤️</span><div class="bar"><div class="bar-fill" id="bar-hp" style="width:100%"></div></div><span class="bar-val" id="val-hp">100</span></div>
-        <div class="stat-bar-wrap bar-hunger"><span class="icon">🍎</span><div class="bar"><div class="bar-fill" id="bar-hunger" style="width:100%"></div></div><span class="bar-val" id="val-hunger">100</span></div>
-        <div class="stat-bar-wrap bar-hygiene"><span class="icon">🚿</span><div class="bar"><div class="bar-fill" id="bar-hygiene" style="width:100%"></div></div><span class="bar-val" id="val-hygiene">100</span></div>
-        <div class="stat-bar-wrap bar-xp"><span class="icon">⚡</span><div class="bar"><div class="bar-fill" id="bar-xp" style="width:0%"></div></div><span class="bar-val" id="val-xp">0</span></div>
-      </div>
-      <div class="hud-top-right">
-        <div class="balance-display" id="hud-balance">0 €Edems€</div>
-        <button class="hud-btn" onclick="openSettings()" title="Ajustes">⚙️</button>
-      </div>
-    </div>
-    <div class="hud-bottom">
-      <div style="display:flex;gap:8px">
-        <div style="text-align:center"><button class="hud-btn" onclick="openNotes()">📝</button><div class="hud-btn-label">Notas</div></div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <div style="text-align:center"><button class="hud-btn" onclick="openChat()">💬</button><div class="hud-btn-label">Chat</div></div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- ═══════════════ VIRTUAL JOYSTICK ═══════════════ -->
-  <div id="joystick-zone" class="joystick-zone hidden">
-    <div class="joystick-knob" id="joystick-knob"></div>
-  </div>
-  
-  <!-- ═══════════════ SETTINGS MODAL ═══════════════ -->
-  <div id="modal-settings" class="modal-overlay hidden">
-    <div class="modal-panel glass-dark" style="position:relative">
-      <button class="modal-close" onclick="closeSettings()">✕</button>
-      <h3 class="neon-text">⚙️ AJUSTES</h3>
-      <div class="setting-row"><span>🔊 Sonido</span><label style="cursor:pointer"><input type="checkbox" id="snd-toggle" checked onchange="toggleSound()"> On</label></div>
-      <div class="setting-row"><span>🔉 Volumen</span><input type="range" id="vol-slider" min="0" max="100" value="50" style="width:120px" oninput="setVolume(this.value)"></div>
-      <div class="setting-row"><span>📊 Nivel</span><span id="set-level" class="neon-text">1</span></div>
-      <div class="setting-row"><span>💰 Saldo</span><span id="set-balance" class="neon-gold">0</span></div>
-      <div class="setting-row"><span>📅 XP Hoy</span><span id="set-dailyxp">0</span></div>
-      <div style="border-top:1px solid rgba(255,255,255,.08);margin:16px 0;padding-top:14px">
-        <button class="auth-btn auth-btn-secondary" onclick="editProfile()" style="margin-bottom:8px">✏️ Editar Perfil</button>
-        <button class="auth-btn auth-btn-secondary" style="border-color:#ff4444;color:#ff4444" onclick="doLogout()">🚪 Cerrar Sesión</button>
-      </div>
-      <div style="text-align:center;margin-top:16px;color:rgba(255,255,255,.25);font-size:10px;letter-spacing:1px">
-        Creado por LUIS BOZA SOLANES<br>EL EDÉN © 2024
-      </div>
-    </div>
-  </div>
-  
-  <!-- ═══════════════ CHAT MODAL ═══════════════ -->
-  <div id="modal-chat" class="hidden">
-    <div class="chat-panel glass-dark animate-slide-up">
-      <div class="chat-header">
-        <span class="neon-text" style="font-size:16px;font-weight:bold">💬 Chat Edén</span>
-        <button style="background:none;border:none;color:#ff4444;font-size:20px;cursor:pointer" onclick="closeChat()">✕</button>
-      </div>
-      <div class="chat-messages" id="chat-messages"></div>
-      <div class="chat-input-row">
-        <input id="chat-input" placeholder="Escribe un mensaje..." onkeypress="if(event.key==='Enter')sendChat()">
-        <button onclick="sendChat()">Enviar</button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- ═══════════════ NOTES MODAL ═══════════════ -->
-  <div id="modal-notes" class="hidden">
-    <div class="notes-panel glass-dark animate-slide-up">
-      <div class="chat-header">
-        <span class="neon-text" style="font-size:16px;font-weight:bold">📝 Notas</span>
-        <button style="background:none;border:none;color:#ff4444;font-size:20px;cursor:pointer" onclick="closeNotes()">✕</button>
-      </div>
-      <div style="flex:1;overflow-y:auto;padding:12px 16px" id="notes-list"></div>
-      <div class="chat-input-row">
-        <input id="note-input" placeholder="Nueva nota..." onkeypress="if(event.key==='Enter')addNote()">
-        <button onclick="addNote()">+</button>
-        <button onclick="clearDoneNotes()" style="background:#ff4444;color:#fff;padding:10px;border-radius:12px;border:none;cursor:pointer">🗑</button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- ═══════════════ BRICK GAME OVERLAY ═══════════════ -->
-  <div id="game-bricks" class="game-overlay hidden">
-    <button class="hud-btn game-back-btn" onclick="exitBrickGame()">←</button>
-    <div class="game-hud">
-      <span class="neon-gold" id="brick-score">€Edems€: 0</span>
-      <span style="color:#ff4444" id="brick-lives">❤️❤️❤️</span>
-    </div>
-    <canvas id="brickCanvas" class="game-canvas" width="480" height="600"></canvas>
-    <div class="game-menu glass-dark" id="brick-menu">
-      <h2 class="neon-text">🎮 EDÉN BRICKS</h2>
-      <p>Destruye todos los ladrillos celestiales</p>
-      <button class="game-menu-btn primary" onclick="startBrickGame()">▶ JUGAR</button>
-      <button class="game-menu-btn" onclick="exitBrickGame()">Volver</button>
-    </div>
-    <div class="game-menu glass-dark hidden" id="brick-over">
-      <h2 style="color:#ff4444">💀 GAME OVER</h2>
-      <p id="brick-final-score" class="neon-gold"></p>
-      <button class="game-menu-btn primary" onclick="startBrickGame()">¡Repetir!</button>
-      <button class="game-menu-btn" onclick="exitBrickGame()">Salir</button>
-    </div>
-    <div class="game-menu glass-dark hidden" id="brick-win">
-      <h2 class="neon-gold">🏆 ¡VICTORIA!</h2>
-      <p id="brick-win-score" class="neon-text"></p>
-      <button class="game-menu-btn primary" onclick="startBrickGame()">Siguiente Nivel</button>
-      <button class="game-menu-btn" onclick="exitBrickGame()">Salir</button>
-    </div>
-  </div>
-  
-  <!-- ═══════════════ FLAPPY GAME OVERLAY ═══════════════ -->
-  <div id="game-flappy" class="game-overlay hidden">
-    <button class="hud-btn game-back-btn" onclick="exitFlappyGame()">←</button>
-    <div class="game-hud"><span class="neon-gold" id="flappy-score">€Edems€: 0</span></div>
-    <canvas id="flappyCanvas" class="game-canvas" width="400" height="650" style="cursor:pointer"></canvas>
-    <div class="game-menu glass-dark" id="flappy-menu">
-      <h2 style="color:#00FF00;text-shadow:0 0 15px #00FF00">🐦 EDÉN FLAPPY</h2>
-      <p>Dificultad EXTREMA — Cada punto = 1 €Edem€<br>Toca o pulsa ESPACIO para volar</p>
-      <button class="game-menu-btn primary" onclick="startFlappyGame()">▶ JUGAR</button>
-      <button class="game-menu-btn" onclick="exitFlappyGame()">Volver</button>
-    </div>
-    <div class="game-menu glass-dark hidden" id="flappy-over">
-      <h2 style="color:#ff4444">💀 GAME OVER</h2>
-      <p id="flappy-final-score" class="neon-gold"></p>
-      <button class="game-menu-btn primary" onclick="startFlappyGame()">¡Repetir!</button>
-      <button class="game-menu-btn" onclick="exitFlappyGame()">Salir</button>
-    </div>
-  </div>
-  
-  <!-- ═══════════════ FIREBASE ═══════════════ -->
-  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-  
-  <script>
-  /* ═══════════════════════════════════════════════════════════════
-     EL EDÉN — Creado por LUIS BOZA SOLANES
-     Videojuego Web Completo con Habitación 2D, Sistema RPG,
-     Minijuegos Canvas y Estética Celestial Premium
-  ═══════════════════════════════════════════════════════════════ */
-  
-  // ═══════════════ FIREBASE CONFIG ═══════════════
-  const firebaseConfig = {
-    apiKey: "AIzaSyAqmfX9_Y9wErXkSCx8oxZxYCqrqTf5wVE",
-    authDomain: "edengame-5a40c.firebaseapp.com",
-    databaseURL: "https://edengame-5a40c-default-rtdb.firebaseio.com",
-    projectId: "edengame-5a40c",
-    storageBucket: "edengame-5a40c.firebasestorage.app",
-    messagingSenderId: "837651200703",
-    appId: "1:837651200703:web:0c3e237c36e1bb37b6640a",
-    measurementId: "G-TKMSN75EF9"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database(), auth = firebase.auth();
-  
-  // ═══════════════ GLOBAL STATE ═══════════════
-  let currentUser = "", currentUID = "";
-  let isMuted = false, masterVolume = 0.5;
-  let userBalance = 0, userXP = 0, userLevel = 1, dailyXP = 0, lastXPDate = "";
-  let hp = 100, hunger = 100, hygiene = 100;
-  let charGender = "boy", charSkin = "#FDEBD0", charCloth = "#00FFFF";
-  let charX = 0, charY = 0, charSpeed = 3, charAwake = false;
-  let roomObjects = [];
-  let keys = {};
-  let gameState = "loading"; // loading, login, register, create, room, bricks, flappy
-  let lastTime = 0, deltaTime = 0;
-  let canvas, ctx, W, H;
-  let cloudOffset = 0;
-  let joystickActive = false, joystickDX = 0, joystickDY = 0;
-  let petBirdAngle = 0;
-  let interactionPrompt = "";
-  let promptAlpha = 0;
-  let decayTimer = 0;
-  
-  // ═══════════════ AUDIO SYSTEM ═══════════════
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const audioBuffers = {};
-  const audioFiles = { hit:'hit.mp3', bounce:'bounce.mp3', coin:'coin.mp3', fail:'fail.mp3', click:'click.mp3', trash:'trash.mp3' };
-  
-  async function preloadSounds() {
-    for (const [name, file] of Object.entries(audioFiles)) {
-      try {
-        const resp = await fetch(file);
-        const buf = await resp.arrayBuffer();
-        audioBuffers[name] = await audioCtx.decodeAudioData(buf);
-      } catch(e) {}
-    }
-  }
-  
-  function playSound(name) {
-    if (isMuted || !audioBuffers[name]) return;
-    try {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const src = audioCtx.createBufferSource();
-      const gain = audioCtx.createGain();
-      src.buffer = audioBuffers[name];
-      gain.gain.value = masterVolume;
-      src.connect(gain).connect(audioCtx.destination);
-      src.start(0);
-    } catch(e) {}
-  }
-  
-  function toggleSound() { isMuted = !document.getElementById('snd-toggle').checked; }
-  function setVolume(v) { masterVolume = v / 100; }
-  
-  // ═══════════════ RPG SYSTEM ═══════════════
-  function xpForLevel(lv) {
-    let base = lv * 100;
-    if (lv <= 20) return base;
-    if (lv <= 50) return base * 2;
-    if (lv <= 100) return base * 4;
-    if (lv <= 200) return base * 8;
-    return base * 16;
-  }
-  
-  function getDifficultyName(lv) {
-    if (lv <= 20) return "Fácil";
-    if (lv <= 50) return "Normal";
-    if (lv <= 100) return "Difícil";
-    if (lv <= 200) return "Muy Difícil";
-    return "MODO DIOS";
-  }
-  
-  function getDifficultyColor(lv) {
-    if (lv <= 20) return "#00FF00";
-    if (lv <= 50) return "#00FFFF";
-    if (lv <= 100) return "#FFD700";
-    if (lv <= 200) return "#FF4500";
-    return "#FF00FF";
-  }
-  
-  // Daily XP cap: ~max XP needed for 1 level up + 10% buffer
-  function getDailyXPCap() {
-    return Math.floor(xpForLevel(userLevel) * 1.1);
-  }
-  
-  function addXP(amount) {
-    const today = new Date().toISOString().slice(0, 10);
-    if (lastXPDate !== today) { dailyXP = 0; lastXPDate = today; }
-    const cap = getDailyXPCap();
-    if (dailyXP >= cap) return; // daily limit reached
-    const actual = Math.min(amount, cap - dailyXP);
-    dailyXP += actual;
-    userXP += actual;
-    // Check level up
-    while (userXP >= xpForLevel(userLevel)) {
-      userXP -= xpForLevel(userLevel);
-      userLevel++;
-      const reward = userLevel * 10;
-      userBalance += reward;
-      playSound('coin');
-      saveUserData();
-    }
-    saveUserData();
-    updateHUD();
-  }
-  
-  function addBalance(amount) {
-    if (!currentUser || currentUser === 'admin') return;
-    userBalance += amount;
-    db.ref('usuarios/' + currentUser + '/saldo').set(userBalance);
-    updateHUD();
-  }
-  
-  // ═══════════════ TAMAGOTCHI SYSTEM ═══════════════
-  function updateStats(dt) {
-    decayTimer += dt;
-    if (decayTimer >= 1) { // every second
-      decayTimer = 0;
-      // Hunger decreases ~5% per hour = 0.00139 per second
-      hunger = Math.max(0, hunger - 0.00139);
-      // Hygiene decreases ~3% per hour = 0.00083 per second
-      hygiene = Math.max(0, hygiene - 0.00083);
-      // If hunger or hygiene is 0, health decreases
-      if (hunger <= 0 || hygiene <= 0) {
-        hp = Math.max(0, hp - 0.005);
-      }
-      // Save periodically (every ~30s via a counter in saveUserData)
-    }
-  }
-  
-  function feedCharacter() {
-    hunger = Math.min(100, hunger + 30);
-    addXP(5);
-    playSound('coin');
-    updateHUD();
-    saveUserData();
-  }
-  
-  function showerCharacter() {
-    hygiene = Math.min(100, hygiene + 30);
-    addXP(5);
-    playSound('coin');
-    updateHUD();
-    saveUserData();
-  }
-  
-  // ═══════════════ SAVE / LOAD ═══════════════
-  let saveCounter = 0;
-  function saveUserData() {
-    if (!currentUser || currentUser === 'admin') return;
-    saveCounter++;
-    if (saveCounter % 10 !== 0 && saveCounter > 1) return; // save every ~10th call
-    db.ref('usuarios/' + currentUser).update({
-      saldo: userBalance, xp: userXP, level: userLevel,
-      dailyXP: dailyXP, lastXPDate: lastXPDate,
-      hp: Math.round(hp * 100) / 100,
-      hunger: Math.round(hunger * 100) / 100,
-      hygiene: Math.round(hygiene * 100) / 100,
-      charGender, charSkin, charCloth
-    });
-  }
-  
-  function loadUserData(data) {
-    userBalance = data.saldo || 0;
-    userXP = data.xp || 0;
-    userLevel = data.level || 1;
-    dailyXP = data.dailyXP || 0;
-    lastXPDate = data.lastXPDate || "";
-    hp = data.hp != null ? data.hp : 100;
-    hunger = data.hunger != null ? data.hunger : 100;
-    hygiene = data.hygiene != null ? data.hygiene : 100;
-    charGender = data.charGender || "boy";
-    charSkin = data.charSkin || "#FDEBD0";
-    charCloth = data.charCloth || "#00FFFF";
-    updateHUD();
-  }
-  
-  // ═══════════════ HUD UPDATE ═══════════════
-  function updateHUD() {
-    document.getElementById('bar-hp').style.width = hp + '%';
-    document.getElementById('val-hp').textContent = Math.round(hp);
-    document.getElementById('bar-hunger').style.width = hunger + '%';
-    document.getElementById('val-hunger').textContent = Math.round(hunger);
-    document.getElementById('bar-hygiene').style.width = hygiene + '%';
-    document.getElementById('val-hygiene').textContent = Math.round(hygiene);
-    const xpNeeded = xpForLevel(userLevel);
-    const xpPct = Math.min(100, (userXP / xpNeeded) * 100);
-    document.getElementById('bar-xp').style.width = xpPct + '%';
-    document.getElementById('val-xp').textContent = Math.round(userXP);
-    document.getElementById('hud-level').innerHTML = '⭐ Nv.' + userLevel + ' <span style="font-size:9px;color:' + getDifficultyColor(userLevel) + '">' + getDifficultyName(userLevel) + '</span>';
-    document.getElementById('hud-balance').textContent = userBalance + ' €Edems€';
-    // Settings
-    document.getElementById('set-level').textContent = userLevel;
-    document.getElementById('set-balance').textContent = userBalance + ' €Edems€';
-    document.getElementById('set-dailyxp').textContent = dailyXP + ' / ' + getDailyXPCap();
-  }
-  
-  // ═══════════════ SCREEN MANAGEMENT ═══════════════
-  function showScreen(id) {
-    ['screen-login', 'screen-register', 'screen-create', 'mainCanvas', 'hud',
-     'game-bricks', 'game-flappy', 'joystick-zone'].forEach(s => {
-      const el = document.getElementById(s);
-      if (el) el.classList.add('hidden');
-    });
-    closeChat(); closeNotes(); closeSettings();
-    const el = document.getElementById(id);
-    if (el) el.classList.remove('hidden');
-    if (id === 'mainCanvas') {
-      document.getElementById('hud').classList.remove('hidden');
-      document.getElementById('joystick-zone').classList.remove('hidden');
-      gameState = 'room';
-      resizeCanvas();
-    }
-  }
-  
-  // ═══════════════ AUTH ═══════════════
-  function doLogin() {
-    const u = document.getElementById('login-user').value.trim();
-    const p = document.getElementById('login-pass').value.trim();
-    if (!u || !p) return;
-    if (u === 'admin' && p === '1234') { currentUser = u; currentUID = u; enterRoom({}); return; }
-    db.ref('usuarios/' + u).once('value', snap => {
-      if (snap.exists() && snap.val().password === p) {
-        currentUser = u;
-        currentUID = snap.val().uid || u;
-        const d = snap.val();
-        if (d.charGender) {
-          loadUserData(d);
-          enterRoom(d);
-        } else {
-          loadUserData(d);
-          showScreen('screen-create');
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AGENDA EDÉN | LUIS BOZA SOLANES | HABITACIÓN PRO</title>
+    
+    <style>
+        :root {
+            --celestial-base: #000b1a;
+            --cyber-neon: #00ffff;
+            --cyber-pink: #ff00ff;
+            --oro-edén: #ffd700;
+            --cristal-bg: rgba(255, 255, 255, 0.08);
         }
-      } else {
-        alert('❌ Usuario o contraseña incorrectos');
-      }
-    });
-  }
-  
-  function doGoogleLogin() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).then(result => {
-      const user = result.user;
-      currentUser = user.displayName || user.email.split('@')[0];
-      currentUID = user.uid;
-      db.ref('usuarios/' + currentUser).once('value', snap => {
-        if (snap.exists()) {
-          const d = snap.val();
-          if (d.charGender) { loadUserData(d); enterRoom(d); }
-          else { loadUserData(d); showScreen('screen-create'); }
-        } else {
-          db.ref('usuarios/' + currentUser).set({
-            password: '', uid: currentUID, saldo: 0, xp: 0, level: 1, nombre: currentUser
-          });
-          showScreen('screen-create');
+
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: var(--celestial-base); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: white; user-select: none; }
+
+        /* 🌌 FONDO Y NUBES MEJORADAS */
+        #fondo-celestial { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: radial-gradient(circle at center, #001a33 0%, #00050a 100%); }
+        .nube { position: absolute; background: white; filter: blur(50px); border-radius: 50%; opacity: 0.1; animation: flotar 20s infinite alternate; }
+
+        @keyframes flotar { from { transform: translate(0, 0); } to { transform: translate(50px, 20px); } }
+
+        /* 💎 ESCENARIO CYBERIKA */
+        #escenario { position: relative; width: 100vw; height: 100vh; perspective: 1200px; z-index: 1; overflow: hidden; }
+        #suelo { position: absolute; bottom: 0; width: 100%; height: 50%; background: linear-gradient(180deg, rgba(0, 255, 255, 0.15) 0%, rgba(0,0,0,0.8) 100%); transform: rotateX(60deg); transform-origin: bottom; border-top: 3px solid var(--cyber-neon); box-shadow: 0 -20px 60px rgba(0, 255, 255, 0.4); z-index: -1; }
+        
+        /* Efecto de escaneo en el suelo */
+        #suelo::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--cyber-neon); box-shadow: 0 0 15px var(--cyber-neon); animation: scan 4s linear infinite; }
+        @keyframes scan { 0% { top: 0; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+
+        /* 🟨 JUGADOR LUIS BOZA */
+        #jugador { position: absolute; width: 45px; height: 45px; background: rgba(255,255,255,0.9); border: 3px solid var(--cyber-pink); border-radius: 12px; box-shadow: 0 0 20px var(--cyber-pink); left: 50%; top: 60%; transform: translate(-50%, -50%); transition: all 0.1s linear; z-index: 10; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 10px; }
+
+        /* 🖼️ MUEBLES Y OBJETOS (TUS PIEZAS) */
+        .objeto-interactivo { position: absolute; border: 2px solid var(--cyber-neon); border-radius: 8px; background: var(--cristal-bg); backdrop-filter: blur(5px); box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); transition: 0.3s; }
+        .objeto-interactivo::after { content: attr(data-label); position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--cyber-neon); text-transform: uppercase; letter-spacing: 1px; width: 150px; text-align: center; }
+
+        #cama { width: 140px; height: 80px; left: 10%; top: 50%; }
+        #consola { width: 70px; height: 70px; right: 15%; top: 45%; border-color: var(--cyber-pink); }
+        #nevera { width: 50px; height: 90px; left: 48%; top: 38%; }
+        #mesa-trabajo { width: 120px; height: 60px; right: 10%; top: 70%; border-color: var(--oro-edén); }
+
+        /* 🖥️ UI SUPERIOR */
+        #ui-top { position: absolute; top: 15px; left: 15px; z-index: 100; width: calc(100% - 30px); display: flex; justify-content: space-between; pointer-events: none; }
+        .stat-container { width: 180px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        .stat-bar-container { width: 100%; height: 8px; background: #222; border-radius: 4px; margin: 5px 0; overflow: hidden; }
+        .stat-fill { height: 100%; transition: width 0.5s ease; }
+
+        #nombre-jugador { color: var(--oro-edén); font-weight: bold; font-size: 20px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); text-transform: uppercase; }
+        #saldo { color: var(--cyber-neon); font-size: 16px; margin-top: 5px; font-family: monospace; }
+
+        /* 🎮 CONTROLES */
+        #joystick-zone { position: absolute; bottom: 40px; left: 40px; width: 100px; height: 100px; z-index: 200; }
+        #joystick-base { width: 100%; height: 100%; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; position: relative; }
+        #joystick-stick { width: 40px; height: 40px; background: white; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 15px white; }
+
+        #btn-interact { position: absolute; bottom: 50px; right: 40px; width: 80px; height: 80px; background: rgba(0, 255, 255, 0.1); border: 3px solid var(--cyber-neon); border-radius: 50%; color: var(--cyber-neon); font-size: 32px; z-index: 200; display: none; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(5px); }
+
+        /* 🎬 INTRO */
+        #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 2s; }
+        #intro-text { color: var(--oro-edén); font-size: 18px; letter-spacing: 5px; animation: pulse 2s infinite; }
+        #intro-name { color: var(--cyber-neon); font-size: 40px; font-weight: bold; margin-top: 10px; text-shadow: 0 0 20px var(--cyber-neon); }
+
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="fondo-celestial">
+        <div class="nube" style="width: 300px; height: 200px; top: 10%; left: 10%;"></div>
+        <div class="nube" style="width: 400px; height: 250px; top: 40%; right: 10%;"></div>
+    </div>
+    
+    <div id="escenario">
+        <div id="suelo"></div>
+        <div id="cama" class="objeto-interactivo" data-label="Cápsula de Sueño" data-action="dormir"></div>
+        <div id="consola" class="objeto-interactivo" data-label="Terminal de Hackeo" data-action="jugar"></div>
+        <div id="nevera" class="objeto-interactivo" data-label="Sintetizador Alimento" data-action="comer"></div>
+        <div id="mesa-trabajo" class="objeto-interactivo" data-label="Mesa de Proyectos" data-action="trabajar"></div>
+        <div id="jugador">LUIS</div>
+    </div>
+
+    <div id="ui-top">
+        <div class="stat-container">
+            <div class="stat-bar-container"><div id="vida-bar" class="stat-fill" style="width: 100%; background: #ff4d4d;"></div></div>
+            <div class="stat-bar-container"><div id="hambre-bar" class="stat-fill" style="width: 100%; background: #ffa333;"></div></div>
+            <div class="stat-bar-container"><div id="energia-bar" class="stat-fill" style="width: 100%; background: #ffff33;"></div></div>
+        </div>
+        <div style="text-align: right;">
+            <div id="nombre-jugador">LUIS BOZA SOLANES</div>
+            <div id="saldo">EDEMS: <span id="edems-val">384</span></div>
+        </div>
+    </div>
+
+    <div id="joystick-zone"><div id="joystick-base"><div id="joystick-stick"></div></div></div>
+    <div id="btn-interact">F</div>
+
+    <div id="intro-screen">
+        <div id="intro-text">ENTRANDO AL EDÉN DE</div>
+        <div id="intro-name">LUIS BOZA SOLANES</div>
+    </div>
+
+    <script>
+        // --- LOGICA DE TU "CÓDIGO MADRE" ---
+        let stats = { vida: 100, hambre: 100, energia: 100, edems: 384 };
+        let playerPos = { x: 50, y: 65 };
+        let interactAccion = '';
+
+        // Inicio
+        setTimeout(() => {
+            document.getElementById('intro-screen').style.opacity = '0';
+            setTimeout(() => { document.getElementById('intro-screen').style.display = 'none'; }, 2000);
+            iniciarCicloVital();
+        }, 4000);
+
+        function iniciarCicloVital() {
+            setInterval(() => {
+                stats.hambre -= 0.5;
+                stats.energia -= 0.3;
+                if(stats.hambre <= 0) stats.vida -= 1;
+                actualizarUI();
+            }, 5000);
         }
-      });
-    }).catch(e => alert('Error Google: ' + e.message));
-  }
-  
-  function doRegister() {
-    const u = document.getElementById('reg-user').value.trim();
-    const p = document.getElementById('reg-pass').value.trim();
-    const a = document.getElementById('reg-age').value;
-    if (!u || !p) return;
-    db.ref('usuarios/' + u).once('value', snap => {
-      if (snap.exists()) { alert('❌ Ese usuario ya existe'); return; }
-      db.ref('usuarios/' + u).set({
-        password: p, age: a, saldo: 0, xp: 0, level: 1, nombre: u, uid: u,
-        hp: 100, hunger: 100, hygiene: 100, puntos: 0, puntosFlappy: 0
-      }).then(() => {
-        alert('✅ ¡Registrado! Inicia sesión.');
-        showScreen('screen-login');
-      });
-    });
-  }
-  
-  function doLogout() {
-    playSound('click');
-    saveCounter = 0; saveUserData();
-    if (currentUser && currentUser !== 'admin') db.ref('usuarios/' + currentUser + '/saldo').off();
-    stopChatListener();
-    currentUser = ""; currentUID = "";
-    gameState = 'login';
-    showScreen('screen-login');
-  }
-  
-  // ═══════════════ CHARACTER CREATION ═══════════════
-  function selectGender(g) {
-    charGender = g;
-    document.querySelectorAll('#gender-row .option-btn').forEach(b => b.classList.toggle('selected', b.dataset.v === g));
-    updateCharPreview();
-  }
-  function selectSkin(c) {
-    charSkin = c;
-    document.querySelectorAll('#skin-row .skin-btn').forEach(b => b.classList.toggle('selected', b.dataset.v === c));
-    updateCharPreview();
-  }
-  function selectCloth(c) {
-    charCloth = c;
-    document.querySelectorAll('#cloth-row .color-btn').forEach(b => b.classList.toggle('selected', b.dataset.v === c));
-    updateCharPreview();
-  }
-  function updateCharPreview() {
-    const emoji = charGender === 'boy' ? '👦' : '👧';
-    document.getElementById('char-preview').innerHTML = '<span style="font-size:50px">' + emoji + '</span>';
-    document.getElementById('char-preview').style.borderColor = charCloth;
-    document.getElementById('char-preview').style.boxShadow = '0 0 25px ' + charCloth + '66';
-  }
-  function confirmCharacter() {
-    if (!charGender) { alert('Elige un género'); return; }
-    db.ref('usuarios/' + currentUser).update({ charGender, charSkin, charCloth });
-    enterRoom({});
-  }
-  
-  // ═══════════════ ENTER ROOM ═══════════════
-  function enterRoom(data) {
-    showScreen('mainCanvas');
-    charX = W / 2;
-    charY = H / 2;
-    charAwake = false;
-    setupRoomObjects();
-    startChatListener();
-    loadNotes();
-    // Listen to balance
-    db.ref('usuarios/' + currentUser + '/saldo').on('value', snap => {
-      if (snap.exists()) { userBalance = snap.val(); updateHUD(); }
-    });
-    updateHUD();
-  }
-  
-  // ═══════════════ ROOM OBJECTS ═══════════════
-  function setupRoomObjects() {
-    const margin = 60;
-    roomObjects = [
-      { id: 'bed', emoji: '🛏️', label: 'Cama Celestial', x: W/2, y: H/2, w: 80, h: 60, color: '#4a00e0' },
-      { id: 'arcade', emoji: '🕹️', label: 'Máquina Recreativa', x: margin + 50, y: margin + 50, w: 60, h: 60, color: '#00FFFF' },
-      { id: 'bird', emoji: '🐦', label: 'Pájaro Mascota', x: W - margin - 80, y: margin + 50, w: 40, h: 40, color: '#00FF00', flying: true },
-      { id: 'shower', emoji: '🚿', label: 'Ducha', x: W - margin - 50, y: H - margin - 60, w: 50, h: 50, color: '#00BFFF' },
-      { id: 'feeder', emoji: '🍖', label: 'Comedero', x: margin + 50, y: H - margin - 60, w: 50, h: 50, color: '#FF8C00' },
-      { id: 'door', emoji: '🚪', label: 'Salida', x: W - margin - 30, y: H/2, w: 40, h: 60, color: '#ff4444' }
-    ];
-  }
-  
-  // ═══════════════ CANVAS SETUP ═══════════════
-  function setupCanvas() {
-    canvas = document.getElementById('mainCanvas');
-    ctx = canvas.getContext('2d');
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-  }
-  
-  function resizeCanvas() {
-    W = window.innerWidth;
-    H = window.innerHeight;
-    canvas.width = W;
-    canvas.height = H;
-    if (gameState === 'room') setupRoomObjects();
-  }
-  
-  // ═══════════════ MAIN LOOP ═══════════════
-  function gameLoop(timestamp) {
-    deltaTime = (timestamp - lastTime) / 1000;
-    if (deltaTime > 0.1) deltaTime = 0.1;
-    lastTime = timestamp;
-  
-    if (gameState === 'room') {
-      updateRoom(deltaTime);
-      drawRoom();
-    }
-  
-    requestAnimationFrame(gameLoop);
-  }
-  
-  // ═══════════════ ROOM UPDATE ═══════════════
-  function updateRoom(dt) {
-    updateStats(dt);
-    cloudOffset += dt * 8;
-    petBirdAngle += dt * 1.5;
-  
-    // Update bird position (flying in circle)
-    const bird = roomObjects.find(o => o.id === 'bird');
-    if (bird) {
-      bird.x = W - 140 + Math.cos(petBirdAngle) * 60;
-      bird.y = 90 + Math.sin(petBirdAngle * 1.3) * 40;
-    }
-  
-    if (!charAwake) return;
-  
-    // Movement
-    let dx = 0, dy = 0;
-    if (keys['KeyW'] || keys['ArrowUp']) dy = -1;
-    if (keys['KeyS'] || keys['ArrowDown']) dy = 1;
-    if (keys['KeyA'] || keys['ArrowLeft']) dx = -1;
-    if (keys['KeyD'] || keys['ArrowRight']) dx = 1;
-  
-    // Joystick
-    if (joystickActive) {
-      dx += joystickDX;
-      dy += joystickDY;
-    }
-  
-    // Normalize
-    const len = Math.sqrt(dx*dx + dy*dy);
-    if (len > 0) {
-      dx /= len; dy /= len;
-      charX += dx * charSpeed * 60 * dt;
-      charY += dy * charSpeed * 60 * dt;
-    }
-  
-    // Bounds
-    charX = Math.max(30, Math.min(W - 30, charX));
-    charY = Math.max(30, Math.min(H - 30, charY));
-  
-    // Check proximity to objects
-    interactionPrompt = "";
-    promptAlpha = Math.max(0, promptAlpha - dt * 3);
-    for (const obj of roomObjects) {
-      const dist = Math.sqrt((charX - obj.x)**2 + (charY - obj.y)**2);
-      if (dist < 60) {
-        interactionPrompt = obj.label;
-        promptAlpha = 1;
-        break;
-      }
-    }
-  }
-  
-  // ═══════════════ ROOM DRAWING ═══════════════
-  function drawRoom() {
-    // Sky gradient
-    const skyGrad = ctx.createLinearGradient(0, 0, 0, H);
-    skyGrad.addColorStop(0, '#0a0a2e');
-    skyGrad.addColorStop(0.5, '#1a0a3e');
-    skyGrad.addColorStop(1, '#0a1a2e');
-    ctx.fillStyle = skyGrad;
-    ctx.fillRect(0, 0, W, H);
-  
-    // Stars
-    drawStars();
-  
-    // Cloud floor
-    drawCloudFloor();
-  
-    // Crystal walls
-    drawCrystalWalls();
-  
-    // Room objects
-    for (const obj of roomObjects) {
-      drawRoomObject(obj);
-    }
-  
-    // Character
-    drawCharacter();
-  
-    // Interaction prompt
-    if (promptAlpha > 0 && interactionPrompt) {
-      ctx.save();
-      ctx.globalAlpha = promptAlpha;
-      ctx.fillStyle = 'rgba(0,0,0,.7)';
-      ctx.font = 'bold 14px Segoe UI';
-      ctx.textAlign = 'center';
-      const tw = ctx.measureText(interactionPrompt + ' — Toca para interactuar').width;
-      const px = charX, py = charY - 45;
-      ctx.beginPath();
-      ctx.roundRect(px - tw/2 - 12, py - 12, tw + 24, 28, 10);
-      ctx.fill();
-      ctx.fillStyle = '#00FFFF';
-      ctx.fillText(interactionPrompt + ' — Toca para interactuar', px, py + 5);
-      ctx.restore();
-    }
-  }
-  
-  function drawStars() {
-    // Pseudo-random stars based on position
-    ctx.fillStyle = 'rgba(255,255,255,.4)';
-    for (let i = 0; i < 80; i++) {
-      const sx = (i * 137.5 + 50) % W;
-      const sy = (i * 97.3 + 30) % (H * 0.4);
-      const size = (i % 3 === 0) ? 2 : 1;
-      const twinkle = 0.3 + 0.7 * Math.abs(Math.sin(Date.now() / 1000 + i));
-      ctx.globalAlpha = twinkle * 0.6;
-      ctx.fillRect(sx, sy, size, size);
-    }
-    ctx.globalAlpha = 1;
-  }
-  
-  function drawCloudFloor() {
-    // Animated cloud floor in bottom half
-    const floorY = H * 0.5;
-    ctx.save();
-    for (let i = 0; i < 12; i++) {
-      const cx = ((i * 130 + cloudOffset * (0.5 + i * 0.1)) % (W + 200)) - 100;
-      const cy = floorY + 40 + (i % 3) * 50 + Math.sin(i + cloudOffset * 0.02) * 15;
-      const rx = 80 + (i % 4) * 20;
-      const ry = 25 + (i % 3) * 8;
-      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, rx);
-      grad.addColorStop(0, 'rgba(200,220,255,.12)');
-      grad.addColorStop(0.6, 'rgba(150,180,255,.06)');
-      grad.addColorStop(1, 'rgba(100,140,255,0)');
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.restore();
-  }
-  
-  function drawCrystalWalls() {
-    const m = 20;
-    ctx.save();
-    // Ethereal glass border
-    ctx.strokeStyle = 'rgba(0,255,255,.15)';
-    ctx.lineWidth = 2;
-    ctx.shadowColor = '#00FFFF';
-    ctx.shadowBlur = 15;
-    ctx.beginPath();
-    ctx.roundRect(m, m, W - m*2, H - m*2, 20);
-    ctx.stroke();
-    // Inner glow line
-    ctx.strokeStyle = 'rgba(0,255,255,.06)';
-    ctx.lineWidth = 1;
-    ctx.shadowBlur = 8;
-    ctx.beginPath();
-    ctx.roundRect(m + 8, m + 8, W - m*2 - 16, H - m*2 - 16, 16);
-    ctx.stroke();
-    ctx.restore();
-  }
-  
-  function drawRoomObject(obj) {
-    ctx.save();
-    const time = Date.now() / 1000;
-  
-    // Glow base
-    const glowGrad = ctx.createRadialGradient(obj.x, obj.y, 0, obj.x, obj.y, obj.w);
-    glowGrad.addColorStop(0, obj.color + '33');
-    glowGrad.addColorStop(1, obj.color + '00');
-    ctx.fillStyle = glowGrad;
-    ctx.beginPath();
-    ctx.arc(obj.x, obj.y, obj.w, 0, Math.PI * 2);
-    ctx.fill();
-  
-    // Glass platform
-    ctx.fillStyle = 'rgba(255,255,255,.05)';
-    ctx.strokeStyle = obj.color + '44';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.roundRect(obj.x - obj.w/2, obj.y - obj.h/2, obj.w, obj.h, 12);
-    ctx.fill();
-    ctx.stroke();
-  
-    // Float animation for bird
-    let oy = 0;
-    if (obj.flying) oy = Math.sin(time * 3) * 5;
-  
-    // Emoji
-    ctx.font = (obj.w * 0.6) + 'px serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(obj.emoji, obj.x, obj.y + oy);
-  
-    // Label
-    ctx.font = 'bold 10px Segoe UI';
-    ctx.fillStyle = 'rgba(255,255,255,.5)';
-    ctx.fillText(obj.label, obj.x, obj.y + obj.h/2 + 14);
-  
-    ctx.restore();
-  }
-  
-  function drawCharacter() {
-    ctx.save();
-    const time = Date.now() / 1000;
-  
-    // Aura glow — brighter with higher level
-    const auraRadius = 35 + Math.min(userLevel, 100) * 0.3;
-    const auraIntensity = Math.min(0.4, 0.08 + userLevel * 0.003);
-    const auraPulse = 1 + Math.sin(time * 2) * 0.15;
-    const auraColor = getDifficultyColor(userLevel);
-  
-    const aGrad = ctx.createRadialGradient(charX, charY, 0, charX, charY, auraRadius * auraPulse);
-    aGrad.addColorStop(0, auraColor + Math.round(auraIntensity * 255).toString(16).padStart(2,'0'));
-    aGrad.addColorStop(1, auraColor + '00');
-    ctx.fillStyle = aGrad;
-    ctx.beginPath();
-    ctx.arc(charX, charY, auraRadius * auraPulse, 0, Math.PI * 2);
-    ctx.fill();
-  
-    // Body
-    const bodyH = 20, bodyW = 16, headR = 10;
-    const legH = 10;
-  
-    if (!charAwake) {
-      // Sleeping — drawn sideways
-      ctx.translate(charX, charY);
-      ctx.rotate(-Math.PI / 2);
-      // Zzz
-      ctx.font = '12px serif';
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#fff';
-      const zzOff = Math.sin(time * 2) * 3;
-      ctx.globalAlpha = 0.5 + Math.sin(time * 1.5) * 0.3;
-      ctx.fillText('💤', 15, -15 + zzOff);
-    } else {
-      ctx.translate(charX, charY);
-    }
-  
-    // Head
-    ctx.beginPath();
-    ctx.arc(0, -bodyH/2 - headR, headR, 0, Math.PI * 2);
-    ctx.fillStyle = charSkin;
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,.3)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  
-    // Eyes
-    ctx.fillStyle = '#000';
-    ctx.fillRect(-4, -bodyH/2 - headR - 2, 2.5, 3);
-    ctx.fillRect(2, -bodyH/2 - headR - 2, 2.5, 3);
-  
-    // Body (clothing)
-    ctx.fillStyle = charCloth;
-    ctx.beginPath();
-    ctx.roundRect(-bodyW/2, -bodyH/2, bodyW, bodyH, 4);
-    ctx.fill();
-  
-    // Legs
-    ctx.fillStyle = charSkin;
-    ctx.fillRect(-6, bodyH/2, 4, legH);
-    ctx.fillRect(2, bodyH/2, 4, legH);
-  
-    // Level star
-    if (userLevel >= 5) {
-      ctx.font = '10px serif';
-      ctx.textAlign = 'center';
-      ctx.globalAlpha = 0.8;
-      ctx.fillText('⭐', 0, -bodyH/2 - headR * 2 - 5);
-    }
-  
-    ctx.restore();
-  }
-  
-  // ═══════════════ INTERACTION ═══════════════
-  function handleRoomClick(x, y) {
-    if (!charAwake) {
-      // Wake up character
-      charAwake = true;
-      playSound('click');
-      return;
-    }
-  
-    // Check if clicking near an object
-    for (const obj of roomObjects) {
-      const dist = Math.sqrt((x - obj.x)**2 + (y - obj.y)**2);
-      if (dist < 50) {
-        interactWith(obj);
-        return;
-      }
-    }
-  }
-  
-  function interactWith(obj) {
-    playSound('click');
-    switch(obj.id) {
-      case 'arcade':
-        openBrickGame();
-        break;
-      case 'bird':
-        openFlappyGame();
-        break;
-      case 'shower':
-        showerCharacter();
-        break;
-      case 'feeder':
-        feedCharacter();
-        break;
-      case 'door':
-        doLogout();
-        break;
-      case 'bed':
-        // Rest — restore some HP
-        hp = Math.min(100, hp + 20);
-        addXP(3);
-        playSound('coin');
-        updateHUD();
-        saveUserData();
-        break;
-    }
-  }
-  
-  // ═══════════════ INPUT HANDLING ═══════════════
-  document.addEventListener('keydown', e => {
-    keys[e.code] = true;
-    if (e.code === 'Space') {
-      e.preventDefault();
-      if (gameState === 'flappy') flappyJump();
-    }
-  });
-  document.addEventListener('keyup', e => { keys[e.code] = false; });
-  
-  // Canvas click
-  document.addEventListener('click', e => {
-    if (gameState === 'room' && e.target === canvas) {
-      handleRoomClick(e.clientX, e.clientY);
-    }
-  });
-  
-  // Joystick
-  (function setupJoystick() {
-    const zone = document.getElementById('joystick-zone');
-    const knob = document.getElementById('joystick-knob');
-    let zoneRect, startX, startY;
-  
-    function handleStart(e) {
-      e.preventDefault();
-      const touch = e.touches ? e.touches[0] : e;
-      zoneRect = zone.getBoundingClientRect();
-      startX = zoneRect.left + zoneRect.width / 2;
-      startY = zoneRect.top + zoneRect.height / 2;
-      joystickActive = true;
-      handleMove(e);
-    }
-  
-    function handleMove(e) {
-      if (!joystickActive) return;
-      e.preventDefault();
-      const touch = e.touches ? e.touches[0] : e;
-      const dx = touch.clientX - startX;
-      const dy = touch.clientY - startY;
-      const maxDist = 35;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      const clampDist = Math.min(dist, maxDist);
-      const angle = Math.atan2(dy, dx);
-      const nx = Math.cos(angle) * clampDist;
-      const ny = Math.sin(angle) * clampDist;
-      knob.style.transform = 'translate(calc(-50% + ' + nx + 'px), calc(-50% + ' + ny + 'px))';
-      joystickDX = nx / maxDist;
-      joystickDY = ny / maxDist;
-    }
-  
-    function handleEnd() {
-      joystickActive = false;
-      joystickDX = 0;
-      joystickDY = 0;
-      knob.style.transform = 'translate(-50%, -50%)';
-    }
-  
-    zone.addEventListener('touchstart', handleStart, { passive: false });
-    zone.addEventListener('touchmove', handleMove, { passive: false });
-    zone.addEventListener('touchend', handleEnd);
-    zone.addEventListener('mousedown', handleStart);
-    document.addEventListener('mousemove', handleMove);
-    document.addEventListener('mouseup', handleEnd);
-  })();
-  
-  // ═══════════════ CHAT SYSTEM ═══════════════
-  let chatListener = null;
-  function startChatListener() {
-    if (chatListener) return;
-    chatListener = db.ref('chat/global').orderByKey().limitToLast(50);
-    chatListener.on('value', snap => {
-      const cont = document.getElementById('chat-messages');
-      cont.innerHTML = '';
-      snap.forEach(child => {
-        const m = child.val();
-        const div = document.createElement('div');
-        div.className = 'msg';
-        div.innerHTML = '<div class="name">' + (m.user || '???') + '</div><div class="text">' + escapeHTML(m.text || '') + '</div>';
-        cont.appendChild(div);
-      });
-      cont.scrollTop = cont.scrollHeight;
-    });
-  }
-  function stopChatListener() {
-    if (chatListener) { chatListener.off(); chatListener = null; }
-  }
-  function sendChat() {
-    const inp = document.getElementById('chat-input');
-    const text = inp.value.trim();
-    if (!text || !currentUser) return;
-    db.ref('chat/global').push({ user: currentUser, text: text, ts: Date.now() });
-    inp.value = '';
-    playSound('click');
-    addXP(1);
-  }
-  function escapeHTML(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  
-  function openChat() { document.getElementById('modal-chat').classList.remove('hidden'); }
-  function closeChat() { document.getElementById('modal-chat').classList.add('hidden'); }
-  
-  // ═══════════════ NOTES SYSTEM ═══════════════
-  function loadNotes() {
-    if (!currentUser || currentUser === 'admin') return;
-    db.ref('notas/' + currentUser).on('value', snap => {
-      const cont = document.getElementById('notes-list');
-      cont.innerHTML = '';
-      snap.forEach(child => {
-        const t = child.val();
-        const k = child.key;
-        const div = document.createElement('div');
-        div.className = 'note-item' + (t.done ? ' done' : '');
-        div.innerHTML = '<input type="checkbox" ' + (t.done ? 'checked' : '') +
-          ' onchange="toggleNote(\'' + k + '\',' + !t.done + ')">' +
-          '<span class="note-text">' + escapeHTML(t.text) + '</span>';
-        cont.appendChild(div);
-      });
-    });
-  }
-  function addNote() {
-    const inp = document.getElementById('note-input');
-    if (inp.value.trim() && currentUser) {
-      db.ref('notas/' + currentUser).push({ text: inp.value.trim(), done: false });
-      inp.value = '';
-      playSound('click');
-      addXP(1);
-    }
-  }
-  function toggleNote(key, val) {
-    db.ref('notas/' + currentUser + '/' + key).update({ done: val });
-  }
-  function clearDoneNotes() {
-    playSound('trash');
-    db.ref('notas/' + currentUser).once('value', snap => {
-      snap.forEach(c => { if (c.val().done) db.ref('notas/' + currentUser + '/' + c.key).remove(); });
-    });
-  }
-  function openNotes() { document.getElementById('modal-notes').classList.remove('hidden'); }
-  function closeNotes() { document.getElementById('modal-notes').classList.add('hidden'); }
-  
-  // ═══════════════ SETTINGS ═══════════════
-  function openSettings() { document.getElementById('modal-settings').classList.remove('hidden'); }
-  function closeSettings() { document.getElementById('modal-settings').classList.add('hidden'); }
-  function editProfile() {
-    const newPass = prompt('Nueva contraseña (dejar vacío para no cambiar):');
-    if (newPass) {
-      db.ref('usuarios/' + currentUser).update({ password: newPass });
-      alert('✅ Contraseña actualizada');
-    }
-  }
-  
-  // ═══════════════════════════════════════════════════
-  //  JUEGO 1 — EDÉN BRICKS (Breakout)
-  // ═══════════════════════════════════════════════════
-  const bCvs = document.getElementById('brickCanvas');
-  const bCtx = bCvs.getContext('2d');
-  const BW = bCvs.width, BH = bCvs.height;
-  
-  let bPaddle = { x: BW/2, w: 80, h: 14, speed: 7 };
-  let bBall = { x: BW/2, y: BH - 40, vx: 4, vy: -4, r: 8 };
-  let bBricks = [], bScore = 0, bLives = 3, bActive = false, bRaf = null;
-  const B_ROWS = 5, B_COLS = 8, B_PAD = 6;
-  const B_BRICK_W = (BW - B_PAD * (B_COLS + 1)) / B_COLS;
-  const B_BRICK_H = 22;
-  const BRICK_COLORS = ['#FF4444','#FF8C00','#FFD700','#00FF00','#00FFFF','#7B2FFF'];
-  let bMouseX = BW / 2;
-  
-  function openBrickGame() {
-    gameState = 'bricks';
-    document.getElementById('game-bricks').classList.remove('hidden');
-    document.getElementById('hud').classList.add('hidden');
-    document.getElementById('joystick-zone').classList.add('hidden');
-    document.getElementById('brick-menu').classList.remove('hidden');
-    document.getElementById('brick-over').classList.add('hidden');
-    document.getElementById('brick-win').classList.add('hidden');
-  }
-  
-  function exitBrickGame() {
-    bActive = false;
-    cancelAnimationFrame(bRaf);
-    document.getElementById('game-bricks').classList.add('hidden');
-    gameState = 'room';
-    document.getElementById('hud').classList.remove('hidden');
-    document.getElementById('joystick-zone').classList.remove('hidden');
-  }
-  
-  function startBrickGame() {
-    document.getElementById('brick-menu').classList.add('hidden');
-    document.getElementById('brick-over').classList.add('hidden');
-    document.getElementById('brick-win').classList.add('hidden');
-    bScore = 0; bLives = 3;
-    bPaddle.x = BW / 2;
-    bBall = { x: BW/2, y: BH - 40, vx: 3 + Math.random() * 2, vy: -4, r: 8 };
-    bBricks = [];
-    for (let r = 0; r < B_ROWS; r++) {
-      for (let c = 0; c < B_COLS; c++) {
-        bBricks.push({
-          x: B_PAD + c * (B_BRICK_W + B_PAD),
-          y: 50 + r * (B_BRICK_H + B_PAD),
-          w: B_BRICK_W, h: B_BRICK_H,
-          alive: true,
-          color: BRICK_COLORS[r % BRICK_COLORS.length]
+
+        // Movimiento suave (Mejorado de lo tuyo)
+        const stick = document.getElementById('joystick-stick');
+        let moveX = 0, moveY = 0;
+
+        document.getElementById('joystick-base').addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            const base = e.currentTarget.getBoundingClientRect();
+            const centerX = base.left + base.width/2;
+            const centerY = base.top + base.height/2;
+            moveX = (touch.clientX - centerX) / 10;
+            moveY = (touch.clientY - centerY) / 10;
+            
+            // Limitar stick visualmente
+            let visualX = touch.clientX - centerX;
+            let visualY = touch.clientY - centerY;
+            const dist = Math.sqrt(visualX**2 + visualY**2);
+            if(dist > 40) { visualX *= 40/dist; visualY *= 40/dist; }
+            stick.style.transform = `translate(calc(-50% + ${visualX}px), calc(-50% + ${visualY}px))`;
+
+            playerPos.x += moveX * 0.2;
+            playerPos.y += moveY * 0.2;
+            actualizarPosicion();
         });
-      }
-    }
-    updateBrickHUD();
-    bActive = true;
-    cancelAnimationFrame(bRaf);
-    brickLoop();
-  }
-  
-  function brickLoop() {
-    if (!bActive) return;
-    // Move ball
-    bBall.x += bBall.vx;
-    bBall.y += bBall.vy;
-  
-    // Wall collision
-    if (bBall.x - bBall.r <= 0 || bBall.x + bBall.r >= BW) bBall.vx *= -1;
-    if (bBall.y - bBall.r <= 0) bBall.vy *= -1;
-  
-    // Paddle collision
-    const py = BH - 30;
-    if (bBall.vy > 0 && bBall.y + bBall.r >= py && bBall.y + bBall.r <= py + bPaddle.h &&
-        bBall.x >= bPaddle.x - bPaddle.w/2 && bBall.x <= bPaddle.x + bPaddle.w/2) {
-      bBall.vy = -Math.abs(bBall.vy);
-      const offset = (bBall.x - bPaddle.x) / (bPaddle.w / 2);
-      bBall.vx = offset * 5;
-      playSound('bounce');
-    }
-  
-    // Bottom — lose life
-    if (bBall.y > BH + 20) {
-      bLives--;
-      playSound('fail');
-      if (bLives <= 0) {
-        bActive = false;
-        document.getElementById('brick-over').classList.remove('hidden');
-        document.getElementById('brick-final-score').textContent = 'Puntuación: ' + bScore + ' €Edems€';
-        addXP(Math.floor(bScore / 2));
-        return;
-      }
-      bBall = { x: BW/2, y: BH - 40, vx: 3 + Math.random() * 2, vy: -4, r: 8 };
-      updateBrickHUD();
-    }
-  
-    // Brick collision
-    for (const br of bBricks) {
-      if (!br.alive) continue;
-      if (bBall.x + bBall.r > br.x && bBall.x - bBall.r < br.x + br.w &&
-          bBall.y + bBall.r > br.y && bBall.y - bBall.r < br.y + br.h) {
-        br.alive = false;
-        bBall.vy *= -1;
-        bScore++;
-        playSound('hit');
-        addBalance(1);
-        updateBrickHUD();
-        break;
-      }
-    }
-  
-    // Win check
-    if (bBricks.every(b => !b.alive)) {
-      bActive = false;
-      document.getElementById('brick-win').classList.remove('hidden');
-      document.getElementById('brick-win-score').textContent = '¡' + bScore + ' puntos! +' + bScore * 2 + ' XP';
-      addXP(bScore * 2);
-      return;
-    }
-  
-    // Paddle follow mouse/touch
-    bPaddle.x += (bMouseX - bPaddle.x) * 0.15;
-    bPaddle.x = Math.max(bPaddle.w/2, Math.min(BW - bPaddle.w/2, bPaddle.x));
-  
-    drawBricks();
-    bRaf = requestAnimationFrame(brickLoop);
-  }
-  
-  function drawBricks() {
-    // Background
-    bCtx.fillStyle = '#000510';
-    bCtx.fillRect(0, 0, BW, BH);
-  
-    // Grid subtle
-    bCtx.strokeStyle = 'rgba(0,255,255,.03)';
-    for (let x = 0; x < BW; x += 40) { bCtx.beginPath(); bCtx.moveTo(x, 0); bCtx.lineTo(x, BH); bCtx.stroke(); }
-    for (let y = 0; y < BH; y += 40) { bCtx.beginPath(); bCtx.moveTo(0, y); bCtx.lineTo(BW, y); bCtx.stroke(); }
-  
-    // Bricks
-    for (const br of bBricks) {
-      if (!br.alive) continue;
-      bCtx.save();
-      bCtx.shadowColor = br.color;
-      bCtx.shadowBlur = 8;
-      bCtx.fillStyle = br.color + 'CC';
-      bCtx.beginPath();
-      bCtx.roundRect(br.x, br.y, br.w, br.h, 4);
-      bCtx.fill();
-      bCtx.strokeStyle = br.color;
-      bCtx.lineWidth = 1;
-      bCtx.stroke();
-      bCtx.restore();
-    }
-  
-    // Ball
-    bCtx.save();
-    bCtx.shadowColor = '#FF4444';
-    bCtx.shadowBlur = 15;
-    bCtx.fillStyle = '#FF4444';
-    bCtx.beginPath();
-    bCtx.arc(bBall.x, bBall.y, bBall.r, 0, Math.PI * 2);
-    bCtx.fill();
-    bCtx.restore();
-  
-    // Paddle
-    bCtx.save();
-    bCtx.shadowColor = '#00FFFF';
-    bCtx.shadowBlur = 12;
-    const pGrad = bCtx.createLinearGradient(bPaddle.x - bPaddle.w/2, 0, bPaddle.x + bPaddle.w/2, 0);
-    pGrad.addColorStop(0, '#00FFFF');
-    pGrad.addColorStop(0.5, '#0088FF');
-    pGrad.addColorStop(1, '#00FFFF');
-    bCtx.fillStyle = pGrad;
-    bCtx.beginPath();
-    bCtx.roundRect(bPaddle.x - bPaddle.w/2, BH - 30, bPaddle.w, bPaddle.h, 7);
-    bCtx.fill();
-    bCtx.restore();
-  }
-  
-  function updateBrickHUD() {
-    document.getElementById('brick-score').textContent = '€Edems€: ' + bScore;
-    let hearts = '';
-    for (let i = 0; i < bLives; i++) hearts += '❤️';
-    document.getElementById('brick-lives').textContent = hearts || '💀';
-  }
-  
-  // Brick game mouse/touch
-  bCvs.addEventListener('mousemove', e => {
-    const rect = bCvs.getBoundingClientRect();
-    bMouseX = (e.clientX - rect.left) * (BW / rect.width);
-  });
-  bCvs.addEventListener('touchmove', e => {
-    e.preventDefault();
-    const rect = bCvs.getBoundingClientRect();
-    bMouseX = (e.touches[0].clientX - rect.left) * (BW / rect.width);
-  }, { passive: false });
-  bCvs.addEventListener('touchstart', e => {
-    const rect = bCvs.getBoundingClientRect();
-    bMouseX = (e.touches[0].clientX - rect.left) * (BW / rect.width);
-  }, { passive: true });
-  
-  // ═══════════════════════════════════════════════════
-  //  JUEGO 2 — EDÉN FLAPPY (Dificultad Extrema)
-  // ═══════════════════════════════════════════════════
-  const fCvs = document.getElementById('flappyCanvas');
-  const fCtx = fCvs.getContext('2d');
-  const FW = fCvs.width, FH = fCvs.height;
-  
-  // EXTREME difficulty: smaller gap, faster pipes
-  const F_GRAVITY = 0.38, F_JUMP = -7, F_PIPE_W = 52, F_GAP = 130, F_PIPE_SPEED = 3.2, F_PIPE_INTERVAL = 85;
-  const NEON_COLORS = ['#00FFFF','#00FF00','#FF00FF','#FFD700','#FF4500','#7B2FFF'];
-  
-  let fBird = { x: 70, y: FH/2, vy: 0, r: 18 };
-  let fPipes = [], fScore = 0, fFrame = 0, fActive = false, fRaf = null;
-  
-  function openFlappyGame() {
-    gameState = 'flappy';
-    document.getElementById('game-flappy').classList.remove('hidden');
-    document.getElementById('hud').classList.add('hidden');
-    document.getElementById('joystick-zone').classList.add('hidden');
-    document.getElementById('flappy-menu').classList.remove('hidden');
-    document.getElementById('flappy-over').classList.add('hidden');
-    fActive = false;
-    drawFlappyStatic();
-  }
-  
-  function exitFlappyGame() {
-    fActive = false;
-    cancelAnimationFrame(fRaf);
-    document.getElementById('game-flappy').classList.add('hidden');
-    gameState = 'room';
-    document.getElementById('hud').classList.remove('hidden');
-    document.getElementById('joystick-zone').classList.remove('hidden');
-  }
-  
-  function startFlappyGame() {
-    document.getElementById('flappy-menu').classList.add('hidden');
-    document.getElementById('flappy-over').classList.add('hidden');
-    fBird = { x: 70, y: FH/2, vy: 0, r: 18 };
-    fPipes = []; fScore = 0; fFrame = 0; fActive = true;
-    document.getElementById('flappy-score').textContent = '€Edems€: 0';
-    cancelAnimationFrame(fRaf);
-    flappyLoop();
-  }
-  
-  function flappyJump() {
-    if (!fActive) { startFlappyGame(); return; }
-    fBird.vy = F_JUMP;
-    playSound('bounce');
-  }
-  
-  fCvs.addEventListener('click', () => { if (gameState === 'flappy') flappyJump(); });
-  fCvs.addEventListener('touchstart', e => { e.preventDefault(); if (gameState === 'flappy') flappyJump(); }, { passive: false });
-  
-  function flappyLoop() {
-    if (!fActive) return;
-    fFrame++;
-  
-    // Generate pipes
-    if (fFrame % F_PIPE_INTERVAL === 0) {
-      const topH = 60 + Math.random() * (FH - F_GAP - 120);
-      const col = NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)];
-      fPipes.push({ x: FW, topH, bottomY: topH + F_GAP, scored: false, col });
-    }
-  
-    // Move pipes
-    fPipes.forEach(p => p.x -= F_PIPE_SPEED);
-    fPipes = fPipes.filter(p => p.x > -F_PIPE_W - 10);
-  
-    // Score
-    fPipes.forEach(p => {
-      if (!p.scored && p.x + F_PIPE_W < fBird.x) {
-        p.scored = true;
-        fScore++;
-        document.getElementById('flappy-score').textContent = '€Edems€: ' + fScore;
-        playSound('coin');
-        addBalance(1);
-      }
-    });
-  
-    // Physics
-    fBird.vy += F_GRAVITY;
-    fBird.y += fBird.vy;
-  
-    // Collision
-    let hit = fBird.y - fBird.r <= 0 || fBird.y + fBird.r >= FH;
-    fPipes.forEach(p => {
-      if (fBird.x + fBird.r > p.x && fBird.x - fBird.r < p.x + F_PIPE_W) {
-        if (fBird.y - fBird.r < p.topH || fBird.y + fBird.r > p.bottomY) hit = true;
-      }
-    });
-  
-    if (hit) {
-      fActive = false;
-      playSound('fail');
-      document.getElementById('flappy-over').classList.remove('hidden');
-      document.getElementById('flappy-final-score').textContent = 'Puntuación: ' + fScore + ' €Edems€';
-      addXP(fScore * 3);
-      // Save high score
-      if (currentUser && currentUser !== 'admin') {
-        db.ref('usuarios/' + currentUser + '/puntosFlappy').once('value', s => {
-          if (fScore > (s.val() || 0)) db.ref('usuarios/' + currentUser + '/puntosFlappy').set(fScore);
+
+        document.addEventListener('touchend', () => {
+            stick.style.transform = `translate(-50%, -50%)`;
+            moveX = 0; moveY = 0;
         });
-      }
-      return;
-    }
-  
-    drawFlappy();
-    fRaf = requestAnimationFrame(flappyLoop);
-  }
-  
-  function drawFlappy() {
-    // Background gradient
-    const bg = fCtx.createLinearGradient(0, 0, 0, FH);
-    bg.addColorStop(0, '#001a10');
-    bg.addColorStop(1, '#0a1a00');
-    fCtx.fillStyle = bg;
-    fCtx.fillRect(0, 0, FW, FH);
-  
-    // Subtle stars
-    fCtx.fillStyle = 'rgba(255,255,255,.3)';
-    for (let i = 0; i < 30; i++) {
-      fCtx.fillRect((i * 73 + 20) % FW, (i * 47 + 10) % (FH * 0.6), 1, 1);
-    }
-  
-    // Pipes — neon blocks
-    fPipes.forEach(p => {
-      drawNeonPipe(p.x, 0, p.topH, p.col);
-      drawNeonPipe(p.x, p.bottomY, FH - p.bottomY, p.col);
-    });
-  
-    // Bird
-    fCtx.save();
-    fCtx.shadowColor = '#00FFFF';
-    fCtx.shadowBlur = 15;
-    fCtx.beginPath();
-    fCtx.arc(fBird.x, fBird.y, fBird.r, 0, Math.PI * 2);
-    fCtx.fillStyle = '#001828';
-    fCtx.fill();
-    fCtx.strokeStyle = '#00FFFF';
-    fCtx.lineWidth = 2;
-    fCtx.stroke();
-    fCtx.restore();
-    // Bird emoji
-    fCtx.font = (fBird.r) + 'px serif';
-    fCtx.textAlign = 'center';
-    fCtx.textBaseline = 'middle';
-    fCtx.fillText('🐦', fBird.x, fBird.y + 1);
-  }
-  
-  function drawNeonPipe(x, y, h, col) {
-    const blockSize = 18;
-    const cols = Math.ceil(F_PIPE_W / blockSize);
-    const rows = Math.ceil(h / blockSize);
-    fCtx.save();
-    for (let c = 0; c < cols; c++) {
-      for (let r = 0; r < rows; r++) {
-        const bx = x + c * blockSize, by = y + r * blockSize;
-        if (by + blockSize < y || by > y + h) continue;
-        fCtx.fillStyle = 'rgba(0,0,0,.6)';
-        fCtx.fillRect(bx + 1, by + 1, blockSize - 2, blockSize - 2);
-        fCtx.strokeStyle = col;
-        fCtx.lineWidth = 1;
-        fCtx.shadowColor = col;
-        fCtx.shadowBlur = 4;
-        fCtx.strokeRect(bx + 1, by + 1, blockSize - 2, blockSize - 2);
-        fCtx.shadowBlur = 0;
-      }
-    }
-    fCtx.restore();
-  }
-  
-  function drawFlappyStatic() {
-    const bg = fCtx.createLinearGradient(0, 0, 0, FH);
-    bg.addColorStop(0, '#001a10');
-    bg.addColorStop(1, '#0a1a00');
-    fCtx.fillStyle = bg;
-    fCtx.fillRect(0, 0, FW, FH);
-    fCtx.font = '20px serif';
-    fCtx.textAlign = 'center';
-    fCtx.textBaseline = 'middle';
-    fCtx.fillText('🐦', FW / 2, FH / 2);
-  }
-  
-  // ═══════════════ LOADING SEQUENCE ═══════════════
-  async function init() {
-    setupCanvas();
-    preloadSounds();
-  
-    // Loading animation
-    const bar = document.getElementById('load-bar');
-    for (let i = 0; i <= 100; i += 2) {
-      bar.style.width = i + '%';
-      await new Promise(r => setTimeout(r, 25));
-    }
-  
-    await new Promise(r => setTimeout(r, 400));
-    document.getElementById('loading-screen').style.animation = 'fadeOut 0.5s forwards';
-    await new Promise(r => setTimeout(r, 500));
-    document.getElementById('loading-screen').classList.add('hidden');
-  
-    // Check if already logged in with Firebase Auth
-    auth.onAuthStateChanged(user => {
-      if (user && currentUser) return; // already handled
-    });
-  
-    showScreen('screen-login');
-    gameState = 'login';
-  
-    // Start main loop
-    requestAnimationFrame(gameLoop);
-  }
-  
-  // Auto-save every 60 seconds
-  setInterval(() => {
-    if (currentUser && currentUser !== 'admin' && gameState === 'room') {
-      saveCounter = 0;
-      saveUserData();
-    }
-  }, 60000);
-  
-  // Start
-  init();
-  </script>
-  </body>
-  </html>
-  ENDOFFILE
-  echo "DONE: $(wc -c < /
+
+        // Teclado PC
+        document.addEventListener('keydown', (e) => {
+            if(e.key == 'w') playerPos.y -= 2;
+            if(e.key == 's') playerPos.y += 2;
+            if(e.key == 'a') playerPos.x -= 2;
+            if(e.key == 'd') playerPos.x += 2;
+            actualizarPosicion();
+        });
+
+        function actualizarPosicion() {
+            if(playerPos.x < 5) playerPos.x = 5; if(playerPos.x > 95) playerPos.x = 95;
+            if(playerPos.y < 40) playerPos.y = 40; if(playerPos.y > 90) playerPos.y = 90;
+            const p = document.getElementById('jugador');
+            p.style.left = playerPos.x + '%';
+            p.style.top = playerPos.y + '%';
+            checkInteraccion();
+        }
+
+        function checkInteraccion() {
+            const pRect = document.getElementById('jugador').getBoundingClientRect();
+            const btn = document.getElementById('btn-interact');
+            let detectado = false;
+            
+            document.querySelectorAll('.objeto-interactivo').forEach(obj => {
+                const oRect = obj.getBoundingClientRect();
+                if(!(pRect.right < oRect.left || pRect.left > oRect.right || pRect.bottom < oRect.top || pRect.top > oRect.bottom)) {
+                    detectado = true;
+                    interactAccion = obj.getAttribute('data-action');
+                }
+            });
+
+            if(detectado) {
+                btn.style.display = 'flex';
+                btn.innerText = interactAccion == 'comer' ? '🍎' : (interactAccion == 'dormir' ? '💤' : '⚡');
+            } else {
+                btn.style.display = 'none';
+            }
+        }
+
+        document.getElementById('btn-interact').addEventListener('click', () => {
+            if(interactAccion == 'comer') { stats.hambre = 100; stats.edems -= 5; }
+            if(interactAccion == 'dormir') { stats.energia = 100; }
+            if(interactAccion == 'jugar') { stats.edems += 20; alert("¡Hackeo completado! +20 Edems"); }
+            actualizarUI();
+        });
+
+        function actualizarUI() {
+            document.getElementById('vida-bar').style.width = stats.vida + '%';
+            document.getElementById('hambre-bar').style.width = stats.hambre + '%';
+            document.getElementById('energia-bar').style.width = stats.energia + '%';
+            document.getElementById('edems-val').innerText = Math.floor(stats.edems);
+        }
+    </script>
+</body>
+</html>
+
