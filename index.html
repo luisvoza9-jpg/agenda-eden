@@ -8,7 +8,6 @@
 <meta name="keywords" content="agenda eden, luisvoza9, juego ladrillos web, chat gratis eden">
 <meta name="author" content="Luisvoza9">
 
-    
     <link rel="icon" type="image/png" href="icono.png">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icono.png">
@@ -70,7 +69,6 @@
         .btn-rank-flotante { position: fixed; bottom: 30px; left: 90px; background: none; color: #FFD700; font-size: 40px; border: none; cursor: pointer; z-index: 101; }
         
         #vista-juego { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('fondo-nubes.jpg'); background-size: cover; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
-        /* AJUSTE PARA QUE NO SE SALGA DEL MÓVIL */
         #gameCanvas { border: 3px solid #00FFFF; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 30px #00FFFF; cursor: none; max-width: 95vw; height: auto; }
         .btn-game-return { position: fixed; top: 25px; left: 25px; color: #00FFFF; cursor: pointer; border: none; background: none; z-index: 1002; }
         .menu-eden { position: absolute; background: rgba(0,0,0,0.95); border: 2px solid #00FFFF; padding: 30px; border-radius: 20px; text-align: center; z-index: 1010; width: 340px; }
@@ -270,17 +268,19 @@
         let masterVolume = 0.5;
         let userBalance = 0;
 
+        // OPTIMIZACIÓN: Precarga de sonidos para evitar lag
         const sonidos = {
             hit: new Audio('hit.mp3'), bounce: new Audio('bounce.mp3'),
             coin: new Audio('coin.mp3'), fail: new Audio('fail.mp3'),
             click: new Audio('click.mp3'), trash: new Audio('trash.mp3')
         };
+        Object.values(sonidos).forEach(a => a.preload = "auto");
 
         function reproducir(n) { 
             if(isMuted) return;
             if(sonidos[n]) { 
                 sonidos[n].volume = masterVolume;
-                sonidos[n].currentTime = 0; 
+                sonidos[n].currentTime = 0; // Reinicio instantáneo
                 sonidos[n].play().catch(() => {}); 
             }
         }
@@ -581,15 +581,15 @@
         
         function iniciarJuegoEden(diff) { 
             reproducir('click'); 
-            cancelAnimationFrame(gameInterval); // Detenemos cualquier loop anterior
+            cancelAnimationFrame(gameInterval); 
             resetVariablesJuego(diff); 
             gameActive = true; 
             
-            // Loop optimizado para fluidez en móvil
+            // LOOP OPTIMIZADO: El dibujo se sincroniza antes de pintar
             function gameLoop() {
                 if(gameActive) {
-                    draw();
                     gameInterval = requestAnimationFrame(gameLoop);
+                    draw();
                 }
             }
             gameLoop();
@@ -628,7 +628,6 @@
             if (relX > 0 && relX < canvas.width) paddleX = relX - paddleWidth / 2;
         });
 
-        // CONTROL TÁCTIL OPTIMIZADO PARA NO DAR LAG
         canvas.addEventListener("touchmove", (e) => {
             if (!gameActive) return;
             e.preventDefault();
@@ -656,7 +655,8 @@
                     if (brick.status > 0 && b.x > brick.x && b.x < brick.x + brick.w && b.y > brick.y && b.y < brick.y + brick.h) {
                         b.dy = -b.dy;
                         if(brick.type !== "wall") {
-                            brick.status--; reproducir('hit');
+                            brick.status--; 
+                            reproducir('hit'); // Sonido instantáneo al contacto
                             if(brick.status === 0) { score++; document.getElementById("game-score").innerText = "€Eden€: " + score; }
                         }
                     }
@@ -664,7 +664,10 @@
                 if (b.x + b.dx > canvas.width - b.radius || b.x + b.dx < b.radius) b.dx = -b.dx;
                 if (b.y + b.dy < b.radius) b.dy = -b.dy;
                 else if (b.y + b.dy > canvas.height - 80) {
-                    if (b.x > paddleX && b.x < paddleX + paddleWidth) { b.dy = -Math.abs(b.dy); reproducir('bounce'); }
+                    if (b.x > paddleX && b.x < paddleX + paddleWidth) { 
+                        b.dy = -Math.abs(b.dy); 
+                        reproducir('bounce'); // Sonido instantáneo al contacto
+                    }
                     else if (b.y > canvas.height) balls.splice(index, 1);
                 }
                 b.x += b.dx; b.y += b.dy;
