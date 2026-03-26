@@ -3,9 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda Edén | Luisvoza9</title>
+    <title>Agenda Edén | Juego de Ladrillos y Chat de Luisvoza9</title>
+<meta name="description" content="Entra en la App Web de Luisvoza9: Agenda personal, chat global y el adictivo juego de ladrillos del Edén.">
+<meta name="keywords" content="agenda eden, luisvoza9, juego ladrillos web, chat gratis eden">
+<meta name="author" content="Luisvoza9">
+
+    
+    <link rel="icon" type="image/png" href="icono.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icono.png">
+    <meta name="theme-color" content="#00FFFF">
+
     <style>
-        /* TU DISEÑO INTACTO */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             height: 100vh; display: flex; justify-content: center; align-items: center;
@@ -15,139 +24,455 @@
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 1; }
         .container { width: 380px; text-align: center; position: relative; z-index: 10; }
         h1 { color: #00FFFF; margin-bottom: 20px; font-size: 32px; text-shadow: 0 0 15px #00FFFF; display: flex; flex-direction: column; align-items: center; letter-spacing: 2px; font-weight: bold; line-height: 1.1; min-height: 110px; }
+        h1 span { display: block; width: 100%; }
+        
         input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00FFFF; background: rgba(0, 0, 0, 0.7); color: white; font-size: 16px; outline: none; text-align: center; }
+        
+        .btn-exit-fixed { position: fixed; top: 25px; right: 25px; color: #ff4444; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1000; transition: 0.3s; }
+        
+        .btn-settings-fixed { position: fixed; top: 25px; left: 25px; color: #fff; text-shadow: 0 0 10px #00FFFF; cursor: pointer; border: none; background: none; display: flex; flex-direction: column; align-items: center; z-index: 1000; transition: 0.3s; }
+        .btn-settings-fixed:hover { transform: rotate(90deg) scale(1.1); color: #00FFFF; }
+
+        .task-input-group { display: flex; gap: 10px; margin-top: 10px; align-items: center; }
         .btn-blue { background: #00FFFF; color: black; width: 55px; font-size: 24px; border-radius: 10px; border: none; cursor: pointer; height: 45px; flex-shrink: 0; }
+        
         .task-list { text-align: left; margin-top: 20px; max-height: 250px; overflow-y: auto; }
-        .task-item { background: rgba(0, 0, 0, 0.6); margin-bottom: 8px; padding: 12px; border-radius: 10px; display: flex; align-items: center; border: 1px solid rgba(0, 255, 255, 0.2); gap: 10px; }
+        .task-item { background: rgba(0, 0, 0, 0.6); margin-bottom: 8px; padding: 12px; border-radius: 10px; display: flex; align-items: center; border: 1px solid rgba(0, 255, 255, 0.2); gap: 10px; transition: 0.3s; }
+        
         .task-text { flex: 1; color: white; word-break: break-word; font-size: 14px; }
-        .btn-trash-central { position: fixed; bottom: 30px; right: 30px; background: none; color: #ff4444; font-size: 50px; border: none; cursor: pointer; z-index: 100; }
+        .task-item.editing { border-color: #FFD700; box-shadow: 0 0 10px #FFD700; background: rgba(0, 0, 0, 0.8); }
+        .edit-input { flex: 1; padding: 5px; border-radius: 5px; border: 1px solid #FFD700; background: rgba(255,255,255,0.1); color: white; font-size: 14px; outline: none; }
+        .btn-edit-note, .btn-save-note { background: none; border: none; cursor: pointer; font-size: 16px; opacity: 0.7; transition: 0.3s; }
+        .btn-edit-note:hover, .btn-save-note:hover { opacity: 1; transform: scale(1.2); }
+
+        .btn-trash-central { position: fixed; bottom: 30px; right: 30px; background: none; color: #ff4444; font-size: 50px; border: none; filter: drop-shadow(0 0 10px #ff4444); cursor: pointer; z-index: 100; }
         .hidden { display: none !important; }
+        
+        .settings-card { background: rgba(0,0,0,0.85); padding: 20px; border-radius: 20px; border: 1px solid #00FFFF; text-align: left; position: relative; }
+        .btn-close-settings { position: absolute; top: 10px; right: 15px; color: #ff4444; font-size: 24px; cursor: pointer; font-weight: bold; }
+        .setting-row { margin: 15px 0; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+        .social-btn { width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        
+        .shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+        .shop-item { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; text-align: center; border: 1px solid rgba(0,255,255,0.3); cursor: pointer; transition: 0.3s; }
+        .shop-item:hover { background: rgba(0,255,255,0.2); border-color: #00FFFF; }
+        .shop-price { display: block; font-size: 10px; color: #FFD700; margin-top: 5px; }
+        .shop-label { font-size: 11px; font-weight: bold; display: block; margin-top: 15px; color: #00FFFF; border-bottom: 1px solid rgba(0,255,255,0.2); }
+
+        .btn-shop-flotante { position: fixed; bottom: 30px; left: 150px; background: none; color: #FFD700; font-size: 40px; border: none; cursor: pointer; z-index: 101; display: flex; flex-direction: column; align-items: center; }
+        .btn-chat-flotante { position: fixed; bottom: 30px; left: 210px; background: none; color: #00FF00; font-size: 40px; border: none; cursor: pointer; z-index: 101; display: flex; flex-direction: column; align-items: center; }
+        .btn-shop-label { font-size: 10px; font-weight: bold; margin-top: -5px; }
+
+        @keyframes borrarVuelo { to { transform: scale(0) translate(20vw, 50vh); opacity: 0; } }
+        .arrugando { animation: borrarVuelo 0.6s ease-in forwards; }
+
         .btn-game-flotante { position: fixed; bottom: 30px; left: 30px; background: none; color: #00FFFF; font-size: 40px; border: none; cursor: pointer; z-index: 101; }
-        /* AJUSTE DE PANTALLA MÓVIL */
-        #gameCanvas { border: 3px solid #00FFFF; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 30px #00FFFF; max-width: 95vw; height: auto; touch-action: none; }
+        .btn-rank-flotante { position: fixed; bottom: 30px; left: 90px; background: none; color: #FFD700; font-size: 40px; border: none; cursor: pointer; z-index: 101; }
+        
         #vista-juego { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('fondo-nubes.jpg'); background-size: cover; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
+        /* AJUSTE PARA QUE NO SE SALGA DEL MÓVIL */
+        #gameCanvas { border: 3px solid #00FFFF; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 30px #00FFFF; cursor: none; max-width: 95vw; height: auto; }
+        .btn-game-return { position: fixed; top: 25px; left: 25px; color: #00FFFF; cursor: pointer; border: none; background: none; z-index: 1002; }
         .menu-eden { position: absolute; background: rgba(0,0,0,0.95); border: 2px solid #00FFFF; padding: 30px; border-radius: 20px; text-align: center; z-index: 1010; width: 340px; }
         .game-btn-neon { background: none; border: 1px solid #00FFFF; color: #00FFFF; padding: 10px 20px; margin: 10px auto; border-radius: 10px; cursor: pointer; width: 100%; }
+        
+        #game-score { color: #FFD700; font-weight: bold; font-size: 14px; text-shadow: 0 0 5px #FFD700; margin-bottom: 10px; }
+        #shop-balance { color: #FFD700; font-weight: bold; font-size: 14px; text-shadow: 0 0 5px #FFD700; margin-bottom: 10px; display: block; text-align: center; }
+
+        #avatar-preview { width: 90px; height: 90px; border-radius: 50%; border: 2px solid #00FFFF; box-shadow: 0 0 15px #00FFFF; overflow: hidden; background: #000; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; }
+        .avatar-opt { background:none; border:1px solid rgba(0,255,255,0.3); border-radius:5px; cursor:pointer; font-size:20px; padding:5px; transition: 0.3s; }
+        .avatar-opt:hover { border-color: #00FFFF; transform: scale(1.1); }
     </style>
 </head>
 <body>
 
     <div id="pantalla-oscura" class="overlay"></div>
 
-    <button id="exit-btn" class="hidden" style="position:fixed; top:25px; right:25px; background:none; border:none; color:#ff4444; font-size:32px; z-index:1000;" onclick="cerrarSesion()">🚪</button>
+    <button id="settings-btn" class="btn-settings-fixed hidden" onclick="mostrarVista('vista-ajustes')">
+        <span style="font-size:32px">⚙️</span>
+    </button>
+
+    <button id="exit-btn" class="btn-exit-fixed hidden" onclick="cerrarSesion()">
+        <span style="font-size:32px">🚪</span><span style="font-size:10px; font-weight:bold">EXIT</span>
+    </button>
+    
     <button class="btn-trash-central hidden" id="btn-borrar" onclick="borrarMarcados()">🗑️</button>
     <button id="game-btn" class="btn-game-flotante hidden" onclick="abrirMenuDificultad()">🎮</button>
+    <button id="rank-btn" class="btn-rank-flotante hidden" onclick="abrirRanking()">🏆</button>
+    
+    <button id="shop-btn" class="btn-shop-flotante hidden" onclick="mostrarVista('vista-tienda')">
+        <span>🏠</span><span class="btn-shop-label">TIENDA</span>
+    </button>
+
+    <button id="chat-btn" class="btn-chat-flotante hidden" onclick="mostrarVista('vista-chat')">
+        <span>💬</span><span class="btn-shop-label">CHAT</span>
+    </button>
 
     <div id="vista-login" class="container">
         <h1 id="titulo-eden"></h1>
         <input type="text" id="user-in" placeholder="Usuario">
         <input type="password" id="pass-in" placeholder="Contraseña">
         <button style="background:#00FFFF; color:black; width:100%; height:45px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="validarAcceso()">ENTRAR</button>
+        
+        <div style="margin-top:20px;">
+            <button class="social-btn" style="background:white; color:black; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onclick="entrarConGoogle()">
+                <svg width="18" height="18" viewBox="0 0 24 24" style="margin-right: 10px;">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                Google
+            </button>
+        </div>
+        <p style="cursor:pointer; color:#ccc; font-size: 12px; margin-top: 20px;" onclick="mostrarVista('vista-eden')">Registrarse</p>
+    </div>
+
+    <div id="vista-eden" class="container hidden">
+        <h2 style="color:#00FFFF; margin-bottom:15px;">REGISTRO</h2>
+        <input type="text" id="user-reg" placeholder="Nuevo usuario">
+        <input type="password" id="pass-reg" placeholder="Contraseña">
+        <input type="number" id="age-reg" placeholder="Edad (opcional)" onfocus="this.placeholder=''" onblur="this.placeholder='Edad (opcional)'">
+        <button style="background:#00FFFF; color:black; width:100%; height:45px; border-radius:10px; font-weight:bold; border:none; cursor:pointer;" onclick="ejecutarRegistro()">GUARDAR</button>
+        <p style="cursor:pointer; color:#ccc; margin-top:20px;" onclick="mostrarVista('vista-login')">Volver</p>
     </div>
 
     <div id="vista-agenda" class="container hidden">
         <h3 style="color:#00FFFF; text-align:left; margin-bottom:10px;">MIS NOTAS</h3>
-        <div style="display:flex; gap:10px;">
-            <input type="text" id="campo-tarea" placeholder="Escribe algo...">
+        <div class="task-input-group">
+            <input type="text" id="campo-tarea" placeholder="Escribe algo..." style="text-align:left; padding-left:15px;">
             <button class="btn-blue" onclick="añadirTarea()">+</button>
         </div>
         <div id="lista-tareas" class="task-list"></div>
     </div>
 
+    <div id="vista-ajustes" class="container hidden">
+        <div class="settings-card" style="max-height: 85vh; overflow-y: auto;">
+            <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
+            <h2 style="color:#00FFFF; margin-bottom:15px; text-align:center;">PERFIL EDÉN</h2>
+            
+            <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 15px;">
+                <div id="avatar-preview"><span id="avatar-img" style="font-size: 45px;">👤</span></div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="avatar-opt" onclick="cambiarAvatar('🥷')">🥷</button>
+                    <button class="avatar-opt" onclick="cambiarAvatar('🤖')">🤖</button>
+                    <button class="avatar-opt" onclick="cambiarAvatar('👽')">👽</button>
+                    <button class="avatar-opt" onclick="cambiarAvatar('👻')">👻</button>
+                    <label for="upload-photo" style="background:white; border-radius:5px; cursor:pointer; padding:5px 8px; color:black; font-size:16px;">📷</label>
+                    <input type="file" id="upload-photo" accept="image/*" style="display:none" onchange="subirFotoLocal(this)">
+                </div>
+            </div>
+
+            <div style="background: rgba(0,255,255,0.1); padding: 12px; border-radius: 10px; border: 1px solid rgba(0,255,255,0.3); margin-bottom: 15px;">
+                <p id="perfil-nombre" style="color: #00FFFF; font-weight: bold;">Usuario: -</p>
+                <p id="perfil-edad" style="font-size: 13px;">Edad: -</p>
+                <p id="perfil-puntos" style="font-size: 13px; color: #FFD700;">Récord Edén: 0 pts</p>
+            </div>
+
+            <div class="setting-row">
+                <span>Volumen Sonido</span>
+                <input type="range" id="vol-range" min="0" max="1" step="0.1" value="0.5" style="width:100px;" onchange="ajustarVolumen(this.value)">
+            </div>
+            
+            <hr style="border:0; border-top:1px solid rgba(0,255,255,0.2); margin:15px 0;">
+            <p style="font-size:12px; color:#00FFFF; margin-bottom:5px;">Editar Datos</p>
+            <input type="password" id="edit-pass" placeholder="Nueva contraseña">
+            <input type="number" id="edit-age" placeholder="Cambiar edad">
+            <button class="game-btn-neon" onclick="actualizarPerfil()">GUARDAR CAMBIOS</button>
+        </div>
+    </div>
+
+    <div id="vista-tienda" class="container hidden">
+        <div class="settings-card">
+            <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
+            <h2 style="color:#FFD700; margin-bottom:10px; text-align:center;">EDÉN SHOP</h2>
+            <span id="shop-balance">Saldo: 0 €Eden€</span>
+            <span class="shop-label">PALETAS (PALAS)</span>
+            <div class="shop-grid">
+                <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
+                <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
+                <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
+            </div>
+            <span class="shop-label">PELOTAS</span>
+            <div class="shop-grid">
+                <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
+                <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
+                <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
+            </div>
+            <span class="shop-label">VIDAS EXTRAS</span>
+            <div class="shop-grid">
+                <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
+                <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
+                <div class="shop-item" onclick="comprar('vida',5)">❤️ x5<span class="shop-price">20000 pts</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="vista-chat" class="container hidden">
+        <div class="settings-card">
+            <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
+            <h2 style="color:#00FF00; text-align:center; margin-bottom:10px;">CHAT EDÉN</h2>
+            <div id="chat-box" style="height:250px; overflow-y:auto; background:rgba(0,0,0,0.6); border-radius:10px; padding:10px; margin-bottom:10px; border:1px solid #00FF00;"></div>
+            <div class="task-input-group">
+                <input type="text" id="chat-input" placeholder="Escribe al Edén..." style="text-align:left; padding-left:10px;">
+                <button class="btn-blue" style="background:#00FF00;" onclick="enviarMensaje()">></button>
+            </div>
+        </div>
+    </div>
+
     <div id="vista-juego" class="hidden">
-        <div id="game-score" style="color:#FFD700; margin-bottom:10px;">€Eden€: 0</div>
-        <canvas id="gameCanvas" width="480" height="500"></canvas>
-        <div id="difficulty-menu" class="menu-eden">
+        <button class="btn-game-return" onclick="salirDelJuego()">
+            <span style="font-size:32px">🚪</span>
+        </button>
+        <div id="game-score">€Eden€: 0</div>
+        <canvas id="gameCanvas" width="500" height="500"></canvas>
+        <div id="difficulty-menu" class="menu-eden hidden">
             <h2 style="color:#00FFFF; margin-bottom:15px;">DIFICULTAD</h2>
-            <button class="game-btn-neon" onclick="iniciarJuegoEden('terrestre')">Fácil</button>
-            <button class="game-btn-neon" onclick="iniciarJuegoEden('eden')">Difícil</button>
-            <button class="game-btn-neon" onclick="mostrarVista('vista-agenda')">Volver</button>
+            <button class="game-btn-neon" onclick="iniciarJuegoEden('terrestre')">Nivel terrestre</button>
+            <button class="game-btn-neon" onclick="iniciarJuegoEden('semidios')">Nivel semidios</button>
+            <button class="game-btn-neon" onclick="iniciarJuegoEden('eden')">Nivel del edén</button>
+        </div>
+        <div id="rank-menu" class="menu-eden hidden">
+            <h2 style="color:#FFD700; margin-bottom:10px;">🏆 RANKING 🏆</h2>
+            <div id="rank-content" style="max-height: 280px; overflow-y: auto;">
+                <div id="rank-terrestre"></div>
+                <div id="rank-semidios"></div>
+                <div id="rank-eden"></div>
+            </div>
+            <button class="game-btn-neon" onclick="cerrarRanking()">CERRAR</button>
+        </div>
+        <div id="game-over-menu" class="menu-eden hidden">
+            <h2 id="end-title" style="color:#00FFFF; margin-bottom:20px;">FIN</h2>
+            <button class="game-btn-neon" onclick="abrirMenuDificultad()">¡Repetir!</button>
+            <button class="game-btn-neon" onclick="salirDelJuego()">Salir</button>
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <script>
-        // CONFIGURACIÓN FIREBASE (TUYA ORIGINAL)
         const firebaseConfig = {
             apiKey: "AIzaSyCod7qKXcefhTqa40EVWbl32dygU9G10Aw",
+            authDomain: "edengame-5a40c.firebaseapp.com",
             databaseURL: "https://edengame-5a40c-default-rtdb.firebaseio.com",
             projectId: "edengame-5a40c",
+            storageBucket: "edengame-5a40c.firebasestorage.app",
+            messagingSenderId: "837651200703",
             appId: "1:837651200703:web:0c3e237c36e1bb37b6640a"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        const auth = firebase.auth();
         let currentUser = "";
+        let isMuted = false;
         let masterVolume = 0.5;
+        let userBalance = 0;
 
-        // SONIDO SIN RETRASO (Pre-cargado)
         const sonidos = {
             hit: new Audio('hit.mp3'), bounce: new Audio('bounce.mp3'),
-            trash: new Audio('trash.mp3'), click: new Audio('click.mp3')
+            coin: new Audio('coin.mp3'), fail: new Audio('fail.mp3'),
+            click: new Audio('click.mp3'), trash: new Audio('trash.mp3')
         };
-        
+
         function reproducir(n) { 
-            const s = sonidos[n];
-            if(s) { 
-                s.currentTime = 0; 
-                s.volume = masterVolume;
-                s.play().catch(()=>{}); 
+            if(isMuted) return;
+            if(sonidos[n]) { 
+                sonidos[n].volume = masterVolume;
+                sonidos[n].currentTime = 0; 
+                sonidos[n].play().catch(() => {}); 
             }
         }
 
-        // TÍTULO ANIMADO
+        function cambiarAvatar(emoji) {
+            document.getElementById('avatar-img').innerHTML = emoji;
+            db.ref('usuarios/' + currentUser).update({ avatar: emoji });
+            reproducir('coin');
+        }
+
+        function subirFotoLocal(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
+                    document.getElementById('avatar-img').innerHTML = img;
+                    db.ref('usuarios/' + currentUser).update({ avatar: e.target.result });
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function ajustarVolumen(v) { masterVolume = v; reproducir('click'); }
+        function alternarSilencio(m) { isMuted = m; if(!m) reproducir('click'); }
+
         const tituloEden = document.getElementById('titulo-eden');
+        const lineas = ["BIENVENIDOS", "AL", "EDÉN"];
+        let timer;
         function animar() {
-            const txt = "BIENVENIDOS AL EDÉN";
-            tituloEden.innerText = "";
-            let i = 0;
-            let itv = setInterval(() => {
-                tituloEden.innerText += txt[i]; i++;
-                if(i >= txt.length) clearInterval(itv);
+            tituloEden.innerHTML = ""; let l=0, c=0; clearInterval(timer);
+            lineas.forEach(() => { let s = document.createElement('span'); tituloEden.appendChild(s); });
+            let spans = tituloEden.querySelectorAll("span");
+            timer = setInterval(() => {
+                if(l < lineas.length){ spans[l].innerText += lineas[l][c]; c++; if(c >= lineas[l].length){ l++; c=0; } } else clearInterval(timer);
             }, 100);
         }
 
-        function validarAcceso() {
-            const u = document.getElementById('user-in').value;
-            const p = document.getElementById('pass-in').value;
-            if(u === 'admin' && p === '1234') { 
-                currentUser = u; 
-                reproducir('click');
-                mostrarVista('vista-agenda'); 
-            }
+        function entrarConGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).then((result) => {
+                const user = result.user;
+                const userKey = user.email.replace(/[.@]/g, '_');
+                db.ref('usuarios/' + userKey).once('value', (s) => {
+                    if (!s.exists()) {
+                        db.ref('usuarios/' + userKey).set({ password: "google_user", age: "", saldo: 0 });
+                    }
+                    currentUser = userKey;
+                    configurarCarteraYEntrar(0);
+                });
+            }).catch((e) => alert("Error Google: " + e.message));
         }
 
         function mostrarVista(id) {
-            document.querySelectorAll('.container, #vista-juego').forEach(v => v.classList.add('hidden'));
+            reproducir('click');
+            document.querySelectorAll('.container, #vista-juego').forEach(c => c.classList.add('hidden'));
+            document.getElementById('btn-borrar').classList.add('hidden');
+            document.getElementById('exit-btn').classList.add('hidden');
+            document.getElementById('settings-btn').classList.add('hidden');
+            document.getElementById('game-btn').classList.add('hidden');
+            document.getElementById('rank-btn').classList.add('hidden');
+            document.getElementById('shop-btn').classList.add('hidden');
+            document.getElementById('chat-btn').classList.add('hidden');
             document.getElementById(id).classList.remove('hidden');
-            if(id === 'vista-agenda') {
+            
+            if(id === 'vista-login') animar();
+            if(id === 'vista-agenda' || id === 'vista-ajustes' || id === 'vista-tienda' || id === 'vista-chat') {
                 document.getElementById('exit-btn').classList.remove('hidden');
+                document.getElementById('settings-btn').classList.remove('hidden');
                 document.getElementById('game-btn').classList.remove('hidden');
-                document.getElementById('btn-borrar').classList.remove('hidden');
-                cargarTareas();
+                document.getElementById('rank-btn').classList.remove('hidden');
+                document.getElementById('shop-btn').classList.remove('hidden');
+                document.getElementById('chat-btn').classList.remove('hidden');
+                if(id === 'vista-agenda') {
+                    document.getElementById('btn-borrar').classList.remove('hidden');
+                    document.getElementById('pantalla-oscura').classList.add('hidden');
+                    cargarTareas();
+                } else if (id === 'vista-chat') {
+                    escucharChat();
+                    document.getElementById('pantalla-oscura').classList.remove('hidden');
+                } else if (id === 'vista-tienda') {
+                    document.getElementById('shop-balance').innerText = `Saldo: ${userBalance} €Eden€`;
+                    document.getElementById('pantalla-oscura').classList.remove('hidden');
+                } else if (id === 'vista-ajustes') {
+                    document.getElementById('pantalla-oscura').classList.remove('hidden');
+                    db.ref('usuarios/' + currentUser).once('value', (s) => {
+                        const d = s.val();
+                        document.getElementById('perfil-nombre').innerText = "Usuario: " + currentUser;
+                        document.getElementById('perfil-edad').innerText = "Edad: " + (d.age || "No definida");
+                        if(d.avatar) {
+                            if(d.avatar.includes('data:image')) {
+                                document.getElementById('avatar-img').innerHTML = `<img src="${d.avatar}" style="width:100%; height:100%; object-fit:cover;">`;
+                            } else {
+                                document.getElementById('avatar-img').innerText = d.avatar;
+                            }
+                        }
+                        db.ref('ranking/eden/' + currentUser).once('value', (r) => {
+                            document.getElementById('perfil-puntos').innerText = "Récord Edén: " + (r.val() || 0) + " pts";
+                        });
+                    });
+                } else {
+                    document.getElementById('pantalla-oscura').classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('pantalla-oscura').classList.remove('hidden');
             }
         }
 
-        // NOTAS CON FIREBASE
+        function configurarCarteraYEntrar(saldoBase) {
+            db.ref('usuarios/' + currentUser + '/saldo').on('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    db.ref('usuarios/' + currentUser + '/saldo').set(saldoBase);
+                    userBalance = saldoBase;
+                } else {
+                    userBalance = snapshot.val();
+                }
+            });
+            mostrarVista('vista-agenda');
+            reproducir('coin');
+        }
+
+        function validarAcceso() {
+            const u = document.getElementById('user-in').value.trim();
+            const p = document.getElementById('pass-in').value.trim();
+            if (u === 'admin' && p === '1234') { currentUser = u; mostrarVista('vista-agenda'); return; }
+            db.ref('usuarios/' + u).once('value', (s) => {
+                if (s.exists() && s.val().password === p) {
+                    currentUser = u;
+                    configurarCarteraYEntrar(s.val().saldo || 0);
+                } else { alert("Error de acceso"); }
+            });
+        }
+
+        function ejecutarRegistro() {
+            const u = document.getElementById('user-reg').value.trim();
+            const p = document.getElementById('pass-reg').value.trim();
+            const a = document.getElementById('age-reg').value;
+            if(u && p) { 
+                db.ref('usuarios/' + u).set({ password: p, age: a, saldo: 0 }).then(() => { 
+                    alert("¡Registrado!"); mostrarVista('vista-login'); 
+                }); 
+            }
+        }
+
+        function actualizarPerfil() {
+            const newP = document.getElementById('edit-pass').value.trim();
+            const newA = document.getElementById('edit-age').value;
+            let updates = {};
+            if(newP) updates.password = newP;
+            if(newA) updates.age = newA;
+            if(Object.keys(updates).length > 0) {
+                db.ref('usuarios/' + currentUser).update(updates).then(() => {
+                    alert("Perfil actualizado");
+                    reproducir('coin');
+                    mostrarVista('vista-ajustes');
+                });
+            }
+        }
+
+        function cerrarSesion() { 
+            reproducir('click'); 
+            if (currentUser && currentUser !== 'admin') {
+                db.ref('usuarios/' + currentUser + '/saldo').off();
+            }
+            currentUser = ""; 
+            mostrarVista('vista-login'); 
+        }
+
         function añadirTarea() {
-            const val = document.getElementById('campo-tarea').value;
-            if(val) {
-                db.ref('notas/' + currentUser).push({ text: val, done: false });
-                document.getElementById('campo-tarea').value = "";
-                reproducir('click');
+            reproducir('click');
+            const input = document.getElementById('campo-tarea');
+            if(input.value.trim() && currentUser) {
+                db.ref('notas/' + currentUser).push({
+                    text: input.value.trim(),
+                    done: false
+                });
+                input.value = '';
             }
         }
 
         function cargarTareas() {
-            db.ref('notas/' + currentUser).on('value', s => {
-                const lista = document.getElementById('lista-tareas');
-                lista.innerHTML = "";
-                s.forEach(child => {
-                    const item = document.createElement('div');
-                    item.className = 'task-item';
-                    item.innerHTML = `<input type="checkbox" ${child.val().done?'checked':''} onclick="db.ref('notas/${currentUser}/${child.key}').update({done:!${child.val().done}})">
-                                      <div class="task-text">${child.val().text}</div>`;
+            const lista = document.getElementById('lista-tareas');
+            db.ref('notas/' + currentUser).on('value', (snapshot) => {
+                lista.innerHTML = '';
+                snapshot.forEach((child) => {
+                    const i = child.key;
+                    const tarea = child.val();
+                    const item = document.createElement('div'); item.className = 'task-item'; item.id = `nota-${i}`;
+                    item.innerHTML = `
+                        <input type="checkbox" style="width:20px;" ${tarea.done?'checked':''} onchange="db.ref('notas/${currentUser}/${i}').update({done: !${tarea.done}})">
+                        <div class="task-text" style="${tarea.done?'text-decoration:line-through;opacity:0.5':''}">${tarea.text}</div>
+                        <button class="btn-edit-note" onclick="modificarTareaInline('${i}')">✏️</button>
+                    `;
                     lista.appendChild(item);
                 });
             });
@@ -155,97 +480,214 @@
 
         function borrarMarcados() {
             reproducir('trash');
-            db.ref('notas/' + currentUser).once('value', s => {
-                s.forEach(child => { if(child.val().done) child.ref.remove(); });
-            });
-        }
-
-        // MOTOR DE JUEGO FLUIDO (SIN LAG)
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-        let ball, paddleX, bricks = [], score = 0, gameActive = false, gameLoopId;
-
-        function abrirMenuDificultad() { 
-            mostrarVista('vista-juego'); 
-            document.getElementById('difficulty-menu').classList.remove('hidden'); 
-        }
-
-        function iniciarJuegoEden(diff) {
-            document.getElementById('difficulty-menu').classList.add('hidden');
-            reproducir('click');
-            score = 0;
-            paddleX = (canvas.width - 90) / 2;
-            ball = { x: canvas.width/2, y: canvas.height-50, dx: 3, dy: -3, r: 8 };
-            
-            bricks = [];
-            let rows = (diff === 'eden') ? 8 : 4;
-            for(let c=0; c<7; c++) {
-                bricks[c] = [];
-                for(let r=0; r<rows; r++) bricks[c][r] = { x:0, y:0, status: 1 };
-            }
-            gameActive = true;
-            runLoop();
-        }
-
-        function runLoop() {
-            if(!gameActive) return;
-            ctx.clearRect(0,0, canvas.width, canvas.height);
-            draw();
-            gameLoopId = requestAnimationFrame(runLoop);
-        }
-
-        function draw() {
-            // Ladrillos
-            bricks.forEach((col, c) => {
-                col.forEach((b, r) => {
-                    if(b.status === 1) {
-                        b.x = c * 65 + 15; b.y = r * 25 + 50;
-                        ctx.fillStyle = "#FF4444";
-                        ctx.fillRect(b.x, b.y, 60, 20);
-                        if(ball.x > b.x && ball.x < b.x+60 && ball.y > b.y && ball.y < b.y+20) {
-                            ball.dy = -ball.dy; b.status = 0; score++;
-                            reproducir('hit');
-                            document.getElementById('game-score').innerText = "€Eden€: " + score;
-                        }
+            db.ref('notas/' + currentUser).once('value', (snapshot) => {
+                snapshot.forEach((child) => {
+                    if(child.val().done) {
+                        db.ref('notas/' + currentUser + '/' + child.key).remove();
                     }
                 });
             });
-
-            // Pelota
-            ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2);
-            ctx.fillStyle = "#00FFFF"; ctx.fill(); ctx.closePath();
-
-            if(ball.x + ball.dx > canvas.width - ball.r || ball.x + ball.dx < ball.r) ball.dx = -ball.dx;
-            if(ball.y + ball.dy < ball.r) ball.dy = -ball.dy;
-            else if(ball.y + ball.dy > canvas.height - 30) {
-                if(ball.x > paddleX && ball.x < paddleX + 90) {
-                    ball.dy = -ball.dy;
-                    reproducir('bounce');
-                } else if(ball.y > canvas.height) {
-                    gameActive = false;
-                    cancelAnimationFrame(gameLoopId);
-                    alert("FIN DEL JUEGO");
-                    mostrarVista('vista-agenda');
-                }
-            }
-            ball.x += ball.dx; ball.y += ball.dy;
-
-            // Pala
-            ctx.fillStyle = "#00FFFF";
-            ctx.fillRect(paddleX, canvas.height - 20, 90, 10);
         }
 
-        // CONTROLES TÁCTILES SIN LAG
+        function modificarTareaInline(i) {
+            const item = document.getElementById(`nota-${i}`);
+            const textDiv = item.querySelector('.task-text');
+            const editBtn = item.querySelector('.btn-edit-note');
+            if (item.classList.contains('editing')) return;
+            item.classList.add('editing');
+            reproducir('click');
+            const currentText = textDiv.innerText;
+            textDiv.innerHTML = `<input type="text" class="edit-input" value="${currentText.replace(/"/g, '&quot;')}">`;
+            editBtn.innerHTML = '✅';
+            editBtn.classList.remove('btn-edit-note');
+            editBtn.classList.add('btn-save-note');
+            const input = textDiv.querySelector('.edit-input');
+            input.focus();
+            input.select();
+            const guardarCambios = () => {
+                const nuevoTexto = input.value.trim();
+                if (nuevoTexto && nuevoTexto !== currentText) {
+                    db.ref('notas/' + currentUser + '/' + i).update({ text: nuevoTexto });
+                    reproducir('coin');
+                }
+                item.classList.remove('editing');
+            };
+            input.addEventListener('keypress', (e) => { if (e.key === 'Enter') guardarCambios(); });
+            editBtn.onclick = guardarCambios;
+        }
+
+        function comprar(tipo, valor) {
+            reproducir('click');
+            let precio = 0;
+            if (tipo === 'paleta') { precio = (valor === 'red' ? 500 : (valor === 'pink' ? 750 : 1000)); }
+            else if (tipo === 'bola') { precio = (valor === 'blue' ? 400 : (valor === 'pink' ? 600 : 900)); }
+            else if (tipo === 'vida') { precio = (valor === 1 ? 5000 : (valor === 3 ? 12000 : 20000)); }
+
+            if (userBalance >= precio) {
+                const nuevoSaldo = userBalance - precio;
+                db.ref('usuarios/' + currentUser).update({ saldo: nuevoSaldo }).then(() => {
+                    reproducir('coin');
+                    document.getElementById('shop-balance').innerText = `Saldo: ${nuevoSaldo} €Eden€`;
+                    alert(`¡Gracias por tu compra!`);
+                });
+            } else { reproducir('fail'); alert("No tienes suficiente €Eden€"); }
+        }
+
+        function abrirRanking() {
+            reproducir('click'); mostrarVista('vista-juego');
+            document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden'));
+            document.getElementById('rank-menu').classList.remove('hidden');
+            ['terrestre', 'semidios', 'eden'].forEach(diff => {
+                db.ref('ranking/' + diff).orderByValue().limitToLast(5).once('value', (s) => {
+                    const div = document.getElementById('rank-' + diff); div.innerHTML = `<p style="color:#FFD700; font-size:12px; margin-top:10px;">${diff.toUpperCase()}</p>`;
+                    let scores = []; s.forEach(c => { scores.push({name: c.key, pts: c.val()}); });
+                    scores.reverse().forEach((u, i) => { div.innerHTML += `<div style="display:flex; justify-content:space-between; font-size:11px; color:#00FFFF;"><span>${i+1}. ${u.name}</span><span>${u.pts}</span></div>`; });
+                });
+            });
+        }
+        function cerrarRanking() { document.getElementById('rank-menu').classList.add('hidden'); mostrarVista('vista-agenda'); }
+
+        function enviarMensaje() {
+            const inp = document.getElementById('chat-input');
+            if(inp.value.trim() && currentUser) {
+                db.ref('chat_global').push({ 
+                    user: currentUser, 
+                    text: inp.value.trim(), 
+                    avatar: document.getElementById('avatar-img').innerText || "👤" 
+                });
+                inp.value = "";
+            }
+        }
+
+        function escucharChat() {
+            db.ref('chat_global').limitToLast(20).on('value', s => {
+                const box = document.getElementById('chat-box');
+                box.innerHTML = "";
+                s.forEach(c => {
+                    const m = c.val();
+                    box.innerHTML += `<div style="text-align:left; margin-bottom:8px; font-size:13px; border-bottom:1px solid rgba(0,255,0,0.1); padding-bottom:4px;"><b>${m.user}:</b> ${m.text}</div>`;
+                });
+                box.scrollTop = box.scrollHeight;
+            });
+        }
+
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const menuGameOver = document.getElementById("game-over-menu");
+        const menuDifficulty = document.getElementById("difficulty-menu");
+        let balls = [], bricks = [], paddleWidth = 90, paddleX, score = 0, gameActive = false, gameInterval, isFireBall = false, currentDifficulty = 'terrestre';
+
+        function abrirMenuDificultad() { reproducir('click'); mostrarVista('vista-juego'); document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden')); menuDifficulty.classList.remove('hidden'); }
+        
+        function iniciarJuegoEden(diff) { 
+            reproducir('click'); 
+            cancelAnimationFrame(gameInterval); // Detenemos cualquier loop anterior
+            resetVariablesJuego(diff); 
+            gameActive = true; 
+            
+            // Loop optimizado para fluidez en móvil
+            function gameLoop() {
+                if(gameActive) {
+                    draw();
+                    gameInterval = requestAnimationFrame(gameLoop);
+                }
+            }
+            gameLoop();
+        }
+
+        function salirDelJuego() { reproducir('click'); gameActive = false; cancelAnimationFrame(gameInterval); mostrarVista('vista-agenda'); }
+
+        function resetVariablesJuego(diff) {
+            currentDifficulty = diff; document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden'));
+            canvas.style.cursor = "none"; paddleWidth = 90; paddleX = (canvas.width - paddleWidth) / 2;
+            isFireBall = false; score = 0; document.getElementById("game-score").innerText = "€Eden€: 0";
+            let rad = (diff === 'eden') ? 5 : 8;
+            balls = [{ x: canvas.width/2, y: canvas.height-100, dx: 2.1, dy: -2.1, radius: rad }];
+            bricks = [];
+            let rows = (diff === 'terrestre') ? 5 : (diff === 'semidios' ? 8 : 12);
+            let cols = (diff === 'terrestre') ? 7 : (diff === 'semidios' ? 12 : 18);
+            let bw = (canvas.width - 40) / cols; let bh = (diff === 'terrestre') ? 20 : 12;
+            for (let c = 0; c < cols; c++) {
+                bricks[c] = [];
+                for (let r = 0; r < rows; r++) {
+                    let type = "normal", life = 1;
+                    if(diff === 'semidios' && Math.random() < 0.2) { type = "hard"; life = 2; }
+                    if(diff === 'eden') {
+                        if(Math.random() < 0.15) { type = "wall"; life = 999; }
+                        else if(Math.random() < 0.3) { type = "hard"; life = 2; }
+                    }
+                    bricks[c][r] = { x: 0, y: 0, status: life, type: type, w: bw - 4, h: bh - 4 };
+                }
+            }
+        }
+
+        document.addEventListener("mousemove", (e) => {
+            if (!gameActive) return;
+            let rect = canvas.getBoundingClientRect();
+            let relX = e.clientX - rect.left;
+            if (relX > 0 && relX < canvas.width) paddleX = relX - paddleWidth / 2;
+        });
+
+        // CONTROL TÁCTIL OPTIMIZADO PARA NO DAR LAG
         canvas.addEventListener("touchmove", (e) => {
+            if (!gameActive) return;
             e.preventDefault();
             let rect = canvas.getBoundingClientRect();
-            let root = document.documentElement;
-            let touch = e.touches[0];
-            let mouseX = touch.clientX - rect.left - root.scrollLeft;
-            paddleX = mouseX - 45;
+            let scaleX = canvas.width / rect.width; 
+            let relX = (e.touches[0].clientX - rect.left) * scaleX;
+            if (relX > 0 && relX < canvas.width) paddleX = relX - paddleWidth / 2;
         }, {passive: false});
 
-        animar();
+        function draw() {
+            if (!gameActive) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            bricks.forEach((col, c) => { col.forEach((b, r) => {
+                if (b.status > 0) {
+                    b.x = c * (b.w + 4) + 15; b.y = r * (b.h + 4) + 50;
+                    ctx.fillStyle = (b.type === "wall") ? "#888" : (b.type === "hard" ? "#FFD700" : "#FF4444");
+                    ctx.fillRect(b.x, b.y, b.w, b.h);
+                }
+            }); });
+
+            balls.forEach((b, index) => {
+                ctx.beginPath(); ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+                ctx.fillStyle = isFireBall ? "#FFA500" : "#FF0000"; ctx.fill(); ctx.closePath();
+                bricks.forEach(col => col.forEach(brick => {
+                    if (brick.status > 0 && b.x > brick.x && b.x < brick.x + brick.w && b.y > brick.y && b.y < brick.y + brick.h) {
+                        b.dy = -b.dy;
+                        if(brick.type !== "wall") {
+                            brick.status--; reproducir('hit');
+                            if(brick.status === 0) { score++; document.getElementById("game-score").innerText = "€Eden€: " + score; }
+                        }
+                    }
+                }));
+                if (b.x + b.dx > canvas.width - b.radius || b.x + b.dx < b.radius) b.dx = -b.dx;
+                if (b.y + b.dy < b.radius) b.dy = -b.dy;
+                else if (b.y + b.dy > canvas.height - 80) {
+                    if (b.x > paddleX && b.x < paddleX + paddleWidth) { b.dy = -Math.abs(b.dy); reproducir('bounce'); }
+                    else if (b.y > canvas.height) balls.splice(index, 1);
+                }
+                b.x += b.dx; b.y += b.dy;
+            });
+            ctx.fillStyle = "#00FFFF"; ctx.fillRect(paddleX, canvas.height - 70, paddleWidth, 12);
+            if(balls.length === 0) { reproducir('fail'); gameActive = false; endPartida(); }
+        }
+
+        function endPartida() {
+            menuGameOver.classList.remove("hidden");
+            if (currentUser && currentUser !== 'admin') {
+                db.ref('usuarios/' + currentUser).update({ saldo: userBalance + score });
+                if(currentDifficulty === 'eden') {
+                    db.ref('ranking/eden/' + currentUser).once('value', (s) => {
+                        if(!s.exists() || score > s.val()) {
+                            db.ref('ranking/eden/' + currentUser).set(score);
+                        }
+                    });
+                }
+            }
+        }
+
+        mostrarVista('vista-login');
     </script>
 </body>
 </html>
