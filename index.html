@@ -997,40 +997,43 @@ function verificarPrimerHabitanteAno(){
   const anoActual = new Date().getFullYear();
   const controlRef = db.ref('sistema/control_anual/ultimo_ano_premiado');
   
-  return controlRef.transaction(function(ultimoAnoPremiado) {
-    // Si no existe el valor, inicializarlo en 2025
-    if(ultimoAnoPremiado === null){
-      return 2025;
-    }
+  // PRIMERO leer el valor actual
+  return controlRef.once('value').then(snapshot => {
+    const ultimoAnoPremiado = snapshot.val() || 2025;
     
-    // Si el año actual es mayor que el último premiado, otorgar premio
+    // SOLO si el año actual es mayor al último premiado
     if(anoActual > ultimoAnoPremiado){
-      // Retornar el año actual para actualizarlo
-      return anoActual;
-    }
-    
-    // Si no hay premio, retornar el mismo valor
-    return ultimoAnoPremiado;
-  }).then(function(result) {
-    const nuevoValor = result.snapshot.val();
-    const valorAnterior = result.committed ? (anoActual - 1) : nuevoValor;
-    
-    // Si el valor cambió, significa que este usuario recibió el premio
-    if(nuevoValor > valorAnterior && nuevoValor === anoActual){
-      // Otorgar premio de 100,000 €Eden€
-      return db.ref('usuarios/'+currentUser+'/saldo').transaction(function(saldoActual) {
-        return (saldoActual || 0) + 100000;
-      }).then(function() {
-        // Mostrar alerta de premio
-        setTimeout(() => {
-          alert('🎉 ¡ENHORABUENA! Eres el primer habitante de Eden en el año ' + anoActual + '.\n\nHas recibido un regalo de 100,000 €Eden€.\n\n¡Disfruta de tu premio! 🎊');
-          reproducir('coin');
-        }, 1000);
-        return true;
+      // Usar transacción para actualizar y dar premio atómicamente
+      return controlRef.transaction(function(valorActual) {
+        // Si no ha cambiado desde que lo leímos, podemos actualizar
+        if(valorActual === ultimoAnoPremiado){
+          return anoActual;
+        }
+        // Si otro usuario ya lo actualizó, no cambiar
+        return valorActual;
+      }).then(function(result) {
+        const nuevoValor = result.snapshot.val();
+        
+        // Si la transacción tuvo éxito (el valor cambió a nuestro año)
+        if(nuevoValor === anoActual){
+          // Dar premio
+          return db.ref('usuarios/'+currentUser+'/saldo').transaction(function(saldoActual) {
+            return (saldoActual || 0) + 100000;
+          }).then(function() {
+            // Mostrar alerta de premio
+            setTimeout(() => {
+              alert('🎉 ¡ENHORABUENA! Eres el primer habitante de Eden en el año ' + anoActual + '.\n\nHas recibido un regalo de 100,000 €Eden€.\n\n¡Disfruta de tu premio! 🎊');
+              reproducir('coin');
+            }, 1000);
+            return true;
+          });
+        }
+        
+        return false; // Otro usuario ya ganó
       });
     }
     
-    return false;
+    return false; // No hay premio este año
   }).catch(function(error) {
     console.error('Error en verificación de primer habitante:', error);
     return false;
@@ -1093,60 +1096,84 @@ function actualizarBotonesTienda(juego){
   const shopElement = document.getElementById(shopId);
   if(!shopElement)return;
   
-  // Actualizar botones de pájaros (solo en Flappy)
-  if(juego === 'flappy'){
-    const coloresPajaros = ['red', 'pink', 'yellow', 'blue', 'green', 'purple'];
-    const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'', blue:'🦅', green:'🦚', purple:'🦢'};
+  // Forzar recarga del inventario antes de actualizar
+  cargarInventarioTienda().then(() => {
     
-    coloresPajaros.forEach(color => {
-      const boton = shopElement.querySelector(`[onclick*="pajaro','${color}'"]`);
-      if(boton){
-        if(tieneItem('pajaro', color)){
-          boton.innerHTML = `<span style="color:${color}">${emojisPajaros[color]}</span><span class="shop-price">Equipar</span>`;
-          boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
-        }else{
-          const precio = color === 'red' ? 500 : (color === 'pink' ? 750 : (color === 'yellow' ? 1000 : (color === 'blue' ? 600 : (color === 'green' ? 800 : 1200))));
-          boton.innerHTML = `<span style="color:${color}">${emojisPajaros[color]}</span><span class="shop-price">${precio} pts</span>`;
-          boton.setAttribute('onclick', `comprar('pajaro','${color}')`);
-        }
-      }
-    });
-  }
-  
-  // Actualizar botones de paletas (solo en Ladrillos)
-  if(juego === 'ladrillos'){
-    const coloresPaletas = ['red', 'pink', 'yellow'];
-    
-    coloresPaletas.forEach(color => {
-      const boton = shopElement.querySelector(`[onclick*="paleta','${color}'"]`);
-      if(boton){
-        if(tieneItem('paleta', color)){
-          boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">Equipar</span>`;
-          boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
-        }else{
-          const precio = color === 'red' ? 500 : (color === 'pink' ? 750 : 1000);
-          boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">${precio} pts</span>`;
-          boton.setAttribute('onclick', `comprar('paleta','${color}')`);
-        }
-      }
-    });
-  }
-  
-  // Actualizar botones de pelotas (ambos juegos)
-  const coloresPelotas = ['blue', 'pink', 'yellow'];
-  
-  coloresPelotas.forEach(color => {
-    const boton = shopElement.querySelector(`[onclick*="bola','${color}'"]`);
-    if(boton){
-      if(tieneItem('bola', color)){
-        boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">Equipar</span>`;
-        boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
-      }else{
-        const precio = color === 'blue' ? 400 : (color === 'pink' ? 600 : 900);
-        boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">${precio} pts</span>`;
-        boton.setAttribute('onclick', `comprar('bola','${color}')`);
-      }
+    // Actualizar botones de pájaros (solo en Flappy)
+    if(juego === 'flappy'){
+      const coloresPajaros = ['red', 'pink', 'yellow', 'blue', 'green', 'purple'];
+      const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'', blue:'🦅', green:'🦚', purple:'🦢'};
+      
+      coloresPajaros.forEach(color => {
+        // Buscar botones por el div que contiene el emoji del pájaro
+        const botones = shopElement.querySelectorAll('.shop-item');
+        botones.forEach(boton => {
+          const emoji = boton.querySelector('span:first-child');
+          if(emoji && emojisPajaros[color] && emoji.textContent.includes(emojisPajaros[color].charAt(0))){
+            if(tieneItem('pajaro', color)){
+              boton.innerHTML = `<span style="color:${color}">${emojisPajaros[color]}</span><span class="shop-price">Equipar</span>`;
+              boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
+            }else{
+              const precio = color === 'red' ? 500 : (color === 'pink' ? 750 : (color === 'yellow' ? 1000 : (color === 'blue' ? 600 : (color === 'green' ? 800 : 1200))));
+              boton.innerHTML = `<span style="color:${color}">${emojisPajaros[color]}</span><span class="shop-price">${precio} pts</span>`;
+              boton.setAttribute('onclick', `comprar('pajaro','${color}')`);
+            }
+          }
+        });
+      });
     }
+    
+    // Actualizar botones de paletas (solo en Ladrillos)
+    if(juego === 'ladrillos'){
+      const coloresPaletas = ['red', 'pink', 'yellow'];
+      
+      coloresPaletas.forEach(color => {
+        const botones = shopElement.querySelectorAll('.shop-item');
+        botones.forEach(boton => {
+          const emoji = boton.querySelector('span:first-child');
+          if(emoji && emoji.textContent === '▬'){
+            const estilo = boton.querySelector('span:first-child').style.color;
+            if(estilo === color || (color === 'red' && estilo.includes('255,0,0')) || 
+               (color === 'pink' && estilo.includes('255,192,203')) || 
+               (color === 'yellow' && estilo.includes('255,255,0'))){
+              if(tieneItem('paleta', color)){
+                boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">Equipar</span>`;
+                boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
+              }else{
+                const precio = color === 'red' ? 500 : (color === 'pink' ? 750 : 1000);
+                boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">${precio} pts</span>`;
+                boton.setAttribute('onclick', `comprar('paleta','${color}')`);
+              }
+            }
+          }
+        });
+      });
+    }
+    
+    // Actualizar botones de pelotas (ambos juegos)
+    const coloresPelotas = ['blue', 'pink', 'yellow'];
+    
+    coloresPelotas.forEach(color => {
+      const botones = shopElement.querySelectorAll('.shop-item');
+      botones.forEach(boton => {
+        const emoji = boton.querySelector('span:first-child');
+        if(emoji && emoji.textContent === '●'){
+          const estilo = boton.querySelector('span:first-child').style.color;
+          if(estilo === color || (color === 'blue' && estilo.includes('0,0,255')) || 
+             (color === 'pink' && estilo.includes('255,192,203')) || 
+             (color === 'yellow' && estilo.includes('255,255,0'))){
+            if(tieneItem('bola', color)){
+              boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">Equipar</span>`;
+              boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
+            }else{
+              const precio = color === 'blue' ? 400 : (color === 'pink' ? 600 : 900);
+              boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">${precio} pts</span>`;
+              boton.setAttribute('onclick', `comprar('bola','${color}')`);
+            }
+          }
+        }
+      });
+    });
   });
 }
 
@@ -1613,14 +1640,39 @@ function _drawFlappyBird(){
   // Clip circular
   fCtx.save();
   fCtx.beginPath();fCtx.arc(b.x,b.y,b.r,0,Math.PI*2);fCtx.clip();
-  if(flappyAvatarImg&&flappyAvatarImg.complete&&flappyAvatarImg.naturalWidth>0){
-    fCtx.drawImage(flappyAvatarImg,b.x-b.r,b.y-b.r,b.r*2,b.r*2);
+  
+  // Verificar si hay pájaro equipado
+  if(currentUser && currentUser !== 'admin'){
+    db.ref('usuarios/'+currentUser+'/pajaroEquipado').once('value').then(snap => {
+      const pajaroEquipado = snap.val();
+      
+      if(pajaroEquipado && tieneItem('pajaro', pajaroEquipado)){
+        // Usar pájaro equipado
+        const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'', blue:'🦅', green:'🦚', purple:'🦢'};
+        const emoji = emojisPajaros[pajaroEquipado] || '🐦';
+        
+        fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
+        fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
+        fCtx.fillText(emoji,b.x,b.y+2);
+      }else{
+        // Usar pájaro por defecto
+        fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
+        fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
+        fCtx.fillText('🐦',b.x,b.y+2);
+      }
+    }).catch(() => {
+      // Error al cargar, usar pájaro por defecto
+      fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
+      fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
+      fCtx.fillText('🐦',b.x,b.y+2);
+    });
   }else{
-    // Fallback emoji/icono
+    // Usuario no logueado o admin, usar pájaro por defecto
     fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
     fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
     fCtx.fillText('🐦',b.x,b.y+2);
   }
+  
   fCtx.restore();
   // Borde neón
   fCtx.beginPath();fCtx.arc(b.x,b.y,b.r,0,Math.PI*2);
