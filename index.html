@@ -36,7 +36,8 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 /* Nav inferior */
 .btn-chat-flotante{position:fixed;bottom:25px;right:25px;background:none;color:#00FF00;
   font-size:36px;border:none;cursor:pointer;z-index:101;display:flex;flex-direction:column;align-items:center}
-/* TIENDA PRINCIPAL QUITADA POR PETICION */
+.btn-shop-flotante{position:fixed;bottom:25px;right:75px;background:none;color:#FFD700;
+  font-size:36px;border:none;cursor:pointer;z-index:101;display:flex;flex-direction:column;align-items:center}
 .btn-shop-label{font-size:9px;font-weight:bold;margin-top:-4px}
 /* Settings card */
 .settings-card{background:rgba(0,0,0,.85);padding:20px;border-radius:20px;
@@ -51,4 +52,1127 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 .shop-item{background:rgba(255,255,255,.1);padding:10px;border-radius:10px;text-align:center;
   border:1px solid rgba(0,255,255,.3);cursor:pointer;transition:.3s}
 .shop-item:hover{background:rgba(0,255,255,.2);border-color:#00FFFF}
-.shop-price{display:block;font-size:10
+.shop-price{display:block;font-size:10px;color:#FFD700;margin-top:5px}
+.shop-label{font-size:11px;font-weight:bold;display:block;margin-top:15px;
+  color:#00FFFF;border-bottom:1px solid rgba(0,255,255,.2)}
+/* Notas */
+.task-input-group{display:flex;gap:10px;margin-top:10px;align-items:center}
+.btn-blue{background:#00FFFF;color:black;width:55px;font-size:24px;border-radius:10px;
+  border:none;cursor:pointer;height:45px;flex-shrink:0}
+.task-list{text-align:left;margin-top:10px;max-height:200px;overflow-y:auto}
+.task-item{background:rgba(0,0,0,.6);margin-bottom:8px;padding:12px;border-radius:10px;
+  display:flex;align-items:center;border:1px solid rgba(0,255,255,.2);gap:10px;transition:.3s}
+.task-text{flex:1;color:white;word-break:break-word;font-size:14px}
+.task-item.editing{border-color:#FFD700;box-shadow:0 0 10px #FFD700;background:rgba(0,0,0,.8)}
+.edit-input{flex:1;padding:5px;border-radius:5px;border:1px solid #FFD700;
+  background:rgba(255,255,255,.1);color:white;font-size:14px;outline:none}
+.btn-edit-note,.btn-save-note{background:none;border:none;cursor:pointer;font-size:16px;opacity:.7;transition:.3s}
+.btn-edit-note:hover,.btn-save-note:hover{opacity:1;transform:scale(1.2)}
+.btn-trash-inline{background:none;color:#ff4444;font-size:26px;border:none;
+  filter:drop-shadow(0 0 6px #ff4444);cursor:pointer}
+/* Avatar */
+#avatar-preview{width:90px;height:90px;border-radius:50%;border:2px solid #00FFFF;
+  box-shadow:0 0 15px #00FFFF;overflow:hidden;background:#000;
+  display:flex;justify-content:center;align-items:center;margin-bottom:10px}
+.avatar-opt{background:none;border:1px solid rgba(0,255,255,.3);border-radius:5px;
+  cursor:pointer;font-size:20px;padding:5px;transition:.3s}
+.avatar-opt:hover{border-color:#00FFFF;transform:scale(1.1)}
+/* Amigos */
+.uid-box{background:rgba(0,0,0,.5);border:1px solid rgba(0,255,255,.3);border-radius:8px;
+  padding:8px 10px;font-size:10px;color:#aaa;word-break:break-all;cursor:pointer;margin-top:5px;transition:.3s}
+.uid-box:hover{border-color:#00FFFF;color:#00FFFF}
+.search-amigo-row{display:flex;gap:8px;margin-top:8px;align-items:center}
+.search-amigo-row input{margin:0;flex:1;font-size:13px;padding:8px 12px}
+.btn-add-amigo{background:#00FFFF;color:black;border:none;border-radius:8px;
+  padding:8px 12px;font-size:18px;cursor:pointer;flex-shrink:0}
+#lista-amigos-wrap{max-height:0;overflow:hidden;transition:max-height .4s ease}
+#lista-amigos-wrap.open{max-height:300px;overflow-y:auto}
+.search-result-item{display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,.05);border:1px solid rgba(0,255,255,.15);
+  border-radius:8px;padding:6px 10px;margin-bottom:6px;font-size:12px}
+.btn-add-result{background:none;border:1px solid #00FFFF;color:#00FFFF;
+  border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer}
+.amigo-item{display:flex;align-items:center;justify-content:space-between;
+  background:rgba(0,255,255,.07);border:1px solid rgba(0,255,255,.2);
+  border-radius:10px;padding:8px 12px;margin-bottom:8px;font-size:13px}
+.amigo-nombre{flex:1;color:#00FFFF}
+.btn-hablar{background:none;border:1px solid #00FF00;color:#00FF00;
+  border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;transition:.3s}
+.btn-hablar:hover{background:rgba(0,255,0,.15)}
+/* Chat */
+.chat-tabs{display:flex;gap:0;margin-bottom:10px;border-radius:10px;
+  overflow:hidden;border:1px solid rgba(0,255,255,.3)}
+.chat-tab{flex:1;padding:7px 0;background:rgba(0,0,0,.6);color:#aaa;
+  font-size:11px;font-weight:bold;cursor:pointer;border:none;transition:.3s;text-align:center}
+.chat-tab.active{background:rgba(0,255,255,.15);color:#00FFFF;border-bottom:2px solid #00FFFF}
+#chat-amigo-header{font-size:12px;color:#FFD700;text-align:center;margin-bottom:6px;min-height:16px}
+
+/* ══════════════════════════ PANTALLA INICIO — TARJETAS ══════════════════════════ */
+.games-grid{display:flex;flex-direction:column;gap:16px;margin-top:10px}
+.game-card{background:rgba(0,0,0,.75);border:2px solid rgba(0,255,255,.4);border-radius:18px;
+  padding:0;overflow:hidden;cursor:pointer;transition:.25s;position:relative}
+.game-card:hover{border-color:#00FFFF;transform:scale(1.02);box-shadow:0 0 20px rgba(0,255,255,.3)}
+.game-card-preview{width:100%;height:110px;display:flex;align-items:center;justify-content:center;
+  font-size:56px;position:relative;overflow:hidden}
+.game-card-preview canvas{position:absolute;top:0;left:0;width:100%;height:100%}
+.game-card-preview-img{width:100%;height:100%;object-fit:cover;opacity:.55}
+.game-card-info{padding:10px 14px 12px}
+.game-card-title{color:#00FFFF;font-size:16px;font-weight:bold;letter-spacing:1px;text-shadow:0 0 8px #00FFFF}
+.game-card-desc{color:#aaa;font-size:11px;margin-top:3px}
+.game-card-badge{position:absolute;top:8px;right:8px;background:rgba(0,255,255,.2);
+  border:1px solid #00FFFF;border-radius:6px;padding:2px 7px;font-size:10px;color:#00FFFF;font-weight:bold}
+
+/* ══════════════════════════ VISTAS DE JUEGO ══════════════════════════ */
+.vista-juego-base{position:fixed;top:0;left:0;width:100%;height:100%;
+  background-size:cover;background-position:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000}
+#vista-juego  {background-image:url('fondo-nubes.jpg')}
+#vista-flappy {background-image:url('fondo1.jpg')}
+.game-canvas-style{border:3px solid #00FFFF;background:rgba(0,0,0,.9);
+  box-shadow:0 0 30px #00FFFF;max-width:95vw;height:auto}
+#gameCanvas  {cursor:none}
+#flappyCanvas{cursor:pointer}
+.btn-game-return{position:fixed;top:18px;left:18px;color:#00FFFF;cursor:pointer;
+  border:none;background:none;z-index:1002;font-size:28px}
+.game-score-display{color:#FFD700;font-weight:bold;font-size:14px;
+  text-shadow:0 0 5px #FFD700;margin-bottom:8px}
+/* Menu overlay base */
+.menu-eden{position:absolute;background:rgba(0,0,0,.95);border:2px solid #00FFFF;
+  padding:26px;border-radius:20px;text-align:center;z-index:1010;width:320px}
+.game-btn-neon{background:none;border:1px solid #00FFFF;color:#00FFFF;
+  padding:10px 20px;margin:8px auto;border-radius:10px;cursor:pointer;width:100%}
+/* Overlays copa/carrito */
+.game-overlay-btns{position:absolute;top:10px;right:10px;display:flex;gap:8px;z-index:1005}
+.overlay-icon-btn{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,255,.4);
+  border-radius:10px;color:white;font-size:22px;cursor:pointer;
+  padding:6px 10px;transition:.3s;backdrop-filter:blur(4px)}
+.overlay-icon-btn:hover{background:rgba(0,255,255,.15);border-color:#00FFFF}
+/* Menús flotantes in-game (ranking + tienda) */
+.ingame-float-menu{position:absolute;top:52px;right:10px;width:290px;
+  background:rgba(0,0,0,.96);border:2px solid #FFD700;border-radius:16px;
+  padding:14px;z-index:1008;max-height:80vh;overflow-y:auto}
+.rank-tabs{display:flex;gap:0;margin-bottom:10px;border-radius:8px;
+  overflow:hidden;border:1px solid rgba(255,215,0,.3)}
+.rank-tab{flex:1;padding:7px 0;background:rgba(0,0,0,.6);color:#aaa;
+  font-size:11px;font-weight:bold;cursor:pointer;border:none;transition:.3s;text-align:center}
+.rank-tab.active{background:rgba(255,215,0,.15);color:#FFD700;border-bottom:2px solid #FFD700}
+.rank-row{display:flex;justify-content:space-between;font-size:11px;
+  color:#00FFFF;padding:4px 2px;border-bottom:1px solid rgba(0,255,255,.1)}
+.rank-row.gold  {color:#FFD700;font-weight:bold}
+.rank-row.silver{color:#C0C0C0;font-weight:bold}
+.rank-row.bronze{color:#CD7F32;font-weight:bold}
+.close-overlay-btn{background:none;border:1px solid #ff4444;color:#ff4444;
+  border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12px;margin-top:10px;width:100%}
+#shop-balance{color:#FFD700;font-weight:bold;font-size:14px;
+  text-shadow:0 0 5px #FFD700;margin-bottom:10px;display:block;text-align:center}
+@keyframes borrarVuelo{to{transform:scale(0) translate(20vw,50vh);opacity:0}}
+.arrugando{animation:borrarVuelo .6s ease-in forwards}
+
+/* ══════════════════════════ FLAPPY — neón específico ══════════════════════════ */
+@keyframes flappyPulse{0%,100%{box-shadow:0 0 20px #00FFFF,0 0 40px rgba(0,255,255,.3)}
+  50%{box-shadow:0 0 30px #00FF00,0 0 60px rgba(0,255,0,.3)}}
+#flappyCanvas{animation:flappyPulse 2s ease-in-out infinite}
+</style>
+</head>
+<body>
+
+<div id="pantalla-oscura" class="overlay"></div>
+
+<!-- Botones fijos globales -->
+<button id="settings-btn" class="btn-settings-fixed hidden" onclick="mostrarVista('vista-ajustes')">
+  <span style="font-size:30px">⚙️</span>
+</button>
+<button id="exit-btn" class="btn-exit-fixed hidden" onclick="cerrarSesion()">
+  <span style="font-size:30px">🚪</span><span style="font-size:10px;font-weight:bold">EXIT</span>
+</button>
+<button id="shop-btn" class="btn-shop-flotante hidden" onclick="mostrarVista('vista-tienda')">
+  <span>🏠</span><span class="btn-shop-label">TIENDA</span>
+</button>
+<button id="chat-btn" class="btn-chat-flotante hidden" onclick="mostrarVista('vista-chat')">
+  <span>💬</span><span class="btn-shop-label">CHAT</span>
+</button>
+
+<!-- ══ LOGIN ══ -->
+<div id="vista-login" class="container">
+  <h1 id="titulo-eden"></h1>
+  <input type="text"     id="user-in"  placeholder="Usuario">
+  <input type="password" id="pass-in"  placeholder="Contraseña">
+  <button style="background:#00FFFF;color:black;width:100%;height:45px;border-radius:10px;font-weight:bold;border:none;cursor:pointer" onclick="validarAcceso()">ENTRAR</button>
+  <div style="margin-top:20px">
+    <button class="social-btn" style="background:white;color:black;border:1px solid #ddd;box-shadow:0 2px 4px rgba(0,0,0,.1)" onclick="entrarConGoogle()">
+      <svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:10px">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Google
+    </button>
+  </div>
+  <p style="cursor:pointer;color:#ccc;font-size:12px;margin-top:20px" onclick="mostrarVista('vista-eden')">Registrarse</p>
+</div>
+
+<!-- ══ REGISTRO ══ -->
+<div id="vista-eden" class="container hidden">
+  <h2 style="color:#00FFFF;margin-bottom:15px">REGISTRO</h2>
+  <input type="text"     id="user-reg" placeholder="Nuevo usuario">
+  <input type="password" id="pass-reg" placeholder="Contraseña">
+  <input type="number"   id="age-reg"  placeholder="Edad (opcional)" onfocus="this.placeholder=''" onblur="this.placeholder='Edad (opcional)'">
+  <button style="background:#00FFFF;color:black;width:100%;height:45px;border-radius:10px;font-weight:bold;border:none;cursor:pointer" onclick="ejecutarRegistro()">GUARDAR</button>
+  <p style="cursor:pointer;color:#ccc;margin-top:20px" onclick="mostrarVista('vista-login')">Volver</p>
+</div>
+
+<!-- ══ PANTALLA PRINCIPAL — TARJETAS DE JUEGO ══ -->
+<div id="vista-agenda" class="container hidden">
+  <h3 style="color:#00FFFF;text-align:center;margin-bottom:6px;letter-spacing:2px;text-shadow:0 0 12px #00FFFF">🎮 JUEGOS EDÉN</h3>
+  <div class="games-grid">
+    <!-- Tarjeta Ladrillos -->
+    <div class="game-card" onclick="abrirMenuDificultad()">
+      <div class="game-card-preview" style="background:linear-gradient(135deg,#0a0a1a,#1a0a2e)">
+        <canvas id="previewCanvas" width="380" height="110" style="position:absolute;top:0;left:0;width:100%;height:110px"></canvas>
+        <span class="game-card-badge">LADRILLOS</span>
+      </div>
+      <div class="game-card-info">
+        <div class="game-card-title">⚡ EDÉN LADRILLOS</div>
+        <div class="game-card-desc">Rompe todos los ladrillos. 3 niveles de dificultad.</div>
+      </div>
+    </div>
+    <!-- Tarjeta Flappy -->
+    <div class="game-card" onclick="abrirFlappy()">
+      <div class="game-card-preview" style="background:linear-gradient(135deg,#001a0a,#0a1a00)">
+        <canvas id="previewFlappyCanvas" width="380" height="110" style="position:absolute;top:0;left:0;width:100%;height:110px"></canvas>
+        <span class="game-card-badge" style="border-color:#00FF00;color:#00FF00">FLAPPY</span>
+      </div>
+      <div class="game-card-info">
+        <div class="game-card-title" style="color:#00FF00;text-shadow:0 0 8px #00FF00">🐦 EDÉN FLAPPY</div>
+        <div class="game-card-desc">Esquiva columnas neón. 1 €Eden€ por punto.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ AJUSTES / PERFIL ══ -->
+<div id="vista-ajustes" class="container hidden">
+  <div class="settings-card" style="max-height:85vh;overflow-y:auto">
+    <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
+    <h2 style="color:#00FFFF;margin-bottom:15px;text-align:center">PERFIL EDÉN</h2>
+    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:15px">
+      <div id="avatar-preview"><span id="avatar-img" style="font-size:45px">👤</span></div>
+      <div style="display:flex;gap:8px">
+        <button class="avatar-opt" onclick="cambiarAvatar('🥷')">🥷</button>
+        <button class="avatar-opt" onclick="cambiarAvatar('🤖')">🤖</button>
+        <button class="avatar-opt" onclick="cambiarAvatar('👽')">👽</button>
+        <button class="avatar-opt" onclick="cambiarAvatar('👻')">👻</button>
+        <label for="upload-photo" style="background:white;border-radius:5px;cursor:pointer;padding:5px 8px;color:black;font-size:16px">📷</label>
+        <input type="file" id="upload-photo" accept="image/*" style="display:none" onchange="subirFotoLocal(this)">
+      </div>
+    </div>
+    <div style="background:rgba(0,255,255,.1);padding:12px;border-radius:10px;border:1px solid rgba(0,255,255,.3);margin-bottom:15px">
+      <p id="perfil-nombre" style="color:#00FFFF;font-weight:bold">Usuario: -</p>
+      <p id="perfil-edad"   style="font-size:13px">Edad: -</p>
+      <p id="perfil-puntos" style="font-size:13px;color:#FFD700">Récord Edén: 0 pts</p>
+      <p style="font-size:11px;color:#aaa;margin-top:8px">Tu ID (tócalo para copiar):</p>
+      <div class="uid-box" id="uid-box" onclick="copiarUID()">—</div>
+    </div>
+    <div class="setting-row">
+      <span>Volumen</span>
+      <input type="range" id="vol-range" min="0" max="1" step="0.1" value="0.5" style="width:100px" onchange="ajustarVolumen(this.value)">
+    </div>
+    <hr style="border:0;border-top:1px solid rgba(0,255,255,.2);margin:15px 0">
+    <p style="font-size:12px;color:#00FFFF;margin-bottom:5px">👥 Amigos</p>
+    <div class="search-amigo-row">
+      <input type="text" id="buscar-amigo-input" placeholder="ID exacto o nombre..." style="text-align:left;padding-left:10px">
+      <button class="btn-add-amigo" onclick="buscarAmigos()" title="Buscar">🔍</button>
+    </div>
+    <div id="search-results" style="margin-top:8px"></div>
+    <p id="msg-amigo" style="font-size:11px;color:#FFD700;min-height:16px;margin-top:4px"></p>
+    <button class="game-btn-neon" style="margin-top:8px" onclick="toggleListaAmigos()">Ver mis amigos 👥</button>
+    <div id="lista-amigos-wrap"><div id="lista-amigos" style="margin-top:8px"></div></div>
+    <hr style="border:0;border-top:1px solid rgba(0,255,255,.2);margin:15px 0">
+    <p style="font-size:12px;color:#00FFFF;margin-bottom:5px">Editar Datos</p>
+    <input type="password" id="edit-pass" placeholder="Nueva contraseña">
+    <input type="number"   id="edit-age"  placeholder="Cambiar edad">
+    <button class="game-btn-neon" onclick="actualizarPerfil()">GUARDAR CAMBIOS</button>
+  </div>
+</div>
+
+<!-- ══ TIENDA ══ -->
+<div id="vista-tienda" class="container hidden">
+  <div class="settings-card">
+    <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
+    <h2 style="color:#FFD700;margin-bottom:10px;text-align:center">EDÉN SHOP</h2>
+    <span id="shop-balance">Saldo: 0 €Eden€</span>
+    <span class="shop-label">PALETAS (PALAS)</span>
+    <div class="shop-grid">
+      <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
+      <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
+      <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
+    </div>
+    <span class="shop-label">PELOTAS</span>
+    <div class="shop-grid">
+      <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
+      <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
+      <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
+    </div>
+    <span class="shop-label">VIDAS EXTRAS</span>
+    <div class="shop-grid">
+      <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
+      <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
+      <div class="shop-item" onclick="comprar('vida',5)">❤️ x5<span class="shop-price">20000 pts</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHAT — 3 pestañas: Global | Amigos | Notas ══ -->
+<div id="vista-chat" class="container hidden">
+  <div class="settings-card">
+    <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
+    <h2 style="color:#00FF00;text-align:center;margin-bottom:10px">CHAT EDÉN</h2>
+    <div class="chat-tabs">
+      <button class="chat-tab active" id="tab-global" onclick="cambiarTabChat('global')">🌐 Global</button>
+      <button class="chat-tab"        id="tab-amigos" onclick="cambiarTabChat('amigos')">👥 Amigos</button>
+      <button class="chat-tab"        id="tab-notas"  onclick="cambiarTabChat('notas')">📝 Notas</button>
+    </div>
+    <div id="chat-amigo-header" class="hidden"></div>
+    <!-- Panel mensajes -->
+    <div id="panel-mensajes">
+      <div id="chat-box" style="height:195px;overflow-y:auto;background:rgba(0,0,0,.6);border-radius:10px;padding:10px;margin-bottom:10px;border:1px solid #00FF00"></div>
+      <div class="task-input-group">
+        <input type="text" id="chat-input" placeholder="Escribe al Edén..." style="text-align:left;padding-left:10px" onkeypress="if(event.key==='Enter')enviarMensaje()">
+        <button class="btn-blue" style="background:#00FF00" onclick="enviarMensaje()">›</button>
+      </div>
+    </div>
+    <!-- Panel notas -->
+    <div id="panel-notas" class="hidden">
+      <div class="task-input-group" style="margin-bottom:8px">
+        <input type="text" id="campo-tarea" placeholder="Nueva nota..." style="text-align:left;padding-left:10px">
+        <button class="btn-blue" onclick="añadirTarea()">+</button>
+        <button class="btn-trash-inline" onclick="borrarMarcados()" title="Borrar marcadas">🗑️</button>
+      </div>
+      <div id="lista-tareas" class="task-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VISTA JUEGO LADRILLOS ══ -->
+<div id="vista-juego" class="vista-juego-base hidden">
+  <button class="btn-game-return" onclick="salirDelJuego()">🚪</button>
+  <div id="game-score" class="game-score-display">€Eden€: 0</div>
+  <canvas id="gameCanvas" class="game-canvas-style" width="500" height="500"></canvas>
+  <!-- Overlays -->
+  <div class="game-overlay-btns">
+    <button class="overlay-icon-btn" onclick="toggleRankIngame('ladrillos')" title="Rankings">🏆</button>
+    <button class="overlay-icon-btn" onclick="toggleShopIngame('ladrillos')" title="Tienda">🛒</button>
+  </div>
+  <div id="rank-ingame-ladrillos" class="ingame-float-menu hidden">
+    <h3 style="color:#FFD700;text-align:center;margin-bottom:8px">🏆 RANKING</h3>
+    <div class="rank-tabs">
+      <button class="rank-tab active" id="rtab-l-mundial" onclick="cambiarTabRank('ladrillos','mundial')">🌍 Mundial</button>
+      <button class="rank-tab"        id="rtab-l-amigos"  onclick="cambiarTabRank('ladrillos','amigos')">👥 Amigos</button>
+    </div>
+    <div id="rank-content-ladrillos"></div>
+    <button class="close-overlay-btn" onclick="cerrarRankIngame('ladrillos')">✖ Cerrar</button>
+  </div>
+  <div id="shop-ingame-ladrillos" class="ingame-float-menu hidden">
+    <h3 style="color:#FFD700;text-align:center;margin-bottom:6px">🛒 TIENDA</h3>
+    <span id="saldo-ingame-l" style="color:#FFD700;font-size:12px;display:block;text-align:center;margin-bottom:6px">Saldo: 0 €Eden€</span>
+    <span class="shop-label" style="margin-top:4px">PALETAS</span>
+    <div class="shop-grid">
+      <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
+      <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
+      <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
+    </div>
+    <span class="shop-label">PELOTAS</span>
+    <div class="shop-grid">
+      <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
+      <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
+      <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
+    </div>
+    <span class="shop-label">VIDAS EXTRAS</span>
+    <div class="shop-grid">
+      <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
+      <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
+      <div class="shop-item" onclick="comprar('vida',5)">❤️ x5<span class="shop-price">20000 pts</span></div>
+    </div>
+    <button class="close-overlay-btn" onclick="cerrarShopIngame('ladrillos')">✖ Cerrar</button>
+  </div>
+  <!-- Menús ladrillos -->
+  <div id="difficulty-menu" class="menu-eden hidden">
+    <h2 style="color:#00FFFF;margin-bottom:15px">DIFICULTAD</h2>
+    <button class="game-btn-neon" onclick="iniciarJuegoEden('terrestre')">Nivel terrestre</button>
+    <button class="game-btn-neon" onclick="iniciarJuegoEden('semidios')">Nivel semidios</button>
+    <button class="game-btn-neon" onclick="iniciarJuegoEden('eden')">Nivel del edén</button>
+  </div>
+  <div id="game-over-menu" class="menu-eden hidden">
+    <h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2>
+    <p id="end-score-txt" style="color:#FFD700;font-size:13px;margin-bottom:12px"></p>
+    <button class="game-btn-neon" onclick="abrirMenuDificultad()">¡Repetir!</button>
+    <button class="game-btn-neon" onclick="toggleShopIngame('ladrillos')">🛒 Tienda</button>
+    <button class="game-btn-neon" onclick="salirDelJuego()">Salir</button>
+  </div>
+</div>
+
+<!-- ══ VISTA FLAPPY ══ -->
+<div id="vista-flappy" class="vista-juego-base hidden">
+  <button class="btn-game-return" onclick="salirFlappy()">🚪</button>
+  <div id="flappy-score" class="game-score-display">€Eden€: 0</div>
+  <canvas id="flappyCanvas" class="game-canvas-style" width="360" height="500"
+    onclick="flappyJump()" ontouchstart="flappyJump()"></canvas>
+  <!-- Overlays Flappy -->
+  <div class="game-overlay-btns">
+    <button class="overlay-icon-btn" onclick="toggleRankIngame('flappy')" title="Rankings">🏆</button>
+    <button class="overlay-icon-btn" onclick="toggleShopIngame('flappy')" title="Tienda">🛒</button>
+  </div>
+  <div id="rank-ingame-flappy" class="ingame-float-menu hidden">
+    <h3 style="color:#FFD700;text-align:center;margin-bottom:8px">🏆 RANKING</h3>
+    <div class="rank-tabs">
+      <button class="rank-tab active" id="rtab-f-mundial" onclick="cambiarTabRank('flappy','mundial')">🌍 Mundial</button>
+      <button class="rank-tab"        id="rtab-f-amigos"  onclick="cambiarTabRank('flappy','amigos')">👥 Amigos</button>
+    </div>
+    <div id="rank-content-flappy"></div>
+    <button class="close-overlay-btn" onclick="cerrarRankIngame('flappy')">✖ Cerrar</button>
+  </div>
+  <div id="shop-ingame-flappy" class="ingame-float-menu hidden">
+    <h3 style="color:#FFD700;text-align:center;margin-bottom:6px">🛒 TIENDA</h3>
+    <span id="saldo-ingame-f" style="color:#FFD700;font-size:12px;display:block;text-align:center;margin-bottom:6px">Saldo: 0 €Eden€</span>
+    <span class="shop-label" style="margin-top:4px">PALETAS</span>
+    <div class="shop-grid">
+      <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
+      <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
+      <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
+    </div>
+    <span class="shop-label">VIDAS EXTRAS</span>
+    <div class="shop-grid">
+      <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
+      <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
+      <div class="shop-item" onclick="comprar('vida',5)">❤️ x5<span class="shop-price">20000 pts</span></div>
+    </div>
+    <button class="close-overlay-btn" onclick="cerrarShopIngame('flappy')">✖ Cerrar</button>
+  </div>
+  <!-- Menú inicio/gameover Flappy -->
+  <div id="flappy-start-menu" class="menu-eden" style="border-color:#00FF00">
+    <h2 style="color:#00FF00;margin-bottom:8px;text-shadow:0 0 12px #00FF00">🐦 EDÉN FLAPPY</h2>
+    <p style="color:#aaa;font-size:12px;margin-bottom:16px">Toca la pantalla o pulsa ESPACIO para saltar entre las columnas.<br>Cada punto = 1 €Eden€ al saldo.</p>
+    <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">▶ JUGAR</button>
+    <button class="game-btn-neon" onclick="salirFlappy()">Volver</button>
+  </div>
+  <div id="flappy-over-menu" class="menu-eden hidden" style="border-color:#ff4444">
+    <h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2>
+    <p id="flappy-score-txt" style="color:#FFD700;font-size:14px;margin-bottom:12px"></p>
+    <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">¡Repetir!</button>
+    <button class="game-btn-neon" onclick="toggleShopIngame('flappy')">🛒 Tienda</button>
+    <button class="game-btn-neon" onclick="salirFlappy()">Salir</button>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+<script>
+/* ═══════════════════ FIREBASE CONFIG ═══════════════════ */
+const firebaseConfig={
+  apiKey:"AIzaSyAqmfX9_Y9wErXkSCx8oxZxYCqrqTf5wVE",
+  authDomain:"edengame-5a40c.firebaseapp.com",
+  databaseURL:"https://edengame-5a40c-default-rtdb.firebaseio.com",
+  projectId:"edengame-5a40c",
+  storageBucket:"edengame-5a40c.firebasestorage.app",
+  messagingSenderId:"837651200703",
+  appId:"1:837651200703:web:0c3e237c36e1bb37b6640a",
+  measurementId:"G-TKMSN75EF9"
+};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database(), auth=firebase.auth();
+let currentUser="",currentUID="",isMuted=false,masterVolume=.5,userBalance=0;
+
+/* ═══════════════════ WEB AUDIO API ═══════════════════ */
+const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+const audioBuffers={};
+const archivosAudio={hit:'hit.mp3',bounce:'bounce.mp3',coin:'coin.mp3',fail:'fail.mp3',click:'click.mp3',trash:'trash.mp3'};
+async function precargarSonidos(){
+  for(const[n,r]of Object.entries(archivosAudio)){
+    try{const ab=await(await fetch(r)).arrayBuffer();audioBuffers[n]=await audioCtx.decodeAudioData(ab);}catch(e){}
+  }
+}
+function desbloquearAudio(){if(audioCtx.state==='suspended')audioCtx.resume();}
+document.addEventListener('touchstart',desbloquearAudio,{once:true});
+document.addEventListener('mousedown',desbloquearAudio,{once:true});
+function reproducir(n){
+  if(isMuted||!audioBuffers[n])return;
+  const src=audioCtx.createBufferSource();src.buffer=audioBuffers[n];
+  const g=audioCtx.createGain();g.gain.value=masterVolume;
+  src.connect(g);g.connect(audioCtx.destination);src.start(0);
+}
+precargarSonidos();
+
+/* ═══════════════════ IMÁGENES ═══════════════════ */
+const imgLadrillo=new Image();imgLadrillo.src='ladrillo.png';
+// Foto de perfil para Flappy (se actualiza al login)
+let flappyAvatarImg=null;
+let flappyAvatarData='';  // data-url o URL de foto
+
+/* ═══════════════════ AVATAR ═══════════════════ */
+function cambiarAvatar(emoji){
+  document.getElementById('avatar-img').innerHTML=emoji;
+  db.ref('usuarios/'+currentUser).update({avatar:emoji});
+  flappyAvatarData=''; flappyAvatarImg=null;
+  reproducir('coin');
+}
+function subirFotoLocal(input){
+  if(input.files&&input.files[0]){
+    const r=new FileReader();
+    r.onload=e=>{
+      document.getElementById('avatar-img').innerHTML='<img src="'+e.target.result+'" style="width:100%;height:100%;object-fit:cover;">';
+      db.ref('usuarios/'+currentUser).update({avatar:e.target.result});
+      flappyAvatarData=e.target.result; flappyAvatarImg=null;
+    };
+    r.readAsDataURL(input.files[0]);
+  }
+}
+function ajustarVolumen(v){masterVolume=v;reproducir('click');}
+function alternarSilencio(m){isMuted=m;if(!m)reproducir('click');}
+
+function cargarFlappyAvatar(data){
+  flappyAvatarImg=new Image();
+  flappyAvatarImg.src=data;
+}
+
+/* ═══════════════════ TÍTULO ANIMADO ═══════════════════ */
+const tituloEden=document.getElementById('titulo-eden');
+const lineas=["BIENVENIDOS","AL","EDÉN"];
+let timer;
+function animar(){
+  tituloEden.innerHTML="";let l=0,c=0;clearInterval(timer);
+  lineas.forEach(()=>{let s=document.createElement('span');tituloEden.appendChild(s);});
+  let spans=tituloEden.querySelectorAll("span");
+  timer=setInterval(()=>{
+    if(l<lineas.length){spans[l].innerText+=lineas[l][c];c++;if(c>=lineas[l].length){l++;c=0;}}else clearInterval(timer);
+  },100);
+}
+
+/* ═══════════════════ GOOGLE LOGIN ═══════════════════ */
+function entrarConGoogle(){
+  const provider=new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).then(result=>{
+    const user=result.user,userKey=user.email.replace(/[.@]/g,'_');
+    currentUID=user.uid;
+    db.ref('usuarios/'+userKey).once('value',s=>{
+      const ficha={nombre:user.displayName||userKey,email:user.email,foto:user.photoURL||"",uid:user.uid};
+      if(!s.exists())db.ref('usuarios/'+userKey).set({password:"google_user",age:"",saldo:0,...ficha});
+      else db.ref('usuarios/'+userKey).update(ficha);
+      db.ref('indice-emails/'+userKey).set(userKey);
+      // Carga avatar para Flappy
+      if(user.photoURL){flappyAvatarData=user.photoURL;cargarFlappyAvatar(user.photoURL);}
+      currentUser=userKey;
+      configurarCarteraYEntrar(s.exists()?(s.val().saldo||0):0);
+    });
+  }).catch(e=>alert("Error Google: "+e.message));
+}
+
+/* ═══════════════════ MOSTRAR VISTA ═══════════════════ */
+function mostrarVista(id){
+  reproducir('click');
+  document.querySelectorAll('.container,.vista-juego-base').forEach(c=>c.classList.add('hidden'));
+  ['exit-btn','settings-btn','shop-btn','chat-btn'].forEach(b=>{const el=document.getElementById(b);if(el)el.classList.add('hidden');});
+  document.getElementById(id).classList.remove('hidden');
+  if(id==='vista-login')animar();
+  const conNav=['vista-agenda','vista-ajustes','vista-tienda','vista-chat'];
+  if(conNav.includes(id)){
+    ['exit-btn','settings-btn','shop-btn','chat-btn'].forEach(b=>document.getElementById(b).classList.remove('hidden'));
+    if(id==='vista-agenda'){
+      document.getElementById('pantalla-oscura').classList.add('hidden');
+      dibujarPreviewLadrillos();dibujarPreviewFlappy();
+    }else if(id==='vista-chat'){
+      document.getElementById('pantalla-oscura').classList.remove('hidden');escucharChat();
+    }else if(id==='vista-tienda'){
+      document.getElementById('shop-balance').innerText='Saldo: '+userBalance+' €Eden€';
+      document.getElementById('pantalla-oscura').classList.remove('hidden');
+    }else if(id==='vista-ajustes'){
+      document.getElementById('pantalla-oscura').classList.remove('hidden');
+      db.ref('usuarios/'+currentUser).once('value',s=>{
+        const d=s.val()||{};
+        document.getElementById('perfil-nombre').innerText="Usuario: "+currentUser;
+        document.getElementById('perfil-edad').innerText="Edad: "+(d.age||"No definida");
+        document.getElementById('uid-box').innerText=currentUser||"—";
+        if(d.avatar){
+          if(d.avatar.includes('data:image')||d.avatar.startsWith('http'))
+            document.getElementById('avatar-img').innerHTML='<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover;">';
+          else document.getElementById('avatar-img').innerText=d.avatar;
+          if(d.avatar.startsWith('http')||d.avatar.includes('data:image')){flappyAvatarData=d.avatar;cargarFlappyAvatar(d.avatar);}
+        }
+        db.ref('ranking/eden/'+currentUser).once('value',r=>{
+          document.getElementById('perfil-puntos').innerText="Récord Edén: "+(r.val()||0)+" pts";
+        });
+      });
+    }else document.getElementById('pantalla-oscura').classList.remove('hidden');
+  }else document.getElementById('pantalla-oscura').classList.remove('hidden');
+}
+
+/* ═══════════════════ CARTERA ═══════════════════ */
+function configurarCarteraYEntrar(saldoBase){
+  db.ref('usuarios/'+currentUser+'/saldo').on('value',snap=>{
+    userBalance=snap.exists()?snap.val():saldoBase;
+    if(!snap.exists())db.ref('usuarios/'+currentUser+'/saldo').set(saldoBase);
+  });
+  mostrarVista('vista-agenda');reproducir('coin');
+}
+
+/* ═══════════════════ AUTH MANUAL ═══════════════════ */
+function validarAcceso(){
+  const u=document.getElementById('user-in').value.trim(),p=document.getElementById('pass-in').value.trim();
+  if(u==='admin'&&p==='1234'){currentUser=u;currentUID=u;mostrarVista('vista-agenda');return;}
+  db.ref('usuarios/'+u).once('value',s=>{
+    if(s.exists()&&s.val().password===p){
+      currentUser=u;currentUID=s.val().uid||u;
+      const d=s.val();
+      if(d.foto&&(d.foto.startsWith('http')||d.foto.includes('data:image'))){flappyAvatarData=d.foto;cargarFlappyAvatar(d.foto);}
+      else if(d.avatar&&(d.avatar.startsWith('http')||d.avatar.includes('data:image'))){flappyAvatarData=d.avatar;cargarFlappyAvatar(d.avatar);}
+      configurarCarteraYEntrar(d.saldo||0);
+    }else alert("Error de acceso");
+  });
+}
+function ejecutarRegistro(){
+  const u=document.getElementById('user-reg').value.trim(),p=document.getElementById('pass-reg').value.trim(),a=document.getElementById('age-reg').value;
+  if(u&&p){
+    db.ref('usuarios/'+u).set({password:p,age:a,saldo:0,nombre:u,uid:u,puntos:0,puntosFlappy:0}).then(()=>{
+      db.ref('indice-emails/'+u).set(u);db.ref('indice-nombres/'+u).set(u);
+      alert("¡Registrado!");mostrarVista('vista-login');
+    });
+  }
+}
+function actualizarPerfil(){
+  const np=document.getElementById('edit-pass').value.trim(),na=document.getElementById('edit-age').value;
+  let up={};if(np)up.password=np;if(na)up.age=na;
+  if(Object.keys(up).length>0)db.ref('usuarios/'+currentUser).update(up).then(()=>{alert("Perfil actualizado");reproducir('coin');mostrarVista('vista-ajustes');});
+}
+function cerrarSesion(){
+  reproducir('click');
+  if(currentUser&&currentUser!=='admin')db.ref('usuarios/'+currentUser+'/saldo').off();
+  pararEscuchaChat();currentUser="";currentUID="";mostrarVista('vista-login');
+}
+
+/* ═══════════════════ COPIAR UID ═══════════════════ */
+function copiarUID(){
+  const txt=document.getElementById('uid-box').innerText;
+  if(!txt||txt==='—')return;
+  const done=()=>{document.getElementById('uid-box').innerText='¡Copiado!';setTimeout(()=>document.getElementById('uid-box').innerText=txt,1500);};
+  if(navigator.clipboard)navigator.clipboard.writeText(txt).then(done).catch(()=>{_fallbackCopy(txt);done();});
+  else{_fallbackCopy(txt);done();}
+}
+function _fallbackCopy(t){const el=document.createElement('textarea');el.value=t;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);}
+
+/* ═══════════════════ NOTAS ═══════════════════ */
+function añadirTarea(){
+  reproducir('click');
+  const inp=document.getElementById('campo-tarea');
+  if(inp.value.trim()&&currentUser){db.ref('notas/'+currentUser).push({text:inp.value.trim(),done:false});inp.value='';}
+}
+function cargarTareas(){
+  const lista=document.getElementById('lista-tareas');
+  db.ref('notas/'+currentUser).on('value',snap=>{
+    lista.innerHTML='';
+    snap.forEach(child=>{
+      const i=child.key,t=child.val();
+      const item=document.createElement('div');item.className='task-item';item.id='nota-'+i;
+      item.innerHTML='<input type="checkbox" style="width:20px" '+(t.done?'checked':'')+
+        ' onchange="db.ref(\'notas/'+currentUser+'/'+i+'\').update({done:!'+t.done+'})">'+
+        '<div class="task-text" style="'+(t.done?'text-decoration:line-through;opacity:.5':'')+'">'+ t.text +'</div>'+
+        '<button class="btn-edit-note" onclick="modificarTareaInline(\''+i+'\')">✏️</button>';
+      lista.appendChild(item);
+    });
+  });
+}
+function borrarMarcados(){
+  reproducir('trash');
+  db.ref('notas/'+currentUser).once('value',snap=>{snap.forEach(c=>{if(c.val().done)db.ref('notas/'+currentUser+'/'+c.key).remove();});});
+}
+function modificarTareaInline(i){
+  const item=document.getElementById('nota-'+i),textDiv=item.querySelector('.task-text'),editBtn=item.querySelector('.btn-edit-note');
+  if(item.classList.contains('editing'))return;
+  item.classList.add('editing');reproducir('click');
+  const ct=textDiv.innerText;
+  textDiv.innerHTML='<input type="text" class="edit-input" value="'+ct.replace(/"/g,'&quot;')+'">';
+  editBtn.innerHTML='✅';editBtn.classList.remove('btn-edit-note');editBtn.classList.add('btn-save-note');
+  const inp=textDiv.querySelector('.edit-input');inp.focus();inp.select();
+  const save=()=>{const nv=inp.value.trim();if(nv&&nv!==ct){db.ref('notas/'+currentUser+'/'+i).update({text:nv});reproducir('coin');}item.classList.remove('editing');};
+  inp.addEventListener('keypress',e=>{if(e.key==='Enter')save();});editBtn.onclick=save;
+}
+
+/* ═══════════════════ TIENDA ═══════════════════ */
+function comprar(tipo,valor){
+  reproducir('click');
+  let precio=0;
+  if(tipo==='paleta')precio=(valor==='red'?500:(valor==='pink'?750:1000));
+  else if(tipo==='bola')precio=(valor==='blue'?400:(valor==='pink'?600:900));
+  else if(tipo==='vida')precio=(valor===1?5000:(valor===3?12000:20000));
+  if(userBalance>=precio){
+    const ns=userBalance-precio;
+    db.ref('usuarios/'+currentUser).update({saldo:ns}).then(()=>{
+      reproducir('coin');
+      ['shop-balance','saldo-ingame-l','saldo-ingame-f'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerText='Saldo: '+ns+' €Eden€';});
+      alert('¡Gracias por tu compra!');
+    });
+  }else{reproducir('fail');alert("No tienes suficiente €Eden€");}
+}
+
+/* ═══════════════════ OVERLAYS COMPARTIDOS ═══════════════════ */
+function toggleRankIngame(juego){
+  const rid='rank-ingame-'+juego,sid='shop-ingame-'+juego;
+  document.getElementById(sid).classList.add('hidden');
+  const m=document.getElementById(rid);
+  if(m.classList.contains('hidden')){m.classList.remove('hidden');cargarRankIngame(juego,'mundial');}
+  else m.classList.add('hidden');
+}
+function cerrarRankIngame(juego){document.getElementById('rank-ingame-'+juego).classList.add('hidden');}
+function toggleShopIngame(juego){
+  const rid='rank-ingame-'+juego,sid='shop-ingame-'+juego;
+  document.getElementById(rid).classList.add('hidden');
+  const m=document.getElementById(sid);
+  if(m.classList.contains('hidden')){
+    m.classList.remove('hidden');
+    const el=document.getElementById('saldo-ingame-'+(juego==='ladrillos'?'l':'f'));
+    if(el)el.innerText='Saldo: '+userBalance+' €Eden€';
+  }else m.classList.add('hidden');
+}
+function cerrarShopIngame(juego){document.getElementById('shop-ingame-'+juego).classList.add('hidden');}
+
+function cambiarTabRank(juego,modo){
+  const pre=juego==='ladrillos'?'l':'f';
+  document.getElementById('rtab-'+pre+'-mundial').classList.toggle('active',modo==='mundial');
+  document.getElementById('rtab-'+pre+'-amigos').classList.toggle('active',modo==='amigos');
+  cargarRankIngame(juego,modo);
+}
+
+function cargarRankIngame(juego,modo){
+  const cont=document.getElementById('rank-content-'+juego);
+  const campoP=juego==='flappy'?'puntosFlappy':'puntos';
+  cont.innerHTML='<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">Cargando…</p>';
+  if(modo==='mundial'){
+    db.ref('usuarios').orderByChild(campoP).limitToLast(10).once('value',s=>{
+      let rows=[];s.forEach(c=>{const v=c.val();if((v[campoP]||0)>0)rows.push({name:v.nombre||c.key,pts:v[campoP]||0});});
+      rows.reverse();cont.innerHTML='';
+      if(!rows.length){cont.innerHTML='<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">Sin datos aún.</p>';return;}
+      rows.forEach((u,i)=>{const cls=i===0?'gold':(i===1?'silver':(i===2?'bronze':''));cont.innerHTML+='<div class="rank-row '+cls+'"><span>'+(i+1)+'. '+u.name+'</span><span>'+u.pts+' pts</span></div>';});
+    });
+  }else{
+    db.ref('amigos/'+currentUser).once('value',sa=>{
+      if(!sa.exists()){cont.innerHTML='<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">No tienes amigos aún.</p>';return;}
+      let keys=[currentUser];sa.forEach(c=>{const k=c.val().key||c.key;if(k)keys.push(k);});
+      Promise.all(keys.map(k=>db.ref('usuarios/'+k).once('value'))).then(snaps=>{
+        let rows=[];snaps.forEach(sn=>{if(sn.exists()){const v=sn.val();rows.push({name:v.nombre||sn.key,pts:v[campoP]||0});}});
+        rows.sort((a,b)=>b.pts-a.pts);cont.innerHTML='';
+        rows.forEach((u,i)=>{const cls=i===0?'gold':(i===1?'silver':(i===2?'bronze':''));cont.innerHTML+='<div class="rank-row '+cls+'"><span>'+(i+1)+'. '+u.name+'</span><span>'+u.pts+' pts</span></div>';});
+      });
+    });
+  }
+}
+
+/* ═══════════════════ AMIGOS ═══════════════════ */
+function buscarAmigos(){
+  const q=document.getElementById('buscar-amigo-input').value.trim(),msg=document.getElementById('msg-amigo'),res=document.getElementById('search-results');
+  res.innerHTML='';msg.innerText='';
+  if(!q){msg.innerText="Escribe un ID o nombre.";return;}
+  db.ref('usuarios/'+q).once('value',s=>{
+    if(s.exists()){_mostrarResultado(res,q,s.val().nombre||q);return;}
+    db.ref('usuarios').orderByChild('nombre').startAt(q).endAt(q+'\uf8ff').limitToFirst(10).once('value',snap=>{
+      if(!snap.exists()){msg.innerText="❌ Sin resultados.";return;}
+      snap.forEach(c=>{if(c.key!==currentUser)_mostrarResultado(res,c.key,c.val().nombre||c.key);});
+    });
+  });
+}
+function _mostrarResultado(container,key,nombre){
+  const div=document.createElement('div');div.className='search-result-item';
+  div.innerHTML='<span style="color:#00FFFF">👤 '+nombre+'</span>'+
+    '<span style="color:#aaa;font-size:10px;margin:0 5px">'+key.substring(0,16)+'…</span>'+
+    '<button class="btn-add-result" onclick="añadirAmigoPorKey(\''+key+'\',\''+nombre.replace(/'/g,"\\'")+'\')">+</button>';
+  container.appendChild(div);
+}
+function añadirAmigoPorKey(amigoKey,nombre){
+  const msg=document.getElementById('msg-amigo');
+  if(amigoKey===currentUser){msg.innerText="Ese eres tú 😅";return;}
+  db.ref('amigos/'+currentUser+'/'+amigoKey).once('value',ya=>{
+    if(ya.exists()){msg.innerText="Ya es tu amigo ✅";return;}
+    db.ref('amigos/'+currentUser+'/'+amigoKey).set({nombre:nombre,key:amigoKey}).then(()=>{
+      msg.innerText='✅ ¡'+nombre+' añadido!';
+      document.getElementById('search-results').innerHTML='';document.getElementById('buscar-amigo-input').value='';
+      reproducir('coin');cargarListaAmigos();
+    });
+  });
+}
+function toggleListaAmigos(){
+  const w=document.getElementById('lista-amigos-wrap');
+  if(w.classList.contains('open'))w.classList.remove('open');
+  else{w.classList.add('open');cargarListaAmigos();}
+}
+function cargarListaAmigos(){
+  const c=document.getElementById('lista-amigos');
+  db.ref('amigos/'+currentUser).once('value',s=>{
+    c.innerHTML='';
+    if(!s.exists()){c.innerHTML='<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">No tienes amigos aún.</p>';return;}
+    s.forEach(child=>{
+      const a=child.val(),nombre=a.nombre||a.key,key=a.key||child.key;
+      const div=document.createElement('div');div.className='amigo-item';
+      div.innerHTML='<span class="amigo-nombre">👤 '+nombre+'</span>'+
+        '<button class="btn-hablar" onclick="abrirChatPrivado(\''+key+'\',\''+nombre.replace(/'/g,"\\'")+'\')">Hablar 💬</button>';
+      c.appendChild(div);
+    });
+  });
+}
+
+/* ═══════════════════ CHAT DUAL ═══════════════════ */
+let chatModo='global',chatAmigoKey='',chatAmigoNombre='',chatListener=null,chatRef=null,tabActual='global';
+function getConversationID(a,b){return[a,b].sort().join('__');}
+function pararEscuchaChat(){if(chatRef&&chatListener){chatRef.off('value',chatListener);chatListener=null;chatRef=null;}}
+function cambiarTabChat(modo){
+  tabActual=modo;
+  ['global','amigos','notas'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t===modo));
+  const pm=document.getElementById('panel-mensajes'),pn=document.getElementById('panel-notas'),hd=document.getElementById('chat-amigo-header');
+  if(modo==='notas'){pm.classList.add('hidden');pn.classList.remove('hidden');hd.classList.add('hidden');cargarTareas();}
+  else{
+    pm.classList.remove('hidden');pn.classList.add('hidden');
+    if(modo==='global'){hd.classList.add('hidden');chatModo='global';escucharChatGlobal();}
+    else{
+      chatModo='amigos';
+      if(chatAmigoKey){hd.classList.remove('hidden');hd.innerText='💬 Hablando con '+chatAmigoNombre;escucharChatPrivado(chatAmigoKey);}
+      else{hd.classList.remove('hidden');hd.innerText='Selecciona un amigo desde ⚙️ Ajustes';document.getElementById('chat-box').innerHTML='<p style="color:#aaa;font-size:12px;text-align:center;padding:20px">Ve a Ajustes → toca "Hablar" junto a un amigo.</p>';pararEscuchaChat();}
+    }
+  }
+}
+function abrirChatPrivado(amigoKey,amigoNombre){chatAmigoKey=amigoKey;chatAmigoNombre=amigoNombre;mostrarVista('vista-chat');cambiarTabChat('amigos');}
+function escucharChatGlobal(){
+  pararEscuchaChat();chatRef=db.ref('chat_global').limitToLast(20);
+  chatListener=chatRef.on('value',s=>{
+    const box=document.getElementById('chat-box');box.innerHTML='';
+    s.forEach(c=>{const m=c.val(),mio=m.user===currentUser;
+      box.innerHTML+='<div style="text-align:'+(mio?'right':'left')+';margin-bottom:8px;font-size:13px;border-bottom:1px solid rgba(0,255,0,.1);padding-bottom:4px"><b style="color:'+(mio?'#00FFFF':'#00FF00')+'">'+m.user+':</b> '+m.text+'</div>';
+    });
+    box.scrollTop=box.scrollHeight;
+  });
+}
+function escucharChatPrivado(amigoKey){
+  pararEscuchaChat();const convID=getConversationID(currentUser,amigoKey);
+  chatRef=db.ref('mensajes-privados/'+convID).limitToLast(30);
+  chatListener=chatRef.on('value',s=>{
+    const box=document.getElementById('chat-box');box.innerHTML='';
+    if(!s.exists()){box.innerHTML='<p style="color:#aaa;font-size:12px;text-align:center;padding:20px">Sé el primero en decir algo 👋</p>';return;}
+    s.forEach(c=>{const m=c.val(),mio=m.user===currentUser;
+      box.innerHTML+='<div style="text-align:'+(mio?'right':'left')+';margin-bottom:8px;font-size:13px;border-bottom:1px solid rgba(0,255,255,.07);padding-bottom:4px"><b style="color:'+(mio?'#00FFFF':'#FFD700')+'">'+(mio?'Tú':m.user)+':</b> '+m.text+'</div>';
+    });
+    box.scrollTop=box.scrollHeight;
+  });
+}
+function escucharChat(){
+  tabActual='global';chatModo='global';
+  ['global','amigos','notas'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t==='global'));
+  document.getElementById('panel-mensajes').classList.remove('hidden');
+  document.getElementById('panel-notas').classList.add('hidden');
+  document.getElementById('chat-amigo-header').classList.add('hidden');
+  escucharChatGlobal();
+}
+function enviarMensaje(){
+  const inp=document.getElementById('chat-input'),texto=inp.value.trim();
+  if(!texto||!currentUser)return;
+  if(chatModo==='global'){db.ref('chat_global').push({user:currentUser,text:texto,avatar:document.getElementById('avatar-img').innerText||"👤"});}
+  else{if(!chatAmigoKey)return;db.ref('mensajes-privados/'+getConversationID(currentUser,chatAmigoKey)).push({user:currentUser,text:texto,ts:Date.now()});}
+  inp.value='';reproducir('click');
+}
+
+/* ═══════════════════════════════════════════════════════
+   JUEGO 1 — LADRILLOS (física intacta)
+═══════════════════════════════════════════════════════ */
+const canvas=document.getElementById("gameCanvas"),ctx=canvas.getContext("2d");
+const menuGameOver=document.getElementById("game-over-menu"),menuDifficulty=document.getElementById("difficulty-menu");
+let balls=[],bricks=[],paddleWidth=90,paddleX,score=0,gameActive=false,gameInterval,isFireBall=false,currentDifficulty='terrestre';
+
+function abrirMenuDificultad(){
+  reproducir('click');
+  document.querySelectorAll('.container,.vista-juego-base').forEach(c=>c.classList.add('hidden'));
+  ['exit-btn','settings-btn','shop-btn','chat-btn'].forEach(b=>{const el=document.getElementById(b);if(el)el.classList.add('hidden');});
+  document.getElementById('vista-juego').classList.remove('hidden');
+  document.getElementById('pantalla-oscura').classList.remove('hidden');
+  document.querySelectorAll('.menu-eden').forEach(m=>m.classList.add('hidden'));
+  ['rank-ingame-ladrillos','shop-ingame-ladrillos'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  menuDifficulty.classList.remove('hidden');
+}
+function iniciarJuegoEden(diff){
+  reproducir('click');cancelAnimationFrame(gameInterval);
+  ['rank-ingame-ladrillos','shop-ingame-ladrillos'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  resetVariablesJuego(diff);gameActive=true;
+  function gameLoop(){if(gameActive){draw();gameInterval=requestAnimationFrame(gameLoop);}}
+  gameLoop();
+}
+function salirDelJuego(){reproducir('click');gameActive=false;cancelAnimationFrame(gameInterval);mostrarVista('vista-agenda');}
+function resetVariablesJuego(diff){
+  currentDifficulty=diff;document.querySelectorAll('.menu-eden').forEach(m=>m.classList.add('hidden'));
+  canvas.style.cursor="none";paddleWidth=90;paddleX=(canvas.width-paddleWidth)/2;
+  isFireBall=false;score=0;document.getElementById("game-score").innerText="€Eden€: 0";
+  let rad=(diff==='eden')?5:8;
+  balls=[{x:canvas.width/2,y:canvas.height-100,dx:4.5,dy:-4.5,radius:rad}];
+  bricks=[];
+  let rows=(diff==='terrestre')?5:(diff==='semidios'?8:12);
+  let cols=(diff==='terrestre')?7:(diff==='semidios'?12:18);
+  let bw=(canvas.width-40)/cols,bh=(diff==='terrestre')?20:12;
+  for(let c=0;c<cols;c++){
+    bricks[c]=[];
+    for(let r=0;r<rows;r++){
+      let type="normal",life=1;
+      if(diff==='semidios'&&Math.random()<.2){type="hard";life=2;}
+      if(diff==='eden'){if(Math.random()<.15){type="wall";life=999;}else if(Math.random()<.3){type="hard";life=2;}}
+      bricks[c][r]={x:c*(bw-4+4)+15,y:r*(bh-4+4)+50,status:life,type:type,w:bw-4,h:bh-4};
+    }
+  }
+}
+document.addEventListener("mousemove",e=>{
+  if(!gameActive)return;
+  let rect=canvas.getBoundingClientRect(),relX=e.clientX-rect.left;
+  if(relX>0&&relX<canvas.width)paddleX=relX-paddleWidth/2;
+});
+canvas.addEventListener("touchmove",e=>{
+  if(!gameActive)return;e.preventDefault();
+  let rect=canvas.getBoundingClientRect(),scaleX=canvas.width/rect.width;
+  let relX=(e.touches[0].clientX-rect.left)*scaleX;
+  if(relX>0&&relX<canvas.width)paddleX=relX-paddleWidth/2;
+},{passive:false});
+
+function draw(){
+  if(!gameActive)return;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // Ladrillos: imagen para normales, colores para hard/wall
+  bricks.forEach(col=>col.forEach(b=>{
+    if(b.status>0){
+      if(b.type==="wall"){ctx.fillStyle="#888";ctx.fillRect(b.x,b.y,b.w,b.h);}
+      else if(b.type==="hard"){
+        ctx.fillStyle="#FFD700";ctx.fillRect(b.x,b.y,b.w,b.h);
+        ctx.strokeStyle="rgba(255,255,255,.5)";ctx.lineWidth=1;ctx.strokeRect(b.x,b.y,b.w,b.h);
+      }else{
+        if(imgLadrillo.complete&&imgLadrillo.naturalWidth>0)ctx.drawImage(imgLadrillo,b.x,b.y,b.w,b.h);
+        else{ctx.fillStyle="#FF4444";ctx.fillRect(b.x,b.y,b.w,b.h);}
+      }
+    }
+  }));
+  // Pelotas
+  balls.forEach((b,index)=>{
+    ctx.beginPath();ctx.arc(b.x,b.y,b.radius,0,Math.PI*2);
+    ctx.fillStyle=isFireBall?"#FFA500":"#FF0000";ctx.fill();ctx.closePath();
+    bricks.forEach(col=>col.forEach(brick=>{
+      if(brick.status>0&&b.x>brick.x&&b.x<brick.x+brick.w&&b.y>brick.y&&b.y<brick.y+brick.h){
+        b.dy=-b.dy;
+        if(brick.type!=="wall"){brick.status--;reproducir('hit');if(brick.status===0){score++;document.getElementById("game-score").innerText="€Eden€: "+score;}}
+      }
+    }));
+    if(b.x+b.dx>canvas.width-b.radius||b.x+b.dx<b.radius)b.dx=-b.dx;
+    if(b.y+b.dy<b.radius)b.dy=-b.dy;
+    else if(b.y+b.dy>canvas.height-80){
+      if(b.x>paddleX&&b.x<paddleX+paddleWidth){b.dy=-Math.abs(b.dy);reproducir('bounce');}
+      else if(b.y>canvas.height)balls.splice(index,1);
+    }
+    b.x+=b.dx;b.y+=b.dy;
+  });
+  ctx.fillStyle="#00FFFF";ctx.fillRect(paddleX,canvas.height-70,paddleWidth,12);
+  if(balls.length===0){reproducir('fail');gameActive=false;endPartida();}
+}
+function endPartida(){
+  menuGameOver.classList.remove("hidden");
+  document.getElementById('end-score-txt').innerText='Puntuación: '+score+' €Eden€';
+  if(currentUser&&currentUser!=='admin'){
+    db.ref('usuarios/'+currentUser).update({saldo:userBalance+score});
+    db.ref('usuarios/'+currentUser+'/puntos').once('value',s=>{if(score>(s.val()||0))db.ref('usuarios/'+currentUser+'/puntos').set(score);});
+    db.ref('ranking/'+currentDifficulty+'/'+currentUser).once('value',s=>{if(!s.exists()||score>s.val())db.ref('ranking/'+currentDifficulty+'/'+currentUser).set(score);});
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   JUEGO 2 — EDÉN FLAPPY
+═══════════════════════════════════════════════════════ */
+const fCvs=document.getElementById('flappyCanvas'),fCtx=fCvs.getContext('2d');
+const FW=fCvs.width,FH=fCvs.height;
+const F_GRAVITY=0.32,F_JUMP=-6.5,F_PIPE_W=52,F_GAP=165,F_PIPE_SPEED=2.4,F_PIPE_INTERVAL=110;
+// Colores neón para columnas (aleatorio por pareja)
+const NEON_COLORS=['#00FFFF','#00FF00','#FF00FF','#FFD700','#FF4500','#7B2FFF'];
+
+let fBird={x:70,y:FH/2,vy:0,r:20};
+let fPipes=[],fScore=0,fFrame=0,fActive=false,fRaf=null,fStarted=false;
+let fBgImg=new Image();fBgImg.src='fondo1.jpg';
+
+function abrirFlappy(){
+  reproducir('click');
+  document.querySelectorAll('.container,.vista-juego-base').forEach(c=>c.classList.add('hidden'));
+  ['exit-btn','settings-btn','shop-btn','chat-btn'].forEach(b=>{const el=document.getElementById(b);if(el)el.classList.add('hidden');});
+  document.getElementById('vista-flappy').classList.remove('hidden');
+  document.getElementById('pantalla-oscura').classList.remove('hidden');
+  document.getElementById('flappy-start-menu').classList.remove('hidden');
+  document.getElementById('flappy-over-menu').classList.add('hidden');
+  ['rank-ingame-flappy','shop-ingame-flappy'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  fActive=false;fStarted=false;
+  fDrawStatic();
+}
+function salirFlappy(){
+  fActive=false;cancelAnimationFrame(fRaf);mostrarVista('vista-agenda');
+}
+function iniciarFlappy(){
+  document.getElementById('flappy-start-menu').classList.add('hidden');
+  document.getElementById('flappy-over-menu').classList.add('hidden');
+  ['rank-ingame-flappy','shop-ingame-flappy'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  fBird={x:70,y:FH/2,vy:0,r:20};fPipes=[];fScore=0;fFrame=0;fActive=true;fStarted=true;
+  document.getElementById('flappy-score').innerText='€Eden€: 0';
+  cancelAnimationFrame(fRaf);fLoop();
+}
+function flappyJump(){
+  if(!fStarted)return;
+  if(!fActive){iniciarFlappy();return;}
+  fBird.vy=F_JUMP;reproducir('bounce');
+}
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&document.getElementById('vista-flappy')&&!document.getElementById('vista-flappy').classList.contains('hidden')){e.preventDefault();flappyJump();}});
+
+function fLoop(){
+  if(!fActive)return;
+  fFrame++;
+  // Genera tubos
+  if(fFrame%F_PIPE_INTERVAL===0){
+    const topH=60+Math.random()*(FH-F_GAP-100);
+    const col=NEON_COLORS[Math.floor(Math.random()*NEON_COLORS.length)];
+    fPipes.push({x:FW,topH:topH,bottomY:topH+F_GAP,scored:false,col:col});
+  }
+  // Mueve tubos
+  fPipes.forEach(p=>p.x-=F_PIPE_SPEED);
+  fPipes=fPipes.filter(p=>p.x>-F_PIPE_W-10);
+  // Puntuación
+  fPipes.forEach(p=>{
+    if(!p.scored&&p.x+F_PIPE_W<fBird.x){
+      p.scored=true;fScore++;
+      document.getElementById('flappy-score').innerText='€Eden€: '+fScore;
+      reproducir('coin');
+      // +1 al saldo de Firebase por cada punto
+      if(currentUser&&currentUser!=='admin'){
+        db.ref('usuarios/'+currentUser+'/saldo').transaction(v=>(v||0)+1);
+      }
+    }
+  });
+  // Física del pájaro
+  fBird.vy+=F_GRAVITY;fBird.y+=fBird.vy;
+  // Colisiones
+  let hit=fBird.y-fBird.r<=0||fBird.y+fBird.r>=FH;
+  fPipes.forEach(p=>{
+    if(fBird.x+fBird.r>p.x&&fBird.x-fBird.r<p.x+F_PIPE_W){
+      if(fBird.y-fBird.r<p.topH||fBird.y+fBird.r>p.bottomY)hit=true;
+    }
+  });
+  if(hit){fActive=false;reproducir('fail');fEndGame();return;}
+  fDraw();fRaf=requestAnimationFrame(fLoop);
+}
+
+function fDraw(){
+  // Fondo
+  if(fBgImg.complete&&fBgImg.naturalWidth>0)fCtx.drawImage(fBgImg,0,0,FW,FH);
+  else{fCtx.fillStyle='#001a10';fCtx.fillRect(0,0,FW,FH);}
+  // Tuberías con bloques neón
+  fPipes.forEach(p=>{_drawPipeNeon(p.x,0,p.topH,p.col);_drawPipeNeon(p.x,p.bottomY,FH-p.bottomY,p.col);});
+  // Pájaro (avatar circular neón)
+  _drawFlappyBird();
+}
+function fDrawStatic(){
+  if(fBgImg.complete&&fBgImg.naturalWidth>0)fCtx.drawImage(fBgImg,0,0,FW,FH);
+  else{fCtx.fillStyle='#001a10';fCtx.fillRect(0,0,FW,FH);}
+  _drawFlappyBird();
+}
+
+function _drawPipeNeon(x,y,h,col){
+  const blockSize=18;
+  const cols2=Math.ceil(F_PIPE_W/blockSize),rows2=Math.ceil(h/blockSize);
+  for(let r=0;r<rows2;r++){
+    for(let c2=0;c2<cols2;c2++){
+      const bx=x+c2*blockSize,by=y+r*blockSize;
+      const bw2=Math.min(blockSize,x+F_PIPE_W-bx),bh2=Math.min(blockSize,y+h-by);
+      if(bw2<=0||bh2<=0)continue;
+      fCtx.fillStyle='rgba(0,0,0,.75)';fCtx.fillRect(bx,by,bw2,bh2);
+      fCtx.strokeStyle=col;fCtx.lineWidth=1.5;
+      fCtx.shadowColor=col;fCtx.shadowBlur=6;
+      fCtx.strokeRect(bx+.5,by+.5,bw2-1,bh2-1);
+      fCtx.shadowBlur=0;
+    }
+  }
+}
+function _drawFlappyBird(){
+  const b=fBird;
+  // Sombra neón
+  fCtx.save();
+  fCtx.shadowColor='#00FFFF';fCtx.shadowBlur=18;
+  fCtx.beginPath();fCtx.arc(b.x,b.y,b.r+3,0,Math.PI*2);
+  fCtx.strokeStyle='#00FFFF';fCtx.lineWidth=2.5;fCtx.stroke();
+  fCtx.restore();
+  // Clip circular
+  fCtx.save();
+  fCtx.beginPath();fCtx.arc(b.x,b.y,b.r,0,Math.PI*2);fCtx.clip();
+  if(flappyAvatarImg&&flappyAvatarImg.complete&&flappyAvatarImg.naturalWidth>0){
+    fCtx.drawImage(flappyAvatarImg,b.x-b.r,b.y-b.r,b.r*2,b.r*2);
+  }else{
+    // Fallback emoji/icono
+    fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
+    fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
+    fCtx.fillText('🐦',b.x,b.y+2);
+  }
+  fCtx.restore();
+  // Borde neón
+  fCtx.beginPath();fCtx.arc(b.x,b.y,b.r,0,Math.PI*2);
+  fCtx.strokeStyle='#00FFFF';fCtx.lineWidth=2;fCtx.stroke();
+}
+
+function fEndGame(){
+  document.getElementById('flappy-over-menu').classList.remove('hidden');
+  document.getElementById('flappy-score-txt').innerText='Puntuación: '+fScore+' €Eden€';
+  if(currentUser&&currentUser!=='admin'){
+    db.ref('usuarios/'+currentUser+'/puntosFlappy').once('value',s=>{
+      if(fScore>(s.val()||0))db.ref('usuarios/'+currentUser+'/puntosFlappy').set(fScore);
+    });
+    db.ref('ranking/flappy/'+currentUser).once('value',s=>{
+      if(!s.exists()||fScore>s.val())db.ref('ranking/flappy/'+currentUser).set(fScore);
+    });
+  }
+}
+
+/* ═══════════════════ PREVIEWS EN TARJETAS ═══════════════════ */
+function dibujarPreviewLadrillos(){
+  const pCvs=document.getElementById('previewCanvas');if(!pCvs)return;
+  const pCtx=pCvs.getContext('2d'),pw=pCvs.width,ph=pCvs.height;
+  pCtx.clearRect(0,0,pw,ph);
+  // Mini ladrillos decorativos
+  const cols2=9,rows2=3,bw2=(pw-20)/(cols2),bh2=22;
+  for(let c2=0;c2<cols2;c2++)for(let r=0;r<rows2;r++){
+    const bx=c2*bw2+10,by=r*(bh2+4)+14;
+    if(imgLadrillo.complete&&imgLadrillo.naturalWidth>0){pCtx.drawImage(imgLadrillo,bx,by,bw2-4,bh2);}
+    else{pCtx.fillStyle=r===0?'#FF4444':(r===1?'#FFD700':'#FF6666');pCtx.fillRect(bx,by,bw2-4,bh2);}
+  }
+  // Mini pelota
+  pCtx.beginPath();pCtx.arc(pw/2,ph-22,8,0,Math.PI*2);pCtx.fillStyle='#FF0000';pCtx.fill();
+  pCtx.shadowColor='#FF4444';pCtx.shadowBlur=8;pCtx.fill();pCtx.shadowBlur=0;
+  // Mini pala
+  pCtx.fillStyle='#00FFFF';pCtx.shadowColor='#00FFFF';pCtx.shadowBlur=8;
+  pCtx.fillRect(pw/2-30,ph-10,60,6);pCtx.shadowBlur=0;
+}
+function dibujarPreviewFlappy(){
+  const pCvs=document.getElementById('previewFlappyCanvas');if(!pCvs)return;
+  const pCtx=pCvs.getContext('2d'),pw=pCvs.width,ph=pCvs.height;
+  pCtx.clearRect(0,0,pw,ph);
+  if(fBgImg.complete&&fBgImg.naturalWidth>0){pCtx.drawImage(fBgImg,0,0,pw,ph);}
+  else{const g=pCtx.createLinearGradient(0,0,0,ph);g.addColorStop(0,'#001a0a');g.addColorStop(1,'#0a1a00');pCtx.fillStyle=g;pCtx.fillRect(0,0,pw,ph);}
+  // Mini columnas neón
+  [[60,0,50],[220,60,45],[340,0,55]].forEach(([x,topH,h],i)=>{
+    const col=NEON_COLORS[i];
+    pCtx.fillStyle='rgba(0,0,0,.6)';pCtx.fillRect(x,topH,28,h);
+    pCtx.strokeStyle=col;pCtx.lineWidth=1.5;pCtx.shadowColor=col;pCtx.shadowBlur=6;
+    pCtx.strokeRect(x,topH,28,h);pCtx.shadowBlur=0;
+  });
+  // Mini pájaro
+  pCtx.beginPath();pCtx.arc(pw/2,ph/2,14,0,Math.PI*2);
+  pCtx.fillStyle='#001828';pCtx.fill();
+  pCtx.strokeStyle='#00FFFF';pCtx.lineWidth=2;pCtx.shadowColor='#00FFFF';pCtx.shadowBlur=10;pCtx.stroke();pCtx.shadowBlur=0;
+  pCtx.font='14px serif';pCtx.textAlign='center';pCtx.textBaseline='middle';pCtx.fillText('🐦',pw/2,ph/2+1);
+}
+
+/* ═══════════════════ INIT ═══════════════════ */
+mostrarVista('vista-login');
+</script>
+</body>
+</html>
+
+
