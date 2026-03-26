@@ -1353,6 +1353,9 @@ function equiparItem(tipo, valor){
         } else if(tipo === 'bola'){
           const coloresBola = {blue: '#0000FF', pink: '#FFC0CB', yellow: '#FFFF00'};
           colorBolaEquipada = coloresBola[valor] || '#FF0000';
+        } else if(tipo === 'pajaro'){
+          const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'', blue:'🦅', green:'🦚', purple:'🦢'};
+          skinPajaroEquipada = emojisPajaros[valor] || '🐦';
         }
         
         // Actualizar UI de tienda si está abierta
@@ -1466,6 +1469,51 @@ function actualizarBotonesTiendaConEstado(juego){
         }
       });
     });
+    
+    // Actualizar botones de pájaros (solo en Flappy)
+    if(juego === 'flappy'){
+      const coloresPajaros = ['red', 'pink', 'yellow', 'blue', 'green', 'purple'];
+      coloresPajaros.forEach(color => {
+        const botones = shopElement.querySelectorAll('.shop-item');
+        botones.forEach(boton => {
+          const emoji = boton.querySelector('span:first-child');
+          if(emoji && (emoji.textContent === '🦜' || emoji.textContent === '🦩' || emoji.textContent === '🦅' || emoji.textContent === '🦚' || emoji.textContent === '🦢')){
+            const estilo = boton.querySelector('span:first-child').style.color;
+            if(estilo === color || (color === 'red' && estilo.includes('255,0,0')) || 
+               (color === 'pink' && estilo.includes('255,192,203')) || 
+               (color === 'blue' && estilo.includes('0,0,255')) ||
+               (color === 'green' && estilo.includes('0,128,0')) ||
+               (color === 'purple' && estilo.includes('128,0,128'))){
+              
+              const tiene = inventario.pajaros && inventario.pajaros[color];
+              const equipado = (color === 'red' && skinPajaroEquipada === '🦜') ||
+                              (color === 'pink' && skinPajaroEquipada === '🦩') ||
+                              (color === 'blue' && skinPajaroEquipada === '🦅') ||
+                              (color === 'green' && skinPajaroEquipada === '🦚') ||
+                              (color === 'purple' && skinPajaroEquipada === '🦢');
+              
+              if(tiene && equipado){
+                boton.innerHTML = `<span style="color:${color}">${emoji.textContent}</span><span class="shop-price">✅ EQUIPADO</span>`;
+                boton.style.border = '2px solid #00FF00';
+                boton.style.boxShadow = '0 0 10px #00FF00';
+                boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
+              } else if(tiene){
+                boton.innerHTML = `<span style="color:${color}">${emoji.textContent}</span><span class="shop-price">Equipar</span>`;
+                boton.style.border = '';
+                boton.style.boxShadow = '';
+                boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
+              } else{
+                const precio = color === 'red' ? 500 : (color === 'pink' ? 750 : (color === 'yellow' ? 1000 : (color === 'blue' ? 600 : (color === 'green' ? 800 : 1200))));
+                boton.innerHTML = `<span style="color:${color}">${emoji.textContent}</span><span class="shop-price">${precio} pts</span>`;
+                boton.style.border = '';
+                boton.style.boxShadow = '';
+                boton.setAttribute('onclick', `comprar('pajaro','${color}')`);
+              }
+            }
+          }
+        });
+      });
+    }
   });
 }
 
@@ -1626,6 +1674,7 @@ const NEON_COLORS=['#00FFFF','#00FF00','#FF00FF','#FFD700','#FF4500','#7B2FFF'];
 let fBird={x:70,y:FH/2,vy:0,r:20};
 let fPipes=[],fScore=0,fFrame=0,fActive=false,fRaf=null,fStarted=false;
 let fBgImg=new Image();fBgImg.src='fondo1.jpg';
+let skinPajaroEquipada = '🐦'; // Variable global para skin del pájaro
 
 function abrirFlappy(){
   reproducir('click');
@@ -1739,10 +1788,10 @@ function _drawFlappyBird(){
   if(flappyAvatarImg&&flappyAvatarImg.complete&&flappyAvatarImg.naturalWidth>0){
     fCtx.drawImage(flappyAvatarImg,b.x-b.r,b.y-b.r,b.r*2,b.r*2);
   }else{
-    // Fallback emoji/icono
+    // Fallback emoji/icono - USAR VARIABLE GLOBAL
     fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
     fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
-    fCtx.fillText('🐦',b.x,b.y+2);
+    fCtx.fillText(skinPajaroEquipada,b.x,b.y+2);
   }
   fCtx.restore();
   // Borde neón
