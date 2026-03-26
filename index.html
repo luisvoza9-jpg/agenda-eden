@@ -294,6 +294,11 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <button class="game-btn-neon" style="margin-top:8px" onclick="toggleListaAmigos()">Ver mis amigos 👥</button>
     <div id="lista-amigos-wrap"><div id="lista-amigos" style="margin-top:8px"></div></div>
     <hr style="border:0;border-top:1px solid rgba(0,255,255,.2);margin:15px 0">
+    <p style="font-size:12px;color:#00FFFF;margin-bottom:5px">🎒 Mi Inventario</p>
+    <div id="inventario-container" style="background:rgba(0,255,255,.05);border:1px solid rgba(0,255,255,.2);border-radius:10px;padding:10px;margin-bottom:10px;max-height:150px;overflow-y:auto">
+      <p style="color:#aaa;font-size:11px;text-align:center">Cargando inventario...</p>
+    </div>
+    <hr style="border:0;border-top:1px solid rgba(0,255,255,.2);margin:15px 0">
     <button class="game-btn-neon" onclick="mostrarPremiosDiarios()">🎁 Ver Premios Diarios</button>
     <hr style="border:0;border-top:1px solid rgba(0,255,255,.2);margin:15px 0">
     <p style="font-size:12px;color:#00FFFF;margin-bottom:5px">Editar Datos</p>
@@ -645,6 +650,7 @@ function mostrarVista(id){
         db.ref('ranking/eden/'+currentUser).once('value',r=>{
           document.getElementById('perfil-puntos').innerText="Récord Edén: "+(r.val()||0)+" pts";
         });
+        cargarInventario();
         actualizarUIPerfil();
       });
     }else document.getElementById('pantalla-oscura').classList.remove('hidden');
@@ -949,7 +955,69 @@ function modificarTareaInline(i){
 }
 
 function cargarInventario(){
-  // Función eliminada - el inventario ahora se maneja dinámicamente en la tienda in-game
+  const container=document.getElementById('inventario-container');
+  if(!container)return;
+  
+  // Obtener tanto el inventario como las vidas disponibles directamente
+  Promise.all([
+    db.ref('usuarios/'+currentUser+'/inventario').once('value'),
+    db.ref('usuarios/'+currentUser+'/vidas_disponibles').once('value')
+  ]).then(([snapInv, snapVidas])=>{
+    let html='';
+    const inventario=snapInv.val()||{};
+    const vidasDisponibles=snapVidas.val()||0;
+    
+    // Mostrar vidas extra
+    if(vidasDisponibles>0){
+      html+='<div style="color:#FFD700;font-size:12px;margin-bottom:5px">❤️ Vidas extra: '+vidasDisponibles+'</div>';
+    }
+    
+    // Mostrar paletas
+    if(inventario.paletas){
+      const paletas=Object.keys(inventario.paletas);
+      if(paletas.length>0){
+        html+='<div style="color:#00FFFF;font-size:12px;margin-bottom:5px">🏓 Paletas: ';
+        paletas.forEach(color=>{html+='<span style="color:'+color+'">▬</span> ';});
+        html+='</div>';
+      }
+    }
+    
+    // Mostrar pájaros
+    if(inventario.pajaros){
+      const pajaros=Object.keys(inventario.pajaros);
+      if(pajaros.length>0){
+        html+='<div style="color:#00FF00;font-size:12px;margin-bottom:5px">🐦 Pájaros: ';
+        pajaros.forEach(color=>{html+='<span style="color:'+color+'">🐦</span> ';});
+        html+='</div>';
+      }
+    }
+    
+    // Mostrar pelotas
+    if(inventario.pelotas){
+      const pelotas=Object.keys(inventario.pelotas);
+      if(pelotas.length>0){
+        html+='<div style="color:#FF69B4;font-size:12px;margin-bottom:5px">⚪ Pelotas: ';
+        pelotas.forEach(color=>{html+='<span style="color:'+color+'">●</span> ';});
+        html+='</div>';
+      }
+    }
+    
+    // Mostrar avatares ganados
+    if(inventario.avatars){
+      const avatars=Object.keys(inventario.avatars);
+      if(avatars.length>0){
+        html+='<div style="color:#FFD700;font-size:12px;margin-bottom:5px">🎭 Avatares ganados: ';
+        avatars.forEach(avatar=>{html+=avatar+' ';});
+        html+='</div>';
+      }
+    }
+    
+    if(html===''){
+      html='<p style="color:#aaa;font-size:11px;text-align:center">No tienes objetos en tu inventario</p>';
+    }
+    
+    container.innerHTML=html;
+  });
 }
 
 /* ═══════════════════ TIENDA ═══════════════════ */
@@ -984,8 +1052,9 @@ function comprar(tipo,valor){
       }
       
       alert('¡Gracias por tu compra! Objeto guardado en tu inventario.');
-      // Actualizar tienda in-game para mostrar botón de equipar
-      actualizarTiendaIngame();
+      
+      // Auto-equipar el ítem recién comprado
+      equiparItem(tipo, valor);
     });
   }else{reproducir('fail');alert("No tienes suficiente €Eden€");}
 }
@@ -997,183 +1066,43 @@ function verificarPrimerHabitanteAno(){
   const anoActual = new Date().getFullYear();
   const controlRef = db.ref('sistema/control_anual/ultimo_ano_premiado');
   
-  // PRIMERO leer el valor actual
-  return controlRef.once('value').then(snapshot => {
-    const ultimoAnoPremiado = snapshot.val() || 2025;
+  return controlRef.transaction(function(ultimoAnoPremiado) {
+    // Si no existe el valor, inicializarlo en 2025
+    if(ultimoAnoPremiado === null){
+      return 2025;
+    }
     
-    // SOLO si el año actual es mayor al último premiado
+    // Si el año actual es mayor que el último premiado, otorgar premio
     if(anoActual > ultimoAnoPremiado){
-      // Usar transacción para actualizar y dar premio atómicamente
-      return controlRef.transaction(function(valorActual) {
-        // Si no ha cambiado desde que lo leímos, podemos actualizar
-        if(valorActual === ultimoAnoPremiado){
-          return anoActual;
-        }
-        // Si otro usuario ya lo actualizó, no cambiar
-        return valorActual;
-      }).then(function(result) {
-        const nuevoValor = result.snapshot.val();
-        
-        // Si la transacción tuvo éxito (el valor cambió a nuestro año)
-        if(nuevoValor === anoActual){
-          // Dar premio
-          return db.ref('usuarios/'+currentUser+'/saldo').transaction(function(saldoActual) {
-            return (saldoActual || 0) + 100000;
-          }).then(function() {
-            // Mostrar alerta de premio
-            setTimeout(() => {
-              alert('🎉 ¡ENHORABUENA! Eres el primer habitante de Eden en el año ' + anoActual + '.\n\nHas recibido un regalo de 100,000 €Eden€.\n\n¡Disfruta de tu premio! 🎊');
-              reproducir('coin');
-            }, 1000);
-            return true;
-          });
-        }
-        
-        return false; // Otro usuario ya ganó
+      // Retornar el año actual para actualizarlo
+      return anoActual;
+    }
+    
+    // Si no hay premio, retornar el mismo valor
+    return ultimoAnoPremiado;
+  }).then(function(result) {
+    const nuevoValor = result.snapshot.val();
+    const valorAnterior = result.committed ? (anoActual - 1) : nuevoValor;
+    
+    // Si el valor cambió, significa que este usuario recibió el premio
+    if(nuevoValor > valorAnterior && nuevoValor === anoActual){
+      // Otorgar premio de 100,000 €Eden€
+      return db.ref('usuarios/'+currentUser+'/saldo').transaction(function(saldoActual) {
+        return (saldoActual || 0) + 100000;
+      }).then(function() {
+        // Mostrar alerta de premio
+        setTimeout(() => {
+          alert('🎉 ¡ENHORABUENA! Eres el primer habitante de Eden en el año ' + anoActual + '.\n\nHas recibido un regalo de 100,000 €Eden€.\n\n¡Disfruta de tu premio! 🎊');
+          reproducir('coin');
+        }, 1000);
+        return true;
       });
     }
     
-    return false; // No hay premio este año
+    return false;
   }).catch(function(error) {
     console.error('Error en verificación de primer habitante:', error);
     return false;
-  });
-}
-
-/* ═══════════════════ SISTEMA DE EQUIPAMIENTO ═══════════════════ */
-let inventarioUsuario = {}; // Cache del inventario
-
-function cargarInventarioTienda(){
-  if(!currentUser)return Promise.resolve({});
-  
-  return db.ref('usuarios/'+currentUser+'/inventario').once('value').then(snap => {
-    inventarioUsuario = snap.val() || {};
-    return inventarioUsuario;
-  });
-}
-
-function tieneItem(tipo, valor){
-  const tipoInventario = tipo === 'paleta' ? 'paletas' : 
-                         tipo === 'pajaro' ? 'pajaros' : 
-                         tipo === 'bola' ? 'pelotas' : tipo;
-  return inventarioUsuario[tipoInventario] && inventarioUsuario[tipoInventario][valor];
-}
-
-function equiparItem(tipo, valor){
-  if(!tieneItem(tipo, valor)){
-    alert('No tienes este ítem en tu inventario.');
-    return;
-  }
-  
-  // Guardar el ítem equipado en el perfil del usuario
-  const equipamientoKey = tipo === 'paleta' ? 'paletaEquipada' : 
-                         tipo === 'pajaro' ? 'pajaroEquipado' : 
-                         tipo === 'bola' ? 'bolaEquipada' : '';
-  
-  if(equipamientoKey){
-    db.ref('usuarios/'+currentUser).update({
-      [equipamientoKey]: valor
-    }).then(() => {
-      alert('✅ ' + tipo + ' ' + valor + ' equipado correctamente.');
-      reproducir('coin');
-      // Actualizar tienda para reflejar el cambio
-      actualizarTiendaIngame();
-    });
-  }
-}
-
-function actualizarTiendaIngame(){
-  cargarInventarioTienda().then(() => {
-    // Actualizar tienda de ladrillos
-    actualizarBotonesTienda('ladrillos');
-    // Actualizar tienda de flappy
-    actualizarBotonesTienda('flappy');
-  });
-}
-
-function actualizarBotonesTienda(juego){
-  const shopId = 'shop-ingame-' + (juego === 'ladrillos' ? 'l' : 'f');
-  const shopElement = document.getElementById(shopId);
-  if(!shopElement)return;
-  
-  // Forzar recarga del inventario antes de actualizar
-  cargarInventarioTienda().then(() => {
-    
-    // Actualizar botones de pájaros (solo en Flappy)
-    if(juego === 'flappy'){
-      const coloresPajaros = ['red', 'pink', 'yellow', 'blue', 'green', 'purple'];
-      const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'', blue:'🦅', green:'🦚', purple:'🦢'};
-      
-      coloresPajaros.forEach(color => {
-        // Buscar botones por el div que contiene el emoji del pájaro
-        const botones = shopElement.querySelectorAll('.shop-item');
-        botones.forEach(boton => {
-          const emoji = boton.querySelector('span:first-child');
-          if(emoji && emojisPajaros[color] && emoji.textContent.includes(emojisPajaros[color].charAt(0))){
-            if(tieneItem('pajaro', color)){
-              boton.innerHTML = `<span style="color:${color}">${emojisPajaros[color]}</span><span class="shop-price">Equipar</span>`;
-              boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
-            }else{
-              const precio = color === 'red' ? 500 : (color === 'pink' ? 750 : (color === 'yellow' ? 1000 : (color === 'blue' ? 600 : (color === 'green' ? 800 : 1200))));
-              boton.innerHTML = `<span style="color:${color}">${emojisPajaros[color]}</span><span class="shop-price">${precio} pts</span>`;
-              boton.setAttribute('onclick', `comprar('pajaro','${color}')`);
-            }
-          }
-        });
-      });
-    }
-    
-    // Actualizar botones de paletas (solo en Ladrillos)
-    if(juego === 'ladrillos'){
-      const coloresPaletas = ['red', 'pink', 'yellow'];
-      
-      coloresPaletas.forEach(color => {
-        const botones = shopElement.querySelectorAll('.shop-item');
-        botones.forEach(boton => {
-          const emoji = boton.querySelector('span:first-child');
-          if(emoji && emoji.textContent === '▬'){
-            const estilo = boton.querySelector('span:first-child').style.color;
-            if(estilo === color || (color === 'red' && estilo.includes('255,0,0')) || 
-               (color === 'pink' && estilo.includes('255,192,203')) || 
-               (color === 'yellow' && estilo.includes('255,255,0'))){
-              if(tieneItem('paleta', color)){
-                boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">Equipar</span>`;
-                boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
-              }else{
-                const precio = color === 'red' ? 500 : (color === 'pink' ? 750 : 1000);
-                boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">${precio} pts</span>`;
-                boton.setAttribute('onclick', `comprar('paleta','${color}')`);
-              }
-            }
-          }
-        });
-      });
-    }
-    
-    // Actualizar botones de pelotas (ambos juegos)
-    const coloresPelotas = ['blue', 'pink', 'yellow'];
-    
-    coloresPelotas.forEach(color => {
-      const botones = shopElement.querySelectorAll('.shop-item');
-      botones.forEach(boton => {
-        const emoji = boton.querySelector('span:first-child');
-        if(emoji && emoji.textContent === '●'){
-          const estilo = boton.querySelector('span:first-child').style.color;
-          if(estilo === color || (color === 'blue' && estilo.includes('0,0,255')) || 
-             (color === 'pink' && estilo.includes('255,192,203')) || 
-             (color === 'yellow' && estilo.includes('255,255,0'))){
-            if(tieneItem('bola', color)){
-              boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">Equipar</span>`;
-              boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
-            }else{
-              const precio = color === 'blue' ? 400 : (color === 'pink' ? 600 : 900);
-              boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">${precio} pts</span>`;
-              boton.setAttribute('onclick', `comprar('bola','${color}')`);
-            }
-          }
-        }
-      });
-    });
   });
 }
 
@@ -1229,8 +1158,8 @@ function toggleShopIngame(juego){
     m.classList.remove('hidden');
     const el=document.getElementById('saldo-ingame-'+(juego==='ladrillos'?'l':'f'));
     if(el)el.innerText='Saldo: '+userBalance+' €Eden€';
-    // Cargar inventario y actualizar botones
-    actualizarTiendaIngame();
+    // Actualizar botones con estado de equipamiento
+    actualizarBotonesTiendaConEstado(juego);
   }else m.classList.add('hidden');
 }
 function cerrarShopIngame(juego){document.getElementById('shop-ingame-'+juego).classList.add('hidden');}
@@ -1383,6 +1312,186 @@ const canvas=document.getElementById("gameCanvas"),ctx=canvas.getContext("2d");
 const menuGameOver=document.getElementById("game-over-menu"),menuDifficulty=document.getElementById("difficulty-menu");
 let balls=[],bricks=[],paddleWidth=90,paddleX,score=0,gameActive=false,gameInterval,isFireBall=false,currentDifficulty='terrestre';
 
+// Variables de estado para equipamiento cosmético
+let colorPalaEquipada = '#00FFFF'; // Default: cian
+let colorBolaEquipada = '#FF0000'; // Default: rojo
+
+// Carga de equipamiento desde Firebase
+function cargarEquipamientoDesdeDB(){
+  if(!currentUser || currentUser === 'admin') return Promise.resolve();
+  
+  return db.ref('usuarios/'+currentUser).once('value').then(snap => {
+    const datos = snap.val() || {};
+    
+    // Cargar paleta equipada
+    if(datos.paletaEquipada){
+      const coloresPaleta = {red: '#FF0000', pink: '#FFC0CB', yellow: '#FFFF00'};
+      colorPalaEquipada = coloresPaleta[datos.paletaEquipada] || '#00FFFF';
+    }
+    
+    // Cargar bola equipada
+    if(datos.bolaEquipada){
+      const coloresBola = {blue: '#0000FF', pink: '#FFC0CB', yellow: '#FFFF00'};
+      colorBolaEquipada = coloresBola[datos.bolaEquipada] || '#FF0000';
+    }
+    
+    console.log('Equipamiento cargado - Pala:', colorPalaEquipada, 'Bola:', colorBolaEquipada);
+  }).catch(error => {
+    console.error('Error cargando equipamiento:', error);
+  });
+}
+
+// Función para equipar ítems
+function equiparItem(tipo, valor){
+  if(!currentUser || currentUser === 'admin') return;
+  
+  // Verificar que el usuario tiene el ítem
+  db.ref('usuarios/'+currentUser+'/inventario').once('value').then(snap => {
+    const inventario = snap.val() || {};
+    const tipoInventario = tipo === 'paleta' ? 'paletas' : 
+                          tipo === 'bola' ? 'pelotas' : 
+                          tipo === 'pajaro' ? 'pajaros' : tipo;
+    
+    if(!inventario[tipoInventario] || !inventario[tipoInventario][valor]){
+      alert('No tienes este ítem en tu inventario.');
+      return;
+    }
+    
+    // Guardar equipamiento en Firebase
+    const equipamientoKey = tipo === 'paleta' ? 'paletaEquipada' : 
+                           tipo === 'bola' ? 'bolaEquipada' : 
+                           tipo === 'pajaro' ? 'pajaroEquipado' : '';
+    
+    if(equipamientoKey){
+      return db.ref('usuarios/'+currentUser).update({
+        [equipamientoKey]: valor
+      }).then(() => {
+        alert('✅ ' + tipo + ' ' + valor + ' equipado correctamente.');
+        reproducir('coin');
+        
+        // Actualizar variables globales
+        if(tipo === 'paleta'){
+          const coloresPaleta = {red: '#FF0000', pink: '#FFC0CB', yellow: '#FFFF00'};
+          colorPalaEquipada = coloresPaleta[valor] || '#00FFFF';
+        } else if(tipo === 'bola'){
+          const coloresBola = {blue: '#0000FF', pink: '#FFC0CB', yellow: '#FFFF00'};
+          colorBolaEquipada = coloresBola[valor] || '#FF0000';
+        }
+        
+        // Actualizar UI de tienda si está abierta
+        actualizarUIEquipamiento();
+      });
+    }
+  });
+}
+
+// Actualizar UI de tienda para mostrar estado EQUIPADO
+function actualizarUIEquipamiento(){
+  // Actualizar tienda de ladrillos
+  const shopLadrillos = document.getElementById('shop-ingame-l');
+  if(shopLadrillos && !shopLadrillos.classList.contains('hidden')){
+    actualizarBotonesTiendaConEstado('ladrillos');
+  }
+  
+  // Actualizar tienda de flappy
+  const shopFlappy = document.getElementById('shop-ingame-f');
+  if(shopFlappy && !shopFlappy.classList.contains('hidden')){
+    actualizarBotonesTiendaConEstado('flappy');
+  }
+}
+
+// Actualizar botones de tienda con estado EQUIPADO
+function actualizarBotonesTiendaConEstado(juego){
+  const shopId = 'shop-ingame-' + (juego === 'ladrillos' ? 'l' : 'f');
+  const shopElement = document.getElementById(shopId);
+  if(!shopElement) return;
+  
+  // Obtener inventario actual
+  db.ref('usuarios/'+currentUser+'/inventario').once('value').then(snap => {
+    const inventario = snap.val() || {};
+    
+    // Actualizar botones de paletas (solo en Ladrillos)
+    if(juego === 'ladrillos'){
+      const coloresPaletas = ['red', 'pink', 'yellow'];
+      coloresPaletas.forEach(color => {
+        const botones = shopElement.querySelectorAll('.shop-item');
+        botones.forEach(boton => {
+          const emoji = boton.querySelector('span:first-child');
+          if(emoji && emoji.textContent === '▬'){
+            const estilo = boton.querySelector('span:first-child').style.color;
+            if(estilo === color || (color === 'red' && estilo.includes('255,0,0')) || 
+               (color === 'pink' && estilo.includes('255,192,203')) || 
+               (color === 'yellow' && estilo.includes('255,255,0'))){
+              
+              const tiene = inventario.paletas && inventario.paletas[color];
+              const equipado = (color === 'red' && colorPalaEquipada === '#FF0000') ||
+                              (color === 'pink' && colorPalaEquipada === '#FFC0CB') ||
+                              (color === 'yellow' && colorPalaEquipada === '#FFFF00');
+              
+              if(tiene && equipado){
+                boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">✅ EQUIPADO</span>`;
+                boton.style.border = '2px solid #00FF00';
+                boton.style.boxShadow = '0 0 10px #00FF00';
+                boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
+              } else if(tiene){
+                boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">Equipar</span>`;
+                boton.style.border = '';
+                boton.style.boxShadow = '';
+                boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
+              } else{
+                const precio = color === 'red' ? 500 : (color === 'pink' ? 750 : 1000);
+                boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">${precio} pts</span>`;
+                boton.style.border = '';
+                boton.style.boxShadow = '';
+                boton.setAttribute('onclick', `comprar('paleta','${color}')`);
+              }
+            }
+          }
+        });
+      });
+    }
+    
+    // Actualizar botones de pelotas (ambos juegos)
+    const coloresPelotas = ['blue', 'pink', 'yellow'];
+    coloresPelotas.forEach(color => {
+      const botones = shopElement.querySelectorAll('.shop-item');
+      botones.forEach(boton => {
+        const emoji = boton.querySelector('span:first-child');
+        if(emoji && emoji.textContent === '●'){
+          const estilo = boton.querySelector('span:first-child').style.color;
+          if(estilo === color || (color === 'blue' && estilo.includes('0,0,255')) || 
+             (color === 'pink' && estilo.includes('255,192,203')) || 
+             (color === 'yellow' && estilo.includes('255,255,0'))){
+            
+            const tiene = inventario.pelotas && inventario.pelotas[color];
+            const equipado = (color === 'blue' && colorBolaEquipada === '#0000FF') ||
+                            (color === 'pink' && colorBolaEquipada === '#FFC0CB') ||
+                            (color === 'yellow' && colorBolaEquipada === '#FFFF00');
+            
+            if(tiene && equipado){
+              boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">✅ EQUIPADO</span>`;
+              boton.style.border = '2px solid #00FF00';
+              boton.style.boxShadow = '0 0 10px #00FF00';
+              boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
+            } else if(tiene){
+              boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">Equipar</span>`;
+              boton.style.border = '';
+              boton.style.boxShadow = '';
+              boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
+            } else{
+              const precio = color === 'blue' ? 400 : (color === 'pink' ? 600 : 900);
+              boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">${precio} pts</span>`;
+              boton.style.border = '';
+              boton.style.boxShadow = '';
+              boton.setAttribute('onclick', `comprar('bola','${color}')`);
+            }
+          }
+        }
+      });
+    });
+  });
+}
+
 function abrirMenuDificultad(){
   reproducir('click');
   document.querySelectorAll('.container,.vista-juego-base').forEach(c=>c.classList.add('hidden'));
@@ -1396,9 +1505,19 @@ function abrirMenuDificultad(){
 function iniciarJuegoEden(diff){
   reproducir('click');cancelAnimationFrame(gameInterval);
   ['rank-ingame-ladrillos','shop-ingame-ladrillos'].forEach(id=>document.getElementById(id).classList.add('hidden'));
-  resetVariablesJuego(diff);gameActive=true;
-  function gameLoop(){if(gameActive){draw();gameInterval=requestAnimationFrame(gameLoop);}}
-  gameLoop();
+  
+  // Cargar equipamiento antes de iniciar el juego
+  cargarEquipamientoDesdeDB().then(() => {
+    resetVariablesJuego(diff);
+    gameActive = true;
+    function gameLoop(){
+      if(gameActive){
+        draw();
+        gameInterval = requestAnimationFrame(gameLoop);
+      }
+    }
+    gameLoop();
+  });
 }
 function salirDelJuego(){reproducir('click');gameActive=false;cancelAnimationFrame(gameInterval);mostrarVista('vista-agenda');}
 function resetVariablesJuego(diff){
@@ -1452,7 +1571,7 @@ function draw(){
   // Pelotas
   balls.forEach((b,index)=>{
     ctx.beginPath();ctx.arc(b.x,b.y,b.radius,0,Math.PI*2);
-    ctx.fillStyle=isFireBall?"#FFA500":"#FF0000";ctx.fill();ctx.closePath();
+    ctx.fillStyle=isFireBall?"#FFA500":colorBolaEquipada;ctx.fill();ctx.closePath();
     bricks.forEach(col=>col.forEach(brick=>{
       if(brick.status>0&&b.x>brick.x&&b.x<brick.x+brick.w&&b.y>brick.y&&b.y<brick.y+brick.h){
         b.dy=-b.dy;
@@ -1467,7 +1586,7 @@ function draw(){
     }
     b.x+=b.dx;b.y+=b.dy;
   });
-  ctx.fillStyle="#00FFFF";ctx.fillRect(paddleX,canvas.height-70,paddleWidth,12);
+  ctx.fillStyle=colorPalaEquipada;ctx.fillRect(paddleX,canvas.height-70,paddleWidth,12);
   if(balls.length===0){reproducir('fail');gameActive=false;endPartida();}
 }
 function endPartida(){
@@ -1640,39 +1759,14 @@ function _drawFlappyBird(){
   // Clip circular
   fCtx.save();
   fCtx.beginPath();fCtx.arc(b.x,b.y,b.r,0,Math.PI*2);fCtx.clip();
-  
-  // Verificar si hay pájaro equipado
-  if(currentUser && currentUser !== 'admin'){
-    db.ref('usuarios/'+currentUser+'/pajaroEquipado').once('value').then(snap => {
-      const pajaroEquipado = snap.val();
-      
-      if(pajaroEquipado && tieneItem('pajaro', pajaroEquipado)){
-        // Usar pájaro equipado
-        const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'', blue:'🦅', green:'🦚', purple:'🦢'};
-        const emoji = emojisPajaros[pajaroEquipado] || '🐦';
-        
-        fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
-        fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
-        fCtx.fillText(emoji,b.x,b.y+2);
-      }else{
-        // Usar pájaro por defecto
-        fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
-        fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
-        fCtx.fillText('🐦',b.x,b.y+2);
-      }
-    }).catch(() => {
-      // Error al cargar, usar pájaro por defecto
-      fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
-      fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
-      fCtx.fillText('🐦',b.x,b.y+2);
-    });
+  if(flappyAvatarImg&&flappyAvatarImg.complete&&flappyAvatarImg.naturalWidth>0){
+    fCtx.drawImage(flappyAvatarImg,b.x-b.r,b.y-b.r,b.r*2,b.r*2);
   }else{
-    // Usuario no logueado o admin, usar pájaro por defecto
+    // Fallback emoji/icono
     fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
     fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
     fCtx.fillText('🐦',b.x,b.y+2);
   }
-  
   fCtx.restore();
   // Borde neón
   fCtx.beginPath();fCtx.arc(b.x,b.y,b.r,0,Math.PI*2);
