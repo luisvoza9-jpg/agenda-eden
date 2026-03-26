@@ -1052,7 +1052,7 @@ function tieneItem(tipo, valor){
 function comprar(tipo,valor){
   reproducir('click');
   
-  // VALIDACIÓN: Bloquear re-compra
+  // VALIDACIÓN: Bloquear re-compra (solo 1 vez)
   if(tipo !== 'vida' && tieneItem(tipo, valor)){
     alert('Ya tienes este objeto');
     return;
