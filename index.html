@@ -405,14 +405,20 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <span class="shop-label" style="margin-top:4px">PALETAS</span>
     <div class="shop-grid">
       <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('paleta','red')">Equipar ▬ Roja</button>
       <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('paleta','pink')">Equipar ▬ Rosa</button>
       <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('paleta','yellow')">Equipar ▬ Amarilla</button>
     </div>
     <span class="shop-label">PELOTAS</span>
     <div class="shop-grid">
       <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('bola','blue')">Equipar ● Azul</button>
       <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('bola','pink')">Equipar ● Rosa</button>
       <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('bola','yellow')">Equipar ● Amarilla</button>
     </div>
     <span class="shop-label">VIDAS EXTRAS</span>
     <div class="shop-grid">
@@ -464,11 +470,17 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <span class="shop-label" style="margin-top:4px">PAJAROS</span>
     <div class="shop-grid">
       <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('pajaro','red')">Equipar 🦜</button>
       <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🦩</span><span class="shop-price">750 pts</span></div>
-      <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">�</span><span class="shop-price">1000 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('pajaro','pink')">Equipar 🦩</button>
+      <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow"></span><span class="shop-price">1000 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('pajaro','yellow')">Equipar</button>
       <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🦅</span><span class="shop-price">600 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('pajaro','blue')">Equipar 🦅</button>
       <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🦚</span><span class="shop-price">800 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('pajaro','green')">Equipar 🦚</button>
       <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
+      <button class="equipar-btn" onclick="equiparItem('pajaro','purple')">Equipar 🦢</button>
     </div>
     <span class="shop-label">VIDAS EXTRAS</span>
     <div class="shop-grid">
@@ -1487,28 +1499,30 @@ function actualizarBotonesTiendaConEstado(juego){
         const botones = shopElement.querySelectorAll('.shop-item');
         botones.forEach(boton => {
           const emoji = boton.querySelector('span:first-child');
-          if(emoji && (emoji.textContent === '🦜' || emoji.textContent === '🦩' || emoji.textContent === '🦅' || emoji.textContent === '🦚' || emoji.textContent === '🦢')){
+          if(emoji && (emoji.textContent === '🦜' || emoji.textContent === '🦩' || emoji.textContent === '🦅' || emoji.textContent === '🦚' || emoji.textContent === '🦢' || emoji.textContent === '')){
             const estilo = boton.querySelector('span:first-child').style.color;
             if(estilo === color || (color === 'red' && estilo.includes('255,0,0')) || 
                (color === 'pink' && estilo.includes('255,192,203')) || 
                (color === 'blue' && estilo.includes('0,0,255')) ||
                (color === 'green' && estilo.includes('0,128,0')) ||
-               (color === 'purple' && estilo.includes('128,0,128'))){
+               (color === 'purple' && estilo.includes('128,0,128')) ||
+               (color === 'yellow' && estilo.includes('255,255,0'))){
               
               const tiene = inventario.pajaros && inventario.pajaros[color];
               const equipado = (color === 'red' && skinPajaroEquipada === '🦜') ||
                               (color === 'pink' && skinPajaroEquipada === '🦩') ||
                               (color === 'blue' && skinPajaroEquipada === '🦅') ||
                               (color === 'green' && skinPajaroEquipada === '🦚') ||
-                              (color === 'purple' && skinPajaroEquipada === '🦢');
+                              (color === 'purple' && skinPajaroEquipada === '🦢') ||
+                              (color === 'yellow' && skinPajaroEquipada === '');
               
               if(tiene && equipado){
-                boton.innerHTML = `<span style="color:${color}">${emoji.textContent}</span><span class="shop-price">✅ EQUIPADO</span>`;
+                boton.innerHTML = `<span style="color:${color}">${emoji.textContent || ''}</span><span class="shop-price">✅ EQUIPADO</span>`;
                 boton.style.border = '2px solid #00FF00';
                 boton.style.boxShadow = '0 0 10px #00FF00';
                 boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
               } else if(tiene){
-                boton.innerHTML = `<span style="color:${color}">${emoji.textContent}</span><span class="shop-price">Equipar</span>`;
+                boton.innerHTML = `<span style="color:${color}">${emoji.textContent || ''}</span><span class="shop-price">Equipar</span>`;
                 boton.style.border = '';
                 boton.style.boxShadow = '';
                 boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
