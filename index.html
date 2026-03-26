@@ -1076,12 +1076,6 @@ function equiparItem(tipo, valor){
     }).then(() => {
       alert('✅ ' + tipo + ' ' + valor + ' equipado correctamente.');
       reproducir('coin');
-      
-      // Si es un pájaro, actualizar el cache para el juego
-      if(tipo === 'pajaro'){
-        pajaroEquipadoActual = valor;
-      }
-      
       // Actualizar tienda para reflejar el cambio
       actualizarTiendaIngame();
     });
@@ -1531,28 +1525,11 @@ const fCvs=document.getElementById('flappyCanvas'),fCtx=fCvs.getContext('2d');
 const FW=fCvs.width,FH=fCvs.height;
 const F_GRAVITY=0.32,F_JUMP=-6.5,F_PIPE_W=52,F_GAP=165,F_PIPE_SPEED=2.4,F_PIPE_INTERVAL=110;
 // Colores neón para columnas (aleatorio por pareja)
-const NEON_COLORS=['#00ffff','#ff00ff','#ffff00','#00ff00','#ff0088','#8800ff'];
-let fBird={x:70,y:FH/2,vy:0,r:20},fPipes=[],fScore=0,fFrame=0,fActive=false,fLoopId,fBgImg=new Image();
-let pajaroEquipadoActual=''; // Cache del pájaro equipado
+const NEON_COLORS=['#00FFFF','#00FF00','#FF00FF','#FFD700','#FF4500','#7B2FFF'];
 
-// Cargar pájaro equipado al inicio
-function cargarPajaroEquipado(){
-  if(currentUser && currentUser !== 'admin'){
-    db.ref('usuarios/'+currentUser+'/pajaroEquipado').once('value').then(snap => {
-      const pajaro = snap.val();
-      if(pajaro && tieneItem('pajaro', pajaro)){
-        pajaroEquipadoActual = pajaro;
-      }else{
-        pajaroEquipadoActual = '';
-      }
-    }).catch(() => {
-      pajaroEquipadoActual = '';
-    });
-  }else{
-    pajaroEquipadoActual = '';
-  }
-}
-fBgImg.src='fondo1.jpg';
+let fBird={x:70,y:FH/2,vy:0,r:20};
+let fPipes=[],fScore=0,fFrame=0,fActive=false,fRaf=null,fStarted=false;
+let fBgImg=new Image();fBgImg.src='fondo1.jpg';
 
 function abrirFlappy(){
   reproducir('click');
@@ -1575,8 +1552,6 @@ function iniciarFlappy(){
   ['rank-ingame-flappy','shop-ingame-flappy'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   fBird={x:70,y:FH/2,vy:0,r:20};fPipes=[];fScore=0;fFrame=0;fActive=true;fStarted=true;
   document.getElementById('flappy-score').innerText='€Eden€: 0';
-  // Cargar pájaro equipado antes de empezar
-  cargarPajaroEquipado();
   cancelAnimationFrame(fRaf);fLoop();
 }
 function flappyJump(){
@@ -1631,56 +1606,11 @@ function fDraw(){
   fPipes.forEach(p=>{_drawPipeNeon(p.x,0,p.topH,p.col);_drawPipeNeon(p.x,p.bottomY,FH-p.bottomY,p.col);});
   // Pájaro (avatar circular neón)
   _drawFlappyBird();
-  // HUD: Foto de perfil en esquina
-  _drawHUDPerfil();
 }
 function fDrawStatic(){
   if(fBgImg.complete&&fBgImg.naturalWidth>0)fCtx.drawImage(fBgImg,0,0,FW,FH);
   else{fCtx.fillStyle='#001a10';fCtx.fillRect(0,0,FW,FH);}
   _drawFlappyBird();
-  // HUD: Foto de perfil en esquina (también en pantalla estática)
-  _drawHUDPerfil();
-}
-
-function _drawHUDPerfil(){
-  // Mostrar foto de perfil en esquina superior derecha (HUD)
-  const hudSize = 40;
-  const hudX = FW - hudSize - 10;
-  const hudY = 10;
-  
-  if(currentUser && currentUser !== 'admin' && flappyAvatarImg && flappyAvatarImg.complete && flappyAvatarImg.naturalWidth > 0){
-    // Dibujar foto de perfil con borde neón
-    fCtx.save();
-    fCtx.shadowColor='#00FFFF';fCtx.shadowBlur=8;
-    fCtx.strokeStyle='#00FFFF';fCtx.lineWidth=2;
-    fCtx.beginPath();fCtx.arc(hudX + hudSize/2, hudY + hudSize/2, hudSize/2, 0, Math.PI*2);
-    fCtx.stroke();
-    fCtx.restore();
-    
-    // Clip circular y dibujar foto
-    fCtx.save();
-    fCtx.beginPath();fCtx.arc(hudX + hudSize/2, hudY + hudSize/2, hudSize/2 - 2, 0, Math.PI*2);
-    fCtx.clip();
-    fCtx.drawImage(flappyAvatarImg, hudX, hudY, hudSize, hudSize);
-    fCtx.restore();
-  }else{
-    // Mostrar avatar por defecto si no hay foto
-    fCtx.save();
-    fCtx.shadowColor='#00FFFF';fCtx.shadowBlur=8;
-    fCtx.strokeStyle='#00FFFF';fCtx.lineWidth=2;
-    fCtx.beginPath();fCtx.arc(hudX + hudSize/2, hudY + hudSize/2, hudSize/2, 0, Math.PI*2);
-    fCtx.stroke();
-    fCtx.restore();
-    
-    fCtx.fillStyle='#001828';
-    fCtx.beginPath();fCtx.arc(hudX + hudSize/2, hudY + hudSize/2, hudSize/2 - 2, 0, Math.PI*2);
-    fCtx.fill();
-    
-    fCtx.fillStyle='#00FFFF';
-    fCtx.font='20px serif';
-    fCtx.textAlign='center';fCtx.textBaseline='middle';
-    fCtx.fillText('👤', hudX + hudSize/2, hudY + hudSize/2);
-  }
 }
 
 function _drawPipeNeon(x,y,h,col){
@@ -1711,17 +1641,33 @@ function _drawFlappyBird(){
   fCtx.save();
   fCtx.beginPath();fCtx.arc(b.x,b.y,b.r,0,Math.PI*2);fCtx.clip();
   
-  // Usar pájaro equipado cacheado (evita consultas asíncronas en draw)
-  if(pajaroEquipadoActual && tieneItem('pajaro', pajaroEquipadoActual)){
-    // Usar pájaro equipado
-    const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'', blue:'🦅', green:'🦚', purple:'🦢'};
-    const emoji = emojisPajaros[pajaroEquipadoActual] || '🐦';
-    
-    fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
-    fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
-    fCtx.fillText(emoji,b.x,b.y+2);
+  // Verificar si hay pájaro equipado
+  if(currentUser && currentUser !== 'admin'){
+    db.ref('usuarios/'+currentUser+'/pajaroEquipado').once('value').then(snap => {
+      const pajaroEquipado = snap.val();
+      
+      if(pajaroEquipado && tieneItem('pajaro', pajaroEquipado)){
+        // Usar pájaro equipado
+        const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'', blue:'🦅', green:'🦚', purple:'🦢'};
+        const emoji = emojisPajaros[pajaroEquipado] || '🐦';
+        
+        fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
+        fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
+        fCtx.fillText(emoji,b.x,b.y+2);
+      }else{
+        // Usar pájaro por defecto
+        fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
+        fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
+        fCtx.fillText('🐦',b.x,b.y+2);
+      }
+    }).catch(() => {
+      // Error al cargar, usar pájaro por defecto
+      fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
+      fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
+      fCtx.fillText('🐦',b.x,b.y+2);
+    });
   }else{
-    // Usar pájaro por defecto
+    // Usuario no logueado o admin, usar pájaro por defecto
     fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
     fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
     fCtx.fillText('🐦',b.x,b.y+2);
@@ -1832,6 +1778,7 @@ if(!cargarSesionLocal()){
 </script>
 </body>
 </html>
+
 
 
 
