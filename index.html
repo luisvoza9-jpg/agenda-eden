@@ -610,11 +610,8 @@ function entrarConGoogle(){
       if(user.photoURL){flappyAvatarData=user.photoURL;cargarFlappyAvatar(user.photoURL);}
       currentUser=userKey;
       guardarSesionLocal(userKey,user.uid);
-      // Verificar premio primer habitante del año antes de entrar
-      verificarPrimerHabitanteAno().then(() => {
-        // Entrar directamente al juego sin mostrar login
-        configurarCarteraYEntrar(s.exists()?(s.val().saldo||0):0);
-      });
+      // Entrar directamente al juego sin mostrar login
+      configurarCarteraYEntrar(s.exists()?(s.val().saldo||0):0);
     });
   }).catch(e=>alert("Error Google: "+e.message));
 }
@@ -851,10 +848,7 @@ function cargarSesionLocal(){
         const d=s.val();
         if(d.foto&&(d.foto.startsWith('http')||d.foto.includes('data:image'))){flappyAvatarData=d.foto;cargarFlappyAvatar(d.foto);}
         else if(d.avatar&&(d.avatar.startsWith('http')||d.avatar.includes('data:image'))){flappyAvatarData=d.avatar;cargarFlappyAvatar(d.avatar);}
-        // Verificar premio primer habitante del año antes de entrar
-        verificarPrimerHabitanteAno().then(() => {
-          configurarCarteraYEntrar(d.saldo||0);
-        });
+        configurarCarteraYEntrar(d.saldo||0);
       }else{
         limpiarSesionLocal();
         mostrarVista('vista-login');
@@ -880,10 +874,7 @@ function validarAcceso(){
       const d=s.val();
       if(d.foto&&(d.foto.startsWith('http')||d.foto.includes('data:image'))){flappyAvatarData=d.foto;cargarFlappyAvatar(d.foto);}
       else if(d.avatar&&(d.avatar.startsWith('http')||d.avatar.includes('data:image'))){flappyAvatarData=d.avatar;cargarFlappyAvatar(d.avatar);}
-      // Verificar premio primer habitante del año antes de entrar
-      verificarPrimerHabitanteAno().then(() => {
-        configurarCarteraYEntrar(d.saldo||0);
-      });
+      configurarCarteraYEntrar(d.saldo||0);
     }else alert("Error de acceso");
   });
 }
@@ -1021,41 +1012,8 @@ function cargarInventario(){
 }
 
 /* ═══════════════════ TIENDA ═══════════════════ */
-
-// Función auxiliar para verificar si el usuario tiene un ítem
-function tieneItem(tipo, valor){
-  if(!currentUser || currentUser === 'admin') return false;
-  
-  const tipoInventario = tipo === 'paleta' ? 'paletas' : 
-                         tipo === 'pajaro' ? 'pajaros' : 
-                         tipo === 'bola' ? 'pelotas' : tipo;
-  
-  // Verificar en el inventario cargado en la UI (más rápido)
-  const inventarioContainer = document.getElementById('inventario-container');
-  if(inventarioContainer){
-    const textoInventario = inventarioContainer.innerText;
-    if(tipo === 'paleta' && textoInventario.includes('Paletas:')){
-      return textoInventario.includes(valor);
-    } else if(tipo === 'pajaro' && textoInventario.includes('Pájaros:')){
-      return textoInventario.includes(valor);
-    } else if(tipo === 'bola' && textoInventario.includes('Pelotas:')){
-      return textoInventario.includes(valor);
-    }
-  }
-  
-  // Fallback: verificar directamente en Firebase
-  return db.ref('usuarios/'+currentUser+'/inventario/'+tipoInventario+'/'+valor).once('value').then(snap => snap.val() === true).catch(() => false);
-}
-
 function comprar(tipo,valor){
   reproducir('click');
-  
-  // VALIDACIÓN: Bloquear re-compra
-  if(tipo !== 'vida' && tieneItem(tipo, valor)){
-    alert('Ya tienes este objeto');
-    return;
-  }
-  
   let precio=0;
   if(tipo==='paleta')precio=(valor==='red'?500:(valor==='pink'?750:1000));
   else if(tipo==='pajaro')precio=(valor==='red'?500:(valor==='pink'?750:(valor==='yellow'?1000:(valor==='blue'?600:(valor==='green'?800:1200)))));
@@ -1090,57 +1048,6 @@ function comprar(tipo,valor){
       equiparItem(tipo, valor);
     });
   }else{reproducir('fail');alert("No tienes suficiente €Eden€");}
-}
-
-/* ═══════════════════ PREMIO PRIMER HABITANTE DEL AÑO ═══════════════════ */
-function verificarPrimerHabitanteAno(){
-  if(!currentUser||currentUser==='admin')return Promise.resolve(false);
-  
-  const anoActual = new Date().getFullYear();
-  const controlRef = db.ref('sistema/control_anual/ultimo_ano_premiado');
-  
-  // PRIMERO: Transacción atómica sobre el año
-  return controlRef.transaction(function(ultimoAnoPremiado) {
-    // Si no existe, inicializar en 2025
-    if(ultimoAnoPremiado === null){
-      return 2025;
-    }
-    
-    // Si el año actual ya está en la DB, no hay premio
-    if(ultimoAnoPremiado === anoActual){
-      return ultimoAnoPremiado; // Retornar mismo valor, no cambiar
-    }
-    
-    // Si el año actual es mayor, actualizar y dar premio
-    if(anoActual > ultimoAnoPremiado){
-      return anoActual;
-    }
-    
-    return ultimoAnoPremiado;
-  }).then(function(result) {
-    const nuevoValor = result.snapshot.val();
-    const valorAnterior = result.committed ? (anoActual - 1) : nuevoValor;
-    
-    // SOLO si este usuario cambió el año, dar premio
-    if(nuevoValor > valorAnterior && nuevoValor === anoActual){
-      // Dar premio de 100,000 €Eden€
-      return db.ref('usuarios/'+currentUser+'/saldo').transaction(function(saldoActual) {
-        return (saldoActual || 0) + 100000;
-      }).then(function() {
-        setTimeout(() => {
-          alert('🎉 ¡ENHORABUENA! Eres el primer habitante de Eden en el año ' + anoActual + '.\n\nHas recibido un regalo de 100,000 €Eden€.\n\n¡Disfruta de tu premio! 🎊');
-          reproducir('coin');
-        }, 1000);
-        return true;
-      });
-    }
-    
-    // Si no cambió el año, no hay premio
-    return false;
-  }).catch(function(error) {
-    console.error('Error en verificación de primer habitante:', error);
-    return false;
-  });
 }
 
 /* ═══════════════════ SISTEMA DE VIDAS ═══════════════════ */
@@ -1471,7 +1378,7 @@ function actualizarBotonesTiendaConEstado(juego){
                 boton.style.boxShadow = '0 0 10px #00FF00';
                 boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
               } else if(tiene){
-                boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">ADQUIRIDO</span>`;
+                boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">Equipar</span>`;
                 boton.style.border = '';
                 boton.style.boxShadow = '';
                 boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
@@ -1511,7 +1418,7 @@ function actualizarBotonesTiendaConEstado(juego){
               boton.style.boxShadow = '0 0 10px #00FF00';
               boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
             } else if(tiene){
-              boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">ADQUIRIDO</span>`;
+              boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">Equipar</span>`;
               boton.style.border = '';
               boton.style.boxShadow = '';
               boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
@@ -1686,32 +1593,6 @@ const NEON_COLORS=['#00FFFF','#00FF00','#FF00FF','#FFD700','#FF4500','#7B2FFF'];
 let fBird={x:70,y:FH/2,vy:0,r:20};
 let fPipes=[],fScore=0,fFrame=0,fActive=false,fRaf=null,fStarted=false;
 let fBgImg=new Image();fBgImg.src='fondo1.jpg';
-let skinPajaroEquipada = '🐦'; // Variable global para skin del pájaro
-
-// Cargar skin del pájaro desde Firebase
-async function cargarSkinFlappy(){
-  if(!currentUser || currentUser === 'admin'){
-    skinPajaroEquipada = '🐦';
-    return;
-  }
-  
-  try {
-    const snap = await db.ref('usuarios/'+currentUser+'/pajaroEquipado').once('value');
-    const pajaroEquipado = snap.val();
-    
-    if(pajaroEquipado){
-      const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'', blue:'🦅', green:'🦚', purple:'🦢'};
-      skinPajaroEquipada = emojisPajaros[pajaroEquipado] || '🐦';
-    } else {
-      skinPajaroEquipada = '🐦';
-    }
-    
-    console.log('Skin Flappy cargada:', skinPajaroEquipada);
-  } catch(error) {
-    console.error('Error cargando skin Flappy:', error);
-    skinPajaroEquipada = '🐦';
-  }
-}
 
 function abrirFlappy(){
   reproducir('click');
@@ -1728,16 +1609,12 @@ function abrirFlappy(){
 function salirFlappy(){
   fActive=false;cancelAnimationFrame(fRaf);mostrarVista('vista-agenda');
 }
-async function iniciarFlappy(){
+function iniciarFlappy(){
   document.getElementById('flappy-start-menu').classList.add('hidden');
   document.getElementById('flappy-over-menu').classList.add('hidden');
   ['rank-ingame-flappy','shop-ingame-flappy'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   fBird={x:70,y:FH/2,vy:0,r:20};fPipes=[];fScore=0;fFrame=0;fActive=true;fStarted=true;
   document.getElementById('flappy-score').innerText='€Eden€: 0';
-  
-  // Cargar skin del pájaro antes de iniciar el juego
-  await cargarSkinFlappy();
-  
   cancelAnimationFrame(fRaf);fLoop();
 }
 function flappyJump(){
@@ -1829,10 +1706,10 @@ function _drawFlappyBird(){
   if(flappyAvatarImg&&flappyAvatarImg.complete&&flappyAvatarImg.naturalWidth>0){
     fCtx.drawImage(flappyAvatarImg,b.x-b.r,b.y-b.r,b.r*2,b.r*2);
   }else{
-    // Fallback emoji/icono - USAR VARIABLE GLOBAL
+    // Fallback emoji/icono
     fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
     fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
-    fCtx.fillText(skinPajaroEquipada,b.x,b.y+2);
+    fCtx.fillText('🐦',b.x,b.y+2);
   }
   fCtx.restore();
   // Borde neón
