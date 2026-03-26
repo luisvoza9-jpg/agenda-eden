@@ -70,7 +70,8 @@
         .btn-rank-flotante { position: fixed; bottom: 30px; left: 90px; background: none; color: #FFD700; font-size: 40px; border: none; cursor: pointer; z-index: 101; }
         
         #vista-juego { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('fondo-nubes.jpg'); background-size: cover; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
-        #gameCanvas { border: 3px solid #00FFFF; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 30px #00FFFF; cursor: none; }
+        /* AJUSTE PARA QUE NO SE SALGA DEL MÓVIL */
+        #gameCanvas { border: 3px solid #00FFFF; background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 30px #00FFFF; cursor: none; max-width: 95vw; height: auto; }
         .btn-game-return { position: fixed; top: 25px; left: 25px; color: #00FFFF; cursor: pointer; border: none; background: none; z-index: 1002; }
         .menu-eden { position: absolute; background: rgba(0,0,0,0.95); border: 2px solid #00FFFF; padding: 30px; border-radius: 20px; text-align: center; z-index: 1010; width: 340px; }
         .game-btn-neon { background: none; border: 1px solid #00FFFF; color: #00FFFF; padding: 10px 20px; margin: 10px auto; border-radius: 10px; cursor: pointer; width: 100%; }
@@ -580,13 +581,21 @@
         
         function iniciarJuegoEden(diff) { 
             reproducir('click'); 
-            clearInterval(gameInterval);
+            cancelAnimationFrame(gameInterval); // Detenemos cualquier loop anterior
             resetVariablesJuego(diff); 
             gameActive = true; 
-            gameInterval = setInterval(draw, 10); 
+            
+            // Loop optimizado para fluidez en móvil
+            function gameLoop() {
+                if(gameActive) {
+                    draw();
+                    gameInterval = requestAnimationFrame(gameLoop);
+                }
+            }
+            gameLoop();
         }
 
-        function salirDelJuego() { reproducir('click'); gameActive = false; clearInterval(gameInterval); mostrarVista('vista-agenda'); }
+        function salirDelJuego() { reproducir('click'); gameActive = false; cancelAnimationFrame(gameInterval); mostrarVista('vista-agenda'); }
 
         function resetVariablesJuego(diff) {
             currentDifficulty = diff; document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden'));
@@ -619,11 +628,13 @@
             if (relX > 0 && relX < canvas.width) paddleX = relX - paddleWidth / 2;
         });
 
+        // CONTROL TÁCTIL OPTIMIZADO PARA NO DAR LAG
         canvas.addEventListener("touchmove", (e) => {
             if (!gameActive) return;
             e.preventDefault();
             let rect = canvas.getBoundingClientRect();
-            let relX = e.touches[0].clientX - rect.left;
+            let scaleX = canvas.width / rect.width; 
+            let relX = (e.touches[0].clientX - rect.left) * scaleX;
             if (relX > 0 && relX < canvas.width) paddleX = relX - paddleWidth / 2;
         }, {passive: false});
 
