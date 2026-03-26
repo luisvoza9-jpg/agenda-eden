@@ -644,7 +644,7 @@
             canvas.style.cursor = "none"; paddleWidth = 90; paddleX = (canvas.width - paddleWidth) / 2;
             isFireBall = false; score = 0; document.getElementById("game-score").innerText = "€Eden€: 0";
             let rad = (diff === 'eden') ? 5 : 8;
-            balls = [{ x: canvas.width/2, y: canvas.height-100, dx: 3.1, dy: -3.1, radius: rad }];
+            balls = [{ x: canvas.width/2, y: canvas.height-100, dx: 4.5, dy: -4.5, radius: rad }];
             bricks = [];
             let rows = (diff === 'terrestre') ? 5 : (diff === 'semidios' ? 8 : 12);
             let cols = (diff === 'terrestre') ? 7 : (diff === 'semidios' ? 12 : 18);
