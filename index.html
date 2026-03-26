@@ -289,6 +289,11 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <button class="game-btn-neon" style="margin-top:8px" onclick="toggleListaAmigos()">Ver mis amigos 👥</button>
     <div id="lista-amigos-wrap"><div id="lista-amigos" style="margin-top:8px"></div></div>
     <hr style="border:0;border-top:1px solid rgba(0,255,255,.2);margin:15px 0">
+    <p style="font-size:12px;color:#00FFFF;margin-bottom:5px">🎒 Mi Inventario</p>
+    <div id="inventario-container" style="background:rgba(0,255,255,.05);border:1px solid rgba(0,255,255,.2);border-radius:10px;padding:10px;margin-bottom:10px;max-height:150px;overflow-y:auto">
+      <p style="color:#aaa;font-size:11px;text-align:center">Cargando inventario...</p>
+    </div>
+    <hr style="border:0;border-top:1px solid rgba(0,255,255,.2);margin:15px 0">
     <p style="font-size:12px;color:#00FFFF;margin-bottom:5px">Editar Datos</p>
     <input type="password" id="edit-pass" placeholder="Nueva contraseña">
     <input type="number"   id="edit-age"  placeholder="Cambiar edad">
@@ -302,11 +307,11 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
     <h2 style="color:#FFD700;margin-bottom:10px;text-align:center">EDÉN SHOP</h2>
     <span id="shop-balance">Saldo: 0 €Eden€</span>
-    <span class="shop-label">PALETAS (PALAS)</span>
+    <span class="shop-label">PAJAROS</span>
     <div class="shop-grid">
-      <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
-      <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
-      <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
+      <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🐦</span><span class="shop-price">500 pts</span></div>
+      <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🐦</span><span class="shop-price">750 pts</span></div>
+      <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">🐦</span><span class="shop-price">1000 pts</span></div>
     </div>
     <span class="shop-label">PELOTAS</span>
     <div class="shop-grid">
@@ -435,11 +440,11 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   <div id="shop-ingame-flappy" class="ingame-float-menu hidden">
     <h3 style="color:#FFD700;text-align:center;margin-bottom:6px">🛒 TIENDA</h3>
     <span id="saldo-ingame-f" style="color:#FFD700;font-size:12px;display:block;text-align:center;margin-bottom:6px">Saldo: 0 €Eden€</span>
-    <span class="shop-label" style="margin-top:4px">PALETAS</span>
+    <span class="shop-label" style="margin-top:4px">PAJAROS</span>
     <div class="shop-grid">
-      <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
-      <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
-      <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
+      <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🐦</span><span class="shop-price">500 pts</span></div>
+      <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🐦</span><span class="shop-price">750 pts</span></div>
+      <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">🐦</span><span class="shop-price">1000 pts</span></div>
     </div>
     <span class="shop-label">VIDAS EXTRAS</span>
     <div class="shop-grid">
@@ -564,6 +569,7 @@ function entrarConGoogle(){
       // Carga avatar para Flappy
       if(user.photoURL){flappyAvatarData=user.photoURL;cargarFlappyAvatar(user.photoURL);}
       currentUser=userKey;
+      guardarSesionLocal(userKey,user.uid);
       configurarCarteraYEntrar(s.exists()?(s.val().saldo||0):0);
     });
   }).catch(e=>alert("Error Google: "+e.message));
@@ -576,17 +582,14 @@ function mostrarVista(id){
   ['exit-btn','settings-btn','shop-btn','chat-btn'].forEach(b=>{const el=document.getElementById(b);if(el)el.classList.add('hidden');});
   document.getElementById(id).classList.remove('hidden');
   if(id==='vista-login')animar();
-  const conNav=['vista-agenda','vista-ajustes','vista-tienda','vista-chat'];
+  const conNav=['vista-agenda','vista-ajustes','vista-chat'];
   if(conNav.includes(id)){
-    ['exit-btn','settings-btn','shop-btn','chat-btn'].forEach(b=>document.getElementById(b).classList.remove('hidden'));
+    ['exit-btn','settings-btn','chat-btn'].forEach(b=>document.getElementById(b).classList.remove('hidden'));
     if(id==='vista-agenda'){
       document.getElementById('pantalla-oscura').classList.add('hidden');
       dibujarPreviewLadrillos();dibujarPreviewFlappy();
     }else if(id==='vista-chat'){
       document.getElementById('pantalla-oscura').classList.remove('hidden');escucharChat();
-    }else if(id==='vista-tienda'){
-      document.getElementById('shop-balance').innerText='Saldo: '+userBalance+' €Eden€';
-      document.getElementById('pantalla-oscura').classList.remove('hidden');
     }else if(id==='vista-ajustes'){
       document.getElementById('pantalla-oscura').classList.remove('hidden');
       db.ref('usuarios/'+currentUser).once('value',s=>{
@@ -603,6 +606,7 @@ function mostrarVista(id){
         db.ref('ranking/eden/'+currentUser).once('value',r=>{
           document.getElementById('perfil-puntos').innerText="Récord Edén: "+(r.val()||0)+" pts";
         });
+        cargarInventario();
       });
     }else document.getElementById('pantalla-oscura').classList.remove('hidden');
   }else document.getElementById('pantalla-oscura').classList.remove('hidden');
@@ -617,13 +621,44 @@ function configurarCarteraYEntrar(saldoBase){
   mostrarVista('vista-agenda');reproducir('coin');
 }
 
+/* ═══════════════════ INICIO DE SESIÓN PERSISTENTE ═══════════════════ */
+function guardarSesionLocal(usuario,uid){
+  localStorage.setItem('edenUser',usuario);
+  localStorage.setItem('edenUID',uid);
+}
+function cargarSesionLocal(){
+  const usuario=localStorage.getItem('edenUser');
+  const uid=localStorage.getItem('edenUID');
+  if(usuario&&uid){
+    currentUser=usuario;currentUID=uid;
+    db.ref('usuarios/'+usuario).once('value',s=>{
+      if(s.exists()){
+        const d=s.val();
+        if(d.foto&&(d.foto.startsWith('http')||d.foto.includes('data:image'))){flappyAvatarData=d.foto;cargarFlappyAvatar(d.foto);}
+        else if(d.avatar&&(d.avatar.startsWith('http')||d.avatar.includes('data:image'))){flappyAvatarData=d.avatar;cargarFlappyAvatar(d.avatar);}
+        configurarCarteraYEntrar(d.saldo||0);
+      }else{
+        limpiarSesionLocal();
+        mostrarVista('vista-login');
+      }
+    });
+    return true;
+  }
+  return false;
+}
+function limpiarSesionLocal(){
+  localStorage.removeItem('edenUser');
+  localStorage.removeItem('edenUID');
+}
+
 /* ═══════════════════ AUTH MANUAL ═══════════════════ */
 function validarAcceso(){
   const u=document.getElementById('user-in').value.trim(),p=document.getElementById('pass-in').value.trim();
-  if(u==='admin'&&p==='1234'){currentUser=u;currentUID=u;mostrarVista('vista-agenda');return;}
+  if(u==='admin'&&p==='1234'){currentUser=u;currentUID=u;guardarSesionLocal(u,u);mostrarVista('vista-agenda');return;}
   db.ref('usuarios/'+u).once('value',s=>{
     if(s.exists()&&s.val().password===p){
       currentUser=u;currentUID=s.val().uid||u;
+      guardarSesionLocal(u,currentUID);
       const d=s.val();
       if(d.foto&&(d.foto.startsWith('http')||d.foto.includes('data:image'))){flappyAvatarData=d.foto;cargarFlappyAvatar(d.foto);}
       else if(d.avatar&&(d.avatar.startsWith('http')||d.avatar.includes('data:image'))){flappyAvatarData=d.avatar;cargarFlappyAvatar(d.avatar);}
@@ -648,7 +683,7 @@ function actualizarPerfil(){
 function cerrarSesion(){
   reproducir('click');
   if(currentUser&&currentUser!=='admin')db.ref('usuarios/'+currentUser+'/saldo').off();
-  pararEscuchaChat();currentUser="";currentUID="";mostrarVista('vista-login');
+  pararEscuchaChat();currentUser="";currentUID="";limpiarSesionLocal();mostrarVista('vista-login');
 }
 
 /* ═══════════════════ COPIAR UID ═══════════════════ */
@@ -698,11 +733,63 @@ function modificarTareaInline(i){
   inp.addEventListener('keypress',e=>{if(e.key==='Enter')save();});editBtn.onclick=save;
 }
 
+function cargarInventario(){
+  const container=document.getElementById('inventario-container');
+  if(!container)return;
+  
+  db.ref('usuarios/'+currentUser+'/inventario').once('value',snap=>{
+    let html='';
+    const inventario=snap.val()||{};
+    
+    // Mostrar vidas extra
+    if(inventario.vidas && inventario.vidas>0){
+      html+='<div style="color:#FFD700;font-size:12px;margin-bottom:5px">❤️ Vidas extra: '+inventario.vidas+'</div>';
+    }
+    
+    // Mostrar paletas
+    if(inventario.paletas){
+      const paletas=Object.keys(inventario.paletas);
+      if(paletas.length>0){
+        html+='<div style="color:#00FFFF;font-size:12px;margin-bottom:5px">🏓 Paletas: ';
+        paletas.forEach(color=>{html+='<span style="color:'+color+'">▬</span> ';});
+        html+='</div>';
+      }
+    }
+    
+    // Mostrar pájaros
+    if(inventario.pajaros){
+      const pajaros=Object.keys(inventario.pajaros);
+      if(pajaros.length>0){
+        html+='<div style="color:#00FF00;font-size:12px;margin-bottom:5px">🐦 Pájaros: ';
+        pajaros.forEach(color=>{html+='<span style="color:'+color+'">🐦</span> ';});
+        html+='</div>';
+      }
+    }
+    
+    // Mostrar pelotas
+    if(inventario.pelotas){
+      const pelotas=Object.keys(inventario.pelotas);
+      if(pelotas.length>0){
+        html+='<div style="color:#FF69B4;font-size:12px;margin-bottom:5px">⚪ Pelotas: ';
+        pelotas.forEach(color=>{html+='<span style="color:'+color+'">●</span> ';});
+        html+='</div>';
+      }
+    }
+    
+    if(html===''){
+      html='<p style="color:#aaa;font-size:11px;text-align:center">No tienes objetos en tu inventario</p>';
+    }
+    
+    container.innerHTML=html;
+  });
+}
+
 /* ═══════════════════ TIENDA ═══════════════════ */
 function comprar(tipo,valor){
   reproducir('click');
   let precio=0;
   if(tipo==='paleta')precio=(valor==='red'?500:(valor==='pink'?750:1000));
+  else if(tipo==='pajaro')precio=(valor==='red'?500:(valor==='pink'?750:1000));
   else if(tipo==='bola')precio=(valor==='blue'?400:(valor==='pink'?600:900));
   else if(tipo==='vida')precio=(valor===1?5000:(valor===3?12000:20000));
   if(userBalance>=precio){
@@ -710,7 +797,22 @@ function comprar(tipo,valor){
     db.ref('usuarios/'+currentUser).update({saldo:ns}).then(()=>{
       reproducir('coin');
       ['shop-balance','saldo-ingame-l','saldo-ingame-f'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerText='Saldo: '+ns+' €Eden€';});
-      alert('¡Gracias por tu compra!');
+      
+      // Guardar objeto comprado en el inventario
+      if(tipo==='vida'){
+        // Guardar vidas adicionales
+        db.ref('usuarios/'+currentUser+'/inventario/vidas').transaction(v=>(v||0)+valor);
+      }else{
+        // Guardar objetos cosméticos (paletas, pájaros, pelotas)
+        let objetoTipo = tipo;
+        if(tipo==='paleta')objetoTipo='paletas';
+        else if(tipo==='pajaro')objetoTipo='pajaros';
+        else if(tipo==='bola')objetoTipo='pelotas';
+        
+        db.ref('usuarios/'+currentUser+'/inventario/'+objetoTipo+'/'+valor).set(true);
+      }
+      
+      alert('¡Gracias por tu compra! Objeto guardado en tu inventario.');
     });
   }else{reproducir('fail');alert("No tienes suficiente €Eden€");}
 }
@@ -1170,7 +1272,9 @@ function dibujarPreviewFlappy(){
 }
 
 /* ═══════════════════ INIT ═══════════════════ */
-mostrarVista('vista-login');
+if(!cargarSesionLocal()){
+  mostrarVista('vista-login');
+}
 </script>
 </body>
 </html>
