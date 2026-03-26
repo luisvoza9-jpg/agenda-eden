@@ -635,9 +635,9 @@ function mostrarVista(id){
       document.getElementById('pantalla-oscura').classList.remove('hidden');
       db.ref('usuarios/'+currentUser).once('value',s=>{
         const d=s.val()||{};
-        document.getElementById('perfil-nombre').innerText="Usuario: "+currentUser;
+        document.getElementById('perfil-nombre').innerText="Usuario: "+currentUID;
         document.getElementById('perfil-edad').innerText="Edad: "+(d.age||"No definida");
-        document.getElementById('uid-box').innerText=currentUser||"—";
+        document.getElementById('uid-box').innerText=currentUID||"—";
         if(d.avatar){
           if(d.avatar.includes('data:image')||d.avatar.startsWith('http'))
             document.getElementById('avatar-img').innerHTML='<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover;">';
@@ -1509,6 +1509,4 @@ if(!cargarSesionLocal()){
 </script>
 </body>
 </html>
-
-
 
