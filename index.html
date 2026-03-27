@@ -27,7 +27,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 .hidden{display:none!important}
 
 /* ── Botones fijos ── */
-.btn-exit-fixed{position:fixed;top:25px;right:25px;color:#ff4444;cursor:pointer;border:none;
+.btn-exit-fixed{position:fixed;top:10px;right:25px;color:#ff4444;cursor:pointer;border:none;
   background:none;display:flex;flex-direction:column;align-items:center;z-index:1000;transition:.3s}
 .btn-settings-fixed{position:fixed;top:25px;left:25px;color:#fff;text-shadow:0 0 10px #00FFFF;
   cursor:pointer;border:none;background:none;display:flex;flex-direction:column;
@@ -71,7 +71,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   color:#00FFFF;border-bottom:1px solid rgba(0,255,255,.2)}
 
 /* Paneles de tienda - misma altura y ancho */
-#shop-panel-ladrillos, #shop-panel-flappy, #shop-panel-candy {
+#shop-panel-ladrillos, #shop-panel-flappy, #shop-panel-candy, #shop-panel-avatar {
   min-height: 320px;
   width: 100%;
   max-width: 100%;
@@ -95,7 +95,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 
 /* ── Avatar ── */
 #avatar-preview{width:90px;height:90px;border-radius:50%;border:2px solid #00FFFF;
-  box-shadow:0 0 15px #00FFFF;overflow:hidden;background:#000;
+  overflow:hidden;background:#000;
   display:flex;justify-content:center;align-items:center;margin-bottom:10px}
 .avatar-opt{background:none;border:1px solid rgba(0,255,255,.3);border-radius:5px;
   cursor:pointer;font-size:20px;padding:5px;transition:.3s}
@@ -270,22 +270,11 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   border-radius:0;transition:.4s}
 .candy-menu-overlay.ce-hidden{opacity:0;pointer-events:none;transform:translateY(20px)}
-
-/* ── MÚSICA — botón flotante ── */
-#music-btn{position:fixed;bottom:70px;right:25px;background:rgba(0,0,0,.7);
-  border:1px solid rgba(0,255,255,.4);border-radius:50%;width:40px;height:40px;
-  color:#fff;font-size:18px;cursor:pointer;z-index:102;display:none;
-  align-items:center;justify-content:center;transition:.3s}
-#music-btn:hover{background:rgba(0,255,255,.15);border-color:#00FFFF}
-#music-btn.playing{border-color:#00FFFF;box-shadow:0 0 10px #00FFFF}
 </style>
 </head>
 <body>
 
 <div id="pantalla-oscura" class="overlay"></div>
-
-<!-- Botón música flotante -->
-<button id="music-btn" onclick="APP.toggleMusic()" title="Música">🔇</button>
 
 <!-- Botones fijos globales -->
 <button id="settings-btn" class="btn-settings-fixed hidden" onclick="mostrarVista('vista-ajustes')">
@@ -354,7 +343,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
       </div>
       <div class="game-card-info">
         <div class="game-card-title" style="color:#00FF00;text-shadow:0 0 8px #00FF00">🐦 EDÉN FLAPPY</div>
-        <div class="game-card-desc">Esquiva columnas neón. 1 €Eden€ por punto.</div>
+        <div class="game-card-desc">Esquiva columnas neón. 25 €Eden€ por punto.</div>
       </div>
     </div>
     <!-- Tarjeta Candy Edén -->
@@ -378,13 +367,9 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <h2 style="color:#00FFFF;margin-bottom:15px;text-align:center">PERFIL EDÉN</h2>
     <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:15px">
       <div id="avatar-preview"><span id="avatar-img" style="font-size:45px">👤</span></div>
-      <div style="display:flex;gap:8px">
-        <button class="avatar-opt" onclick="cambiarAvatar('🥷')">🥷</button>
-        <button class="avatar-opt" onclick="cambiarAvatar('🤖')">🤖</button>
-        <button class="avatar-opt" onclick="cambiarAvatar('👽')">👽</button>
-        <button class="avatar-opt" onclick="cambiarAvatar('👻')">👻</button>
-        <label for="upload-photo" style="background:white;border-radius:5px;cursor:pointer;padding:5px 8px;color:black;font-size:16px">📷</label>
-        <input type="file" id="upload-photo" accept="image/*" style="display:none" onchange="subirFotoLocal(this)">
+      <div id="avatar-options-container" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:200px">
+        <!-- Los avatares comprados se cargarán aquí dinámicamente -->
+        <button class="avatar-opt" onclick="cambiarAvatar('👤')">👤</button>
       </div>
     </div>
     <div style="background:rgba(0,255,255,.1);padding:12px;border-radius:10px;border:1px solid rgba(0,255,255,.3);margin-bottom:15px">
@@ -453,6 +438,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
       <button class="shop-tab active" id="shop-tab-ladrillos" onclick="cambiarTabTienda('ladrillos')" style="flex:1;padding:8px 0;background:rgba(0,229,255,.15);color:#00e5ff;font-size:12px;font-weight:bold;cursor:pointer;border:none;transition:.3s;text-align:center">🏓 Ladrillos</button>
       <button class="shop-tab"        id="shop-tab-flappy"   onclick="cambiarTabTienda('flappy')"   style="flex:1;padding:8px 0;background:rgba(0,0,0,.6);color:#aaa;font-size:12px;font-weight:bold;cursor:pointer;border:none;transition:.3s;text-align:center">🐦 Flappy</button>
       <button class="shop-tab"        id="shop-tab-candy"    onclick="cambiarTabTienda('candy')"    style="flex:1;padding:8px 0;background:rgba(0,0,0,.6);color:#aaa;font-size:12px;font-weight:bold;cursor:pointer;border:none;transition:.3s;text-align:center">🍬 Candy</button>
+      <button class="shop-tab"        id="shop-tab-avatar"   onclick="cambiarTabTienda('avatar')"   style="flex:1;padding:8px 0;background:rgba(0,0,0,.6);color:#aaa;font-size:12px;font-weight:bold;cursor:pointer;border:none;transition:.3s;text-align:center">👤 Avatar</button>
     </div>
     
     <!-- Contenido único de la tienda -->
@@ -464,6 +450,12 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
           <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
           <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
           <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
+          <div class="shop-item" onclick="comprar('paleta','green')"><span style="color:green">▬</span><span class="shop-price">800 pts</span></div>
+          <div class="shop-item" onclick="comprar('paleta','purple')"><span style="color:purple">▬</span><span class="shop-price">1200 pts</span></div>
+          <div class="shop-item" onclick="comprar('paleta','orange')"><span style="color:orange">▬</span><span class="shop-price">900 pts</span></div>
+          <div class="shop-item" onclick="comprar('paleta','cyan')"><span style="color:cyan">▬</span><span class="shop-price">1100 pts</span></div>
+          <div class="shop-item" onclick="comprar('paleta','white')"><span style="color:white">▬</span><span class="shop-price">1500 pts</span></div>
+          <div class="shop-item" onclick="comprar('paleta','gold')"><span style="color:gold">▬</span><span class="shop-price">2000 pts</span></div>
         </div>
         
         <span class="shop-label">PELOTAS</span>
@@ -471,6 +463,15 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
           <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
           <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
           <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
+          <div class="shop-item" onclick="comprar('bola','red')"><span style="color:red">●</span><span class="shop-price">500 pts</span></div>
+          <div class="shop-item" onclick="comprar('bola','green')"><span style="color:green">●</span><span class="shop-price">700 pts</span></div>
+          <div class="shop-item" onclick="comprar('bola','purple')"><span style="color:purple">●</span><span class="shop-price">1000 pts</span></div>
+          <div class="shop-item" onclick="comprar('bola','orange')"><span style="color:orange">●</span><span class="shop-price">800 pts</span></div>
+          <div class="shop-item" onclick="comprar('bola','cyan')"><span style="color:cyan">●</span><span class="shop-price">950 pts</span></div>
+          <div class="shop-item" onclick="comprar('bola','white')"><span style="color:white">●</span><span class="shop-price">1300 pts</span></div>
+          <div class="shop-item" onclick="comprar('bola','gold')"><span style="color:gold">●</span><span class="shop-price">1800 pts</span></div>
+          <div class="shop-item" onclick="comprar('bola','rainbow')">🌈<span class="shop-price">2500 pts</span></div>
+          <div class="shop-item" onclick="comprar('bola','fire')">🔥<span class="shop-price">3000 pts</span></div>
         </div>
       </div>
       
@@ -501,6 +502,18 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
           <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
           <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
           <div class="shop-item" onclick="comprar('vida',5)">❤️ x5<span class="shop-price">20000 pts</span></div>
+        </div>
+      </div>
+      
+      <!-- Contenido AVATAR -->
+      <div id="shop-panel-avatar" class="hidden">
+        <span class="shop-label">AVATARES</span>
+        <div class="shop-grid">
+          <div class="shop-item" onclick="comprarAvatar('samurai')">🗿<span class="shop-price">2000 pts</span></div>
+          <div class="shop-item" onclick="comprarAvatar('astronauta')">👨‍🚀<span class="shop-price">2000 pts</span></div>
+          <div class="shop-item" onclick="comprarAvatar('superheroe')">🦸‍♂️<span class="shop-price">2000 pts</span></div>
+          <div class="shop-item" onclick="comprarAvatar('pirata')">🏴‍☠️<span class="shop-price">2000 pts</span></div>
+          <div class="shop-item" onclick="comprarAvatar('mago')">🧙‍♂️<span class="shop-price">2000 pts</span></div>
         </div>
       </div>
     </div>
@@ -543,7 +556,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   <canvas id="gameCanvas" class="game-canvas-style" width="500" height="500"></canvas>
   <div class="game-overlay-btns">
     <button class="overlay-icon-btn" onclick="toggleRankIngame('ladrillos')" title="Rankings">🏆</button>
-    <button class="overlay-icon-btn" onclick="mostrarVista('vista-tienda-unificada')" title="Tienda">🛒</button>
   </div>
   <div id="rank-ingame-ladrillos" class="ingame-float-menu hidden">
     <h3 style="color:#FFD700;text-align:center;margin-bottom:8px">🏆 RANKING</h3>
@@ -577,7 +589,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     onclick="flappyJump()" ontouchstart="flappyJump()"></canvas>
   <div class="game-overlay-btns">
     <button class="overlay-icon-btn" onclick="toggleRankIngame('flappy')" title="Rankings">🏆</button>
-    <button class="overlay-icon-btn" onclick="mostrarVista('vista-tienda-unificada')" title="Tienda">🛒</button>
   </div>
   <div id="rank-ingame-flappy" class="ingame-float-menu hidden">
     <h3 style="color:#FFD700;text-align:center;margin-bottom:8px">🏆 RANKING</h3>
@@ -590,7 +601,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   </div>
   <div id="flappy-start-menu" class="menu-eden" style="border-color:#00FF00">
     <h2 style="color:#00FF00;margin-bottom:8px;text-shadow:0 0 12px #00FF00">🐦 EDÉN FLAPPY</h2>
-    <p style="color:#aaa;font-size:12px;margin-bottom:16px">Toca la pantalla o pulsa ESPACIO para saltar entre las columnas.<br>Cada punto = 1 €Eden€ al saldo.</p>
+    <p style="color:#aaa;font-size:12px;margin-bottom:16px">Toca la pantalla o pulsa ESPACIO para saltar entre las columnas.<br>Cada punto = 25 €Eden€ al saldo.</p>
     <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">▶ JUGAR</button>
     <button class="game-btn-neon" onclick="salirFlappy()">Volver</button>
   </div>
@@ -628,10 +639,10 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 
   <!-- Ranking overlay -->
   <div class="game-overlay-btns">
-    <button class="overlay-icon-btn" style="border-color:rgba(255,0,255,.4);font-size:16px;padding:4px;width:24px;height:24px" onclick="toggleRankIngame('candy')" title="Rankings">🏆</button>
+    <button class="overlay-icon-btn" style="border-color:rgba(255,0,255,.4);font-size:16px;padding:4px;width:24px;height:24px;display:flex;align-items:center;justify-content:center" onclick="toggleRankIngame('candy')" title="Rankings">🏆</button>
   </div>
   <div id="rank-ingame-candy" class="hidden" style="position:absolute;top:52px;right:10px;width:290px;background:rgba(0,0,0,.9);padding:10px;border-radius:8px;z-index:1008;border:none;box-shadow:none">
-    <h3 style="color:#FF00FF;text-align:center;margin-bottom:8px;font-size:14px">🏆 RANKING CANDY</h3>
+    <h3 style="color:#FF00FF;text-align:center;margin-bottom:8px;font-size:14px;display:flex;align-items:center;justify-content:center;gap:5px">🏆 RANKING CANDY</h3>
     <div class="rank-tabs">
       <button class="rank-tab active" id="rtab-c-mundial" onclick="cambiarTabRank('candy','mundial')">🌍 Mundial</button>
       <button class="rank-tab"        id="rtab-c-amigos"  onclick="cambiarTabRank('candy','amigos')">👥 Amigos</button>
@@ -664,7 +675,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <div style="display:flex;gap:10px;margin-bottom:16px">
       <div onclick="CANDY.setSkin('classic')" style="cursor:pointer;padding:8px;background:#222;border-radius:10px;border:1px solid #444;font-size:1.2rem" title="Classic">💎</div>
       <div onclick="CANDY.setSkin('fruit')"   style="cursor:pointer;padding:8px;background:#222;border-radius:10px;border:1px solid #444;font-size:1.2rem" title="Frutas">🍎</div>
-      <div onclick="CANDY.setSkin('cyber')"   style="cursor:pointer;padding:8px;background:#222;border-radius:10px;border:1px solid #444;font-size:1.2rem" title="Cyber">⌬</div>
+      <div onclick="CANDY.setSkin('cyber')"   style="cursor:pointer;padding:8px;background:#222;border-radius:10px;border:1px solid #444;font-size:1.4rem" title="Cyber">⌬</div>
     </div>
     <!-- Niveles -->
     <div id="candy-lvl-container" class="candy-lvl-grid"></div>
@@ -825,16 +836,13 @@ const APP = (() => {
   function toggleMusic() {
     unlockAudio();
     musicPlaying = !musicPlaying;
-    const btn1 = document.getElementById('music-btn');
     const btn2 = document.getElementById('toggle-music-btn');
     if (musicPlaying) {
       tryExternalMusic();
-      if (btn1) { btn1.textContent = '🎵'; btn1.classList.add('playing'); }
       if (btn2)   btn2.textContent = '⏸ OFF';
     } else {
       if (musicAudio) { musicAudio.pause(); musicAudio = null; }
       stopAmbient();
-      if (btn1) { btn1.textContent = '🔇'; btn1.classList.remove('playing'); }
       if (btn2)   btn2.textContent = '▶ ON';
     }
   }
@@ -939,23 +947,25 @@ function mostrarVista(id) {
   });
   document.getElementById(id).classList.remove('hidden');
 
-  // Botón música siempre visible cuando hay sesión
-  const mb = document.getElementById('music-btn');
-  if (mb) mb.style.display = currentUser ? 'flex' : 'none';
-
   if (id === 'vista-login') animar();
   if (id === 'vista-tienda-unificada') {
     const su = document.getElementById('shop-balance-unificado');
     if (su) su.innerText = 'Saldo: ' + userBalance + ' €Eden€';
     cargarEquipamientoDesdeDB().then(() => actualizarBotonesTiendaSimple());
+    actualizarBotonesAvatar(); // Actualizar estado de avatares
   }
 
   const conNav = ['vista-agenda','vista-ajustes','vista-chat','vista-candy'];
   if (conNav.includes(id)) {
-    // No mostrar exit-btn en Candy
-    const botones = id === 'vista-candy' 
-      ? ['settings-btn','chat-btn','shop-btn-izq'] 
-      : ['exit-btn','settings-btn','chat-btn','shop-btn-izq'];
+    // Control específico de botones por vista
+    let botones = [];
+    if (id === 'vista-candy') {
+      botones = ['settings-btn','chat-btn','shop-btn-izq']; // Sin exit-btn
+    } else if (id === 'vista-ajustes') {
+      botones = []; // No mostrar ningún botón en ajustes
+    } else {
+      botones = ['exit-btn','settings-btn','chat-btn','shop-btn-izq']; // Normal
+    }
     botones.forEach(b => document.getElementById(b).classList.remove('hidden'));
     if (id === 'vista-agenda') {
       document.getElementById('pantalla-oscura').classList.add('hidden');
@@ -1132,7 +1142,6 @@ function cerrarSesion() {
   reproducir('click');
   if (currentUser && currentUser !== 'admin') db.ref('usuarios/' + currentUser + '/saldo').off();
   pararEscuchaChat(); currentUser = ""; currentUID = ""; limpiarSesionLocal();
-  document.getElementById('music-btn').style.display = 'none';
   mostrarVista('vista-login');
 }
 
@@ -1212,8 +1221,14 @@ function cargarEquipamientoDesdeDB() {
   if (!currentUser || currentUser === 'admin') return Promise.resolve();
   return db.ref('usuarios/' + currentUser).once('value').then(snap => {
     const d = snap.val() || {};
-    if (d.paletaEquipada) colorPalaEquipada = { red:'#FF0000', pink:'#FFC0CB', yellow:'#FFFF00' }[d.paletaEquipada] || '#00FFFF';
-    if (d.bolaEquipada)   colorBolaEquipada  = { blue:'#0000FF', pink:'#FFC0CB', yellow:'#FFFF00' }[d.bolaEquipada]  || '#FF0000';
+    if (d.paletaEquipada) colorPalaEquipada = { 
+      red:'#FF0000', pink:'#FFC0CB', yellow:'#FFFF00', green:'#00FF00', purple:'#9400D3', 
+      orange:'#FFA500', cyan:'#00FFFF', white:'#FFFFFF', gold:'#FFD700' 
+    }[d.paletaEquipada] || '#00FFFF';
+    if (d.bolaEquipada)   colorBolaEquipada  = { 
+      blue:'#0000FF', pink:'#FFC0CB', yellow:'#FFFF00', red:'#FF0000', green:'#00FF00', purple:'#9400D3', 
+      orange:'#FFA500', cyan:'#00FFFF', white:'#FFFFFF', gold:'#FFD700', rainbow:'linear-gradient(45deg,red,orange,yellow,green,blue,indigo,violet)', fire:'linear-gradient(45deg,#ff4500,#ff6347,#ff8c00,#ffa500)' 
+    }[d.bolaEquipada]  || '#FF0000';
     if (d.pajaroEquipado) skinPajaroEquipada = { red:'🦜', pink:'🦩', yellow:'🦆', blue:'🦅', green:'🦚', purple:'🦢' }[d.pajaroEquipado] || '🐦';
   }).catch(() => {});
 }
@@ -1251,9 +1266,13 @@ function comprar(tipo, valor) {
 
 function procesarCompra(tipo, valor) {
   let precio = 0;
-  if (tipo === 'paleta') precio = { red:500, pink:750, yellow:1000 }[valor] || 0;
+  if (tipo === 'paleta') precio = { 
+    red:500, pink:750, yellow:1000, green:800, purple:1200, orange:900, cyan:1100, white:1500, gold:2000 
+  }[valor] || 0;
   else if (tipo === 'pajaro') precio = { red:500, pink:750, yellow:1000, blue:600, green:800, purple:1200 }[valor] || 0;
-  else if (tipo === 'bola')   precio = { blue:400, pink:600, yellow:900 }[valor] || 0;
+  else if (tipo === 'bola')   precio = { 
+    blue:400, pink:600, yellow:900, red:500, green:700, purple:1000, orange:800, cyan:950, white:1300, gold:1800, rainbow:2500, fire:3000 
+  }[valor] || 0;
   else if (tipo === 'vida')   precio = valor === 1 ? 5000 : valor === 3 ? 12000 : 20000;
   if (userBalance >= precio) {
     const ns = userBalance - precio;
@@ -1286,8 +1305,14 @@ function equiparItem(tipo, valor) {
     const key = tipo === 'paleta' ? 'paletaEquipada' : tipo === 'bola' ? 'bolaEquipada' : tipo === 'pajaro' ? 'pajaroEquipado' : '';
     if (key) db.ref('usuarios/' + currentUser).update({ [key]: valor }).then(() => {
       reproducir('coin');
-      if (tipo === 'paleta') colorPalaEquipada = { red:'#FF0000', pink:'#FFC0CB', yellow:'#FFFF00' }[valor] || '#00FFFF';
-      if (tipo === 'bola')   colorBolaEquipada  = { blue:'#0000FF', pink:'#FFC0CB', yellow:'#FFFF00' }[valor] || '#FF0000';
+      if (tipo === 'paleta') colorPalaEquipada = { 
+        red:'#FF0000', pink:'#FFC0CB', yellow:'#FFFF00', green:'#00FF00', purple:'#9400D3', 
+        orange:'#FFA500', cyan:'#00FFFF', white:'#FFFFFF', gold:'#FFD700' 
+      }[valor] || '#00FFFF';
+      if (tipo === 'bola')   colorBolaEquipada  = { 
+        blue:'#0000FF', pink:'#FFC0CB', yellow:'#FFFF00', red:'#FF0000', green:'#00FF00', purple:'#9400D3', 
+        orange:'#FFA500', cyan:'#00FFFF', white:'#FFFFFF', gold:'#FFD700', rainbow:'linear-gradient(45deg,red,orange,yellow,green,blue,indigo,violet)', fire:'linear-gradient(45deg,#ff4500,#ff6347,#ff8c00,#ffa500)' 
+      }[valor] || '#FF0000';
       if (tipo === 'pajaro') skinPajaroEquipada  = { red:'🦜', pink:'🦩', yellow:'🦆', blue:'🦅', green:'🦚', purple:'🦢' }[valor] || '🐦';
       actualizarBotonesTiendaSimple();
     });
@@ -1371,14 +1396,33 @@ function actualizarDirecto(){
         if(emojiStyle.includes('color:blue')) color = 'blue';
         else if(emojiStyle.includes('color:pink')) color = 'pink';
         else if(emojiStyle.includes('color:yellow')) color = 'yellow';
+        else if(emojiStyle.includes('color:red')) color = 'red';
+        else if(emojiStyle.includes('color:green')) color = 'green';
+        else if(emojiStyle.includes('color:purple')) color = 'purple';
+        else if(emojiStyle.includes('color:orange')) color = 'orange';
+        else if(emojiStyle.includes('color:cyan')) color = 'cyan';
+        else if(emojiStyle.includes('color:white')) color = 'white';
+        else if(emojiStyle.includes('color:gold')) color = 'gold';
         
         if(color){
           const tiene = inventario.pelotas && inventario.pelotas[color];
           const equipado = (color === 'blue' && colorBolaEquipada === '#0000FF') ||
                           (color === 'pink' && colorBolaEquipada === '#FFC0CB') ||
-                          (color === 'yellow' && colorBolaEquipada === '#FFFF00');
+                          (color === 'yellow' && colorBolaEquipada === '#FFFF00') ||
+                          (color === 'red' && colorBolaEquipada === '#FF0000') ||
+                          (color === 'green' && colorBolaEquipada === '#00FF00') ||
+                          (color === 'purple' && colorBolaEquipada === '#9400D3') ||
+                          (color === 'orange' && colorBolaEquipada === '#FFA500') ||
+                          (color === 'cyan' && colorBolaEquipada === '#00FFFF') ||
+                          (color === 'white' && colorBolaEquipada === '#FFFFFF') ||
+                          (color === 'gold' && colorBolaEquipada === '#FFD700') ||
+                          (color === 'rainbow' && colorBolaEquipada === 'linear-gradient(45deg,red,orange,yellow,green,blue,indigo,violet)') ||
+                          (color === 'fire' && colorBolaEquipada === 'linear-gradient(45deg,#ff4500,#ff6347,#ff8c00,#ffa500)');
           
-          const precios = {blue: '400 pts', pink: '600 pts', yellow: '900 pts'};
+          const precios = {
+            blue: '400 pts', pink: '600 pts', yellow: '900 pts', red: '500 pts', green: '700 pts', 
+            purple: '1000 pts', orange: '800 pts', cyan: '950 pts', white: '1300 pts', gold: '1800 pts'
+          };
           
           if(equipado){
             console.log(`✅ Pelota ${color} está equipada - marcando como EQUIPADO`);
@@ -1409,14 +1453,29 @@ function actualizarDirecto(){
         if(emojiStyle.includes('color:red')) color = 'red';
         else if(emojiStyle.includes('color:pink')) color = 'pink';
         else if(emojiStyle.includes('color:yellow')) color = 'yellow';
+        else if(emojiStyle.includes('color:green')) color = 'green';
+        else if(emojiStyle.includes('color:purple')) color = 'purple';
+        else if(emojiStyle.includes('color:orange')) color = 'orange';
+        else if(emojiStyle.includes('color:cyan')) color = 'cyan';
+        else if(emojiStyle.includes('color:white')) color = 'white';
+        else if(emojiStyle.includes('color:gold')) color = 'gold';
         
         if(color){
           const tiene = inventario.paletas && inventario.paletas[color];
           const equipado = (color === 'red' && colorPalaEquipada === '#FF0000') ||
                           (color === 'pink' && colorPalaEquipada === '#FFC0CB') ||
-                          (color === 'yellow' && colorPalaEquipada === '#FFFF00');
+                          (color === 'yellow' && colorPalaEquipada === '#FFFF00') ||
+                          (color === 'green' && colorPalaEquipada === '#00FF00') ||
+                          (color === 'purple' && colorPalaEquipada === '#9400D3') ||
+                          (color === 'orange' && colorPalaEquipada === '#FFA500') ||
+                          (color === 'cyan' && colorPalaEquipada === '#00FFFF') ||
+                          (color === 'white' && colorPalaEquipada === '#FFFFFF') ||
+                          (color === 'gold' && colorPalaEquipada === '#FFD700');
           
-          const precios = {red: '500 pts', pink: '750 pts', yellow: '1000 pts'};
+          const precios = {
+            red: '500 pts', pink: '750 pts', yellow: '1000 pts', green: '800 pts', purple: '1200 pts',
+            orange: '900 pts', cyan: '1100 pts', white: '1500 pts', gold: '2000 pts'
+          };
           
           if(equipado){
             console.log(`✅ Paleta ${color} está equipada - marcando como EQUIPADO`);
@@ -1439,6 +1498,37 @@ function actualizarDirecto(){
             boton.style.boxShadow = '';
             boton.setAttribute('onclick', `comprar('paleta','${color}')`);
           }
+        }
+      }
+      // PELOTAS ESPECIALES
+      else if(['🌈','🔥'].includes(emojiText)){
+        let color = emojiText === '🌈' ? 'rainbow' : 'fire';
+        const tiene = inventario.pelotas && inventario.pelotas[color];
+        const equipado = (color === 'rainbow' && colorBolaEquipada === 'linear-gradient(45deg,red,orange,yellow,green,blue,indigo,violet)') ||
+                        (color === 'fire' && colorBolaEquipada === 'linear-gradient(45deg,#ff4500,#ff6347,#ff8c00,#ffa500)');
+        
+        const precios = {rainbow: '2500 pts', fire: '3000 pts'};
+        
+        if(equipado){
+          console.log(`✅ Pelota ${color} está equipada - marcando como EQUIPADO`);
+          priceSpan.textContent = '✅ EQUIPADO';
+          boton.style.border = '2px solid #00FF00';
+          boton.style.boxShadow = '0 0 10px #00FF00';
+          boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
+        }
+        else if(tiene){
+          console.log(`🔄 Pelota ${color} tiene pero no equipada - marcando como Equipar`);
+          priceSpan.textContent = 'Equipar';
+          boton.style.border = '';
+          boton.style.boxShadow = '';
+          boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
+        }
+        else{
+          console.log(`💰 Pelota ${color} no tiene - marcando como Comprar`);
+          priceSpan.textContent = precios[color];
+          boton.style.border = '';
+          boton.style.boxShadow = '';
+          boton.setAttribute('onclick', `comprar('bola','${color}')`);
         }
       }
       
@@ -1477,8 +1567,32 @@ function usarVida(juego) {
 /* ═══════════════════ OVERLAYS RANKING ═══════════════════ */
 function toggleRankIngame(juego) {
   const rid = 'rank-ingame-' + juego, m = document.getElementById(rid);
-  if (m.classList.contains('hidden')) { m.classList.remove('hidden'); cargarRankIngame(juego, 'mundial'); }
-  else m.classList.add('hidden');
+  if (m.classList.contains('hidden')) { 
+    m.classList.remove('hidden'); 
+    cargarRankIngame(juego, 'mundial');
+    
+    // Ocultar menús específicos del juego
+    if (juego === 'flappy') {
+      document.getElementById('flappy-start-menu').classList.add('hidden');
+      document.getElementById('flappy-over-menu').classList.add('hidden');
+    } else if (juego === 'candy') {
+      document.getElementById('candy-start-menu').classList.add('hidden');
+      document.getElementById('candy-over-menu').classList.add('hidden');
+      document.getElementById('candy-shop-menu').classList.add('hidden');
+    } else if (juego === 'ladrillos') {
+      document.getElementById('game-over-menu').classList.add('hidden');
+      document.getElementById('difficulty-menu').classList.add('hidden');
+    }
+  } else { 
+    m.classList.add('hidden');
+    
+    // Mostrar menús si es necesario
+    if (juego === 'flappy' && !fActive) {
+      document.getElementById('flappy-start-menu').classList.remove('hidden');
+    } else if (juego === 'ladrillos' && !bricksGameActive) {
+      document.getElementById('difficulty-menu').classList.remove('hidden');
+    }
+  }
 }
 function cerrarRankIngame(juego) { document.getElementById('rank-ingame-' + juego).classList.add('hidden'); }
 function cambiarTabRank(juego, modo) {
@@ -1489,14 +1603,16 @@ function cambiarTabRank(juego, modo) {
 }
 function cargarRankIngame(juego, modo) {
   const cont = document.getElementById('rank-content-' + juego);
-  const campoP = juego === 'flappy' ? 'puntosFlappy' : juego === 'candy' ? 'candyBestScore' : 'puntos';
+  const campoP = juego === 'flappy' ? 'puntosFlappy' : juego === 'candy' ? 'candyBestLevel' : juego === 'ladrillos' ? 'partidasGanadas' : 'puntos';
+  const unidad = juego === 'candy' ? 'Nv.' : juego === 'ladrillos' ? 'P.' : '';
+  const etiqueta = juego === 'candy' ? '' : juego === 'ladrillos' ? ' ganadas' : ' pts';
   cont.innerHTML = '<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">Cargando…</p>';
   if (modo === 'mundial') {
     db.ref('usuarios').orderByChild(campoP).limitToLast(10).once('value', s => {
       let rows = []; s.forEach(c => { const v = c.val(); if ((v[campoP] || 0) > 0) rows.push({ name: v.nombre || c.key, pts: v[campoP] || 0 }); });
       rows.reverse(); cont.innerHTML = '';
       if (!rows.length) { cont.innerHTML = '<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">Sin datos aún.</p>'; return; }
-      rows.forEach((u, i) => { const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''; cont.innerHTML += '<div class="rank-row ' + cls + '"><span>' + (i+1) + '. ' + u.name + '</span><span>' + u.pts + ' pts</span></div>'; });
+      rows.forEach((u, i) => { const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''; cont.innerHTML += '<div class="rank-row ' + cls + '"><span>' + (i+1) + '. ' + u.name + '</span><span>' + unidad + u.pts + etiqueta + '</span></div>'; });
     });
   } else {
     db.ref('amigos/' + currentUser).once('value', sa => {
@@ -1505,7 +1621,7 @@ function cargarRankIngame(juego, modo) {
       Promise.all(keys.map(k => db.ref('usuarios/' + k).once('value'))).then(snaps => {
         let rows = []; snaps.forEach(sn => { if (sn.exists()) { const v = sn.val(); rows.push({ name: v.nombre || sn.key, pts: v[campoP] || 0 }); } });
         rows.sort((a, b) => b.pts - a.pts); cont.innerHTML = '';
-        rows.forEach((u, i) => { const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''; cont.innerHTML += '<div class="rank-row ' + cls + '"><span>' + (i+1) + '. ' + u.name + '</span><span>' + u.pts + ' pts</span></div>'; });
+        rows.forEach((u, i) => { const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''; cont.innerHTML += '<div class="rank-row ' + cls + '"><span>' + (i+1) + '. ' + u.name + '</span><span>' + unidad + u.pts + etiqueta + '</span></div>'; });
       });
     });
   }
@@ -1587,7 +1703,7 @@ function cambiarTabTienda(seccion) {
   console.log('🔄 Cambiando a sección de tienda:', seccion);
   
   // Actualizar pestañas
-  ['ladrillos','flappy','candy'].forEach(t => {
+  ['ladrillos','flappy','candy','avatar'].forEach(t => {
     const tab = document.getElementById('shop-tab-' + t);
     if (tab) {
       if (t === seccion) {
@@ -1601,7 +1717,7 @@ function cambiarTabTienda(seccion) {
   });
   
   // Actualizar contenido - ahora usa shop-panel en lugar de shop-content
-  ['ladrillos','flappy','candy'].forEach(t => {
+  ['ladrillos','flappy','candy','avatar'].forEach(t => {
     const panel = document.getElementById('shop-panel-' + t);
     if (panel) {
       panel.classList.toggle('hidden', t !== seccion);
@@ -1611,6 +1727,99 @@ function cambiarTabTienda(seccion) {
     }
   });
 }
+
+function comprarAvatar(tipo) {
+  if (!currentUser || currentUser === 'admin') return;
+  
+  // Verificar si ya está comprado
+  db.ref('usuarios/' + currentUser + '/avatars/' + tipo).once('value', s => {
+    if (s.exists()) {
+      alert('¡Ya tienes este avatar!');
+      return;
+    }
+    
+    // Verificar saldo
+    if (userBalance < 2000) {
+      alert('No tienes suficientes €Eden€. Necesitas 2000 €Eden€.');
+      return;
+    }
+    
+    // Realizar compra
+    db.ref('usuarios/' + currentUser + '/saldo').transaction(v => (v || 0) - 2000).then(() => {
+      db.ref('usuarios/' + currentUser + '/avatars/' + tipo).set(true).then(() => {
+        actualizarSaldoUI(userBalance - 2000);
+        reproducir('coin');
+        alert('¡Avatar comprado con éxito!');
+        
+        // Actualizar la UI para mostrar como comprado
+        actualizarBotonesAvatar();
+      });
+    }).catch(() => {
+      alert('Error al realizar la compra.');
+    });
+  });
+}
+
+function actualizarBotonesAvatar() {
+  if (!currentUser) return;
+  
+  db.ref('usuarios/' + currentUser + '/avatars').once('value', s => {
+    const avataresComprados = s.val() || {};
+    
+    // Actualizar cada botón de avatar
+    const avatares = ['samurai', 'astronauta', 'superheroe', 'pirata', 'mago'];
+    avatares.forEach(avatar => {
+      const boton = document.querySelector(`[onclick="comprarAvatar('${avatar}')"]`);
+      if (boton) {
+        if (avataresComprados[avatar]) {
+          // Marcar como comprado
+          boton.style.opacity = '0.5';
+          boton.style.cursor = 'default';
+          boton.style.pointerEvents = 'none';
+          boton.setAttribute('onclick', '');
+          const priceSpan = boton.querySelector('.shop-price');
+          if (priceSpan) priceSpan.textContent = 'COMPRADO';
+        }
+      }
+    });
+    
+    // Actualizar avatares en ajustes
+    cargarAvataresEnAjustes(avataresComprados);
+  });
+}
+
+function cargarAvataresEnAjustes(avataresComprados) {
+  const container = document.getElementById('avatar-options-container');
+  if (!container) return;
+  
+  // Mapeo de avatar types a emojis
+  const avatarEmojis = {
+    'samurai': '🗿',
+    'astronauta': '👨‍🚀',
+    'superheroe': '🦸‍♂️',
+    'pirata': '🏴‍☠️',
+    'mago': '🧙‍♂️'
+  };
+  
+  // Avatares gratuitos siempre disponibles
+  let html = `
+    <button class="avatar-opt" onclick="cargarLayoutAvatar()">📷</button>
+    <button class="avatar-opt" onclick="cambiarAvatar('👤')">👤</button>
+    <button class="avatar-opt" onclick="cambiarAvatar('🥷')">🥷</button>
+    <button class="avatar-opt" onclick="cambiarAvatar('🤖')">🤖</button>
+    <button class="avatar-opt" onclick="cambiarAvatar('👽')">👽</button>
+  `;
+  
+  // Añadir avatares comprados
+  Object.keys(avataresComprados).forEach(avatarType => {
+    if (avatarEmojis[avatarType]) {
+      html += `<button class="avatar-opt" onclick="cambiarAvatar('${avatarEmojis[avatarType]}')">${avatarEmojis[avatarType]}</button>`;
+    }
+  });
+  
+  container.innerHTML = html;
+}
+
 function abrirChatPrivado(amigoKey, amigoNombre) { chatAmigoKey = amigoKey; chatAmigoNombre = amigoNombre; mostrarVista('vista-chat'); cambiarTabChat('amigos'); }
 function escucharChatGlobal() {
   pararEscuchaChat(); chatRef = db.ref('chat_global').limitToLast(20);
@@ -1693,10 +1902,20 @@ function salirDelJuego() { reproducir('click'); bricksGameActive = false; cancel
 function _bricksReset(diff) {
   bricksCurrentDifficulty = diff;
   document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden'));
-  bricksCanvas.style.cursor = "none"; bricksPaddleWidth = 90; bricksPaddleX = (bricksCanvas.width - bricksPaddleWidth) / 2;
+  bricksCanvas.style.cursor = "none"; 
+  // Configuración según dificultad
+  if (diff === 'eden') {
+    // Nivel final: más difícil
+    bricksPaddleWidth = 60; // Pala más pequeña
+    const speedIncrease = 1.5; // 50% más rápido
+    bricksBalls = [{ x: bricksCanvas.width / 2, y: bricksCanvas.height - 100, dx: 4.5 * speedIncrease, dy: -4.5 * speedIncrease, radius: 5 }];
+  } else {
+    // Niveles normales
+    bricksPaddleWidth = 90;
+    bricksBalls = [{ x: bricksCanvas.width / 2, y: bricksCanvas.height - 100, dx: 4.5, dy: -4.5, radius: 8 }];
+  }
+  bricksPaddleX = (bricksCanvas.width - bricksPaddleWidth) / 2;
   bricksIsFireBall = false; bricksScore = 0; document.getElementById("game-score").innerText = "€Eden€: 0";
-  const rad = diff === 'eden' ? 5 : 8;
-  bricksBalls = [{ x: bricksCanvas.width / 2, y: bricksCanvas.height - 100, dx: 4.5, dy: -4.5, radius: rad }];
   bricksBricksList = [];
   const rows = diff === 'terrestre' ? 5 : diff === 'semidios' ? 8 : 12;
   const cols = diff === 'terrestre' ? 7 : diff === 'semidios' ? 12 : 18;
@@ -1757,8 +1976,14 @@ function _bricksEndPartida() {
         menuGameOver.innerHTML = `<h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2><p style="color:#FFD700;font-size:13px;margin-bottom:12px">Puntuación: ${bricksScore} €Eden€<br><span style="color:#00FF00;font-size:12px">❤️ Tienes ${vidas} vida(s)</span></p><button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="usarVida('ladrillos')">❤️ Usar Vida</button><button class="game-btn-neon" onclick="abrirMenuDificultad()">🔄 Reiniciar</button><button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button><button class="game-btn-neon" onclick="salirDelJuego()">🚪 Salir</button>`;
       } else {
         menuGameOver.innerHTML = `<h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2><p id="end-score-txt" style="color:#FFD700;font-size:13px;margin-bottom:12px">Puntuación: ${bricksScore} €Eden€</p><button class="game-btn-neon" onclick="abrirMenuDificultad()">¡Repetir!</button><button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button><button class="game-btn-neon" onclick="salirDelJuego()">Salir</button>`;
+        // Calcular recompensa según dificultad
+        let recompensa = 0;
+        if (bricksCurrentDifficulty === 'terrestre') recompensa = 100;
+        else if (bricksCurrentDifficulty === 'semidios') recompensa = 200;
+        else if (bricksCurrentDifficulty === 'eden') recompensa = 500;
+        
         darXPporJuego(bricksScore);
-        db.ref('usuarios/' + currentUser).update({ saldo: userBalance + bricksScore });
+        db.ref('usuarios/' + currentUser).update({ saldo: userBalance + recompensa });
         db.ref('usuarios/' + currentUser + '/puntos').once('value', sv => { if (bricksScore > (sv.val() || 0)) db.ref('usuarios/' + currentUser + '/puntos').set(bricksScore); });
         db.ref('ranking/' + bricksCurrentDifficulty + '/' + currentUser).once('value', sv => { if (!sv.exists() || bricksScore > sv.val()) db.ref('ranking/' + bricksCurrentDifficulty + '/' + currentUser).set(bricksScore); });
       }
@@ -1827,7 +2052,7 @@ function fLoop() {
       p.scored = true; fScore++;
       document.getElementById('flappy-score').innerText = '€Eden€: ' + fScore;
       reproducir('coin');
-      if (currentUser && currentUser !== 'admin') db.ref('usuarios/' + currentUser + '/saldo').transaction(v => (v || 0) + 1);
+      if (currentUser && currentUser !== 'admin') db.ref('usuarios/' + currentUser + '/saldo').transaction(v => (v || 0) + 25); // 25 €Eden€ por punto
     }
   });
   fBird.vy += F_GRAVITY; fBird.y += fBird.vy;
@@ -2025,6 +2250,23 @@ const CANDY = (() => {
         const el = document.createElement('div');
         el.className = 'ce-cell-eden'; el.id = 'ce-' + r + '-' + c;
         el.onclick = () => _cellClick(r, c);
+        
+        // Añadir soporte para touch events (móvil)
+        el.addEventListener('touchstart', (e) => {
+          e.preventDefault(); // Evitar scroll
+          _cellTouchStart(r, c, e);
+        }, { passive: false });
+        
+        el.addEventListener('touchmove', (e) => {
+          e.preventDefault(); // Evitar scroll
+          _cellTouchMove(r, c, e);
+        }, { passive: false });
+        
+        el.addEventListener('touchend', (e) => {
+          e.preventDefault(); // Evitar scroll
+          _cellTouchEnd(r, c, e);
+        }, { passive: false });
+        
         container.appendChild(el);
       }
     }
@@ -2048,6 +2290,80 @@ const CANDY = (() => {
       }
       selected = null;
     }
+  }
+
+  // Variables para el arrastre con touch
+  let touchStartCell = null;
+  let touchStartTime = 0;
+
+  function _cellTouchStart(r, c, e) {
+    if (busy || !currentLevel) return;
+    touchStartCell = { r, c };
+    touchStartTime = Date.now();
+    
+    // Seleccionar la celda inicial
+    const el = document.getElementById('ce-' + r + '-' + c);
+    if (!selected) {
+      selected = { r, c }; 
+      el.classList.add('ce-selected');
+    } else {
+      // Deseleccionar si ya hay una seleccionada
+      const { r: r1, c: c1 } = selected;
+      document.getElementById('ce-' + r1 + '-' + c1).classList.remove('ce-selected');
+      selected = { r, c }; 
+      el.classList.add('ce-selected');
+    }
+  }
+
+  function _cellTouchMove(r, c, e) {
+    if (!touchStartCell || busy || !currentLevel) return;
+    
+    // Verificar si la celda actual es adyacente a la inicial
+    const { r: startR, c: startC } = touchStartCell;
+    if (Math.abs(r - startR) + Math.abs(c - startC) === 1) {
+      // Es adyacente, podemos hacer el swap
+      const el = document.getElementById('ce-' + r + '-' + c);
+      if (selected && selected.r === startR && selected.c === startC) {
+        // Resaltar la celda de destino
+        el.style.transform = 'scale(1.1)';
+        el.style.boxShadow = '0 0 15px rgba(255, 215, 0, 0.8)';
+      }
+    }
+  }
+
+  function _cellTouchEnd(r, c, e) {
+    if (!touchStartCell || busy || !currentLevel) return;
+    
+    const { r: startR, c: startC } = touchStartCell;
+    const el = document.getElementById('ce-' + r + '-' + c);
+    
+    // Resetear estilos
+    el.style.transform = '';
+    el.style.boxShadow = '';
+    
+    // Verificar si es un movimiento válido (celda adyacente)
+    if (Math.abs(r - startR) + Math.abs(c - startC) === 1) {
+      // Hacer el swap
+      busy = true;
+      document.getElementById('ce-' + startR + '-' + startC).classList.remove('ce-selected');
+      _swap(r, c, startR, startC);
+      
+      setTimeout(() => {
+        if (!_checkMatches()) { 
+          _swap(r, c, startR, startC); 
+          busy = false; 
+        } else { 
+          candyMoves--; 
+          _updateHUD(); 
+        }
+        selected = null;
+      }, 280);
+    } else {
+      // No es un movimiento válido, solo mantener la selección
+      selected = { r: startR, c: startC };
+    }
+    
+    touchStartCell = null;
   }
 
   function _swap(r1, c1, r2, c2) {
@@ -2151,9 +2467,65 @@ const CANDY = (() => {
       osc.connect(gain); gain.connect(APP.audioCtx.destination);
       osc.start(); osc.stop(APP.audioCtx.currentTime + 0.3);
     } catch(e) {}
-    if (p === 'rayo') { for (let i = 0; i < CANDY_GRID_SIZE; i++) { if (gridData[r]) gridData[r][i] = null; if (gridData[i]) gridData[i][c] = null; } }
-    else { for (let i = r - 1; i <= r + 1; i++) for (let j = c - 1; j <= c + 1; j++) if (gridData[i] && gridData[i][j] !== undefined) gridData[i][j] = null; }
+    
+    // Mostrar mensaje del power-up
+    let mensaje = '';
+    if (p === 'rayo') {
+      mensaje = '⚡ Rayo: Columna destruida!';
+      for (let i = 0; i < CANDY_GRID_SIZE; i++) { if (gridData[i]) gridData[i][c] = null; }
+    } else {
+      mensaje = '🥐 Croissant: Mini bomba! ¡PUM!';
+      for (let i = r - 1; i <= r + 1; i++) for (let j = c - 1; j <= c + 1; j++) if (gridData[i] && gridData[i][j] !== undefined) gridData[i][j] = null;
+    }
+    
+    // Crear y mostrar mensaje flotante
+    mostrarMensajePowerUp(mensaje);
+    
     saveState(); _updateHUD(); _refill();
+  }
+
+  function mostrarMensajePowerUp(texto) {
+    // Crear elemento del mensaje
+    const msgDiv = document.createElement('div');
+    msgDiv.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.9);
+      color: #FFD700;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      z-index: 9999;
+      border: 1px solid #FFD700;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+      animation: fadeInOut 2s ease-in-out;
+    `;
+    msgDiv.textContent = texto;
+    
+    // Añadir animación CSS si no existe
+    if (!document.getElementById('powerup-msg-styles')) {
+      const style = document.createElement('style');
+      style.id = 'powerup-msg-styles';
+      style.textContent = `
+        @keyframes fadeInOut {
+          0% { opacity: 0; transform: translateY(10px); }
+          20% { opacity: 1; transform: translateY(0); }
+          80% { opacity: 1; transform: translateY(0); }
+          100% { opacity: 0; transform: translateY(-10px); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // Añadir al body y eliminar después de 2 segundos
+    document.body.appendChild(msgDiv);
+    setTimeout(() => {
+      if (msgDiv.parentNode) {
+        msgDiv.parentNode.removeChild(msgDiv);
+      }
+    }, 2000);
   }
 
   function _updateHUD() {
@@ -2183,17 +2555,18 @@ const CANDY = (() => {
         });
       } catch(e) {}
       if (currentLevel.id >= (candyState.unlocked || 1)) candyState.unlocked = currentLevel.id + 1;
-      // Guardar en Firebase
       if (currentUser && currentUser !== 'admin') {
         db.ref('usuarios/' + currentUser + '/candyBestLevel').transaction(v => Math.max(v || 0, currentLevel.id));
         db.ref('usuarios/' + currentUser + '/candyBestScore').transaction(v => Math.max(v || 0, candyScore));
         db.ref('ranking/candy/' + currentUser).transaction(v => Math.max(v || 0, candyScore));
-        const reward = Math.floor(candyScore / 100) * 10;
-        if (reward > 0) {
-          db.ref('usuarios/' + currentUser + '/saldo').transaction(v => (v || 0) + reward);
-          alert('🏆 ¡NIVEL ' + currentLevel.id + ' SUPERADO!\n🍬 Puntuación: ' + candyScore + '\n💰 +' + reward + ' €Eden€ de recompensa');
-        } else {
-          alert('🏆 ¡NIVEL ' + currentLevel.id + ' SUPERADO!\n🍬 Puntuación: ' + candyScore);
+        
+        // Recompensas de Candy: 250 €Eden€ por nivel + 1.000 €Eden€ cada 15 niveles
+        let recompensa = 250; // Base por nivel
+        if (currentLevel.id % 15 === 0) recompensa += 1000; // Bonificación cada 15 niveles
+        
+        if (recompensa > 0) {
+          db.ref('usuarios/' + currentUser + '/saldo').transaction(v => (v || 0) + recompensa);
+          actualizarSaldoUI(userBalance + recompensa);
         }
         darXPporJuego(Math.floor(candyScore / 10));
         saveState();
@@ -2203,13 +2576,111 @@ const CANDY = (() => {
       // Derrota
       reproducir('fail');
       const overMenu = document.getElementById('candy-over-menu');
-      const overTitle = document.getElementById('candy-over-title');
-      const overTxt   = document.getElementById('candy-over-txt');
-      if (overTitle) overTitle.innerText = '😔 NIVEL FALLADO';
+      overMenu.classList.remove('ce-hidden');
       if (overTxt)   overTxt.innerText   = 'Nivel ' + currentLevel.id + ' — ' + candyScore + ' / ' + currentLevel.goal + ' pts';
       overMenu.classList.remove('ce-hidden');
       currentLevel = null;
+    } else {
+      // Verificar si hay movimientos posibles
+      if (!_hayMovimientosPosibles()) {
+        // No hay movimientos, reorganizar aleatoriamente
+        _reorganizarGrid();
+        mostrarMensajePowerUp('¡Sin movimientos! Reorganizando...');
+      }
     }
+  }
+
+  function _hayMovimientosPosibles() {
+    for (let r = 0; r < CANDY_GRID_SIZE; r++) {
+      for (let c = 0; c < CANDY_GRID_SIZE; c++) {
+        // Verificar intercambio con celda de la derecha
+        if (c < CANDY_GRID_SIZE - 1) {
+          // Intercambiar temporalmente y verificar matches
+          _swap(r, c, r, c + 1);
+          if (_verificarMatches(r, c) || _verificarMatches(r, c + 1)) {
+            _swap(r, c, r, c + 1); // Deshacer
+            return true;
+          }
+          _swap(r, c, r, c + 1); // Deshacer
+        }
+        
+        // Verificar intercambio con celda de abajo
+        if (r < CANDY_GRID_SIZE - 1) {
+          _swap(r, c, r + 1, c);
+          if (_verificarMatches(r, c) || _verificarMatches(r + 1, c)) {
+            _swap(r, c, r + 1, c); // Deshacer
+            return true;
+          }
+          _swap(r, c, r + 1, c); // Deshacer
+        }
+      }
+    }
+    return false;
+  }
+
+  function _verificarMatches(r, c) {
+    const type = gridData[r][c].type;
+    
+    // Verificar horizontal
+    let countH = 1;
+    // Izquierda
+    for (let i = c - 1; i >= 0 && gridData[r][i] && gridData[r][i].type === type; i--) countH++;
+    // Derecha
+    for (let i = c + 1; i < CANDY_GRID_SIZE && gridData[r][i] && gridData[r][i].type === type; i++) countH++;
+    
+    // Verificar vertical
+    let countV = 1;
+    // Arriba
+    for (let i = r - 1; i >= 0 && gridData[i][c] && gridData[i][c].type === type; i--) countV++;
+    // Abajo
+    for (let i = r + 1; i < CANDY_GRID_SIZE && gridData[i][c] && gridData[i][c].type === type; i++) countV++;
+    
+    return countH >= 3 || countV >= 3;
+  }
+
+  function _reorganizarGrid() {
+    // Recolectar todas las figuras
+    let figuras = [];
+    for (let r = 0; r < CANDY_GRID_SIZE; r++) {
+      for (let c = 0; c < CANDY_GRID_SIZE; c++) {
+        if (gridData[r][c]) {
+          figuras.push(gridData[r][c].type);
+        }
+      }
+    }
+    
+    // Mezclar aleatoriamente
+    for (let i = figuras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [figuras[i], figuras[j]] = [figuras[j], figuras[i]];
+    }
+    
+    // Reasignar figuras mezcladas
+    let index = 0;
+    for (let r = 0; r < CANDY_GRID_SIZE; r++) {
+      for (let c = 0; c < CANDY_GRID_SIZE; c++) {
+        if (gridData[r][c]) {
+          gridData[r][c] = { type: figuras[index++], isBomb: false };
+        }
+      }
+    }
+    
+    _render();
+    
+    // Verificar si hay matches después de reorganizar
+    setTimeout(() => {
+      if (_checkMatches()) {
+        // Hay matches, procesarlos normalmente
+      } else {
+        // Sigue sin movimientos, reorganizar de nuevo
+        setTimeout(() => {
+          if (!_hayMovimientosPosibles()) {
+            _reorganizarGrid();
+            mostrarMensajePowerUp('Reintentando reorganización...');
+          }
+        }, 500);
+      }
+    }, 300);
   }
 
   /* ── Abrir / salir ── */
