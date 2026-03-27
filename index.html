@@ -311,7 +311,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   </div>
 </div>
 
-<!-- ══ TIENDA ══ -->
+<!-- ══ TIENDA UNIFICADA ══ -->
 <div id="vista-tienda" class="container hidden">
   <div class="settings-card">
     <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
@@ -319,27 +319,53 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <span id="shop-balance">Saldo: 0 €Eden€</span>
     <button onclick="console.log('🔥 Forzando actualización manual'); actualizarBotonesTiendaSimple();" style="background:#00FFFF;color:black;padding:5px 10px;border:none;border-radius:5px;margin:5px;cursor:pointer;font-size:12px;">🔄 Forzar Actualización</button>
     <button onclick="console.log('🔥 Actualización directa'); actualizarDirecto();" style="background:#FF6600;color:white;padding:5px 10px;border:none;border-radius:5px;margin:5px;cursor:pointer;font-size:12px;">🔥 ACTUALIZAR DIRECTO</button>
-    <span class="shop-label">PAJAROS</span>
-    <div class="shop-grid">
-      <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
-      <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🦩</span><span class="shop-price">750 pts</span></div>
-      <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">🦆</span><span class="shop-price">1000 pts</span></div>
-      <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🦅</span><span class="shop-price">600 pts</span></div>
-      <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🦚</span><span class="shop-price">800 pts</span></div>
-      <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
+    
+    <!-- Sección en 2 columnas -->
+    <div style="display:flex;gap:20px;margin-top:15px;">
+      
+      <!-- COLUMNA IZQUIERDA: LADRILLOS -->
+      <div style="flex:1;">
+        <h3 style="color:#00FFFF;text-align:center;margin-bottom:10px;">🏓 LADRILLOS</h3>
+        <span class="shop-label">PALETAS</span>
+        <div class="shop-grid">
+          <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
+          <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
+          <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
+        </div>
+        <span class="shop-label">PELOTAS</span>
+        <div class="shop-grid">
+          <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
+          <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
+          <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
+        </div>
+      </div>
+      
+      <!-- COLUMNA DERECHA: FLAPPY -->
+      <div style="flex:1;">
+        <h3 style="color:#FFD700;text-align:center;margin-bottom:10px;">🐦 FLAPPY</h3>
+        <span class="shop-label">PAJAROS</span>
+        <div class="shop-grid">
+          <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
+          <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🦩</span><span class="shop-price">750 pts</span></div>
+          <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">🦆</span><span class="shop-price">1000 pts</span></div>
+          <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🦅</span><span class="shop-price">600 pts</span></div>
+          <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🦚</span><span class="shop-price">800 pts</span></div>
+          <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
+        </div>
+      </div>
+      
     </div>
-    <span class="shop-label">PELOTAS</span>
-    <div class="shop-grid">
-      <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
-      <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
-      <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
+    
+    <!-- Sección inferior: VIDAS -->
+    <div style="margin-top:20px;padding-top:15px;border-top:1px solid rgba(255,255,255,0.2);">
+      <h3 style="color:#FF69B4;text-align:center;margin-bottom:10px;">❤️ VIDAS EXTRAS</h3>
+      <div class="shop-grid" style="max-width:400px;margin:0 auto;">
+        <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
+        <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
+        <div class="shop-item" onclick="comprar('vida',5)">❤️ x5<span class="shop-price">20000 pts</span></div>
+      </div>
     </div>
-    <span class="shop-label">VIDAS EXTRAS</span>
-    <div class="shop-grid">
-      <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
-      <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
-      <div class="shop-item" onclick="comprar('vida',5)">❤️ x5<span class="shop-price">20000 pts</span></div>
-    </div>
+    
   </div>
 </div>
 
@@ -374,7 +400,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   </div>
 </div>
 
-<!-- ══ VISTA JUEGO LADRILLOS ══ -->
 <div id="vista-juego" class="vista-juego-base hidden">
   <button class="btn-game-return" onclick="salirDelJuego()">🚪</button>
   <div id="game-score" class="game-score-display">€Eden€: 0</div>
@@ -382,7 +407,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   <!-- Overlays -->
   <div class="game-overlay-btns">
     <button class="overlay-icon-btn" onclick="toggleRankIngame('ladrillos')" title="Rankings">🏆</button>
-    <button class="overlay-icon-btn" onclick="toggleShopIngame('ladrillos')" title="Tienda">🛒</button>
+    <button class="overlay-icon-btn" onclick="mostrarVista('vista-tienda')" title="Tienda">🛒</button>
   </div>
   <div id="rank-ingame-ladrillos" class="ingame-float-menu hidden">
     <h3 style="color:#FFD700;text-align:center;margin-bottom:8px">🏆 RANKING</h3>
@@ -392,29 +417,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     </div>
     <div id="rank-content-ladrillos"></div>
     <button class="close-overlay-btn" onclick="cerrarRankIngame('ladrillos')">✖ Cerrar</button>
-  </div>
-  <div id="shop-ingame-ladrillos" class="ingame-float-menu hidden">
-    <h3 style="color:#FFD700;text-align:center;margin-bottom:6px">🛒 TIENDA</h3>
-    <span id="saldo-ingame-l" style="color:#FFD700;font-size:12px;display:block;text-align:center;margin-bottom:6px">Saldo: 0 €Eden€</span>
-    <span class="shop-label" style="margin-top:4px">PALETAS</span>
-    <div class="shop-grid">
-      <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
-      <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
-      <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
-    </div>
-    <span class="shop-label">PELOTAS</span>
-    <div class="shop-grid">
-      <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
-      <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
-      <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
-    </div>
-    <span class="shop-label">VIDAS EXTRAS</span>
-    <div class="shop-grid">
-      <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
-      <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
-      <div class="shop-item" onclick="comprar('vida',5)">❤️ x5<span class="shop-price">20000 pts</span></div>
-    </div>
-    <button class="close-overlay-btn" onclick="cerrarShopIngame('ladrillos')">✖ Cerrar</button>
   </div>
   <!-- Menús ladrillos -->
   <div id="difficulty-menu" class="menu-eden hidden">
@@ -433,7 +435,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 </div>
 
 <!-- ══ VISTA FLAPPY ══ -->
-<div id="vista-flappy" class="vista-juego-base hidden">
   <button class="btn-game-return" onclick="salirFlappy()">🚪</button>
   <div id="flappy-score" class="game-score-display">€Eden€: 0</div>
   <canvas id="flappyCanvas" class="game-canvas-style" width="360" height="500"
@@ -441,7 +442,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   <!-- Overlays Flappy -->
   <div class="game-overlay-btns">
     <button class="overlay-icon-btn" onclick="toggleRankIngame('flappy')" title="Rankings">🏆</button>
-    <button class="overlay-icon-btn" onclick="toggleShopIngame('flappy')" title="Tienda">🛒</button>
+    <button class="overlay-icon-btn" onclick="mostrarVista('vista-tienda')" title="Tienda">🛒</button>
   </div>
   <div id="rank-ingame-flappy" class="ingame-float-menu hidden">
     <h3 style="color:#FFD700;text-align:center;margin-bottom:8px">🏆 RANKING</h3>
@@ -1410,25 +1411,25 @@ function equiparItem(tipo, valor){
 function actualizarUIEquipamiento(){
   console.log('🔄 Actualizando UI de equipamiento...');
   
-  // Actualizar tienda principal
+  // Actualizar tienda principal (unificada)
   const shopPrincipal = document.getElementById('vista-tienda');
   if(shopPrincipal && !shopPrincipal.classList.contains('hidden')){
-    console.log('📦 Actualizando tienda principal');
-    actualizarBotonesTiendaSimple();
+    console.log('📦 Actualizando tienda principal unificada');
+    actualizarDirecto(); // Usar la misma función para todo
   }
   
-  // Actualizar tienda de ladrillos
-  const shopLadrillos = document.getElementById('shop-ingame-l');
+  // Actualizar tienda de ladrillos (in-game)
+  const shopLadrillos = document.getElementById('shop-ingame-ladrillos');
   if(shopLadrillos && !shopLadrillos.classList.contains('hidden')){
-    console.log('🏓 Actualizando tienda ladrillos');
-    actualizarDirecto(); // Usar la misma función simple
+    console.log('🏓 Actualizando tienda ladrillos in-game');
+    actualizarDirecto(); // Usar la misma función
   }
   
-  // Actualizar tienda de flappy
-  const shopFlappy = document.getElementById('shop-ingame-f');
+  // Actualizar tienda de flappy (in-game)
+  const shopFlappy = document.getElementById('shop-ingame-flappy');
   if(shopFlappy && !shopFlappy.classList.contains('hidden')){
-    console.log('🐦 Actualizando tienda flappy');
-    actualizarBotonesTiendaSimple();
+    console.log('🐦 Actualizando tienda flappy in-game');
+    actualizarDirecto(); // Usar la misma función
   }
 }
 
