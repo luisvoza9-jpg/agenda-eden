@@ -1421,15 +1421,13 @@ function actualizarUIEquipamiento(){
   const shopLadrillos = document.getElementById('shop-ingame-l');
   if(shopLadrillos && !shopLadrillos.classList.contains('hidden')){
     console.log('🏓 Actualizando tienda ladrillos');
-    // Mantener la función original para ladrillos
-    actualizarBotonesTiendaConEstado('ladrillos');
+    actualizarDirecto(); // Usar la misma función simple
   }
   
   // Actualizar tienda de flappy
   const shopFlappy = document.getElementById('shop-ingame-f');
   if(shopFlappy && !shopFlappy.classList.contains('hidden')){
     console.log('🐦 Actualizando tienda flappy');
-    // Mantener la función original para flappy
     actualizarBotonesTiendaSimple();
   }
 }
@@ -1438,6 +1436,8 @@ function actualizarUIEquipamiento(){
 function actualizarDirecto(){
   console.log('🔥 INICIO actualizarDirecto - MODO SIMPLE');
   console.log('🐦 skinPajaroEquipada actual:', skinPajaroEquipada);
+  console.log('🏓 colorPalaEquipada actual:', colorPalaEquipada);
+  console.log('⚪ colorBolaEquipada actual:', colorBolaEquipada);
   
   const botones = document.querySelectorAll('.shop-item');
   console.log('🔍 Botones encontrados:', botones.length);
@@ -1452,6 +1452,20 @@ function actualizarDirecto(){
     '🦢': {color: 'purple', precio: '1200 pts', tiene: true}
   };
   
+  // Mapeo para pelotas
+  const mapaPelotas = {
+    '●': {color: 'blue', precio: '400 pts', tiene: true},
+    '●': {color: 'pink', precio: '600 pts', tiene: true},
+    '●': {color: 'yellow', precio: '900 pts', tiene: true}
+  };
+  
+  // Mapeo para paletas
+  const mapaPaletas = {
+    '▬': {color: 'red', precio: '500 pts', tiene: true},
+    '▬': {color: 'pink', precio: '750 pts', tiene: true},
+    '▬': {color: 'yellow', precio: '1000 pts', tiene: true}
+  };
+  
   botones.forEach((boton, index) => {
     const emoji = boton.querySelector('span:first-child');
     const priceSpan = boton.querySelector('.shop-price');
@@ -1459,12 +1473,13 @@ function actualizarDirecto(){
     if(!emoji || !priceSpan) return;
     
     const emojiText = emoji.textContent;
-    console.log(`🐦 Botón ${index}: emoji="${emojiText}", precio actual="${priceSpan.textContent}"`);
+    const emojiStyle = emoji.getAttribute('style') || '';
+    console.log(`🐦 Botón ${index}: emoji="${emojiText}", estilo="${emojiStyle}", precio actual="${priceSpan.textContent}"`);
     
+    // PÁJAROS
     if(mapaPajaros[emojiText]){
       const pajaro = mapaPajaros[emojiText];
       
-      // Si es el pájaro equipado actualmente
       if(skinPajaroEquipada === emojiText){
         console.log(`✅ ${emojiText} está equipado - marcando como EQUIPADO`);
         priceSpan.textContent = '✅ EQUIPADO';
@@ -1472,7 +1487,6 @@ function actualizarDirecto(){
         boton.style.boxShadow = '0 0 10px #00FF00';
         boton.setAttribute('onclick', `equiparItem('pajaro','${pajaro.color}')`);
       }
-      // Si lo tiene pero no está equipado
       else if(pajaro.tiene){
         console.log(`🔄 ${emojiText} tiene pero no equipado - marcando como Equipar`);
         priceSpan.textContent = 'Equipar';
@@ -1480,7 +1494,6 @@ function actualizarDirecto(){
         boton.style.boxShadow = '';
         boton.setAttribute('onclick', `equiparItem('pajaro','${pajaro.color}')`);
       }
-      // Si no lo tiene
       else{
         console.log(`💰 ${emojiText} no tiene - marcando como Comprar`);
         priceSpan.textContent = pajaro.precio;
@@ -1488,9 +1501,69 @@ function actualizarDirecto(){
         boton.style.boxShadow = '';
         boton.setAttribute('onclick', `comprar('pajaro','${pajaro.color}')`);
       }
-      
-      console.log(`🔧 Nuevo estado: precio="${priceSpan.textContent}", onclick="${boton.getAttribute('onclick')}"`);
     }
+    // PELOTAS
+    else if(emojiText === '●'){
+      let color = '';
+      if(emojiStyle.includes('color:blue')) color = 'blue';
+      else if(emojiStyle.includes('color:pink')) color = 'pink';
+      else if(emojiStyle.includes('color:yellow')) color = 'yellow';
+      
+      if(color){
+        const equipado = (color === 'blue' && colorBolaEquipada === '#0000FF') ||
+                        (color === 'pink' && colorBolaEquipada === '#FFC0CB') ||
+                        (color === 'yellow' && colorBolaEquipada === '#FFFF00');
+        
+        const precios = {blue: '400 pts', pink: '600 pts', yellow: '900 pts'};
+        
+        if(equipado){
+          console.log(`✅ Pelota ${color} está equipada - marcando como EQUIPADO`);
+          priceSpan.textContent = '✅ EQUIPADO';
+          boton.style.border = '2px solid #00FF00';
+          boton.style.boxShadow = '0 0 10px #00FF00';
+          boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
+        }
+        else{
+          console.log(`🔄 Pelota ${color} - marcando como Equipar`);
+          priceSpan.textContent = 'Equipar';
+          boton.style.border = '';
+          boton.style.boxShadow = '';
+          boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
+        }
+      }
+    }
+    // PALETAS
+    else if(emojiText === '▬'){
+      let color = '';
+      if(emojiStyle.includes('color:red')) color = 'red';
+      else if(emojiStyle.includes('color:pink')) color = 'pink';
+      else if(emojiStyle.includes('color:yellow')) color = 'yellow';
+      
+      if(color){
+        const equipado = (color === 'red' && colorPalaEquipada === '#FF0000') ||
+                        (color === 'pink' && colorPalaEquipada === '#FFC0CB') ||
+                        (color === 'yellow' && colorPalaEquipada === '#FFFF00');
+        
+        const precios = {red: '500 pts', pink: '750 pts', yellow: '1000 pts'};
+        
+        if(equipado){
+          console.log(`✅ Paleta ${color} está equipada - marcando como EQUIPADO`);
+          priceSpan.textContent = '✅ EQUIPADO';
+          boton.style.border = '2px solid #00FF00';
+          boton.style.boxShadow = '0 0 10px #00FF00';
+          boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
+        }
+        else{
+          console.log(`🔄 Paleta ${color} - marcando como Equipar`);
+          priceSpan.textContent = 'Equipar';
+          boton.style.border = '';
+          boton.style.boxShadow = '';
+          boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
+        }
+      }
+    }
+    
+    console.log(`🔧 Nuevo estado: precio="${priceSpan.textContent}", onclick="${boton.getAttribute('onclick')}"`);
   });
   
   console.log('✅ actualizarDirecto COMPLETADO');
