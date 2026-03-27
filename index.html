@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -49,8 +50,9 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   font-weight:bold;display:flex;align-items:center;justify-content:center;gap:10px}
 /* Tienda */
 .shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.shop-item-container{display:flex;flex-direction:column;align-items:center}
 .shop-item{background:rgba(255,255,255,.1);padding:10px;border-radius:10px;text-align:center;
-  border:1px solid rgba(0,255,255,.3);cursor:pointer;transition:.3s}
+  border:1px solid rgba(0,255,255,.3);cursor:pointer;transition:.3s;margin-bottom:8px;width:100%}
 .shop-item:hover{background:rgba(0,255,255,.2);border-color:#00FFFF}
 .shop-price{display:block;font-size:10px;color:#FFD700;margin-top:5px}
 .equipar-btn{background:rgba(255,255,255,.1);padding:8px;border-radius:10px;text-align:center;
@@ -319,18 +321,30 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <span id="shop-balance">Saldo: 0 €Eden€</span>
     <span class="shop-label">PAJAROS</span>
     <div class="shop-grid">
-      <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
-      <button class="equipar-btn" onclick="equiparItem('pajaro','red')">Equipar 🦜</button>
-      <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🦩</span><span class="shop-price">750 pts</span></div>
-      <button class="equipar-btn" onclick="equiparItem('pajaro','pink')">Equipar 🦩</button>
-      <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">�</span><span class="shop-price">1000 pts</span></div>
-      <button class="equipar-btn" onclick="equiparItem('pajaro','yellow')">Equipar �</button>
-      <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🦅</span><span class="shop-price">600 pts</span></div>
-      <button class="equipar-btn" onclick="equiparItem('pajaro','blue')">Equipar 🦅</button>
-      <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🦚</span><span class="shop-price">800 pts</span></div>
-      <button class="equipar-btn" onclick="equiparItem('pajaro','green')">Equipar 🦚</button>
-      <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
-      <button class="equipar-btn" onclick="equiparItem('pajaro','purple')">Equipar 🦢</button>
+      <div class="shop-item-container">
+        <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
+        <button class="equipar-btn" onclick="equiparItem('pajaro','red')">Equipar 🦜</button>
+      </div>
+      <div class="shop-item-container">
+        <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🦩</span><span class="shop-price">750 pts</span></div>
+        <button class="equipar-btn" onclick="equiparItem('pajaro','pink')">Equipar 🦩</button>
+      </div>
+      <div class="shop-item-container">
+        <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow"></span><span class="shop-price">1000 pts</span></div>
+        <button class="equipar-btn" onclick="equiparItem('pajaro','yellow')">Equipar</button>
+      </div>
+      <div class="shop-item-container">
+        <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🦅</span><span class="shop-price">600 pts</span></div>
+        <button class="equipar-btn" onclick="equiparItem('pajaro','blue')">Equipar 🦅</button>
+      </div>
+      <div class="shop-item-container">
+        <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🦚</span><span class="shop-price">800 pts</span></div>
+        <button class="equipar-btn" onclick="equiparItem('pajaro','green')">Equipar 🦚</button>
+      </div>
+      <div class="shop-item-container">
+        <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
+        <button class="equipar-btn" onclick="equiparItem('pajaro','purple')">Equipar 🦢</button>
+      </div>
     </div>
     <span class="shop-label">PELOTAS</span>
     <div class="shop-grid">
