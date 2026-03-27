@@ -1289,6 +1289,158 @@ function actualizarBotonesTiendaSimple() {
   });
 }
 
+function actualizarDirecto(){
+  console.log('🔥 INICIO actualizarDirecto - MODO SIMPLE');
+  console.log('🐦 skinPajaroEquipada actual:', skinPajaroEquipada);
+  console.log('🏓 colorPalaEquipada actual:', colorPalaEquipada);
+  console.log('⚪ colorBolaEquipada actual:', colorBolaEquipada);
+  
+  const botones = document.querySelectorAll('.shop-item');
+  console.log('🔍 Botones encontrados:', botones.length);
+  
+  // Obtener inventario del usuario una sola vez
+  if(!currentUser || currentUser === 'admin'){
+    console.log('❌ No hay usuario activo, saliendo...');
+    return;
+  }
+  
+  db.ref('usuarios/'+currentUser+'/inventario').once('value').then(snap => {
+    const inventario = snap.val() || {};
+    console.log('📦 Inventario cargado:', inventario);
+    
+    botones.forEach((boton, index) => {
+      const emoji = boton.querySelector('span:first-child');
+      const priceSpan = boton.querySelector('.shop-price');
+      
+      if(!emoji || !priceSpan) return;
+      
+      const emojiText = emoji.textContent;
+      const emojiStyle = emoji.getAttribute('style') || '';
+      console.log(`🐦 Botón ${index}: emoji="${emojiText}", estilo="${emojiStyle}", precio actual="${priceSpan.textContent}"`);
+      
+      // PÁJAROS
+      if(['🦜','🦩','🦆','🦅','🦚','🦢'].includes(emojiText)){
+        const mapaPajaros = {
+          '🦜': {color: 'red', precio: '500 pts'},
+          '🦩': {color: 'pink', precio: '750 pts'}, 
+          '🦆': {color: 'yellow', precio: '1000 pts'},
+          '🦅': {color: 'blue', precio: '600 pts'},
+          '🦚': {color: 'green', precio: '800 pts'},
+          '🦢': {color: 'purple', precio: '1200 pts'}
+        };
+        
+        const pajaro = mapaPajaros[emojiText];
+        const tiene = inventario.pajaros && inventario.pajaros[pajaro.color];
+        const equipado = skinPajaroEquipada === emojiText;
+        
+        if(equipado){
+          console.log(`✅ ${emojiText} está equipado - marcando como EQUIPADO`);
+          priceSpan.textContent = '✅ EQUIPADO';
+          boton.style.border = '2px solid #00FF00';
+          boton.style.boxShadow = '0 0 10px #00FF00';
+          boton.setAttribute('onclick', `equiparItem('pajaro','${pajaro.color}')`);
+        }
+        else if(tiene){
+          console.log(`🔄 ${emojiText} tiene pero no equipado - marcando como Equipar`);
+          priceSpan.textContent = 'Equipar';
+          boton.style.border = '';
+          boton.style.boxShadow = '';
+          boton.setAttribute('onclick', `equiparItem('pajaro','${pajaro.color}')`);
+        }
+        else{
+          console.log(`💰 ${emojiText} no tiene - marcando como Comprar`);
+          priceSpan.textContent = pajaro.precio;
+          boton.style.border = '';
+          boton.style.boxShadow = '';
+          boton.setAttribute('onclick', `comprar('pajaro','${pajaro.color}')`);
+        }
+      }
+      // PELOTAS
+      else if(emojiText === '●'){
+        let color = '';
+        if(emojiStyle.includes('color:blue')) color = 'blue';
+        else if(emojiStyle.includes('color:pink')) color = 'pink';
+        else if(emojiStyle.includes('color:yellow')) color = 'yellow';
+        
+        if(color){
+          const tiene = inventario.pelotas && inventario.pelotas[color];
+          const equipado = (color === 'blue' && colorBolaEquipada === '#0000FF') ||
+                          (color === 'pink' && colorBolaEquipada === '#FFC0CB') ||
+                          (color === 'yellow' && colorBolaEquipada === '#FFFF00');
+          
+          const precios = {blue: '400 pts', pink: '600 pts', yellow: '900 pts'};
+          
+          if(equipado){
+            console.log(`✅ Pelota ${color} está equipada - marcando como EQUIPADO`);
+            priceSpan.textContent = '✅ EQUIPADO';
+            boton.style.border = '2px solid #00FF00';
+            boton.style.boxShadow = '0 0 10px #00FF00';
+            boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
+          }
+          else if(tiene){
+            console.log(`🔄 Pelota ${color} tiene pero no equipada - marcando como Equipar`);
+            priceSpan.textContent = 'Equipar';
+            boton.style.border = '';
+            boton.style.boxShadow = '';
+            boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
+          }
+          else{
+            console.log(`💰 Pelota ${color} no tiene - marcando como Comprar`);
+            priceSpan.textContent = precios[color];
+            boton.style.border = '';
+            boton.style.boxShadow = '';
+            boton.setAttribute('onclick', `comprar('bola','${color}')`);
+          }
+        }
+      }
+      // PALETAS
+      else if(emojiText === '▬'){
+        let color = '';
+        if(emojiStyle.includes('color:red')) color = 'red';
+        else if(emojiStyle.includes('color:pink')) color = 'pink';
+        else if(emojiStyle.includes('color:yellow')) color = 'yellow';
+        
+        if(color){
+          const tiene = inventario.paletas && inventario.paletas[color];
+          const equipado = (color === 'red' && colorPalaEquipada === '#FF0000') ||
+                          (color === 'pink' && colorPalaEquipada === '#FFC0CB') ||
+                          (color === 'yellow' && colorPalaEquipada === '#FFFF00');
+          
+          const precios = {red: '500 pts', pink: '750 pts', yellow: '1000 pts'};
+          
+          if(equipado){
+            console.log(`✅ Paleta ${color} está equipada - marcando como EQUIPADO`);
+            priceSpan.textContent = '✅ EQUIPADO';
+            boton.style.border = '2px solid #00FF00';
+            boton.style.boxShadow = '0 0 10px #00FF00';
+            boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
+          }
+          else if(tiene){
+            console.log(`🔄 Paleta ${color} tiene pero no equipada - marcando como Equipar`);
+            priceSpan.textContent = 'Equipar';
+            boton.style.border = '';
+            boton.style.boxShadow = '';
+            boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
+          }
+          else{
+            console.log(`💰 Paleta ${color} no tiene - marcando como Comprar`);
+            priceSpan.textContent = precios[color];
+            boton.style.border = '';
+            boton.style.boxShadow = '';
+            boton.setAttribute('onclick', `comprar('paleta','${color}')`);
+          }
+        }
+      }
+      
+      console.log(`🔧 Nuevo estado: precio="${priceSpan.textContent}", onclick="${boton.getAttribute('onclick')}"`);
+    });
+    
+    console.log('✅ actualizarDirecto COMPLETADO');
+  }).catch(error => {
+    console.error('❌ Error cargando inventario:', error);
+  });
+}
+
 /* ═══════════════════ SISTEMA DE VIDAS ═══════════════════ */
 function usarVida(juego) {
   if (!currentUser || currentUser === 'admin') return;
