@@ -317,6 +317,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
     <h2 style="color:#FFD700;margin-bottom:10px;text-align:center">EDÉN SHOP</h2>
     <span id="shop-balance">Saldo: 0 €Eden€</span>
+    <button onclick="console.log('🔥 Forzando actualización manual'); actualizarBotonesTiendaSimple();" style="background:#00FFFF;color:black;padding:5px 10px;border:none;border-radius:5px;margin:5px;cursor:pointer;font-size:12px;">🔄 Forzar Actualización</button>
     <span class="shop-label">PAJAROS</span>
     <div class="shop-grid">
       <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
@@ -631,13 +632,9 @@ function mostrarVista(id){
     // Cargar equipamiento desde Firebase y actualizar botones
     cargarEquipamientoDesdeDB().then(() => {
       console.log('📦 Equipamiento cargado, actualizando botones...');
-      actualizarBotonesTiendaConEstado('tienda-principal');
-      
-      // Forzar actualización adicional después de un pequeño delay
-      setTimeout(() => {
-        console.log('🔄 Forzando segunda actualización...');
-        actualizarBotonesTiendaConEstado('tienda-principal');
-      }, 1000);
+      actualizarBotonesTiendaSimple();
+    }).catch(error => {
+      console.error('❌ Error cargando equipamiento:', error);
     });
   }
   const conNav=['vista-agenda','vista-ajustes','vista-chat'];
@@ -1401,13 +1398,14 @@ function actualizarUIEquipamiento(){
   const shopPrincipal = document.getElementById('vista-tienda');
   if(shopPrincipal && !shopPrincipal.classList.contains('hidden')){
     console.log('📦 Actualizando tienda principal');
-    actualizarBotonesTiendaConEstado('tienda-principal');
+    actualizarBotonesTiendaSimple();
   }
   
   // Actualizar tienda de ladrillos
   const shopLadrillos = document.getElementById('shop-ingame-l');
   if(shopLadrillos && !shopLadrillos.classList.contains('hidden')){
     console.log('🏓 Actualizando tienda ladrillos');
+    // Mantener la función original para ladrillos
     actualizarBotonesTiendaConEstado('ladrillos');
   }
   
@@ -1415,177 +1413,79 @@ function actualizarUIEquipamiento(){
   const shopFlappy = document.getElementById('shop-ingame-f');
   if(shopFlappy && !shopFlappy.classList.contains('hidden')){
     console.log('🐦 Actualizando tienda flappy');
+    // Mantener la función original para flappy
     actualizarBotonesTiendaConEstado('flappy');
   }
 }
 
-// Actualizar botones de tienda con estado EQUIPADO
-function actualizarBotonesTiendaConEstado(juego){
-  let shopElement;
+// Función simplificada para actualizar botones de tienda
+function actualizarBotonesTiendaSimple(){
+  console.log('🔄 INICIO actualizarBotonesTiendaSimple');
   
-  if(juego === 'tienda-principal'){
-    shopElement = document.getElementById('vista-tienda');
-  } else {
-    const shopId = 'shop-ingame-' + (juego === 'ladrillos' ? 'l' : 'f');
-    shopElement = document.getElementById(shopId);
+  const shopElement = document.getElementById('vista-tienda');
+  if(!shopElement) {
+    console.log('❌ No se encontró la tienda principal');
+    return;
   }
-  
-  if(!shopElement) return;
   
   // Obtener inventario actual
   db.ref('usuarios/'+currentUser+'/inventario').once('value').then(snap => {
     const inventario = snap.val() || {};
+    console.log('📦 Inventario cargado:', inventario);
     
-    // Actualizar botones de paletas (solo en Ladrillos)
-    if(juego === 'ladrillos'){
-      const coloresPaletas = ['red', 'pink', 'yellow'];
-      coloresPaletas.forEach(color => {
-        const botones = shopElement.querySelectorAll('.shop-item');
-        botones.forEach(boton => {
-          const emoji = boton.querySelector('span:first-child');
-          if(emoji && emoji.textContent === '▬'){
-            const estilo = boton.querySelector('span:first-child').style.color;
-            const atributoColor = boton.querySelector('span:first-child').getAttribute('style');
-            
-            // Detectar color por estilo CSS o por atributo HTML
-            const esColorRojo = (color === 'red' && (estilo === 'red' || estilo.includes('255,0,0') || atributoColor.includes('color:red')));
-            const esColorPink = (color === 'pink' && (estilo === 'pink' || estilo.includes('255,192,203') || atributoColor.includes('color:pink')));
-            const esColorYellow = (color === 'yellow' && (estilo === 'yellow' || estilo.includes('255,255,0') || atributoColor.includes('color:yellow')));
-            
-            if(esColorRojo || esColorPink || esColorYellow){
-              
-              const tiene = inventario.paletas && inventario.paletas[color];
-              const equipado = (color === 'red' && colorPalaEquipada === '#FF0000') ||
-                              (color === 'pink' && colorPalaEquipada === '#FFC0CB') ||
-                              (color === 'yellow' && colorPalaEquipada === '#FFFF00');
-              
-              if(tiene && equipado){
-                boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">✅ EQUIPADO</span>`;
-                boton.style.border = '2px solid #00FF00';
-                boton.style.boxShadow = '0 0 10px #00FF00';
-                boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
-              } else if(tiene){
-                boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">Equipar</span>`;
-                boton.style.border = '';
-                boton.style.boxShadow = '';
-                boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
-              } else{
-                const precio = color === 'red' ? 500 : (color === 'pink' ? 750 : 1000);
-                boton.innerHTML = `<span style="color:${color}">▬</span><span class="shop-price">${precio} pts</span>`;
-                boton.style.border = '';
-                boton.style.boxShadow = '';
-                boton.setAttribute('onclick', `comprar('paleta','${color}')`);
-              }
-            }
-          }
-        });
-      });
-    }
+    // Actualizar pájaros
+    const botones = shopElement.querySelectorAll('.shop-item');
+    console.log('🔍 Botones encontrados:', botones.length);
     
-    // Actualizar botones de pelotas (tienda principal y ambos juegos)
-    if(juego === 'tienda-principal' || juego === 'ladrillos' || juego === 'flappy'){
-      const coloresPelotas = ['blue', 'pink', 'yellow'];
-      coloresPelotas.forEach(color => {
-        const botones = shopElement.querySelectorAll('.shop-item');
-        botones.forEach(boton => {
-          const emoji = boton.querySelector('span:first-child');
-          if(emoji && emoji.textContent === '●'){
-            const estilo = boton.querySelector('span:first-child').style.color;
-            const atributoColor = boton.querySelector('span:first-child').getAttribute('style');
-            
-            // Detectar color por estilo CSS o por atributo HTML
-            const esColorBlue = (color === 'blue' && (estilo === 'blue' || estilo.includes('0,0,255') || atributoColor.includes('color:blue')));
-            const esColorPink = (color === 'pink' && (estilo === 'pink' || estilo.includes('255,192,203') || atributoColor.includes('color:pink')));
-            const esColorYellow = (color === 'yellow' && (estilo === 'yellow' || estilo.includes('255,255,0') || atributoColor.includes('color:yellow')));
-            
-            if(esColorBlue || esColorPink || esColorYellow){
-              
-              const tiene = inventario.pelotas && inventario.pelotas[color];
-              const equipado = (color === 'blue' && colorBolaEquipada === '#0000FF') ||
-                              (color === 'pink' && colorBolaEquipada === '#FFC0CB') ||
-                              (color === 'yellow' && colorBolaEquipada === '#FFFF00');
-              
-              if(tiene && equipado){
-                boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">✅ EQUIPADO</span>`;
-                boton.style.border = '2px solid #00FF00';
-                boton.style.boxShadow = '0 0 10px #00FF00';
-                boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
-              } else if(tiene){
-                boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">Equipar</span>`;
-                boton.style.border = '';
-                boton.style.boxShadow = '';
-                boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
-              } else{
-                const precio = color === 'blue' ? 400 : (color === 'pink' ? 600 : 900);
-                boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">${precio} pts</span>`;
-                boton.style.border = '';
-                boton.style.boxShadow = '';
-                boton.setAttribute('onclick', `comprar('bola','${color}')`);
-              }
-            }
-          }
-        });
-      });
-    }
-    
-    // Actualizar botones de pájaros (tienda principal y Flappy)
-    if(juego === 'tienda-principal' || juego === 'flappy'){
-      console.log('🐦 Actualizando pájaros para juego:', juego);
-      const coloresPajaros = ['red', 'pink', 'yellow', 'blue', 'green', 'purple'];
-      coloresPajaros.forEach(color => {
-        const botones = shopElement.querySelectorAll('.shop-item');
-        console.log(`🔍 Buscando pájaros color: ${color}, botones encontrados: ${botones.length}`);
-        botones.forEach(boton => {
-          const emoji = boton.querySelector('span:first-child');
-          if(emoji && (emoji.textContent === '🦜' || emoji.textContent === '🦩' || emoji.textContent === '🦆' || emoji.textContent === '🦅' || emoji.textContent === '🦚' || emoji.textContent === '🦢')){
-            const estilo = boton.querySelector('span:first-child').style.color;
-            const atributoColor = boton.querySelector('span:first-child').getAttribute('style');
-            
-            // Detectar color por estilo CSS o por atributo HTML
-            const esColorRojo = (color === 'red' && (estilo === 'red' || estilo.includes('255,0,0') || atributoColor.includes('color:red')));
-            const esColorPink = (color === 'pink' && (estilo === 'pink' || estilo.includes('255,192,203') || atributoColor.includes('color:pink')));
-            const esColorBlue = (color === 'blue' && (estilo === 'blue' || estilo.includes('0,0,255') || atributoColor.includes('color:blue')));
-            const esColorGreen = (color === 'green' && (estilo === 'green' || estilo.includes('0,128,0') || atributoColor.includes('color:green')));
-            const esColorPurple = (color === 'purple' && (estilo === 'purple' || estilo.includes('128,0,128') || atributoColor.includes('color:purple')));
-            const esColorYellow = (color === 'yellow' && (estilo === 'yellow' || estilo.includes('255,255,0') || atributoColor.includes('color:yellow')));
-            
-            if(esColorRojo || esColorPink || esColorBlue || esColorGreen || esColorPurple || esColorYellow){
-              
-              const tiene = inventario.pajaros && inventario.pajaros[color];
-              const equipado = (color === 'red' && skinPajaroEquipada === '🦜') ||
-                              (color === 'pink' && skinPajaroEquipada === '🦩') ||
-                              (color === 'yellow' && skinPajaroEquipada === '🦆') ||
-                              (color === 'blue' && skinPajaroEquipada === '🦅') ||
-                              (color === 'green' && skinPajaroEquipada === '🦚') ||
-                              (color === 'purple' && skinPajaroEquipada === '🦢');
-              
-              console.log(`📊 Pájaro ${color}: tiene=${tiene}, equipado=${equipado}, skinActual=${skinPajaroEquipada}`);
-              
-              if(tiene && equipado){
-                console.log(`✅ Pájaro ${color}: Marcando como EQUIPADO`);
-                boton.innerHTML = `<span style="color:${color}">${emoji.textContent || ''}</span><span class="shop-price">✅ EQUIPADO</span>`;
-                boton.style.border = '2px solid #00FF00';
-                boton.style.boxShadow = '0 0 10px #00FF00';
-                boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
-              } else if(tiene){
-                console.log(`🔄 Pájaro ${color}: Marcando como Equipar`);
-                boton.innerHTML = `<span style="color:${color}">${emoji.textContent || ''}</span><span class="shop-price">Equipar</span>`;
-                boton.style.border = '';
-                boton.style.boxShadow = '';
-                boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
-              } else{
-                console.log(`💰 Pájaro ${color}: Marcando como Comprar`);
-                const precio = color === 'red' ? 500 : (color === 'pink' ? 750 : (color === 'yellow' ? 1000 : (color === 'blue' ? 600 : (color === 'green' ? 800 : 1200))));
-                boton.innerHTML = `<span style="color:${color}">${emoji.textContent}</span><span class="shop-price">${precio} pts</span>`;
-                boton.style.border = '';
-                boton.style.boxShadow = '';
-                boton.setAttribute('onclick', `comprar('pajaro','${color}')`);
-              }
-            }
-          }
-        });
-      });
-    }
+    botones.forEach((boton, index) => {
+      const emoji = boton.querySelector('span:first-child');
+      const priceSpan = boton.querySelector('.shop-price');
+      
+      if(!emoji || !priceSpan) return;
+      
+      console.log(`🐦 Procesando botón ${index}: emoji="${emoji.textContent}", color="${emoji.style.color}"`);
+      
+      // Detectar tipo y color por el emoji
+      let tipo = '', color = '';
+      if(emoji.textContent === '🦜'){ tipo = 'pajaro'; color = 'red'; }
+      else if(emoji.textContent === '🦩'){ tipo = 'pajaro'; color = 'pink'; }
+      else if(emoji.textContent === '🦆'){ tipo = 'pajaro'; color = 'yellow'; }
+      else if(emoji.textContent === '🦅'){ tipo = 'pajaro'; color = 'blue'; }
+      else if(emoji.textContent === '🦚'){ tipo = 'pajaro'; color = 'green'; }
+      else if(emoji.textContent === '🦢'){ tipo = 'pajaro'; color = 'purple'; }
+      else if(emoji.textContent === '●'){ tipo = 'bola'; }
+      else if(emoji.textContent === '▬'){ tipo = 'paleta'; }
+      
+      if(tipo === 'pajaro'){
+        const tiene = inventario.pajaros && inventario.pajaros[color];
+        const equipado = skinPajaroEquipada === emoji.textContent;
+        
+        console.log(`📊 Pájaro ${color}: tiene=${tiene}, equipado=${equipado}`);
+        
+        if(tiene && equipado){
+          priceSpan.textContent = '✅ EQUIPADO';
+          boton.style.border = '2px solid #00FF00';
+          boton.style.boxShadow = '0 0 10px #00FF00';
+          boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
+          console.log(`✅ Pájaro ${color} marcado como EQUIPADO`);
+        } else if(tiene){
+          priceSpan.textContent = 'Equipar';
+          boton.style.border = '';
+          boton.style.boxShadow = '';
+          boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
+          console.log(`🔄 Pájaro ${color} marcado como Equipar`);
+        } else{
+          const precios = {red:500, pink:750, yellow:1000, blue:600, green:800, purple:1200};
+          priceSpan.textContent = precios[color] + ' pts';
+          boton.style.border = '';
+          boton.style.boxShadow = '';
+          boton.setAttribute('onclick', `comprar('pajaro','${color}')`);
+          console.log(`💰 Pájaro ${color} marcado como Comprar`);
+        }
+      }
+    });
+  }).catch(error => {
+    console.error('❌ Error cargando inventario:', error);
   });
 }
 
