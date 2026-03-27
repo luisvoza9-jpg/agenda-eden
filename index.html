@@ -70,6 +70,13 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 .shop-label{font-size:11px;font-weight:bold;display:block;margin-top:15px;
   color:#00FFFF;border-bottom:1px solid rgba(0,255,255,.2)}
 
+/* Paneles de tienda - misma altura y ancho */
+#shop-panel-ladrillos, #shop-panel-flappy, #shop-panel-candy {
+  min-height: 320px;
+  width: 100%;
+  max-width: 100%;
+}
+
 /* ── Notas ── */
 .task-input-group{display:flex;gap:10px;margin-top:10px;align-items:center}
 .btn-blue{background:#00FFFF;color:black;width:55px;font-size:24px;border-radius:10px;
@@ -448,50 +455,48 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
       <button class="shop-tab"        id="shop-tab-candy"    onclick="cambiarTabTienda('candy')"    style="flex:1;padding:8px 0;background:rgba(0,0,0,.6);color:#aaa;font-size:12px;font-weight:bold;cursor:pointer;border:none;transition:.3s;text-align:center">🍬 Candy</button>
     </div>
     
-    <!-- Contenido LADRILLOS -->
-    <div id="shop-content-ladrillos">
-      <div class="shop-grid-2cols" style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
-        <div class="shop-column">
-          <span class="shop-label">PALETAS</span>
-          <div class="shop-grid">
-            <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
-            <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
-            <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
-          </div>
+    <!-- Contenido único de la tienda -->
+    <div id="shop-content">
+      <!-- Contenido LADRILLOS -->
+      <div id="shop-panel-ladrillos">
+        <span class="shop-label">PALETAS</span>
+        <div class="shop-grid">
+          <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
+          <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
+          <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
         </div>
-        <div class="shop-column">
-          <span class="shop-label">PELOTAS</span>
-          <div class="shop-grid">
-            <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
-            <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
-            <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
-          </div>
+        
+        <span class="shop-label">PELOTAS</span>
+        <div class="shop-grid">
+          <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
+          <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
+          <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
         </div>
       </div>
-    </div>
-    
-    <!-- Contenido FLAPPY -->
-    <div id="shop-content-flappy" class="hidden">
-      <div class="shop-grid">
-        <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
-        <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🦩</span><span class="shop-price">750 pts</span></div>
-        <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">🦆</span><span class="shop-price">1000 pts</span></div>
-        <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🦅</span><span class="shop-price">600 pts</span></div>
-        <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🦚</span><span class="shop-price">800 pts</span></div>
-        <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
+      
+      <!-- Contenido FLAPPY -->
+      <div id="shop-panel-flappy" class="hidden">
+        <span class="shop-label">PÁJAROS</span>
+        <div class="shop-grid">
+          <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
+          <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🦩</span><span class="shop-price">750 pts</span></div>
+          <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">🦆</span><span class="shop-price">1000 pts</span></div>
+          <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🦅</span><span class="shop-price">600 pts</span></div>
+          <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🦚</span><span class="shop-price">800 pts</span></div>
+          <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
+        </div>
       </div>
-    </div>
-    
-    <!-- Contenido CANDY -->
-    <div id="shop-content-candy" class="hidden">
-      <div class="shop-column">
+      
+      <!-- Contenido CANDY -->
+      <div id="shop-panel-candy" class="hidden">
         <span class="shop-label">POWER-UPS</span>
         <div class="shop-grid">
           <div class="shop-item" onclick="comprar('candy_rayo',1)">⚡<span class="shop-price">500 pts</span></div>
           <div class="shop-item" onclick="comprar('candy_bollo',1)">🥐<span class="shop-price">500 pts</span></div>
+          <div class="shop-item" style="opacity:0.3;cursor:default;pointer-events:none">🎁<span class="shop-price">Próximamente</span></div>
         </div>
-        <h3 style="color:#FF69B4;text-align:center;margin-top:15px;margin-bottom:5px">❤️ VIDAS</h3>
-        <span class="shop-label">EXTRAS</span>
+        
+        <span class="shop-label">VIDAS</span>
         <div class="shop-grid">
           <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
           <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
@@ -623,17 +628,16 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 
   <!-- Ranking overlay -->
   <div class="game-overlay-btns">
-    <button class="overlay-icon-btn" style="border-color:rgba(255,0,255,.4)" onclick="toggleRankIngame('candy')" title="Rankings">🏆</button>
-    <button class="overlay-icon-btn" style="border-color:rgba(255,0,255,.4)" onclick="mostrarVista('vista-tienda-unificada')" title="Tienda">🛒</button>
+    <button class="overlay-icon-btn" style="border-color:rgba(255,0,255,.4);font-size:16px;padding:4px;width:24px;height:24px" onclick="toggleRankIngame('candy')" title="Rankings">🏆</button>
   </div>
-  <div id="rank-ingame-candy" class="ingame-float-menu hidden" style="border-color:#FF00FF">
-    <h3 style="color:#FF00FF;text-align:center;margin-bottom:8px">🏆 RANKING CANDY</h3>
+  <div id="rank-ingame-candy" class="hidden" style="position:absolute;top:52px;right:10px;width:290px;background:rgba(0,0,0,.9);padding:10px;border-radius:8px;z-index:1008;border:none;box-shadow:none">
+    <h3 style="color:#FF00FF;text-align:center;margin-bottom:8px;font-size:14px">🏆 RANKING CANDY</h3>
     <div class="rank-tabs">
       <button class="rank-tab active" id="rtab-c-mundial" onclick="cambiarTabRank('candy','mundial')">🌍 Mundial</button>
       <button class="rank-tab"        id="rtab-c-amigos"  onclick="cambiarTabRank('candy','amigos')">👥 Amigos</button>
     </div>
     <div id="rank-content-candy"></div>
-    <button class="close-overlay-btn" onclick="cerrarRankIngame('candy')">✖ Cerrar</button>
+    <button class="close-overlay-btn" onclick="cerrarRankIngame('candy')" style="font-size:10px">✖ Cerrar</button>
   </div>
 
   <!-- Inventory bar -->
@@ -946,9 +950,13 @@ function mostrarVista(id) {
     cargarEquipamientoDesdeDB().then(() => actualizarBotonesTiendaSimple());
   }
 
-  const conNav = ['vista-agenda','vista-ajustes','vista-chat'];
+  const conNav = ['vista-agenda','vista-ajustes','vista-chat','vista-candy'];
   if (conNav.includes(id)) {
-    ['exit-btn','settings-btn','chat-btn','shop-btn-izq'].forEach(b => document.getElementById(b).classList.remove('hidden'));
+    // No mostrar exit-btn en Candy
+    const botones = id === 'vista-candy' 
+      ? ['settings-btn','chat-btn','shop-btn-izq'] 
+      : ['exit-btn','settings-btn','chat-btn','shop-btn-izq'];
+    botones.forEach(b => document.getElementById(b).classList.remove('hidden'));
     if (id === 'vista-agenda') {
       document.getElementById('pantalla-oscura').classList.add('hidden');
       dibujarPreviewLadrillos(); dibujarPreviewFlappy(); dibujarPreviewCandy();
@@ -1576,6 +1584,8 @@ function cambiarTabChat(modo) {
 }
 
 function cambiarTabTienda(seccion) {
+  console.log('🔄 Cambiando a sección de tienda:', seccion);
+  
   // Actualizar pestañas
   ['ladrillos','flappy','candy'].forEach(t => {
     const tab = document.getElementById('shop-tab-' + t);
@@ -1590,11 +1600,14 @@ function cambiarTabTienda(seccion) {
     }
   });
   
-  // Actualizar contenido
+  // Actualizar contenido - ahora usa shop-panel en lugar de shop-content
   ['ladrillos','flappy','candy'].forEach(t => {
-    const content = document.getElementById('shop-content-' + t);
-    if (content) {
-      content.classList.toggle('hidden', t !== seccion);
+    const panel = document.getElementById('shop-panel-' + t);
+    if (panel) {
+      panel.classList.toggle('hidden', t !== seccion);
+      console.log('Panel shop-panel-' + t + (t !== seccion ? ' OCULTO' : ' VISIBLE'));
+    } else {
+      console.error('❌ No se encontró panel: shop-panel-' + t);
     }
   });
 }
@@ -1961,10 +1974,12 @@ const CANDY = (() => {
   /* ── Interfaz menús ── */
   function showMenu() {
     reproducir('click');
-    document.getElementById('candy-start-menu').classList.remove('candy-menu-overlay');
-    document.getElementById('candy-start-menu').style.opacity = '1';
-    document.getElementById('candy-start-menu').style.pointerEvents = 'auto';
-    document.getElementById('candy-start-menu').style.transform = 'none';
+    const menu = document.getElementById('candy-start-menu');
+    menu.classList.add('candy-menu-overlay'); // Asegurar que mantenga la clase de posicionamiento
+    menu.classList.remove('ce-hidden');
+    menu.style.opacity = '1';
+    menu.style.pointerEvents = 'auto';
+    menu.style.transform = 'none';
     document.getElementById('candy-over-menu').classList.add('ce-hidden');
     document.getElementById('candy-shop-menu').classList.add('ce-hidden');
     loadState();
@@ -1995,6 +2010,7 @@ const CANDY = (() => {
     document.getElementById('candy-start-menu').style.pointerEvents = 'none';
     document.getElementById('candy-over-menu').classList.add('ce-hidden');
     document.getElementById('candy-shop-menu').classList.add('ce-hidden');
+    
     _buildGrid(); _updateHUD();
   }
 
@@ -2200,7 +2216,11 @@ const CANDY = (() => {
   function abrir() {
     reproducir('click');
     document.querySelectorAll('.container,.vista-juego-base').forEach(c => c.classList.add('hidden'));
-    ['exit-btn','settings-btn','shop-btn-izq','chat-btn'].forEach(b => { const el = document.getElementById(b); if (el) el.classList.add('hidden'); });
+    // Ocultar todos los botones globales en Candy
+    ['exit-btn','settings-btn','shop-btn-izq','chat-btn'].forEach(b => { 
+      const el = document.getElementById(b); 
+      if (el) el.classList.add('hidden'); 
+    });
     document.getElementById('vista-candy').classList.remove('hidden');
     document.getElementById('pantalla-oscura').classList.remove('hidden');
     // Asegurarse de que el menú inicio está visible
