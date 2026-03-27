@@ -51,7 +51,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   font-weight:bold;display:flex;align-items:center;justify-content:center;gap:10px}
 /* Tienda */
 .shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
-.shop-grid-2cols{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:10px}
+.shop-grid-3cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin-top:10px}
 .shop-column{background:rgba(0,0,0,.3);border-radius:15px;padding:15px;border:1px solid rgba(0,255,255,.2)}
 .shop-item{background:rgba(255,255,255,.1);padding:10px;border-radius:10px;text-align:center;
   border:1px solid rgba(0,255,255,.3);cursor:pointer;transition:.3s}
@@ -325,7 +325,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <h2 style="color:#FFD700;margin-bottom:10px;text-align:center">EDÉN SHOP UNIFICADA</h2>
     <span id="shop-balance-unificado">Saldo: 0 €Eden€</span>
     
-    <div class="shop-grid-2cols">
+    <div class="shop-grid-3cols">
       <!-- Columna LADRILLOS -->
       <div class="shop-column">
         <h3 style="color:#00FFFF;text-align:center;margin-bottom:10px">🏓 LADRILLOS</h3>
@@ -356,14 +356,17 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
           <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
         </div>
       </div>
-    </div>
-    
-    <!-- Sección común VIDAS -->
-    <span class="shop-label" style="margin-top:15px">❤️ VIDAS EXTRAS</span>
-    <div class="shop-grid">
-      <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
-      <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
-      <div class="shop-item" onclick="comprar('vida',5)">❤️ x5<span class="shop-price">20000 pts</span></div>
+      
+      <!-- Columna VIDAS -->
+      <div class="shop-column">
+        <h3 style="color:#FF69B4;text-align:center;margin-bottom:10px">❤️ VIDAS</h3>
+        <span class="shop-label">EXTRAS</span>
+        <div class="shop-grid">
+          <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
+          <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
+          <div class="shop-item" onclick="comprar('vida',5)">❤️ x5<span class="shop-price">20000 pts</span></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1430,18 +1433,11 @@ function actualizarUIEquipamiento(){
     actualizarBotonesTiendaSimple();
   }
   
-  // Actualizar tienda de ladrillos
-  const shopLadrillos = document.getElementById('shop-ingame-l');
-  if(shopLadrillos && !shopLadrillos.classList.contains('hidden')){
-    console.log('🏓 Actualizando tienda ladrillos');
+  // Actualizar tienda unificada si está visible
+  const shopUnificado = document.getElementById('vista-tienda-unificada');
+  if(shopUnificado && !shopUnificado.classList.contains('hidden')){
+    console.log('🛒 Actualizando tienda unificada');
     actualizarDirecto(); // Usar la misma función simple
-  }
-  
-  // Actualizar tienda de flappy
-  const shopFlappy = document.getElementById('shop-ingame-f');
-  if(shopFlappy && !shopFlappy.classList.contains('hidden')){
-    console.log('🐦 Actualizando tienda flappy');
-    actualizarBotonesTiendaSimple();
   }
 }
 
@@ -1595,12 +1591,12 @@ function abrirMenuDificultad(){
   document.getElementById('vista-juego').classList.remove('hidden');
   document.getElementById('pantalla-oscura').classList.remove('hidden');
   document.querySelectorAll('.menu-eden').forEach(m=>m.classList.add('hidden'));
-  ['rank-ingame-ladrillos','shop-ingame-ladrillos'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  ['rank-ingame-ladrillos'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   menuDifficulty.classList.remove('hidden');
 }
 function iniciarJuegoEden(diff){
   reproducir('click');cancelAnimationFrame(gameInterval);
-  ['rank-ingame-ladrillos','shop-ingame-ladrillos'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  ['rank-ingame-ladrillos'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   
   // Cargar equipamiento antes de iniciar el juego
   cargarEquipamientoDesdeDB().then(() => {
@@ -1755,7 +1751,7 @@ function abrirFlappy(){
   document.getElementById('pantalla-oscura').classList.remove('hidden');
   document.getElementById('flappy-start-menu').classList.remove('hidden');
   document.getElementById('flappy-over-menu').classList.add('hidden');
-  ['rank-ingame-flappy','shop-ingame-flappy'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  ['rank-ingame-flappy'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   fActive=false;fStarted=false;
   fDrawStatic();
 }
@@ -1765,7 +1761,7 @@ function salirFlappy(){
 function iniciarFlappy(){
   document.getElementById('flappy-start-menu').classList.add('hidden');
   document.getElementById('flappy-over-menu').classList.add('hidden');
-  ['rank-ingame-flappy','shop-ingame-flappy'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  ['rank-ingame-flappy'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   fBird={x:70,y:FH/2,vy:0,r:20};fPipes=[];fScore=0;fFrame=0;fActive=true;fStarted=true;
   document.getElementById('flappy-score').innerText='€Eden€: 0';
   cancelAnimationFrame(fRaf);fLoop();
