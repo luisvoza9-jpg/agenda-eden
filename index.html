@@ -633,6 +633,12 @@ function mostrarVista(id){
     cargarEquipamientoDesdeDB().then(() => {
       console.log('📦 Equipamiento cargado, actualizando botones...');
       actualizarBotonesTiendaSimple();
+      
+      // Forzar actualización después de un pequeño delay para asegurar que se muestre correctamente
+      setTimeout(() => {
+        console.log('🔄 Actualización adicional forzada...');
+        actualizarBotonesTiendaSimple();
+      }, 500);
     }).catch(error => {
       console.error('❌ Error cargando equipamiento:', error);
     });
@@ -1046,7 +1052,9 @@ function comprar(tipo,valor){
   if(tipo !== 'vida'){
     return tieneItem(tipo, valor).then(yaTiene => {
       if(yaTiene){
-        alert('Ya tienes este objeto');
+        alert('Ya tienes este objeto. Puedes equiparlo desde aquí.');
+        // Actualizar botones para mostrar "Equipar" en lugar del precio
+        actualizarBotonesTiendaSimple();
         return;
       }
       
