@@ -1430,13 +1430,13 @@ function actualizarUIEquipamiento(){
   if(shopFlappy && !shopFlappy.classList.contains('hidden')){
     console.log('🐦 Actualizando tienda flappy');
     // Mantener la función original para flappy
-    actualizarBotonesTiendaConEstado('flappy');
+    actualizarBotonesTiendaSimple();
   }
 }
 
 // Función DIRECTA Y SIMPLE para actualizar botones
 function actualizarDirecto(){
-  console.log('� INICIO actualizarDirecto - MODO SIMPLE');
+  console.log('🔥 INICIO actualizarDirecto - MODO SIMPLE');
   
   const botones = document.querySelectorAll('.shop-item');
   console.log('🔍 Botones encontrados:', botones.length);
@@ -1495,9 +1495,10 @@ function actualizarDirecto(){
   console.log('✅ actualizarDirecto COMPLETADO');
 }
 
-function abrirMenuDificultad(){
-  reproducir('click');
-  document.querySelectorAll('.container,.vista-juego-base').forEach(c=>c.classList.add('hidden'));
+// Función simplificada para actualizar botones de tienda (versión compatible)
+function actualizarBotonesTiendaSimple(){
+  console.log('🔄 Versión compatible - llamando a actualizarDirecto');
+  actualizarDirecto();
   ['exit-btn','settings-btn','shop-btn','chat-btn'].forEach(b=>{const el=document.getElementById(b);if(el)el.classList.add('hidden');});
   document.getElementById('vista-juego').classList.remove('hidden');
   document.getElementById('pantalla-oscura').classList.remove('hidden');
@@ -1887,7 +1888,3 @@ if(!cargarSesionLocal()){
 </script>
 </body>
 </html>
-
- 
-
-
