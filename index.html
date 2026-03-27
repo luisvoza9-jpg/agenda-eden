@@ -438,47 +438,60 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 <div id="vista-tienda-unificada" class="container hidden">
   <div class="settings-card">
     <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
-    <h2 style="color:#00e5ff;margin-bottom:10px;text-align:center">EDÉN SHOP UNIFICADA</h2>
+    <h2 style="color:#00e5ff;margin-bottom:10px;text-align:center">EDÉN SHOP</h2>
     <span id="shop-balance-unificado" style="display:block;text-align:center;color:#FFD700;font-weight:bold;margin-bottom:8px">Saldo: 0 €Eden€</span>
-    <div class="shop-grid-3cols">
-      <!-- Columna LADRILLOS -->
-      <div class="shop-column">
-        <h3 style="color:#00FFFF;text-align:center;margin-bottom:10px">🏓 LADRILLOS</h3>
-        <span class="shop-label">PALETAS</span>
-        <div class="shop-grid">
-          <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
-          <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
-          <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
+    
+    <!-- Pestañas de la tienda -->
+    <div class="shop-tabs" style="display:flex;gap:0;margin-bottom:15px;border-radius:10px;overflow:hidden;border:1px solid rgba(0,229,255,.3)">
+      <button class="shop-tab active" id="shop-tab-ladrillos" onclick="cambiarTabTienda('ladrillos')" style="flex:1;padding:8px 0;background:rgba(0,229,255,.15);color:#00e5ff;font-size:12px;font-weight:bold;cursor:pointer;border:none;transition:.3s;text-align:center">🏓 Ladrillos</button>
+      <button class="shop-tab"        id="shop-tab-flappy"   onclick="cambiarTabTienda('flappy')"   style="flex:1;padding:8px 0;background:rgba(0,0,0,.6);color:#aaa;font-size:12px;font-weight:bold;cursor:pointer;border:none;transition:.3s;text-align:center">🐦 Flappy</button>
+      <button class="shop-tab"        id="shop-tab-candy"    onclick="cambiarTabTienda('candy')"    style="flex:1;padding:8px 0;background:rgba(0,0,0,.6);color:#aaa;font-size:12px;font-weight:bold;cursor:pointer;border:none;transition:.3s;text-align:center">🍬 Candy</button>
+    </div>
+    
+    <!-- Contenido LADRILLOS -->
+    <div id="shop-content-ladrillos">
+      <div class="shop-grid-2cols" style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
+        <div class="shop-column">
+          <span class="shop-label">PALETAS</span>
+          <div class="shop-grid">
+            <div class="shop-item" onclick="comprar('paleta','red')"><span style="color:red">▬</span><span class="shop-price">500 pts</span></div>
+            <div class="shop-item" onclick="comprar('paleta','pink')"><span style="color:pink">▬</span><span class="shop-price">750 pts</span></div>
+            <div class="shop-item" onclick="comprar('paleta','yellow')"><span style="color:yellow">▬</span><span class="shop-price">1000 pts</span></div>
+          </div>
         </div>
-        <span class="shop-label">PELOTAS</span>
-        <div class="shop-grid">
-          <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
-          <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
-          <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
-        </div>
-      </div>
-      <!-- Columna FLAPPY -->
-      <div class="shop-column">
-        <h3 style="color:#00FF00;text-align:center;margin-bottom:10px">🐦 FLAPPY</h3>
-        <span class="shop-label">PAJAROS</span>
-        <div class="shop-grid">
-          <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
-          <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🦩</span><span class="shop-price">750 pts</span></div>
-          <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">🦆</span><span class="shop-price">1000 pts</span></div>
-          <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🦅</span><span class="shop-price">600 pts</span></div>
-          <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🦚</span><span class="shop-price">800 pts</span></div>
-          <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
+        <div class="shop-column">
+          <span class="shop-label">PELOTAS</span>
+          <div class="shop-grid">
+            <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
+            <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
+            <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
+          </div>
         </div>
       </div>
-      <!-- Columna CANDY + VIDAS -->
+    </div>
+    
+    <!-- Contenido FLAPPY -->
+    <div id="shop-content-flappy" class="hidden">
+      <div class="shop-grid">
+        <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
+        <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🦩</span><span class="shop-price">750 pts</span></div>
+        <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">🦆</span><span class="shop-price">1000 pts</span></div>
+        <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🦅</span><span class="shop-price">600 pts</span></div>
+        <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🦚</span><span class="shop-price">800 pts</span></div>
+        <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
+      </div>
+    </div>
+    
+    <!-- Contenido CANDY -->
+    <div id="shop-content-candy" class="hidden">
       <div class="shop-column">
-        <h3 style="color:#FF00FF;text-align:center;margin-bottom:10px">🍬 CANDY</h3>
         <span class="shop-label">POWER-UPS</span>
         <div class="shop-grid">
           <div class="shop-item" onclick="comprar('candy_rayo',1)">⚡<span class="shop-price">500 pts</span></div>
           <div class="shop-item" onclick="comprar('candy_bollo',1)">🥐<span class="shop-price">500 pts</span></div>
         </div>
-        <h3 style="color:#FF69B4;text-align:center;margin-top:10px;margin-bottom:5px">❤️ VIDAS</h3>
+        <h3 style="color:#FF69B4;text-align:center;margin-top:15px;margin-bottom:5px">❤️ VIDAS</h3>
+        <span class="shop-label">EXTRAS</span>
         <div class="shop-grid">
           <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
           <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
@@ -1560,6 +1573,30 @@ function cambiarTabChat(modo) {
       else { hd.classList.remove('hidden'); hd.innerText = 'Selecciona un amigo desde ⚙️ Ajustes'; document.getElementById('chat-box').innerHTML = '<p style="color:#aaa;font-size:12px;text-align:center;padding:20px">Ve a Ajustes → toca "Hablar" junto a un amigo.</p>'; pararEscuchaChat(); }
     }
   }
+}
+
+function cambiarTabTienda(seccion) {
+  // Actualizar pestañas
+  ['ladrillos','flappy','candy'].forEach(t => {
+    const tab = document.getElementById('shop-tab-' + t);
+    if (tab) {
+      if (t === seccion) {
+        tab.style.background = 'rgba(0,229,255,.15)';
+        tab.style.color = '#00e5ff';
+      } else {
+        tab.style.background = 'rgba(0,0,0,.6)';
+        tab.style.color = '#aaa';
+      }
+    }
+  });
+  
+  // Actualizar contenido
+  ['ladrillos','flappy','candy'].forEach(t => {
+    const content = document.getElementById('shop-content-' + t);
+    if (content) {
+      content.classList.toggle('hidden', t !== seccion);
+    }
+  });
 }
 function abrirChatPrivado(amigoKey, amigoNombre) { chatAmigoKey = amigoKey; chatAmigoNombre = amigoNombre; mostrarVista('vista-chat'); cambiarTabChat('amigos'); }
 function escucharChatGlobal() {
