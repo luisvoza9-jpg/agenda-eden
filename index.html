@@ -627,8 +627,10 @@ function mostrarVista(id){
   document.getElementById(id).classList.remove('hidden');
   if(id==='vista-login')animar();
   if(id==='vista-tienda'){
+    console.log('🛒 Abriendo tienda principal...');
     // Cargar equipamiento desde Firebase y actualizar botones
     cargarEquipamientoDesdeDB().then(() => {
+      console.log('📦 Equipamiento cargado, actualizando botones...');
       actualizarBotonesTiendaConEstado('tienda-principal');
     });
   }
@@ -1090,6 +1092,7 @@ function procesarCompra(tipo, valor){
       
       // Forzar actualización de UI de tiendas
       setTimeout(() => {
+        console.log('⚡ Forzando actualización UI después de compra...');
         actualizarUIEquipamiento();
       }, 500);
     });
@@ -1386,21 +1389,26 @@ function equiparItem(tipo, valor){
 
 // Actualizar UI de tienda para mostrar estado EQUIPADO
 function actualizarUIEquipamiento(){
+  console.log('🔄 Actualizando UI de equipamiento...');
+  
   // Actualizar tienda principal
   const shopPrincipal = document.getElementById('vista-tienda');
   if(shopPrincipal && !shopPrincipal.classList.contains('hidden')){
+    console.log('📦 Actualizando tienda principal');
     actualizarBotonesTiendaConEstado('tienda-principal');
   }
   
   // Actualizar tienda de ladrillos
   const shopLadrillos = document.getElementById('shop-ingame-l');
   if(shopLadrillos && !shopLadrillos.classList.contains('hidden')){
+    console.log('🏓 Actualizando tienda ladrillos');
     actualizarBotonesTiendaConEstado('ladrillos');
   }
   
   // Actualizar tienda de flappy
   const shopFlappy = document.getElementById('shop-ingame-f');
   if(shopFlappy && !shopFlappy.classList.contains('hidden')){
+    console.log('🐦 Actualizando tienda flappy');
     actualizarBotonesTiendaConEstado('flappy');
   }
 }
