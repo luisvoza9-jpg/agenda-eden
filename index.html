@@ -42,8 +42,12 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   font-size:36px;border:none;cursor:pointer;z-index:101;display:flex;flex-direction:column;align-items:center}
 .btn-shop-label{font-size:9px;font-weight:bold;margin-top:-4px}
 /* Settings card */
-.settings-card{background:rgba(0,0,0,.85);padding:20px;border-radius:20px;
-  border:1px solid #00FFFF;text-align:left;position:relative}
+.settings-card{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;
+  background:rgba(20,20,25,0.95);padding:20px;border-radius:20px;
+  border:1px solid #00e5ff;box-shadow:0 0 20px rgba(0,229,255,0.2);
+  text-align:left;max-height:85vh;overflow-y:auto;
+  scrollbar-width:none;-ms-overflow-style:none}
+.settings-card::-webkit-scrollbar{display:none}
 .btn-close-settings{position:absolute;top:10px;right:15px;color:#ff4444;
   font-size:24px;cursor:pointer;font-weight:bold}
 .setting-row{margin:15px 0;display:flex;justify-content:space-between;align-items:center;font-size:14px}
@@ -322,7 +326,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 <div id="vista-tienda-unificada" class="container hidden">
   <div class="settings-card">
     <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
-    <h2 style="color:#FFD700;margin-bottom:10px;text-align:center">EDÉN SHOP UNIFICADA</h2>
+    <h2 style="color:#00e5ff;margin-bottom:10px;text-align:center">EDÉN SHOP UNIFICADA</h2>
     <span id="shop-balance-unificado">Saldo: 0 €Eden€</span>
     
     <div class="shop-grid-3cols">
@@ -375,7 +379,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 <div id="vista-tienda" class="container hidden">
   <div class="settings-card">
     <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
-    <h2 style="color:#FFD700;margin-bottom:10px;text-align:center">EDÉN SHOP</h2>
+    <h2 style="color:#00e5ff;margin-bottom:10px;text-align:center">EDÉN SHOP</h2>
     <span id="shop-balance">Saldo: 0 €Eden€</span>
     <button onclick="console.log('🔥 Forzando actualización manual'); actualizarBotonesTiendaSimple();" style="background:#00FFFF;color:black;padding:5px 10px;border:none;border-radius:5px;margin:5px;cursor:pointer;font-size:12px;">🔄 Forzar Actualización</button>
     <button onclick="console.log('🔥 Actualización directa'); actualizarDirecto();" style="background:#FF6600;color:white;padding:5px 10px;border:none;border-radius:5px;margin:5px;cursor:pointer;font-size:12px;">🔥 ACTUALIZAR DIRECTO</button>
