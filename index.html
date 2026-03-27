@@ -321,7 +321,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <div class="shop-grid">
       <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
       <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🦩</span><span class="shop-price">750 pts</span></div>
-      <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow"></span><span class="shop-price">1000 pts</span></div>
+      <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">🦆</span><span class="shop-price">1000 pts</span></div>
       <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🦅</span><span class="shop-price">600 pts</span></div>
       <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🦚</span><span class="shop-price">800 pts</span></div>
       <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
@@ -457,7 +457,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <div class="shop-grid">
       <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
       <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🦩</span><span class="shop-price">750 pts</span></div>
-      <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow"></span><span class="shop-price">1000 pts</span></div>
+      <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">🦆</span><span class="shop-price">1000 pts</span></div>
       <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🦅</span><span class="shop-price">600 pts</span></div>
       <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🦚</span><span class="shop-price">800 pts</span></div>
       <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
@@ -1322,7 +1322,7 @@ function cargarEquipamientoDesdeDB(){
     
     // Cargar pájaro equipado
     if(datos.pajaroEquipado){
-      const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'', blue:'🦅', green:'🦚', purple:'🦢'};
+      const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'🦆', blue:'🦅', green:'🦚', purple:'🦢'};
       skinPajaroEquipada = emojisPajaros[datos.pajaroEquipado] || '🐦';
     }
     
@@ -1368,7 +1368,7 @@ function equiparItem(tipo, valor){
           const coloresBola = {blue: '#0000FF', pink: '#FFC0CB', yellow: '#FFFF00'};
           colorBolaEquipada = coloresBola[valor] || '#FF0000';
         } else if(tipo === 'pajaro'){
-          const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'', blue:'🦅', green:'🦚', purple:'🦢'};
+          const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'🦆', blue:'🦅', green:'🦚', purple:'🦢'};
           skinPajaroEquipada = emojisPajaros[valor] || '🐦';
         }
         
@@ -1420,9 +1420,14 @@ function actualizarBotonesTiendaConEstado(juego){
           const emoji = boton.querySelector('span:first-child');
           if(emoji && emoji.textContent === '▬'){
             const estilo = boton.querySelector('span:first-child').style.color;
-            if(estilo === color || (color === 'red' && estilo.includes('255,0,0')) || 
-               (color === 'pink' && estilo.includes('255,192,203')) || 
-               (color === 'yellow' && estilo.includes('255,255,0'))){
+            const atributoColor = boton.querySelector('span:first-child').getAttribute('style');
+            
+            // Detectar color por estilo CSS o por atributo HTML
+            const esColorRojo = (color === 'red' && (estilo === 'red' || estilo.includes('255,0,0') || atributoColor.includes('color:red')));
+            const esColorPink = (color === 'pink' && (estilo === 'pink' || estilo.includes('255,192,203') || atributoColor.includes('color:pink')));
+            const esColorYellow = (color === 'yellow' && (estilo === 'yellow' || estilo.includes('255,255,0') || atributoColor.includes('color:yellow')));
+            
+            if(esColorRojo || esColorPink || esColorYellow){
               
               const tiene = inventario.paletas && inventario.paletas[color];
               const equipado = (color === 'red' && colorPalaEquipada === '#FF0000') ||
@@ -1461,9 +1466,14 @@ function actualizarBotonesTiendaConEstado(juego){
           const emoji = boton.querySelector('span:first-child');
           if(emoji && emoji.textContent === '●'){
             const estilo = boton.querySelector('span:first-child').style.color;
-            if(estilo === color || (color === 'blue' && estilo.includes('0,0,255')) || 
-               (color === 'pink' && estilo.includes('255,192,203')) || 
-               (color === 'yellow' && estilo.includes('255,255,0'))){
+            const atributoColor = boton.querySelector('span:first-child').getAttribute('style');
+            
+            // Detectar color por estilo CSS o por atributo HTML
+            const esColorBlue = (color === 'blue' && (estilo === 'blue' || estilo.includes('0,0,255') || atributoColor.includes('color:blue')));
+            const esColorPink = (color === 'pink' && (estilo === 'pink' || estilo.includes('255,192,203') || atributoColor.includes('color:pink')));
+            const esColorYellow = (color === 'yellow' && (estilo === 'yellow' || estilo.includes('255,255,0') || atributoColor.includes('color:yellow')));
+            
+            if(esColorBlue || esColorPink || esColorYellow){
               
               const tiene = inventario.pelotas && inventario.pelotas[color];
               const equipado = (color === 'blue' && colorBolaEquipada === '#0000FF') ||
@@ -1500,22 +1510,27 @@ function actualizarBotonesTiendaConEstado(juego){
         const botones = shopElement.querySelectorAll('.shop-item');
         botones.forEach(boton => {
           const emoji = boton.querySelector('span:first-child');
-          if(emoji && (emoji.textContent === '🦜' || emoji.textContent === '🦩' || emoji.textContent === '🦅' || emoji.textContent === '🦚' || emoji.textContent === '🦢' || emoji.textContent === '')){
+          if(emoji && (emoji.textContent === '🦜' || emoji.textContent === '🦩' || emoji.textContent === '🦆' || emoji.textContent === '🦅' || emoji.textContent === '🦚' || emoji.textContent === '🦢')){
             const estilo = boton.querySelector('span:first-child').style.color;
-            if(estilo === color || (color === 'red' && estilo.includes('255,0,0')) || 
-               (color === 'pink' && estilo.includes('255,192,203')) || 
-               (color === 'blue' && estilo.includes('0,0,255')) ||
-               (color === 'green' && estilo.includes('0,128,0')) ||
-               (color === 'purple' && estilo.includes('128,0,128')) ||
-               (color === 'yellow' && estilo.includes('255,255,0'))){
+            const atributoColor = boton.querySelector('span:first-child').getAttribute('style');
+            
+            // Detectar color por estilo CSS o por atributo HTML
+            const esColorRojo = (color === 'red' && (estilo === 'red' || estilo.includes('255,0,0') || atributoColor.includes('color:red')));
+            const esColorPink = (color === 'pink' && (estilo === 'pink' || estilo.includes('255,192,203') || atributoColor.includes('color:pink')));
+            const esColorBlue = (color === 'blue' && (estilo === 'blue' || estilo.includes('0,0,255') || atributoColor.includes('color:blue')));
+            const esColorGreen = (color === 'green' && (estilo === 'green' || estilo.includes('0,128,0') || atributoColor.includes('color:green')));
+            const esColorPurple = (color === 'purple' && (estilo === 'purple' || estilo.includes('128,0,128') || atributoColor.includes('color:purple')));
+            const esColorYellow = (color === 'yellow' && (estilo === 'yellow' || estilo.includes('255,255,0') || atributoColor.includes('color:yellow')));
+            
+            if(esColorRojo || esColorPink || esColorBlue || esColorGreen || esColorPurple || esColorYellow){
               
               const tiene = inventario.pajaros && inventario.pajaros[color];
               const equipado = (color === 'red' && skinPajaroEquipada === '🦜') ||
                               (color === 'pink' && skinPajaroEquipada === '🦩') ||
+                              (color === 'yellow' && skinPajaroEquipada === '🦆') ||
                               (color === 'blue' && skinPajaroEquipada === '🦅') ||
                               (color === 'green' && skinPajaroEquipada === '🦚') ||
-                              (color === 'purple' && skinPajaroEquipada === '🦢') ||
-                              (color === 'yellow' && skinPajaroEquipada === '');
+                              (color === 'purple' && skinPajaroEquipada === '🦢');
               
               if(tiene && equipado){
                 boton.innerHTML = `<span style="color:${color}">${emoji.textContent || ''}</span><span class="shop-price">✅ EQUIPADO</span>`;
