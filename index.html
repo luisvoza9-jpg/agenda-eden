@@ -627,8 +627,10 @@ function mostrarVista(id){
   document.getElementById(id).classList.remove('hidden');
   if(id==='vista-login')animar();
   if(id==='vista-tienda'){
-    // Actualizar botones de tienda principal con estado de equipamiento
-    actualizarBotonesTiendaConEstado('tienda-principal');
+    // Cargar equipamiento desde Firebase y actualizar botones
+    cargarEquipamientoDesdeDB().then(() => {
+      actualizarBotonesTiendaConEstado('tienda-principal');
+    });
   }
   const conNav=['vista-agenda','vista-ajustes','vista-chat'];
   if(conNav.includes(id)){
@@ -1318,7 +1320,13 @@ function cargarEquipamientoDesdeDB(){
       colorBolaEquipada = coloresBola[datos.bolaEquipada] || '#FF0000';
     }
     
-    console.log('Equipamiento cargado - Pala:', colorPalaEquipada, 'Bola:', colorBolaEquipada);
+    // Cargar pájaro equipado
+    if(datos.pajaroEquipado){
+      const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'', blue:'🦅', green:'🦚', purple:'🦢'};
+      skinPajaroEquipada = emojisPajaros[datos.pajaroEquipado] || '🐦';
+    }
+    
+    console.log('Equipamiento cargado - Pala:', colorPalaEquipada, 'Bola:', colorBolaEquipada, 'Pájaro:', skinPajaroEquipada);
   }).catch(error => {
     console.error('Error cargando equipamiento:', error);
   });
