@@ -1054,25 +1054,14 @@ function comprar(tipo,valor){
       if(yaTiene){
         alert('Ya tienes este objeto. Puedes equiparlo desde aquí.');
         
-        // CAMBIAR INMEDIATAMENTE EL BOTÓN QUE SE PULSÓ
-        event.stopPropagation();
-        const botonClickeado = event.target.closest('.shop-item');
-        if(botonClickeado){
-          const emoji = botonClickeado.querySelector('span:first-child');
-          const priceSpan = botonClickeado.querySelector('.shop-price');
-          
-          if(emoji && priceSpan){
-            priceSpan.textContent = 'Equipar';
-            botonClickeado.style.border = '';
-            botonClickeado.style.boxShadow = '';
-            botonClickeado.setAttribute('onclick', `equiparItem('${tipo}','${valor}')`);
-            
-            // Forzar actualización completa también
-            setTimeout(() => {
-              actualizarBotonesTiendaSimple();
-            }, 100);
-          }
-        }
+        // Forzar actualización inmediata de todos los botones
+        actualizarBotonesTiendaSimple();
+        
+        // También actualizar después de un pequeño delay por si acaso
+        setTimeout(() => {
+          actualizarBotonesTiendaSimple();
+        }, 200);
+        
         return;
       }
       
@@ -1457,7 +1446,8 @@ function actualizarBotonesTiendaSimple(){
   // Obtener inventario actual
   db.ref('usuarios/'+currentUser+'/inventario').once('value').then(snap => {
     const inventario = snap.val() || {};
-    console.log('📦 Inventario cargado:', inventario);
+    console.log('📦 Inventario completo:', inventario);
+    console.log('🐦 skinPajaroEquipada actual:', skinPajaroEquipada);
     
     // Actualizar pájaros
     const botones = shopElement.querySelectorAll('.shop-item');
@@ -1467,9 +1457,12 @@ function actualizarBotonesTiendaSimple(){
       const emoji = boton.querySelector('span:first-child');
       const priceSpan = boton.querySelector('.shop-price');
       
-      if(!emoji || !priceSpan) return;
+      if(!emoji || !priceSpan) {
+        console.log(`❌ Botón ${index}: sin emoji o priceSpan`);
+        return;
+      }
       
-      console.log(`🐦 Procesando botón ${index}: emoji="${emoji.textContent}", color="${emoji.style.color}"`);
+      console.log(`🐦 Botón ${index}: emoji="${emoji.textContent}", precio actual="${priceSpan.textContent}", onclick="${boton.getAttribute('onclick')}"`);
       
       // Detectar tipo y color por el emoji
       let tipo = '', color = '';
@@ -1489,25 +1482,27 @@ function actualizarBotonesTiendaSimple(){
         console.log(`📊 Pájaro ${color}: tiene=${tiene}, equipado=${equipado}`);
         
         if(tiene && equipado){
+          console.log(`✅ Cambiando pájaro ${color} a EQUIPADO`);
           priceSpan.textContent = '✅ EQUIPADO';
           boton.style.border = '2px solid #00FF00';
           boton.style.boxShadow = '0 0 10px #00FF00';
           boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
-          console.log(`✅ Pájaro ${color} marcado como EQUIPADO`);
         } else if(tiene){
+          console.log(`🔄 Cambiando pájaro ${color} a Equipar`);
           priceSpan.textContent = 'Equipar';
           boton.style.border = '';
           boton.style.boxShadow = '';
           boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
-          console.log(`🔄 Pájaro ${color} marcado como Equipar`);
         } else{
+          console.log(`� Manteniendo pájaro ${color} como Comprar`);
           const precios = {red:500, pink:750, yellow:1000, blue:600, green:800, purple:1200};
           priceSpan.textContent = precios[color] + ' pts';
           boton.style.border = '';
           boton.style.boxShadow = '';
           boton.setAttribute('onclick', `comprar('pajaro','${color}')`);
-          console.log(`💰 Pájaro ${color} marcado como Comprar`);
         }
+        
+        console.log(`� Resultado final: precio="${priceSpan.textContent}", onclick="${boton.getAttribute('onclick')}"`);
       }
     });
   }).catch(error => {
