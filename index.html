@@ -1053,8 +1053,26 @@ function comprar(tipo,valor){
     return tieneItem(tipo, valor).then(yaTiene => {
       if(yaTiene){
         alert('Ya tienes este objeto. Puedes equiparlo desde aquí.');
-        // Actualizar botones para mostrar "Equipar" en lugar del precio
-        actualizarBotonesTiendaSimple();
+        
+        // CAMBIAR INMEDIATAMENTE EL BOTÓN QUE SE PULSÓ
+        event.stopPropagation();
+        const botonClickeado = event.target.closest('.shop-item');
+        if(botonClickeado){
+          const emoji = botonClickeado.querySelector('span:first-child');
+          const priceSpan = botonClickeado.querySelector('.shop-price');
+          
+          if(emoji && priceSpan){
+            priceSpan.textContent = 'Equipar';
+            botonClickeado.style.border = '';
+            botonClickeado.style.boxShadow = '';
+            botonClickeado.setAttribute('onclick', `equiparItem('${tipo}','${valor}')`);
+            
+            // Forzar actualización completa también
+            setTimeout(() => {
+              actualizarBotonesTiendaSimple();
+            }, 100);
+          }
+        }
         return;
       }
       
@@ -1874,11 +1892,22 @@ function dibujarPreviewFlappy(){
 /* ═══════════════════ INIT ═══════════════════ */
 if(!cargarSesionLocal()){
   mostrarVista('vista-login');
+} else {
+  // Si ya hay sesión, cargar equipamiento y actualizar tienda si está visible
+  setTimeout(() => {
+    const tiendaVisible = !document.getElementById('vista-tienda').classList.contains('hidden');
+    if(tiendaVisible && currentUser){
+      console.log('🔄 Sesión cargada, actualizando tienda...');
+      cargarEquipamientoDesdeDB().then(() => {
+        actualizarBotonesTiendaSimple();
+      });
+    }
+  }, 1000);
 }
 </script>
 </body>
 </html>
 
-
+ 
 
 
