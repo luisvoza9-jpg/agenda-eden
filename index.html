@@ -632,6 +632,10 @@ function mostrarVista(id){
   ['exit-btn','settings-btn','shop-btn','chat-btn'].forEach(b=>{const el=document.getElementById(b);if(el)el.classList.add('hidden');});
   document.getElementById(id).classList.remove('hidden');
   if(id==='vista-login')animar();
+  if(id==='vista-tienda'){
+    // Actualizar botones de tienda principal con estado de equipamiento
+    actualizarBotonesTiendaConEstado('tienda-principal');
+  }
   const conNav=['vista-agenda','vista-ajustes','vista-chat'];
   if(conNav.includes(id)){
     ['exit-btn','settings-btn','chat-btn'].forEach(b=>document.getElementById(b).classList.remove('hidden'));
@@ -1390,8 +1394,15 @@ function actualizarUIEquipamiento(){
 
 // Actualizar botones de tienda con estado EQUIPADO
 function actualizarBotonesTiendaConEstado(juego){
-  const shopId = 'shop-ingame-' + (juego === 'ladrillos' ? 'l' : 'f');
-  const shopElement = document.getElementById(shopId);
+  let shopElement;
+  
+  if(juego === 'tienda-principal'){
+    shopElement = document.getElementById('vista-tienda');
+  } else {
+    const shopId = 'shop-ingame-' + (juego === 'ladrillos' ? 'l' : 'f');
+    shopElement = document.getElementById(shopId);
+  }
+  
   if(!shopElement) return;
   
   // Obtener inventario actual
@@ -1439,47 +1450,49 @@ function actualizarBotonesTiendaConEstado(juego){
       });
     }
     
-    // Actualizar botones de pelotas (ambos juegos)
-    const coloresPelotas = ['blue', 'pink', 'yellow'];
-    coloresPelotas.forEach(color => {
-      const botones = shopElement.querySelectorAll('.shop-item');
-      botones.forEach(boton => {
-        const emoji = boton.querySelector('span:first-child');
-        if(emoji && emoji.textContent === '●'){
-          const estilo = boton.querySelector('span:first-child').style.color;
-          if(estilo === color || (color === 'blue' && estilo.includes('0,0,255')) || 
-             (color === 'pink' && estilo.includes('255,192,203')) || 
-             (color === 'yellow' && estilo.includes('255,255,0'))){
-            
-            const tiene = inventario.pelotas && inventario.pelotas[color];
-            const equipado = (color === 'blue' && colorBolaEquipada === '#0000FF') ||
-                            (color === 'pink' && colorBolaEquipada === '#FFC0CB') ||
-                            (color === 'yellow' && colorBolaEquipada === '#FFFF00');
-            
-            if(tiene && equipado){
-              boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">✅ EQUIPADO</span>`;
-              boton.style.border = '2px solid #00FF00';
-              boton.style.boxShadow = '0 0 10px #00FF00';
-              boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
-            } else if(tiene){
-              boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">Equipar</span>`;
-              boton.style.border = '';
-              boton.style.boxShadow = '';
-              boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
-            } else{
-              const precio = color === 'blue' ? 400 : (color === 'pink' ? 600 : 900);
-              boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">${precio} pts</span>`;
-              boton.style.border = '';
-              boton.style.boxShadow = '';
-              boton.setAttribute('onclick', `comprar('bola','${color}')`);
+    // Actualizar botones de pelotas (tienda principal y ambos juegos)
+    if(juego === 'tienda-principal' || juego === 'ladrillos' || juego === 'flappy'){
+      const coloresPelotas = ['blue', 'pink', 'yellow'];
+      coloresPelotas.forEach(color => {
+        const botones = shopElement.querySelectorAll('.shop-item');
+        botones.forEach(boton => {
+          const emoji = boton.querySelector('span:first-child');
+          if(emoji && emoji.textContent === '●'){
+            const estilo = boton.querySelector('span:first-child').style.color;
+            if(estilo === color || (color === 'blue' && estilo.includes('0,0,255')) || 
+               (color === 'pink' && estilo.includes('255,192,203')) || 
+               (color === 'yellow' && estilo.includes('255,255,0'))){
+              
+              const tiene = inventario.pelotas && inventario.pelotas[color];
+              const equipado = (color === 'blue' && colorBolaEquipada === '#0000FF') ||
+                              (color === 'pink' && colorBolaEquipada === '#FFC0CB') ||
+                              (color === 'yellow' && colorBolaEquipada === '#FFFF00');
+              
+              if(tiene && equipado){
+                boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">✅ EQUIPADO</span>`;
+                boton.style.border = '2px solid #00FF00';
+                boton.style.boxShadow = '0 0 10px #00FF00';
+                boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
+              } else if(tiene){
+                boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">Equipar</span>`;
+                boton.style.border = '';
+                boton.style.boxShadow = '';
+                boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
+              } else{
+                const precio = color === 'blue' ? 400 : (color === 'pink' ? 600 : 900);
+                boton.innerHTML = `<span style="color:${color}">●</span><span class="shop-price">${precio} pts</span>`;
+                boton.style.border = '';
+                boton.style.boxShadow = '';
+                boton.setAttribute('onclick', `comprar('bola','${color}')`);
+              }
             }
           }
-        }
+        });
       });
-    });
+    }
     
-    // Actualizar botones de pájaros (solo en Flappy)
-    if(juego === 'flappy'){
+    // Actualizar botones de pájaros (tienda principal y Flappy)
+    if(juego === 'tienda-principal' || juego === 'flappy'){
       const coloresPajaros = ['red', 'pink', 'yellow', 'blue', 'green', 'purple'];
       coloresPajaros.forEach(color => {
         const botones = shopElement.querySelectorAll('.shop-item');
