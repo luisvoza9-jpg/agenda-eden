@@ -1437,6 +1437,7 @@ function actualizarUIEquipamiento(){
 // Función DIRECTA Y SIMPLE para actualizar botones
 function actualizarDirecto(){
   console.log('🔥 INICIO actualizarDirecto - MODO SIMPLE');
+  console.log('🐦 skinPajaroEquipada actual:', skinPajaroEquipada);
   
   const botones = document.querySelectorAll('.shop-item');
   console.log('🔍 Botones encontrados:', botones.length);
@@ -1465,7 +1466,7 @@ function actualizarDirecto(){
       
       // Si es el pájaro equipado actualmente
       if(skinPajaroEquipada === emojiText){
-        console.log(`✅ ${emojiText} está equipado`);
+        console.log(`✅ ${emojiText} está equipado - marcando como EQUIPADO`);
         priceSpan.textContent = '✅ EQUIPADO';
         boton.style.border = '2px solid #00FF00';
         boton.style.boxShadow = '0 0 10px #00FF00';
@@ -1473,7 +1474,7 @@ function actualizarDirecto(){
       }
       // Si lo tiene pero no está equipado
       else if(pajaro.tiene){
-        console.log(`🔄 ${emojiText} tiene pero no equipado`);
+        console.log(`🔄 ${emojiText} tiene pero no equipado - marcando como Equipar`);
         priceSpan.textContent = 'Equipar';
         boton.style.border = '';
         boton.style.boxShadow = '';
@@ -1481,7 +1482,7 @@ function actualizarDirecto(){
       }
       // Si no lo tiene
       else{
-        console.log(`💰 ${emojiText} no tiene`);
+        console.log(`💰 ${emojiText} no tiene - marcando como Comprar`);
         priceSpan.textContent = pajaro.precio;
         boton.style.border = '';
         boton.style.boxShadow = '';
@@ -1499,6 +1500,11 @@ function actualizarDirecto(){
 function actualizarBotonesTiendaSimple(){
   console.log('🔄 Versión compatible - llamando a actualizarDirecto');
   actualizarDirecto();
+}
+
+function abrirMenuDificultad(){
+  reproducir('click');
+  document.querySelectorAll('.container,.vista-juego-base').forEach(c=>c.classList.add('hidden'));
   ['exit-btn','settings-btn','shop-btn','chat-btn'].forEach(b=>{const el=document.getElementById(b);if(el)el.classList.add('hidden');});
   document.getElementById('vista-juego').classList.remove('hidden');
   document.getElementById('pantalla-oscura').classList.remove('hidden');
