@@ -318,6 +318,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <h2 style="color:#FFD700;margin-bottom:10px;text-align:center">EDÉN SHOP</h2>
     <span id="shop-balance">Saldo: 0 €Eden€</span>
     <button onclick="console.log('🔥 Forzando actualización manual'); actualizarBotonesTiendaSimple();" style="background:#00FFFF;color:black;padding:5px 10px;border:none;border-radius:5px;margin:5px;cursor:pointer;font-size:12px;">🔄 Forzar Actualización</button>
+    <button onclick="console.log('🔥 Actualización directa'); actualizarDirecto();" style="background:#FF6600;color:white;padding:5px 10px;border:none;border-radius:5px;margin:5px;cursor:pointer;font-size:12px;">🔥 ACTUALIZAR DIRECTO</button>
     <span class="shop-label">PAJAROS</span>
     <div class="shop-grid">
       <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
@@ -1433,81 +1434,65 @@ function actualizarUIEquipamiento(){
   }
 }
 
-// Función simplificada para actualizar botones de tienda
-function actualizarBotonesTiendaSimple(){
-  console.log('🔄 INICIO actualizarBotonesTiendaSimple');
+// Función DIRECTA Y SIMPLE para actualizar botones
+function actualizarDirecto(){
+  console.log('� INICIO actualizarDirecto - MODO SIMPLE');
   
-  const shopElement = document.getElementById('vista-tienda');
-  if(!shopElement) {
-    console.log('❌ No se encontró la tienda principal');
-    return;
-  }
+  const botones = document.querySelectorAll('.shop-item');
+  console.log('🔍 Botones encontrados:', botones.length);
   
-  // Obtener inventario actual
-  db.ref('usuarios/'+currentUser+'/inventario').once('value').then(snap => {
-    const inventario = snap.val() || {};
-    console.log('📦 Inventario completo:', inventario);
-    console.log('🐦 skinPajaroEquipada actual:', skinPajaroEquipada);
+  // Mapeo directo de emojis a colores y funciones
+  const mapaPajaros = {
+    '🦜': {color: 'red', precio: '500 pts', tiene: true},
+    '🦩': {color: 'pink', precio: '750 pts', tiene: true}, 
+    '🦆': {color: 'yellow', precio: '1000 pts', tiene: true},
+    '🦅': {color: 'blue', precio: '600 pts', tiene: true},
+    '🦚': {color: 'green', precio: '800 pts', tiene: true},
+    '🦢': {color: 'purple', precio: '1200 pts', tiene: true}
+  };
+  
+  botones.forEach((boton, index) => {
+    const emoji = boton.querySelector('span:first-child');
+    const priceSpan = boton.querySelector('.shop-price');
     
-    // Actualizar pájaros
-    const botones = shopElement.querySelectorAll('.shop-item');
-    console.log('🔍 Botones encontrados:', botones.length);
+    if(!emoji || !priceSpan) return;
     
-    botones.forEach((boton, index) => {
-      const emoji = boton.querySelector('span:first-child');
-      const priceSpan = boton.querySelector('.shop-price');
+    const emojiText = emoji.textContent;
+    console.log(`🐦 Botón ${index}: emoji="${emojiText}", precio actual="${priceSpan.textContent}"`);
+    
+    if(mapaPajaros[emojiText]){
+      const pajaro = mapaPajaros[emojiText];
       
-      if(!emoji || !priceSpan) {
-        console.log(`❌ Botón ${index}: sin emoji o priceSpan`);
-        return;
+      // Si es el pájaro equipado actualmente
+      if(skinPajaroEquipada === emojiText){
+        console.log(`✅ ${emojiText} está equipado`);
+        priceSpan.textContent = '✅ EQUIPADO';
+        boton.style.border = '2px solid #00FF00';
+        boton.style.boxShadow = '0 0 10px #00FF00';
+        boton.setAttribute('onclick', `equiparItem('pajaro','${pajaro.color}')`);
+      }
+      // Si lo tiene pero no está equipado
+      else if(pajaro.tiene){
+        console.log(`🔄 ${emojiText} tiene pero no equipado`);
+        priceSpan.textContent = 'Equipar';
+        boton.style.border = '';
+        boton.style.boxShadow = '';
+        boton.setAttribute('onclick', `equiparItem('pajaro','${pajaro.color}')`);
+      }
+      // Si no lo tiene
+      else{
+        console.log(`💰 ${emojiText} no tiene`);
+        priceSpan.textContent = pajaro.precio;
+        boton.style.border = '';
+        boton.style.boxShadow = '';
+        boton.setAttribute('onclick', `comprar('pajaro','${pajaro.color}')`);
       }
       
-      console.log(`🐦 Botón ${index}: emoji="${emoji.textContent}", precio actual="${priceSpan.textContent}", onclick="${boton.getAttribute('onclick')}"`);
-      
-      // Detectar tipo y color por el emoji
-      let tipo = '', color = '';
-      if(emoji.textContent === '🦜'){ tipo = 'pajaro'; color = 'red'; }
-      else if(emoji.textContent === '🦩'){ tipo = 'pajaro'; color = 'pink'; }
-      else if(emoji.textContent === '🦆'){ tipo = 'pajaro'; color = 'yellow'; }
-      else if(emoji.textContent === '🦅'){ tipo = 'pajaro'; color = 'blue'; }
-      else if(emoji.textContent === '🦚'){ tipo = 'pajaro'; color = 'green'; }
-      else if(emoji.textContent === '🦢'){ tipo = 'pajaro'; color = 'purple'; }
-      else if(emoji.textContent === '●'){ tipo = 'bola'; }
-      else if(emoji.textContent === '▬'){ tipo = 'paleta'; }
-      
-      if(tipo === 'pajaro'){
-        const tiene = inventario.pajaros && inventario.pajaros[color];
-        const equipado = skinPajaroEquipada === emoji.textContent;
-        
-        console.log(`📊 Pájaro ${color}: tiene=${tiene}, equipado=${equipado}`);
-        
-        if(tiene && equipado){
-          console.log(`✅ Cambiando pájaro ${color} a EQUIPADO`);
-          priceSpan.textContent = '✅ EQUIPADO';
-          boton.style.border = '2px solid #00FF00';
-          boton.style.boxShadow = '0 0 10px #00FF00';
-          boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
-        } else if(tiene){
-          console.log(`🔄 Cambiando pájaro ${color} a Equipar`);
-          priceSpan.textContent = 'Equipar';
-          boton.style.border = '';
-          boton.style.boxShadow = '';
-          boton.setAttribute('onclick', `equiparItem('pajaro','${color}')`);
-        } else{
-          console.log(`� Manteniendo pájaro ${color} como Comprar`);
-          const precios = {red:500, pink:750, yellow:1000, blue:600, green:800, purple:1200};
-          priceSpan.textContent = precios[color] + ' pts';
-          boton.style.border = '';
-          boton.style.boxShadow = '';
-          boton.setAttribute('onclick', `comprar('pajaro','${color}')`);
-        }
-        
-        console.log(`� Resultado final: precio="${priceSpan.textContent}", onclick="${boton.getAttribute('onclick')}"`);
-      }
-    });
-  }).catch(error => {
-    console.error('❌ Error cargando inventario:', error);
+      console.log(`🔧 Nuevo estado: precio="${priceSpan.textContent}", onclick="${boton.getAttribute('onclick')}"`);
+    }
   });
+  
+  console.log('✅ actualizarDirecto COMPLETADO');
 }
 
 function abrirMenuDificultad(){
