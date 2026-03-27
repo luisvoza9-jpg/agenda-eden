@@ -1274,19 +1274,8 @@ function equiparItem(tipo, valor) {
 }
 
 function actualizarBotonesTiendaSimple() {
-  document.querySelectorAll('.shop-item').forEach(btn => {
-    const emoji = btn.querySelector('span:first-child');
-    const price = btn.querySelector('.shop-price');
-    if (!emoji || !price) return;
-    const et = emoji.textContent, es = emoji.getAttribute('style') || '';
-    const mapaP = { '🦜':'red','🦩':'pink','🦆':'yellow','🦅':'blue','🦚':'green','🦢':'purple' };
-    if (mapaP[et]) {
-      const equipado = skinPajaroEquipada === { red:'🦜',pink:'🦩',yellow:'🦆',blue:'🦅',green:'🦚',purple:'🦢' }[mapaP[et]];
-      price.textContent  = equipado ? '✅ EQUIPADO' : 'Equipar';
-      btn.style.border   = equipado ? '2px solid #00FF00' : '';
-      btn.style.boxShadow= equipado ? '0 0 10px #00FF00' : '';
-    }
-  });
+  console.log('🔄 Versión actualizada - llamando a actualizarDirecto');
+  actualizarDirecto();
 }
 
 function actualizarDirecto(){
