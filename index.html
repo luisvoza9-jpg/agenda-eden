@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agenda Edén | Luisvoza9</title>
-<meta name="description" content="Entra en la App Web de Luisvoza9: Agenda personal, chat global y el adictivo juego de ladrillos del Edén.">
-<meta name="keywords" content="agenda eden, luisvoza9, juego ladrillos web, chat gratis eden">
+<meta name="description" content="Entra en la App Web de Luisvoza9: Agenda personal, chat global y juegos del Edén.">
 <meta name="author" content="Luisvoza9">
 <link rel="icon" type="image/png" href="icono.png">
 <link rel="manifest" href="manifest.json">
@@ -26,14 +25,16 @@ h1 span{display:block;width:100%}
 input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #00FFFF;
   background:rgba(0,0,0,.7);color:white;font-size:16px;outline:none;text-align:center}
 .hidden{display:none!important}
-/* Botones fijos */
+
+/* ── Botones fijos ── */
 .btn-exit-fixed{position:fixed;top:25px;right:25px;color:#ff4444;cursor:pointer;border:none;
   background:none;display:flex;flex-direction:column;align-items:center;z-index:1000;transition:.3s}
 .btn-settings-fixed{position:fixed;top:25px;left:25px;color:#fff;text-shadow:0 0 10px #00FFFF;
   cursor:pointer;border:none;background:none;display:flex;flex-direction:column;
   align-items:center;z-index:1000;transition:.3s}
 .btn-settings-fixed:hover{transform:rotate(90deg) scale(1.1);color:#00FFFF}
-/* Nav inferior */
+
+/* ── Nav inferior ── */
 .btn-chat-flotante{position:fixed;bottom:25px;right:25px;background:none;color:#00FF00;
   font-size:36px;border:none;cursor:pointer;z-index:101;display:flex;flex-direction:column;align-items:center}
 .btn-shop-flotante{position:fixed;bottom:25px;right:75px;background:none;color:#FFD700;
@@ -41,7 +42,8 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 .btn-shop-flotante-izq{position:fixed;bottom:25px;left:25px;background:none;color:#FFD700;
   font-size:36px;border:none;cursor:pointer;z-index:101;display:flex;flex-direction:column;align-items:center}
 .btn-shop-label{font-size:9px;font-weight:bold;margin-top:-4px}
-/* Settings card */
+
+/* ── Settings card ── */
 .settings-card{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;
   background:rgba(20,20,25,0.95);padding:20px;border-radius:20px;
   border:1px solid #00e5ff;box-shadow:0 0 20px rgba(0,229,255,0.2);
@@ -53,7 +55,8 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 .setting-row{margin:15px 0;display:flex;justify-content:space-between;align-items:center;font-size:14px}
 .social-btn{width:100%;padding:10px;margin-top:10px;border-radius:8px;border:none;cursor:pointer;
   font-weight:bold;display:flex;align-items:center;justify-content:center;gap:10px}
-/* Tienda */
+
+/* ── Tienda ── */
 .shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
 .shop-grid-3cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin-top:10px}
 .shop-column{background:rgba(0,0,0,.3);border-radius:15px;padding:15px;border:1px solid rgba(0,255,255,.2)}
@@ -66,7 +69,8 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 .equipar-btn:hover{background:rgba(0,255,255,.2);border-color:#00FFFF}
 .shop-label{font-size:11px;font-weight:bold;display:block;margin-top:15px;
   color:#00FFFF;border-bottom:1px solid rgba(0,255,255,.2)}
-/* Notas */
+
+/* ── Notas ── */
 .task-input-group{display:flex;gap:10px;margin-top:10px;align-items:center}
 .btn-blue{background:#00FFFF;color:black;width:55px;font-size:24px;border-radius:10px;
   border:none;cursor:pointer;height:45px;flex-shrink:0}
@@ -81,14 +85,16 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 .btn-edit-note:hover,.btn-save-note:hover{opacity:1;transform:scale(1.2)}
 .btn-trash-inline{background:none;color:#ff4444;font-size:26px;border:none;
   filter:drop-shadow(0 0 6px #ff4444);cursor:pointer}
-/* Avatar */
+
+/* ── Avatar ── */
 #avatar-preview{width:90px;height:90px;border-radius:50%;border:2px solid #00FFFF;
   box-shadow:0 0 15px #00FFFF;overflow:hidden;background:#000;
   display:flex;justify-content:center;align-items:center;margin-bottom:10px}
 .avatar-opt{background:none;border:1px solid rgba(0,255,255,.3);border-radius:5px;
   cursor:pointer;font-size:20px;padding:5px;transition:.3s}
 .avatar-opt:hover{border-color:#00FFFF;transform:scale(1.1)}
-/* Amigos */
+
+/* ── Amigos ── */
 .uid-box{background:rgba(0,0,0,.5);border:1px solid rgba(0,255,255,.3);border-radius:8px;
   padding:8px 10px;font-size:10px;color:#aaa;word-break:break-all;cursor:pointer;margin-top:5px;transition:.3s}
 .uid-box:hover{border-color:#00FFFF;color:#00FFFF}
@@ -110,7 +116,8 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 .btn-hablar{background:none;border:1px solid #00FF00;color:#00FF00;
   border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;transition:.3s}
 .btn-hablar:hover{background:rgba(0,255,0,.15)}
-/* Chat */
+
+/* ── Chat ── */
 .chat-tabs{display:flex;gap:0;margin-bottom:10px;border-radius:10px;
   overflow:hidden;border:1px solid rgba(0,255,255,.3)}
 .chat-tab{flex:1;padding:7px 0;background:rgba(0,0,0,.6);color:#aaa;
@@ -119,19 +126,26 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 #chat-amigo-header{font-size:12px;color:#FFD700;text-align:center;margin-bottom:6px;min-height:16px}
 
 /* ══════════════════════════ PANTALLA INICIO — TARJETAS ══════════════════════════ */
-.games-grid{display:flex;flex-direction:column;gap:16px;margin-top:10px}
+.games-grid{display:flex;flex-direction:column;gap:14px;margin-top:8px;
+  max-height:calc(100vh - 140px);overflow-y:auto;padding-bottom:70px;
+  scrollbar-width:none}
+.games-grid::-webkit-scrollbar{display:none}
 .game-card{background:rgba(0,0,0,.75);border:2px solid rgba(0,255,255,.4);border-radius:18px;
   padding:0;overflow:hidden;cursor:pointer;transition:.25s;position:relative}
 .game-card:hover{border-color:#00FFFF;transform:scale(1.02);box-shadow:0 0 20px rgba(0,255,255,.3)}
-.game-card-preview{width:100%;height:110px;display:flex;align-items:center;justify-content:center;
+.game-card-preview{width:100%;height:100px;display:flex;align-items:center;justify-content:center;
   font-size:56px;position:relative;overflow:hidden}
 .game-card-preview canvas{position:absolute;top:0;left:0;width:100%;height:100%}
-.game-card-preview-img{width:100%;height:100%;object-fit:cover;opacity:.55}
-.game-card-info{padding:10px 14px 12px}
-.game-card-title{color:#00FFFF;font-size:16px;font-weight:bold;letter-spacing:1px;text-shadow:0 0 8px #00FFFF}
+.game-card-info{padding:9px 14px 11px}
+.game-card-title{color:#00FFFF;font-size:15px;font-weight:bold;letter-spacing:1px;text-shadow:0 0 8px #00FFFF}
 .game-card-desc{color:#aaa;font-size:11px;margin-top:3px}
 .game-card-badge{position:absolute;top:8px;right:8px;background:rgba(0,255,255,.2);
   border:1px solid #00FFFF;border-radius:6px;padding:2px 7px;font-size:10px;color:#00FFFF;font-weight:bold}
+
+/* ══════════════════════════ CANDY EDÉN — tarjeta preview ══════════════════════════ */
+.game-card.candy-card{border-color:rgba(255,0,255,.4)}
+.game-card.candy-card:hover{border-color:#FF00FF;box-shadow:0 0 20px rgba(255,0,255,.3)}
+.game-card-badge.candy-badge{border-color:#FF00FF;color:#FF00FF;background:rgba(255,0,255,.15)}
 
 /* ══════════════════════════ VISTAS DE JUEGO ══════════════════════════ */
 .vista-juego-base{position:fixed;top:0;left:0;width:100%;height:100%;
@@ -139,6 +153,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000}
 #vista-juego  {background-image:url('fondo-nubes.jpg')}
 #vista-flappy {background-image:url('fondo1.jpg')}
+#vista-candy  {background:radial-gradient(ellipse at center,#1a0030 0%,#050010 100%)}
 .game-canvas-style{border:3px solid #00FFFF;background:rgba(0,0,0,.9);
   box-shadow:0 0 30px #00FFFF;max-width:95vw;height:auto}
 #gameCanvas  {cursor:none}
@@ -176,18 +191,94 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12px;margin-top:10px;width:100%}
 #shop-balance{color:#FFD700;font-weight:bold;font-size:14px;
   text-shadow:0 0 5px #FFD700;margin-bottom:10px;display:block;text-align:center}
-@keyframes borrarVuelo{to{transform:scale(0) translate(20vw,50vh);opacity:0}}
-.arrugando{animation:borrarVuelo .6s ease-in forwards}
 
 /* ══════════════════════════ FLAPPY — neón específico ══════════════════════════ */
 @keyframes flappyPulse{0%,100%{box-shadow:0 0 20px #00FFFF,0 0 40px rgba(0,255,255,.3)}
   50%{box-shadow:0 0 30px #00FF00,0 0 60px rgba(0,255,0,.3)}}
 #flappyCanvas{animation:flappyPulse 2s ease-in-out infinite}
+
+/* ══════════════════════════ CANDY EDÉN — vista interna ══════════════════════════ */
+#vista-candy .game-score-display{color:#FF00FF;text-shadow:0 0 5px #FF00FF}
+
+/* Candy grid */
+#ce-grid-eden {
+  display:grid;grid-template-columns:repeat(8,1fr);gap:3px;
+  padding:8px;margin:auto;width:90%;aspect-ratio:1/1;
+  background:rgba(255,0,255,.04);border-radius:16px;
+}
+.ce-cell-eden {
+  aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;cursor:pointer;border-radius:8px;
+  transition:all .18s;background:rgba(255,255,255,.03);
+  border:1px solid transparent;
+}
+.ce-cell-eden:hover{background:rgba(255,0,255,.12);border-color:rgba(255,0,255,.4)}
+.ce-cell-eden.ce-selected{background:rgba(255,0,255,.25);border-color:#FF00FF;
+  transform:scale(.9);box-shadow:0 0 8px #FF00FF}
+.ce-cell-eden.ce-bomb{animation:ceBombPulse .6s infinite alternate;border:2px inset #fff}
+@keyframes ceBombPulse{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(180deg)}}
+
+/* Candy HUD */
+.candy-hud{display:flex;justify-content:space-around;padding:10px;width:100%;
+  background:linear-gradient(180deg,#0f0f1a 0%,transparent 100%)}
+.candy-hud-item{text-align:center}
+.candy-hud-label{font-size:8px;letter-spacing:1px;display:block}
+.candy-hud-value{font-size:18px;font-weight:900}
+
+/* Candy inventory bar */
+.candy-inv-bar{display:flex;gap:14px;padding:10px 14px;justify-content:center;
+  background:rgba(5,5,18,.9);border-top:1px solid rgba(255,0,255,.2);width:100%}
+.candy-power-btn{width:48px;height:48px;border:2px solid #FF00FF;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  position:relative;font-size:1.2rem;background:rgba(255,0,255,.07);transition:.2s}
+.candy-power-btn:hover{background:rgba(255,0,255,.2)}
+.candy-power-badge{position:absolute;top:-8px;right:-8px;background:#FF00FF;
+  font-size:10px;font-weight:bold;padding:2px 7px;border-radius:12px;
+  box-shadow:0 0 8px #FF00FF;color:#000}
+
+/* Candy super combo */
+@keyframes superComboGlow{
+  0%,100%{box-shadow:0 0 20px #FF00FF,inset 0 0 20px rgba(255,0,255,.1)}
+  50%{box-shadow:0 0 50px #FF00FF,0 0 80px rgba(255,0,255,.4),inset 0 0 30px rgba(255,0,255,.2)}}
+#vista-candy.super-combo-mode{animation:superComboGlow 1s ease-in-out infinite}
+
+/* ── Nivel selector Candy ── */
+.candy-lvl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+  max-height:220px;overflow-y:auto;padding:4px;width:90%}
+.candy-lvl-btn{aspect-ratio:1/1;border-radius:12px;border:1px solid #333;
+  background:#111;color:#555;font-weight:bold;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:.2s;font-size:13px}
+.candy-lvl-btn.unlocked{border-color:#FF00FF;color:#fff;background:rgba(255,0,255,.07)}
+.candy-lvl-btn.unlocked:hover{background:rgba(255,0,255,.2);border-color:#fff}
+
+/* Candy tienda */
+.candy-shop-item{text-align:center;cursor:pointer}
+.candy-shop-item > div{font-size:2rem;background:#111;padding:14px;border-radius:18px;
+  border:1px solid #FF00FF;box-shadow:0 0 12px #FF00FF;transition:.2s}
+.candy-shop-item > div:hover{background:rgba(255,0,255,.2)}
+.candy-shop-price{font-size:11px;color:#FFD700;margin-top:6px;font-weight:bold}
+
+/* ── Candy menú overlay ── */
+.candy-menu-overlay{position:absolute;inset:0;background:rgba(0,0,0,.96);z-index:100;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border-radius:0;transition:.4s}
+.candy-menu-overlay.ce-hidden{opacity:0;pointer-events:none;transform:translateY(20px)}
+
+/* ── MÚSICA — botón flotante ── */
+#music-btn{position:fixed;bottom:70px;right:25px;background:rgba(0,0,0,.7);
+  border:1px solid rgba(0,255,255,.4);border-radius:50%;width:40px;height:40px;
+  color:#fff;font-size:18px;cursor:pointer;z-index:102;display:none;
+  align-items:center;justify-content:center;transition:.3s}
+#music-btn:hover{background:rgba(0,255,255,.15);border-color:#00FFFF}
+#music-btn.playing{border-color:#00FFFF;box-shadow:0 0 10px #00FFFF}
 </style>
 </head>
 <body>
 
 <div id="pantalla-oscura" class="overlay"></div>
+
+<!-- Botón música flotante -->
+<button id="music-btn" onclick="APP.toggleMusic()" title="Música">🔇</button>
 
 <!-- Botones fijos globales -->
 <button id="settings-btn" class="btn-settings-fixed hidden" onclick="mostrarVista('vista-ajustes')">
@@ -195,9 +286,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 </button>
 <button id="exit-btn" class="btn-exit-fixed hidden" onclick="cerrarSesion()">
   <span style="font-size:30px">🚪</span><span style="font-size:10px;font-weight:bold">EXIT</span>
-</button>
-<button id="shop-btn" class="btn-shop-flotante hidden" onclick="mostrarVista('vista-tienda')">
-  <span>🏠</span><span class="btn-shop-label">TIENDA</span>
 </button>
 <button id="shop-btn-izq" class="btn-shop-flotante-izq hidden" onclick="mostrarVista('vista-tienda-unificada')">
   <span>🛒</span><span class="btn-shop-label">TIENDA</span>
@@ -243,7 +331,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <!-- Tarjeta Ladrillos -->
     <div class="game-card" onclick="abrirMenuDificultad()">
       <div class="game-card-preview" style="background:linear-gradient(135deg,#0a0a1a,#1a0a2e)">
-        <canvas id="previewCanvas" width="380" height="110" style="position:absolute;top:0;left:0;width:100%;height:110px"></canvas>
+        <canvas id="previewCanvas" width="380" height="100" style="position:absolute;top:0;left:0;width:100%;height:100px"></canvas>
         <span class="game-card-badge">LADRILLOS</span>
       </div>
       <div class="game-card-info">
@@ -254,12 +342,23 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <!-- Tarjeta Flappy -->
     <div class="game-card" onclick="abrirFlappy()">
       <div class="game-card-preview" style="background:linear-gradient(135deg,#001a0a,#0a1a00)">
-        <canvas id="previewFlappyCanvas" width="380" height="110" style="position:absolute;top:0;left:0;width:100%;height:110px"></canvas>
+        <canvas id="previewFlappyCanvas" width="380" height="100" style="position:absolute;top:0;left:0;width:100%;height:100px"></canvas>
         <span class="game-card-badge" style="border-color:#00FF00;color:#00FF00">FLAPPY</span>
       </div>
       <div class="game-card-info">
         <div class="game-card-title" style="color:#00FF00;text-shadow:0 0 8px #00FF00">🐦 EDÉN FLAPPY</div>
         <div class="game-card-desc">Esquiva columnas neón. 1 €Eden€ por punto.</div>
+      </div>
+    </div>
+    <!-- Tarjeta Candy Edén -->
+    <div class="game-card candy-card" onclick="abrirCandyEden()">
+      <div class="game-card-preview" style="background:linear-gradient(135deg,#1a0030,#05000e)">
+        <canvas id="previewCandyCanvas" width="380" height="100" style="position:absolute;top:0;left:0;width:100%;height:100px"></canvas>
+        <span class="game-card-badge candy-badge">CANDY</span>
+      </div>
+      <div class="game-card-info">
+        <div class="game-card-title" style="color:#FF00FF;text-shadow:0 0 8px #FF00FF">🍬 CANDY EDÉN</div>
+        <div class="game-card-desc">Combina 3+ gemas. Desbloquea 50 niveles. Power-ups en tienda.</div>
       </div>
     </div>
   </div>
@@ -290,11 +389,24 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
       </div>
       <p id="perfil-edad"   style="font-size:13px">Edad: -</p>
       <p id="perfil-puntos" style="font-size:13px;color:#FFD700">Récord Edén: 0 pts</p>
+      <p id="perfil-candy"  style="font-size:13px;color:#FF00FF">Récord Candy: Nv.0 · 0 pts</p>
       <p style="font-size:11px;color:#aaa;margin-top:8px">Tu ID (tócalo para copiar):</p>
       <div class="uid-box" id="uid-box" onclick="copiarUID()">—</div>
     </div>
+    <!-- MÚSICA -->
+    <div class="setting-row" style="background:rgba(0,255,255,.05);border-radius:8px;padding:8px 12px;border:1px solid rgba(0,255,255,.15)">
+      <span>🎵 Música de fondo</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input type="range" id="vol-music-range" min="0" max="1" step="0.05" value="0.3"
+          style="width:70px" onchange="APP.setMusicVolume(this.value)">
+        <button id="toggle-music-btn" onclick="APP.toggleMusic()"
+          style="background:rgba(0,255,255,.15);border:1px solid #00FFFF;color:#00FFFF;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:11px;font-weight:bold">
+          ▶ ON
+        </button>
+      </div>
+    </div>
     <div class="setting-row">
-      <span>Volumen</span>
+      <span>🔊 Volumen FX</span>
       <input type="range" id="vol-range" min="0" max="1" step="0.1" value="0.5" style="width:100px" onchange="ajustarVolumen(this.value)">
     </div>
     <hr style="border:0;border-top:1px solid rgba(0,255,255,.2);margin:15px 0">
@@ -327,8 +439,7 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   <div class="settings-card">
     <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
     <h2 style="color:#00e5ff;margin-bottom:10px;text-align:center">EDÉN SHOP UNIFICADA</h2>
-    <span id="shop-balance-unificado">Saldo: 0 €Eden€</span>
-    
+    <span id="shop-balance-unificado" style="display:block;text-align:center;color:#FFD700;font-weight:bold;margin-bottom:8px">Saldo: 0 €Eden€</span>
     <div class="shop-grid-3cols">
       <!-- Columna LADRILLOS -->
       <div class="shop-column">
@@ -346,7 +457,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
           <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
         </div>
       </div>
-      
       <!-- Columna FLAPPY -->
       <div class="shop-column">
         <h3 style="color:#00FF00;text-align:center;margin-bottom:10px">🐦 FLAPPY</h3>
@@ -360,49 +470,21 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
           <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
         </div>
       </div>
-      
-      <!-- Columna VIDAS -->
+      <!-- Columna CANDY + VIDAS -->
       <div class="shop-column">
-        <h3 style="color:#FF69B4;text-align:center;margin-bottom:10px">❤️ VIDAS</h3>
-        <span class="shop-label">EXTRAS</span>
+        <h3 style="color:#FF00FF;text-align:center;margin-bottom:10px">🍬 CANDY</h3>
+        <span class="shop-label">POWER-UPS</span>
+        <div class="shop-grid">
+          <div class="shop-item" onclick="comprar('candy_rayo',1)">⚡<span class="shop-price">500 pts</span></div>
+          <div class="shop-item" onclick="comprar('candy_bollo',1)">🥐<span class="shop-price">500 pts</span></div>
+        </div>
+        <h3 style="color:#FF69B4;text-align:center;margin-top:10px;margin-bottom:5px">❤️ VIDAS</h3>
         <div class="shop-grid">
           <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
           <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
           <div class="shop-item" onclick="comprar('vida',5)">❤️ x5<span class="shop-price">20000 pts</span></div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ TIENDA ══ -->
-<div id="vista-tienda" class="container hidden">
-  <div class="settings-card">
-    <div class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</div>
-    <h2 style="color:#00e5ff;margin-bottom:10px;text-align:center">EDÉN SHOP</h2>
-    <span id="shop-balance">Saldo: 0 €Eden€</span>
-    <button onclick="console.log('🔥 Forzando actualización manual'); actualizarBotonesTiendaSimple();" style="background:#00FFFF;color:black;padding:5px 10px;border:none;border-radius:5px;margin:5px;cursor:pointer;font-size:12px;">🔄 Forzar Actualización</button>
-    <button onclick="console.log('🔥 Actualización directa'); actualizarDirecto();" style="background:#FF6600;color:white;padding:5px 10px;border:none;border-radius:5px;margin:5px;cursor:pointer;font-size:12px;">🔥 ACTUALIZAR DIRECTO</button>
-    <span class="shop-label">PAJAROS</span>
-    <div class="shop-grid">
-      <div class="shop-item" onclick="comprar('pajaro','red')"><span style="color:red">🦜</span><span class="shop-price">500 pts</span></div>
-      <div class="shop-item" onclick="comprar('pajaro','pink')"><span style="color:pink">🦩</span><span class="shop-price">750 pts</span></div>
-      <div class="shop-item" onclick="comprar('pajaro','yellow')"><span style="color:yellow">🦆</span><span class="shop-price">1000 pts</span></div>
-      <div class="shop-item" onclick="comprar('pajaro','blue')"><span style="color:blue">🦅</span><span class="shop-price">600 pts</span></div>
-      <div class="shop-item" onclick="comprar('pajaro','green')"><span style="color:green">🦚</span><span class="shop-price">800 pts</span></div>
-      <div class="shop-item" onclick="comprar('pajaro','purple')"><span style="color:purple">🦢</span><span class="shop-price">1200 pts</span></div>
-    </div>
-    <span class="shop-label">PELOTAS</span>
-    <div class="shop-grid">
-      <div class="shop-item" onclick="comprar('bola','blue')"><span style="color:blue">●</span><span class="shop-price">400 pts</span></div>
-      <div class="shop-item" onclick="comprar('bola','pink')"><span style="color:pink">●</span><span class="shop-price">600 pts</span></div>
-      <div class="shop-item" onclick="comprar('bola','yellow')"><span style="color:yellow">●</span><span class="shop-price">900 pts</span></div>
-    </div>
-    <span class="shop-label">VIDAS EXTRAS</span>
-    <div class="shop-grid">
-      <div class="shop-item" onclick="comprar('vida',1)">❤️ x1<span class="shop-price">5000 pts</span></div>
-      <div class="shop-item" onclick="comprar('vida',3)">❤️ x3<span class="shop-price">12000 pts</span></div>
-      <div class="shop-item" onclick="comprar('vida',5)">❤️ x5<span class="shop-price">20000 pts</span></div>
     </div>
   </div>
 </div>
@@ -418,7 +500,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
       <button class="chat-tab"        id="tab-notas"  onclick="cambiarTabChat('notas')">📝 Notas</button>
     </div>
     <div id="chat-amigo-header" class="hidden"></div>
-    <!-- Panel mensajes -->
     <div id="panel-mensajes">
       <div id="chat-box" style="height:195px;overflow-y:auto;background:rgba(0,0,0,.6);border-radius:10px;padding:10px;margin-bottom:10px;border:1px solid #00FF00"></div>
       <div class="task-input-group">
@@ -426,7 +507,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
         <button class="btn-blue" style="background:#00FF00" onclick="enviarMensaje()">›</button>
       </div>
     </div>
-    <!-- Panel notas -->
     <div id="panel-notas" class="hidden">
       <div class="task-input-group" style="margin-bottom:8px">
         <input type="text" id="campo-tarea" placeholder="Nueva nota..." style="text-align:left;padding-left:10px">
@@ -443,7 +523,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   <button class="btn-game-return" onclick="salirDelJuego()">🚪</button>
   <div id="game-score" class="game-score-display">€Eden€: 0</div>
   <canvas id="gameCanvas" class="game-canvas-style" width="500" height="500"></canvas>
-  <!-- Overlays -->
   <div class="game-overlay-btns">
     <button class="overlay-icon-btn" onclick="toggleRankIngame('ladrillos')" title="Rankings">🏆</button>
     <button class="overlay-icon-btn" onclick="mostrarVista('vista-tienda-unificada')" title="Tienda">🛒</button>
@@ -457,7 +536,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <div id="rank-content-ladrillos"></div>
     <button class="close-overlay-btn" onclick="cerrarRankIngame('ladrillos')">✖ Cerrar</button>
   </div>
-  <!-- Menús ladrillos -->
   <div id="difficulty-menu" class="menu-eden hidden">
     <h2 style="color:#00FFFF;margin-bottom:15px">DIFICULTAD</h2>
     <button class="game-btn-neon" onclick="iniciarJuegoEden('terrestre')">Nivel terrestre</button>
@@ -479,7 +557,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   <div id="flappy-score" class="game-score-display">€Eden€: 0</div>
   <canvas id="flappyCanvas" class="game-canvas-style" width="360" height="500"
     onclick="flappyJump()" ontouchstart="flappyJump()"></canvas>
-  <!-- Overlays Flappy -->
   <div class="game-overlay-btns">
     <button class="overlay-icon-btn" onclick="toggleRankIngame('flappy')" title="Rankings">🏆</button>
     <button class="overlay-icon-btn" onclick="mostrarVista('vista-tienda-unificada')" title="Tienda">🛒</button>
@@ -493,7 +570,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <div id="rank-content-flappy"></div>
     <button class="close-overlay-btn" onclick="cerrarRankIngame('flappy')">✖ Cerrar</button>
   </div>
-  <!-- Menú inicio/gameover Flappy -->
   <div id="flappy-start-menu" class="menu-eden" style="border-color:#00FF00">
     <h2 style="color:#00FF00;margin-bottom:8px;text-shadow:0 0 12px #00FF00">🐦 EDÉN FLAPPY</h2>
     <p style="color:#aaa;font-size:12px;margin-bottom:16px">Toca la pantalla o pulsa ESPACIO para saltar entre las columnas.<br>Cada punto = 1 €Eden€ al saldo.</p>
@@ -509,29 +585,116 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   </div>
 </div>
 
+<!-- ══ VISTA CANDY EDÉN ══ -->
+<div id="vista-candy" class="vista-juego-base hidden">
+  <button class="btn-game-return" onclick="CANDY.salir()" style="color:#FF00FF">🚪</button>
+
+  <!-- HUD -->
+  <div class="candy-hud">
+    <div class="candy-hud-item">
+      <span class="candy-hud-label" style="color:#00FFFF">PUNTOS</span>
+      <div class="candy-hud-value" id="ce-score-eden">0</div>
+    </div>
+    <div class="candy-hud-item">
+      <span class="candy-hud-label" style="color:#FF00FF">TURNOS</span>
+      <div class="candy-hud-value" id="ce-moves-eden" style="color:#FF00FF">0</div>
+    </div>
+    <div class="candy-hud-item">
+      <span class="candy-hud-label" style="color:#FFD700">OBJETIVO</span>
+      <div class="candy-hud-value" id="ce-goal-eden" style="color:#FFD700">0</div>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div id="ce-grid-eden"></div>
+
+  <!-- Ranking overlay -->
+  <div class="game-overlay-btns">
+    <button class="overlay-icon-btn" style="border-color:rgba(255,0,255,.4)" onclick="toggleRankIngame('candy')" title="Rankings">🏆</button>
+    <button class="overlay-icon-btn" style="border-color:rgba(255,0,255,.4)" onclick="mostrarVista('vista-tienda-unificada')" title="Tienda">🛒</button>
+  </div>
+  <div id="rank-ingame-candy" class="ingame-float-menu hidden" style="border-color:#FF00FF">
+    <h3 style="color:#FF00FF;text-align:center;margin-bottom:8px">🏆 RANKING CANDY</h3>
+    <div class="rank-tabs">
+      <button class="rank-tab active" id="rtab-c-mundial" onclick="cambiarTabRank('candy','mundial')">🌍 Mundial</button>
+      <button class="rank-tab"        id="rtab-c-amigos"  onclick="cambiarTabRank('candy','amigos')">👥 Amigos</button>
+    </div>
+    <div id="rank-content-candy"></div>
+    <button class="close-overlay-btn" onclick="cerrarRankIngame('candy')">✖ Cerrar</button>
+  </div>
+
+  <!-- Inventory bar -->
+  <div class="candy-inv-bar">
+    <div class="candy-power-btn" onclick="CANDY.usePower('rayo')">⚡
+      <div class="candy-power-badge" id="ce-inv-rayo-eden">0</div>
+    </div>
+    <div class="candy-power-btn" onclick="CANDY.usePower('bollo')">🥐
+      <div class="candy-power-badge" id="ce-inv-bollo-eden">0</div>
+    </div>
+    <button onclick="CANDY.showMenu()" style="background:none;border:1px solid #333;color:#444;border-radius:10px;padding:0 12px;cursor:pointer;font-size:10px;font-weight:bold">MENÚ</button>
+  </div>
+
+  <!-- MENÚ INICIO CANDY -->
+  <div id="candy-start-menu" class="candy-menu-overlay">
+    <h1 style="color:#FF00FF;letter-spacing:5px;text-shadow:0 0 25px #FF00FF;margin:0">CANDY EDÉN</h1>
+    <p style="font-size:10px;color:#555;margin-bottom:18px">HYPER EDITION v2.9</p>
+    <!-- Saldo -->
+    <div style="background:#000;padding:10px 28px;border-radius:50px;border:2px solid #FFD700;margin-bottom:16px;display:flex;gap:12px;align-items:center;box-shadow:0 0 14px rgba(255,215,0,.2)">
+      <span style="color:#FFD700;font-weight:bold;font-size:18px">💰 <span id="ce-wallet-eden">0</span></span>
+      <button onclick="CANDY.toggleShop()" style="background:#FFD700;border:none;border-radius:8px;font-size:11px;padding:4px 12px;cursor:pointer;font-weight:900;color:#000">TIENDA</button>
+    </div>
+    <!-- Skin selector -->
+    <div style="display:flex;gap:10px;margin-bottom:16px">
+      <div onclick="CANDY.setSkin('classic')" style="cursor:pointer;padding:8px;background:#222;border-radius:10px;border:1px solid #444;font-size:1.2rem" title="Classic">💎</div>
+      <div onclick="CANDY.setSkin('fruit')"   style="cursor:pointer;padding:8px;background:#222;border-radius:10px;border:1px solid #444;font-size:1.2rem" title="Frutas">🍎</div>
+      <div onclick="CANDY.setSkin('cyber')"   style="cursor:pointer;padding:8px;background:#222;border-radius:10px;border:1px solid #444;font-size:1.2rem" title="Cyber">⌬</div>
+    </div>
+    <!-- Niveles -->
+    <div id="candy-lvl-container" class="candy-lvl-grid"></div>
+  </div>
+
+  <!-- TIENDA CANDY (mini, dentro del juego) -->
+  <div id="candy-shop-menu" class="candy-menu-overlay ce-hidden" style="background:rgba(0,0,0,.98);inset:40px 20px;height:auto;border-radius:24px;border:1px solid #FF00FF">
+    <h2 style="color:#FF00FF;letter-spacing:2px">POWER-UPS</h2>
+    <div style="display:flex;gap:22px;margin:24px 0">
+      <div class="candy-shop-item" onclick="CANDY.buy('rayo')">
+        <div>⚡</div><div class="candy-shop-price">500 💰</div>
+      </div>
+      <div class="candy-shop-item" onclick="CANDY.buy('bollo')">
+        <div>🥐</div><div class="candy-shop-price">500 💰</div>
+      </div>
+    </div>
+    <button onclick="CANDY.toggleShop()" style="background:#222;border:1px solid #444;color:#fff;padding:10px 28px;border-radius:12px;cursor:pointer;font-weight:bold">VOLVER</button>
+  </div>
+
+  <!-- GAMEOVER CANDY -->
+  <div id="candy-over-menu" class="candy-menu-overlay ce-hidden" style="border:2px solid #FF00FF;border-radius:20px;inset:auto;padding:30px;width:300px">
+    <h2 id="candy-over-title" style="color:#FF00FF;margin-bottom:8px">GAME OVER</h2>
+    <p id="candy-over-txt"  style="color:#FFD700;font-size:14px;margin-bottom:14px"></p>
+    <button class="game-btn-neon" style="border-color:#FF00FF;color:#FF00FF" onclick="CANDY.showMenu()">🔄 Menú</button>
+    <button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button>
+    <button class="game-btn-neon" onclick="CANDY.salir()">🚪 Salir</button>
+  </div>
+</div>
+
 <!-- ══ VISTA PREMIOS DIARIOS ══ -->
 <div id="vista-premios" class="container hidden">
   <div class="settings-card">
     <div class="btn-close-settings" onclick="mostrarVista('vista-ajustes')">✖</div>
     <h2 style="color:#FFD700;margin-bottom:15px;text-align:center">🎁 PREMIOS DIARIOS</h2>
-    
     <div style="background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);border-radius:10px;padding:15px;margin-bottom:15px">
       <h3 style="color:#FFD700;text-align:center;margin-bottom:10px">🎉 Recompensa Diaria</h3>
       <p style="color:#fff;font-size:14px;text-align:center;margin-bottom:8px">+500 €Eden€ por login diario</p>
       <p style="color:#aaa;font-size:12px;text-align:center">Se reinicia cada 24 horas</p>
     </div>
-    
     <div style="background:rgba(0,255,0,.1);border:1px solid rgba(0,255,0,.3);border-radius:10px;padding:15px;margin-bottom:15px">
       <h3 style="color:#00FF00;text-align:center;margin-bottom:10px">🎭 Avatar Gratuito</h3>
       <p style="color:#fff;font-size:14px;text-align:center;margin-bottom:8px">Cada 5 días consecutivos</p>
       <p style="color:#aaa;font-size:12px;text-align:center">Avatar aleatorio exclusivo</p>
     </div>
-    
     <div id="estado-premios" style="background:rgba(0,255,255,.05);border:1px solid rgba(0,255,255,.2);border-radius:10px;padding:15px">
       <p style="color:#00FFFF;font-size:14px;text-align:center;margin-bottom:10px">📊 Tu Estado</p>
-      <div id="info-premios">
-        <p style="color:#aaa;font-size:12px;text-align:center">Cargando información...</p>
-      </div>
+      <div id="info-premios"><p style="color:#aaa;font-size:12px;text-align:center">Cargando información...</p></div>
     </div>
   </div>
 </div>
@@ -540,9 +703,143 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
 <script>
+/* ═══════════════════════════════════════════════════════════════
+   MÓDULO APP — Namespace global para evitar conflictos
+═══════════════════════════════════════════════════════════════ */
+const APP = (() => {
+  /* ── Web Audio Context (compartido por toda la app) ── */
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const audioBuffers = {};
+  const soundFiles = { hit:'hit.mp3', bounce:'bounce.mp3', coin:'coin.mp3', fail:'fail.mp3', click:'click.mp3', trash:'trash.mp3' };
+
+  async function preloadSounds() {
+    for (const [name, url] of Object.entries(soundFiles)) {
+      try {
+        const ab = await (await fetch(url)).arrayBuffer();
+        audioBuffers[name] = await audioCtx.decodeAudioData(ab);
+      } catch(e) {}
+    }
+  }
+
+  function unlockAudio() { if (audioCtx.state === 'suspended') audioCtx.resume(); }
+  document.addEventListener('touchstart', unlockAudio, { once: true });
+  document.addEventListener('mousedown',  unlockAudio, { once: true });
+
+  let _masterVolume = 0.5;
+
+  function playSFX(name) {
+    if (isMuted || !audioBuffers[name]) return;
+    const src  = audioCtx.createBufferSource();
+    src.buffer = audioBuffers[name];
+    const gain = audioCtx.createGain();
+    gain.gain.value = _masterVolume;
+    src.connect(gain); gain.connect(audioCtx.destination);
+    src.start(0);
+  }
+
+  /* ── Música de fondo con Web Audio API (oscillator mood) ──
+     Usa una URL de audio externa de dominio libre para no requerir archivos.
+     Fuente: OpenGameArt / Freesound (formato OGG/MP3 libre de derechos) */
+  const MUSIC_URL = 'https://opengameart.org/sites/default/files/dreamscape_0.mp3';
+  // Fallback: generamos música ambiental con Web Audio API si el fetch falla
+  let musicAudio = null;
+  let musicPlaying = false;
+  let musicVolume = 0.3;
+  // Ambient oscillator fallback
+  let ambientNodes = [];
+
+  function startAmbientOscillator() {
+    stopAmbient();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    // Pad de acordes ambientales en C menor (Cm, Gm, Eb, Bb)
+    const chords = [
+      [261.63, 311.13, 392.00], // Cm
+      [196.00, 233.08, 293.66], // Gm
+      [311.13, 392.00, 466.16], // Eb
+      [233.08, 293.66, 349.23], // Bb
+    ];
+    let idx = 0;
+    function playChord() {
+      if (!musicPlaying) return;
+      stopAmbient();
+      const c = chords[idx % chords.length]; idx++;
+      c.forEach(freq => {
+        const osc  = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(musicVolume * 0.12, audioCtx.currentTime + 1.2);
+        gain.gain.linearRampToValueAtTime(musicVolume * 0.08, audioCtx.currentTime + 3.0);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 4.5);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime + 5);
+        ambientNodes.push(osc, gain);
+      });
+      setTimeout(playChord, 4400);
+    }
+    playChord();
+  }
+
+  function stopAmbient() {
+    ambientNodes.forEach(n => { try { n.disconnect(); } catch(e) {} });
+    ambientNodes = [];
+  }
+
+  function tryExternalMusic() {
+    if (musicAudio) return;
+    musicAudio = new Audio(MUSIC_URL);
+    musicAudio.loop = true;
+    musicAudio.volume = musicVolume;
+    musicAudio.crossOrigin = 'anonymous';
+    musicAudio.play().then(() => {
+      // éxito con archivo externo
+      stopAmbient();
+    }).catch(() => {
+      // fallo: usar osciladores ambientales
+      musicAudio = null;
+      startAmbientOscillator();
+    });
+  }
+
+  function toggleMusic() {
+    unlockAudio();
+    musicPlaying = !musicPlaying;
+    const btn1 = document.getElementById('music-btn');
+    const btn2 = document.getElementById('toggle-music-btn');
+    if (musicPlaying) {
+      tryExternalMusic();
+      if (btn1) { btn1.textContent = '🎵'; btn1.classList.add('playing'); }
+      if (btn2)   btn2.textContent = '⏸ OFF';
+    } else {
+      if (musicAudio) { musicAudio.pause(); musicAudio = null; }
+      stopAmbient();
+      if (btn1) { btn1.textContent = '🔇'; btn1.classList.remove('playing'); }
+      if (btn2)   btn2.textContent = '▶ ON';
+    }
+  }
+
+  function setMusicVolume(v) {
+    musicVolume = parseFloat(v);
+    if (musicAudio)   musicAudio.volume = musicVolume;
+    ambientNodes.forEach(n => {
+      if (n instanceof GainNode) n.gain.value = musicVolume * 0.12;
+    });
+  }
+
+  preloadSounds();
+
+  return { playSFX, toggleMusic, setMusicVolume, get audioCtx() { return audioCtx; } };
+})();
+
+/* ─── Alias corto para el código original ─── */
+function reproducir(n) { APP.playSFX(n); }
+
 /* ═══════════════════ FIREBASE CONFIG ═══════════════════ */
-const firebaseConfig={
+const firebaseConfig = {
   apiKey:"AIzaSyAqmfX9_Y9wErXkSCx8oxZxYCqrqTf5wVE",
   authDomain:"edengame-5a40c.firebaseapp.com",
   databaseURL:"https://edengame-5a40c-default-rtdb.firebaseio.com",
@@ -553,1432 +850,1259 @@ const firebaseConfig={
   measurementId:"G-TKMSN75EF9"
 };
 firebase.initializeApp(firebaseConfig);
-const db=firebase.database(), auth=firebase.auth();
-let currentUser="",currentUID="",isMuted=false,masterVolume=.5,userBalance=0;
+const db = firebase.database(), auth = firebase.auth();
 
-/* ═══════════════════ WEB AUDIO API ═══════════════════ */
-const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-const audioBuffers={};
-const archivosAudio={hit:'hit.mp3',bounce:'bounce.mp3',coin:'coin.mp3',fail:'fail.mp3',click:'click.mp3',trash:'trash.mp3'};
-async function precargarSonidos(){
-  for(const[n,r]of Object.entries(archivosAudio)){
-    try{const ab=await(await fetch(r)).arrayBuffer();audioBuffers[n]=await audioCtx.decodeAudioData(ab);}catch(e){}
-  }
-}
-function desbloquearAudio(){if(audioCtx.state==='suspended')audioCtx.resume();}
-document.addEventListener('touchstart',desbloquearAudio,{once:true});
-document.addEventListener('mousedown',desbloquearAudio,{once:true});
-function reproducir(n){
-  if(isMuted||!audioBuffers[n])return;
-  const src=audioCtx.createBufferSource();src.buffer=audioBuffers[n];
-  const g=audioCtx.createGain();g.gain.value=masterVolume;
-  src.connect(g);g.connect(audioCtx.destination);src.start(0);
-}
-precargarSonidos();
+/* ─── Estado global ─── */
+let currentUser = "", currentUID = "", isMuted = false, masterVolume = 0.5, userBalance = 0;
+function ajustarVolumen(v) { masterVolume = v; reproducir('click'); }
 
 /* ═══════════════════ IMÁGENES ═══════════════════ */
-const imgLadrillo=new Image();imgLadrillo.src='ladrillo.png';
-// Foto de perfil para Flappy (se actualiza al login)
-let flappyAvatarImg=null;
-let flappyAvatarData='';  // data-url o URL de foto
+const imgLadrillo = new Image(); imgLadrillo.src = 'ladrillo.png';
+let flappyAvatarImg = null, flappyAvatarData = '';
 
 /* ═══════════════════ AVATAR ═══════════════════ */
-function cambiarAvatar(emoji){
-  document.getElementById('avatar-img').innerHTML=emoji;
-  db.ref('usuarios/'+currentUser).update({avatar:emoji});
-  flappyAvatarData=''; flappyAvatarImg=null;
+function cambiarAvatar(emoji) {
+  document.getElementById('avatar-img').innerHTML = emoji;
+  db.ref('usuarios/' + currentUser).update({ avatar: emoji });
+  flappyAvatarData = ''; flappyAvatarImg = null;
   reproducir('coin');
 }
-function subirFotoLocal(input){
-  if(input.files&&input.files[0]){
-    const r=new FileReader();
-    r.onload=e=>{
-      document.getElementById('avatar-img').innerHTML='<img src="'+e.target.result+'" style="width:100%;height:100%;object-fit:cover;">';
-      db.ref('usuarios/'+currentUser).update({avatar:e.target.result});
-      flappyAvatarData=e.target.result; flappyAvatarImg=null;
+function subirFotoLocal(input) {
+  if (input.files && input.files[0]) {
+    const r = new FileReader();
+    r.onload = e => {
+      document.getElementById('avatar-img').innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:100%;object-fit:cover;">';
+      db.ref('usuarios/' + currentUser).update({ avatar: e.target.result });
+      flappyAvatarData = e.target.result; flappyAvatarImg = null;
     };
     r.readAsDataURL(input.files[0]);
   }
 }
-function ajustarVolumen(v){masterVolume=v;reproducir('click');}
-function alternarSilencio(m){isMuted=m;if(!m)reproducir('click');}
-
-function cargarFlappyAvatar(data){
-  flappyAvatarImg=new Image();
-  flappyAvatarImg.src=data;
-}
+function cargarFlappyAvatar(data) { flappyAvatarImg = new Image(); flappyAvatarImg.src = data; }
 
 /* ═══════════════════ TÍTULO ANIMADO ═══════════════════ */
-const tituloEden=document.getElementById('titulo-eden');
-const lineas=["BIENVENIDOS","AL","EDÉN"];
-let timer;
-function animar(){
-  tituloEden.innerHTML="";let l=0,c=0;clearInterval(timer);
-  lineas.forEach(()=>{let s=document.createElement('span');tituloEden.appendChild(s);});
-  let spans=tituloEden.querySelectorAll("span");
-  timer=setInterval(()=>{
-    if(l<lineas.length){spans[l].innerText+=lineas[l][c];c++;if(c>=lineas[l].length){l++;c=0;}}else clearInterval(timer);
-  },100);
+const tituloEden = document.getElementById('titulo-eden');
+const lineas = ["BIENVENIDOS","AL","EDÉN"];
+let _titleTimer;
+function animar() {
+  tituloEden.innerHTML = ""; let l = 0, c = 0; clearInterval(_titleTimer);
+  lineas.forEach(() => { let s = document.createElement('span'); tituloEden.appendChild(s); });
+  let spans = tituloEden.querySelectorAll("span");
+  _titleTimer = setInterval(() => {
+    if (l < lineas.length) { spans[l].innerText += lineas[l][c]; c++; if (c >= lineas[l].length) { l++; c = 0; } }
+    else clearInterval(_titleTimer);
+  }, 100);
 }
 
 /* ═══════════════════ GOOGLE LOGIN ═══════════════════ */
-function entrarConGoogle(){
-  const provider=new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider).then(result=>{
-    const user=result.user,userKey=user.email.replace(/[.@]/g,'_');
-    currentUID=user.uid;
-    db.ref('usuarios/'+userKey).once('value',s=>{
-      const ficha={nombre:user.displayName||userKey,email:user.email,foto:user.photoURL||"",uid:user.uid};
-      if(!s.exists())db.ref('usuarios/'+userKey).set({password:"google_user",age:"",saldo:0,...ficha});
-      else db.ref('usuarios/'+userKey).update(ficha);
-      db.ref('indice-emails/'+userKey).set(userKey);
-      // Carga avatar para Flappy
-      if(user.photoURL){flappyAvatarData=user.photoURL;cargarFlappyAvatar(user.photoURL);}
-      currentUser=userKey;
-      guardarSesionLocal(userKey,user.uid);
-      // Entrar directamente al juego sin mostrar login
-      configurarCarteraYEntrar(s.exists()?(s.val().saldo||0):0);
+function entrarConGoogle() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).then(result => {
+    const user = result.user, userKey = user.email.replace(/[.@]/g, '_');
+    currentUID = user.uid;
+    db.ref('usuarios/' + userKey).once('value', s => {
+      const ficha = { nombre: user.displayName || userKey, email: user.email, foto: user.photoURL || "", uid: user.uid };
+      if (!s.exists()) db.ref('usuarios/' + userKey).set({ password: "google_user", age: "", saldo: 0, ...ficha });
+      else db.ref('usuarios/' + userKey).update(ficha);
+      db.ref('indice-emails/' + userKey).set(userKey);
+      if (user.photoURL) { flappyAvatarData = user.photoURL; cargarFlappyAvatar(user.photoURL); }
+      currentUser = userKey;
+      guardarSesionLocal(userKey, user.uid);
+      configurarCarteraYEntrar(s.exists() ? (s.val().saldo || 0) : 0);
     });
-  }).catch(e=>alert("Error Google: "+e.message));
+  }).catch(e => alert("Error Google: " + e.message));
 }
 
 /* ═══════════════════ MOSTRAR VISTA ═══════════════════ */
-function mostrarVista(id){
+function mostrarVista(id) {
   reproducir('click');
-  document.querySelectorAll('.container,.vista-juego-base').forEach(c=>c.classList.add('hidden'));
-  ['exit-btn','settings-btn','shop-btn','chat-btn','shop-btn-izq'].forEach(b=>{const el=document.getElementById(b);if(el)el.classList.add('hidden');});
+  document.querySelectorAll('.container,.vista-juego-base').forEach(c => c.classList.add('hidden'));
+  ['exit-btn','settings-btn','shop-btn-izq','chat-btn'].forEach(b => {
+    const el = document.getElementById(b); if (el) el.classList.add('hidden');
+  });
   document.getElementById(id).classList.remove('hidden');
-  if(id==='vista-login')animar();
-  if(id==='vista-tienda'){
-    console.log('🛒 Abriendo tienda principal...');
-    // Cargar equipamiento desde Firebase y actualizar botones
-    cargarEquipamientoDesdeDB().then(() => {
-      console.log('📦 Equipamiento cargado, actualizando botones...');
-      actualizarBotonesTiendaSimple();
-      
-      // Forzar actualización después de un pequeño delay para asegurar que se muestre correctamente
-      setTimeout(() => {
-        console.log('🔄 Actualización adicional forzada...');
-        actualizarBotonesTiendaSimple();
-      }, 500);
-    }).catch(error => {
-      console.error('❌ Error cargando equipamiento:', error);
-    });
+
+  // Botón música siempre visible cuando hay sesión
+  const mb = document.getElementById('music-btn');
+  if (mb) mb.style.display = currentUser ? 'flex' : 'none';
+
+  if (id === 'vista-login') animar();
+  if (id === 'vista-tienda-unificada') {
+    const su = document.getElementById('shop-balance-unificado');
+    if (su) su.innerText = 'Saldo: ' + userBalance + ' €Eden€';
+    cargarEquipamientoDesdeDB().then(() => actualizarBotonesTiendaSimple());
   }
-  if(id==='vista-tienda-unificada'){
-    console.log('🛒 Abriendo tienda unificada...');
-    // Actualizar saldo en tienda unificada
-    const saldoUnificado = document.getElementById('shop-balance-unificado');
-    if(saldoUnificado) saldoUnificado.innerText = 'Saldo: ' + userBalance + ' €Eden€';
-    // Cargar equipamiento y actualizar botones
-    cargarEquipamientoDesdeDB().then(() => {
-      console.log('📦 Equipamiento cargado, actualizando tienda unificada...');
-      actualizarBotonesTiendaSimple();
-    }).catch(error => {
-      console.error('❌ Error cargando equipamiento:', error);
-    });
-  }
-  const conNav=['vista-agenda','vista-ajustes','vista-chat'];
-  if(conNav.includes(id)){
-    ['exit-btn','settings-btn','chat-btn','shop-btn-izq'].forEach(b=>document.getElementById(b).classList.remove('hidden'));
-    if(id==='vista-agenda'){
+
+  const conNav = ['vista-agenda','vista-ajustes','vista-chat'];
+  if (conNav.includes(id)) {
+    ['exit-btn','settings-btn','chat-btn','shop-btn-izq'].forEach(b => document.getElementById(b).classList.remove('hidden'));
+    if (id === 'vista-agenda') {
       document.getElementById('pantalla-oscura').classList.add('hidden');
-      dibujarPreviewLadrillos();dibujarPreviewFlappy();
-    }else if(id==='vista-chat'){
-      document.getElementById('pantalla-oscura').classList.remove('hidden');escucharChat();
-    }else if(id==='vista-ajustes'){
+      dibujarPreviewLadrillos(); dibujarPreviewFlappy(); dibujarPreviewCandy();
+    } else if (id === 'vista-chat') {
+      document.getElementById('pantalla-oscura').classList.remove('hidden'); escucharChat();
+    } else if (id === 'vista-ajustes') {
       document.getElementById('pantalla-oscura').classList.remove('hidden');
-      db.ref('usuarios/'+currentUser).once('value',s=>{
-        const d=s.val()||{};
-        document.getElementById('perfil-nombre').innerText="Usuario: "+currentUser;
-        document.getElementById('perfil-edad').innerText="Edad: "+(d.age||"No definida");
-        document.getElementById('uid-box').innerText=currentUser||"—";
-        if(d.avatar){
-          if(d.avatar.includes('data:image')||d.avatar.startsWith('http'))
-            document.getElementById('avatar-img').innerHTML='<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover;">';
-          else document.getElementById('avatar-img').innerText=d.avatar;
-          if(d.avatar.startsWith('http')||d.avatar.includes('data:image')){flappyAvatarData=d.avatar;cargarFlappyAvatar(d.avatar);}
+      db.ref('usuarios/' + currentUser).once('value', s => {
+        const d = s.val() || {};
+        document.getElementById('perfil-nombre').innerText = "Usuario: " + currentUser;
+        document.getElementById('perfil-edad').innerText   = "Edad: " + (d.age || "No definida");
+        document.getElementById('uid-box').innerText       = currentUser || "—";
+        if (d.avatar) {
+          if (d.avatar.includes('data:image') || d.avatar.startsWith('http'))
+            document.getElementById('avatar-img').innerHTML = '<img src="' + d.avatar + '" style="width:100%;height:100%;object-fit:cover;">';
+          else document.getElementById('avatar-img').innerText = d.avatar;
+          if (d.avatar.startsWith('http') || d.avatar.includes('data:image')) { flappyAvatarData = d.avatar; cargarFlappyAvatar(d.avatar); }
         }
-        db.ref('ranking/eden/'+currentUser).once('value',r=>{
-          document.getElementById('perfil-puntos').innerText="Récord Edén: "+(r.val()||0)+" pts";
+        db.ref('ranking/eden/' + currentUser).once('value', r => {
+          document.getElementById('perfil-puntos').innerText = "Récord Edén: " + (r.val() || 0) + " pts";
         });
-        cargarInventario();
-        actualizarUIPerfil();
+        // Récord Candy
+        db.ref('usuarios/' + currentUser + '/candyBestLevel').once('value', r1 => {
+          db.ref('usuarios/' + currentUser + '/candyBestScore').once('value', r2 => {
+            const el = document.getElementById('perfil-candy');
+            if (el) el.innerText = 'Récord Candy: Nv.' + (r1.val() || 0) + ' · ' + (r2.val() || 0) + ' pts';
+          });
+        });
+        cargarInventario(); actualizarUIPerfil();
       });
-    }else document.getElementById('pantalla-oscura').classList.remove('hidden');
-  }else document.getElementById('pantalla-oscura').classList.remove('hidden');
+    } else document.getElementById('pantalla-oscura').classList.remove('hidden');
+  } else {
+    document.getElementById('pantalla-oscura').classList.remove('hidden');
+  }
 }
 
 /* ═══════════════════ CARTERA ═══════════════════ */
-function configurarCarteraYEntrar(saldoBase){
-  db.ref('usuarios/'+currentUser+'/saldo').on('value',snap=>{
-    userBalance=snap.exists()?snap.val():saldoBase;
-    if(!snap.exists())db.ref('usuarios/'+currentUser+'/saldo').set(saldoBase);
+function configurarCarteraYEntrar(saldoBase) {
+  db.ref('usuarios/' + currentUser + '/saldo').on('value', snap => {
+    userBalance = snap.exists() ? snap.val() : saldoBase;
+    if (!snap.exists()) db.ref('usuarios/' + currentUser + '/saldo').set(saldoBase);
+    // Sync Candy wallet display
+    const cw = document.getElementById('ce-wallet-eden');
+    if (cw) cw.innerText = userBalance;
   });
-  mostrarVista('vista-agenda');reproducir('coin');
-  // Verificar recompensa diaria
+  mostrarVista('vista-agenda'); reproducir('coin');
   verificarRecompensaDiaria();
 }
 
 /* ═══════════════════ SISTEMA DE NIVELES Y XP ═══════════════════ */
-function calcularNivel(xp){
-  let nivel=1;
-  let xpRequerido=100;
-  let xpTotal=100;
-  
-  while(xp>=xpTotal){
-    nivel++;
-    xpRequerido=Math.floor(xpRequerido*1.2);
-    xpTotal+=xpRequerido;
-  }
-  
-  const xpActualNivel=xp-(xpTotal-xpRequerido);
-  
-  return {nivel, xpActualNivel, xpRequerido, xpTotal};
+function calcularNivel(xp) {
+  let nivel = 1, xpReq = 100, xpTotal = 100;
+  while (xp >= xpTotal) { nivel++; xpReq = Math.floor(xpReq * 1.2); xpTotal += xpReq; }
+  return { nivel, xpActualNivel: xp - (xpTotal - xpReq), xpRequerido: xpReq };
 }
-
-function ganarXP(cantidad){
-  if(!currentUser)return;
-  
-  db.ref('usuarios/'+currentUser+'/xp').transaction(v=>(v||0)+cantidad).then(result=>{
-    const nuevoXP=result.snapshot.val()||cantidad;
-    const nivelInfo=calcularNivel(nuevoXP);
-    
-    // Actualizar nivel si subió
-    db.ref('usuarios/'+currentUser).update({
-      xp: nuevoXP,
-      nivel: nivelInfo.nivel
-    });
-    
-    // Actualizar UI si está en ajustes
+function ganarXP(cantidad) {
+  if (!currentUser) return;
+  db.ref('usuarios/' + currentUser + '/xp').transaction(v => (v || 0) + cantidad).then(result => {
+    const nuevo = result.snapshot.val() || cantidad;
+    const info = calcularNivel(nuevo);
+    db.ref('usuarios/' + currentUser).update({ xp: nuevo, nivel: info.nivel });
     actualizarUIPerfil();
-    
-    // Notificar si subió de nivel
-    const nivelAnterior=calcularNivel(nuevoXP-cantidad).nivel;
-    if(nivelInfo.nivel>nivelAnterior){
-      alert('🎉 ¡FELICIDADES! Has subido al nivel '+nivelInfo.nivel+'!');
-      reproducir('coin');
+    if (calcularNivel(nuevo - cantidad).nivel < info.nivel) {
+      alert('🎉 ¡FELICIDADES! Has subido al nivel ' + info.nivel + '!'); reproducir('coin');
     }
   });
 }
-
-function actualizarUIPerfil(){
-  if(!currentUser)return;
-  
-  db.ref('usuarios/'+currentUser).once('value',s=>{
-    const datos=s.val()||{};
-    const xp=datos.xp||0;
-    const nivelInfo=calcularNivel(xp);
-    
-    // Actualizar información del perfil
-    const nivelEl=document.getElementById('perfil-nivel');
-    const xpEl=document.getElementById('perfil-xp');
-    const xpBarEl=document.getElementById('xp-bar');
-    
-    if(nivelEl) nivelEl.innerText='Nivel: '+nivelInfo.nivel;
-    if(xpEl) xpEl.innerText='XP: '+nivelInfo.xpActualNivel+'/'+nivelInfo.xpRequerido;
-    if(xpBarEl) xpBarEl.style.width=(nivelInfo.xpActualNivel/nivelInfo.xpRequerido*100)+'%';
+function actualizarUIPerfil() {
+  if (!currentUser) return;
+  db.ref('usuarios/' + currentUser).once('value', s => {
+    const d = s.val() || {}, xp = d.xp || 0, info = calcularNivel(xp);
+    const ne = document.getElementById('perfil-nivel'),
+          xe = document.getElementById('perfil-xp'),
+          xb = document.getElementById('xp-bar');
+    if (ne) ne.innerText = 'Nivel: ' + info.nivel;
+    if (xe) xe.innerText = 'XP: ' + info.xpActualNivel + '/' + info.xpRequerido;
+    if (xb) xb.style.width = (info.xpActualNivel / info.xpRequerido * 100) + '%';
   });
 }
+function darXPporJuego(puntos) { ganarXP(Math.floor(puntos / 2)); }
 
-function darXPporLogin(){
-  ganarXP(10); // 10 XP por login diario
-}
-
-function darXPporJuego(puntos){
-  const xpGanada=Math.floor(puntos/2); // 1 XP por cada 2 puntos del juego
-  ganarXP(xpGanada);
-}
-
-/* ═══════════════════ SISTEMA DE RECOMPENSAS DIARIAS ═══════════════════ */
-function verificarRecompensaDiaria(){
-  if(!currentUser)return;
-  
-  const hoy=new Date().toDateString();
-  db.ref('usuarios/'+currentUser+'/ultimoLogin').once('value',s=>{
-    const ultimoLogin=s.val();
-    
-    if(ultimoLogin!==hoy){
-      // Es un nuevo día, dar recompensa
-      db.ref('usuarios/'+currentUser+'/saldo').transaction(v=>(v||0)+500).then(()=>{
-        db.ref('usuarios/'+currentUser+'/ultimoLogin').set(hoy);
-        
-        // Incrementar días consecutivos
-        db.ref('usuarios/'+currentUser+'/diasConsecutivos').transaction(v=>(v||0)+1).then(result=>{
-          const diasConsecutivos=result.snapshot.val()||0;
-          
-          // Dar XP por login
-          darXPporLogin();
-          
-          alert('🎉 ¡Recompensa diaria recibida! +500 €Eden€ +10 XP\n🔥 Días consecutivos: '+diasConsecutivos);
-          
-          // Verificar si corresponde avatar gratis (cada 5 días)
-          if(diasConsecutivos%5===0){
-            darAvatarGratis();
-          }
-        });
-        
-        // Actualizar saldo en pantalla
-        ['shop-balance','shop-balance-unificado','saldo-ingame-l','saldo-ingame-f'].forEach(id=>{
-          const el=document.getElementById(id);
-          if(el)el.innerText='Saldo: '+(userBalance+500)+' €Eden€';
+/* ═══════════════════ RECOMPENSAS DIARIAS ═══════════════════ */
+function verificarRecompensaDiaria() {
+  if (!currentUser) return;
+  const hoy = new Date().toDateString();
+  db.ref('usuarios/' + currentUser + '/ultimoLogin').once('value', s => {
+    if (s.val() !== hoy) {
+      db.ref('usuarios/' + currentUser + '/saldo').transaction(v => (v || 0) + 500).then(() => {
+        db.ref('usuarios/' + currentUser + '/ultimoLogin').set(hoy);
+        db.ref('usuarios/' + currentUser + '/diasConsecutivos').transaction(v => (v || 0) + 1).then(r => {
+          const dias = r.snapshot.val() || 0;
+          ganarXP(10);
+          alert('🎉 ¡Recompensa diaria! +500 €Eden€ +10 XP\n🔥 Días consecutivos: ' + dias);
+          if (dias % 5 === 0) darAvatarGratis();
         });
       });
     }
   });
 }
-
-function mostrarPremiosDiarios(){
-  reproducir('click');
-  mostrarVista('vista-premios');
-  
-  if(!currentUser)return;
-  
-  const hoy=new Date().toDateString();
-  db.ref('usuarios/'+currentUser).once('value',s=>{
-    const datos=s.val()||{};
-    const ultimoLogin=datos.ultimoLogin;
-    const diasConsecutivos=datos.diasConsecutivos||0;
-    const infoDiv=document.getElementById('info-premios');
-    
-    let html='';
-    
-    // Estado de recompensa diaria
-    if(ultimoLogin===hoy){
-      html+='<div style="color:#00FF00;font-size:13px;margin-bottom:8px">✅ Recompensa diaria ya reclamada</div>';
-    }else{
-      const tiempoRestante=calcularTiempoRestante();
-      html+='<div style="color:#FFD700;font-size:13px;margin-bottom:8px">⏰ Tiempo restante: '+tiempoRestante+'</div>';
-    }
-    
-    // Estado de avatar gratis
-    const proximoAvatar=5-(diasConsecutivos%5);
-    if(proximoAvatar===5){
-      html+='<div style="color:#FF69B4;font-size:13px;margin-bottom:8px">🎁 ¡Avatar disponible hoy!</div>';
-    }else{
-      html+='<div style="color:#00FFFF;font-size:13px;margin-bottom:8px">📈 Días para próximo avatar: '+proximoAvatar+'</div>';
-    }
-    
-    html+='<div style="color:#fff;font-size:12px;margin-top:10px">🔥 Días consecutivos: '+diasConsecutivos+'</div>';
-    
-    infoDiv.innerHTML=html;
+function mostrarPremiosDiarios() {
+  reproducir('click'); mostrarVista('vista-premios');
+  if (!currentUser) return;
+  const hoy = new Date().toDateString();
+  db.ref('usuarios/' + currentUser).once('value', s => {
+    const d = s.val() || {}, dias = d.diasConsecutivos || 0;
+    let html = '';
+    if (d.ultimoLogin === hoy) html += '<div style="color:#00FF00;font-size:13px;margin-bottom:8px">✅ Recompensa diaria ya reclamada</div>';
+    else { const h = Math.floor((new Date(new Date().setHours(24,0,0,0)) - new Date()) / 3600000); html += '<div style="color:#FFD700;font-size:13px;margin-bottom:8px">⏰ Siguiente en aprox. ' + h + 'h</div>'; }
+    const next = 5 - (dias % 5);
+    html += (next === 5 ? '<div style="color:#FF69B4;font-size:13px;margin-bottom:8px">🎁 ¡Avatar disponible hoy!</div>' : '<div style="color:#00FFFF;font-size:13px;margin-bottom:8px">📈 Días para próximo avatar: ' + next + '</div>');
+    html += '<div style="color:#fff;font-size:12px;margin-top:10px">🔥 Días consecutivos: ' + dias + '</div>';
+    document.getElementById('info-premios').innerHTML = html;
+  });
+}
+function darAvatarGratis() {
+  const av = ['🎭','🎪','🎨','🎯','🎲','🎸','🎺','🥁','🎻','🎹'];
+  const ava = av[Math.floor(Math.random() * av.length)];
+  db.ref('usuarios/' + currentUser + '/inventario/avatars/' + ava).set(true).then(() => {
+    alert('🎁 ¡Avatar gratis ganado: ' + ava + '!\n📂 Revisa tu inventario.'); reproducir('coin');
   });
 }
 
-function calcularTiempoRestante(){
-  const ahora=new Date();
-  const manana=new Date(ahora);
-  manana.setDate(manana.getDate()+1);
-  manana.setHours(0,0,0,0);
-  
-  const diff=manana-ahora;
-  const horas=Math.floor(diff/(1000*60*60));
-  const minutos=Math.floor((diff%(1000*60*60))/(1000*60));
-  
-  return horas+'h '+minutos+'m';
-}
-
-function darAvatarGratis(){
-  const avataresGratis=['🎭','🎪','🎨','🎯','🎲','🎸','🎺','🥁','🎻','🎹'];
-  const avatarAleatorio=avataresGratis[Math.floor(Math.random()*avataresGratis.length)];
-  
-  db.ref('usuarios/'+currentUser+'/inventario/avatars/'+avatarAleatorio).set(true).then(()=>{
-    alert('🎁 ¡FELICIDADES! Has ganado un avatar gratis: '+avatarAleatorio+'\n📂 Revisa tu inventario en Ajustes.');
-    reproducir('coin');
-  });
-}
-
-/* ═══════════════════ INICIO DE SESIÓN PERSISTENTE ═══════════════════ */
-function guardarSesionLocal(usuario,uid){
-  localStorage.setItem('edenUser',usuario);
-  localStorage.setItem('edenUID',uid);
-}
-function cargarSesionLocal(){
-  const usuario=localStorage.getItem('edenUser');
-  const uid=localStorage.getItem('edenUID');
-  if(usuario&&uid){
-    currentUser=usuario;currentUID=uid;
-    db.ref('usuarios/'+usuario).once('value',s=>{
-      if(s.exists()){
-        const d=s.val();
-        if(d.foto&&(d.foto.startsWith('http')||d.foto.includes('data:image'))){flappyAvatarData=d.foto;cargarFlappyAvatar(d.foto);}
-        else if(d.avatar&&(d.avatar.startsWith('http')||d.avatar.includes('data:image'))){flappyAvatarData=d.avatar;cargarFlappyAvatar(d.avatar);}
-        configurarCarteraYEntrar(d.saldo||0);
-      }else{
-        limpiarSesionLocal();
-        mostrarVista('vista-login');
-      }
+/* ═══════════════════ SESIÓN PERSISTENTE ═══════════════════ */
+function guardarSesionLocal(u, uid) { localStorage.setItem('edenUser', u); localStorage.setItem('edenUID', uid); }
+function limpiarSesionLocal() { localStorage.removeItem('edenUser'); localStorage.removeItem('edenUID'); }
+function cargarSesionLocal() {
+  const u = localStorage.getItem('edenUser'), uid = localStorage.getItem('edenUID');
+  if (u && uid) {
+    currentUser = u; currentUID = uid;
+    db.ref('usuarios/' + u).once('value', s => {
+      if (s.exists()) {
+        const d = s.val();
+        if (d.foto && (d.foto.startsWith('http') || d.foto.includes('data:image'))) { flappyAvatarData = d.foto; cargarFlappyAvatar(d.foto); }
+        else if (d.avatar && (d.avatar.startsWith('http') || d.avatar.includes('data:image'))) { flappyAvatarData = d.avatar; cargarFlappyAvatar(d.avatar); }
+        configurarCarteraYEntrar(d.saldo || 0);
+      } else { limpiarSesionLocal(); mostrarVista('vista-login'); }
     });
     return true;
   }
   return false;
 }
-function limpiarSesionLocal(){
-  localStorage.removeItem('edenUser');
-  localStorage.removeItem('edenUID');
-}
 
 /* ═══════════════════ AUTH MANUAL ═══════════════════ */
-function validarAcceso(){
-  const u=document.getElementById('user-in').value.trim(),p=document.getElementById('pass-in').value.trim();
-  if(u==='admin'&&p==='1234'){currentUser=u;currentUID=u;guardarSesionLocal(u,u);mostrarVista('vista-agenda');return;}
-  db.ref('usuarios/'+u).once('value',s=>{
-    if(s.exists()&&s.val().password===p){
-      currentUser=u;currentUID=s.val().uid||u;
-      guardarSesionLocal(u,currentUID);
-      const d=s.val();
-      if(d.foto&&(d.foto.startsWith('http')||d.foto.includes('data:image'))){flappyAvatarData=d.foto;cargarFlappyAvatar(d.foto);}
-      else if(d.avatar&&(d.avatar.startsWith('http')||d.avatar.includes('data:image'))){flappyAvatarData=d.avatar;cargarFlappyAvatar(d.avatar);}
-      configurarCarteraYEntrar(d.saldo||0);
-    }else alert("Error de acceso");
+function validarAcceso() {
+  const u = document.getElementById('user-in').value.trim(), p = document.getElementById('pass-in').value.trim();
+  if (u === 'admin' && p === '1234') { currentUser = u; currentUID = u; guardarSesionLocal(u, u); mostrarVista('vista-agenda'); return; }
+  db.ref('usuarios/' + u).once('value', s => {
+    if (s.exists() && s.val().password === p) {
+      currentUser = u; currentUID = s.val().uid || u;
+      guardarSesionLocal(u, currentUID);
+      const d = s.val();
+      if (d.foto && (d.foto.startsWith('http') || d.foto.includes('data:image'))) { flappyAvatarData = d.foto; cargarFlappyAvatar(d.foto); }
+      else if (d.avatar && (d.avatar.startsWith('http') || d.avatar.includes('data:image'))) { flappyAvatarData = d.avatar; cargarFlappyAvatar(d.avatar); }
+      configurarCarteraYEntrar(d.saldo || 0);
+    } else alert("Error de acceso");
   });
 }
-function ejecutarRegistro(){
-  const u=document.getElementById('user-reg').value.trim(),p=document.getElementById('pass-reg').value.trim(),a=document.getElementById('age-reg').value;
-  if(u&&p){
-    db.ref('usuarios/'+u).set({password:p,age:a,saldo:0,nombre:u,uid:u,puntos:0,puntosFlappy:0}).then(()=>{
-      db.ref('indice-emails/'+u).set(u);db.ref('indice-nombres/'+u).set(u);
-      alert("¡Registrado!");mostrarVista('vista-login');
+function ejecutarRegistro() {
+  const u = document.getElementById('user-reg').value.trim(), p = document.getElementById('pass-reg').value.trim(), a = document.getElementById('age-reg').value;
+  if (u && p) {
+    db.ref('usuarios/' + u).set({ password: p, age: a, saldo: 0, nombre: u, uid: u, puntos: 0, puntosFlappy: 0 }).then(() => {
+      db.ref('indice-emails/' + u).set(u); db.ref('indice-nombres/' + u).set(u);
+      alert("¡Registrado!"); mostrarVista('vista-login');
     });
   }
 }
-function actualizarPerfil(){
-  const np=document.getElementById('edit-pass').value.trim(),na=document.getElementById('edit-age').value;
-  let up={};if(np)up.password=np;if(na)up.age=na;
-  if(Object.keys(up).length>0)db.ref('usuarios/'+currentUser).update(up).then(()=>{alert("Perfil actualizado");reproducir('coin');mostrarVista('vista-ajustes');});
+function actualizarPerfil() {
+  const np = document.getElementById('edit-pass').value.trim(), na = document.getElementById('edit-age').value;
+  let up = {}; if (np) up.password = np; if (na) up.age = na;
+  if (Object.keys(up).length > 0) db.ref('usuarios/' + currentUser).update(up).then(() => { alert("Perfil actualizado"); reproducir('coin'); mostrarVista('vista-ajustes'); });
 }
-function cerrarSesion(){
+function cerrarSesion() {
   reproducir('click');
-  if(currentUser&&currentUser!=='admin')db.ref('usuarios/'+currentUser+'/saldo').off();
-  pararEscuchaChat();currentUser="";currentUID="";limpiarSesionLocal();mostrarVista('vista-login');
+  if (currentUser && currentUser !== 'admin') db.ref('usuarios/' + currentUser + '/saldo').off();
+  pararEscuchaChat(); currentUser = ""; currentUID = ""; limpiarSesionLocal();
+  document.getElementById('music-btn').style.display = 'none';
+  mostrarVista('vista-login');
 }
 
 /* ═══════════════════ COPIAR UID ═══════════════════ */
-function copiarUID(){
-  const txt=document.getElementById('uid-box').innerText;
-  if(!txt||txt==='—')return;
-  const done=()=>{document.getElementById('uid-box').innerText='¡Copiado!';setTimeout(()=>document.getElementById('uid-box').innerText=txt,1500);};
-  if(navigator.clipboard)navigator.clipboard.writeText(txt).then(done).catch(()=>{_fallbackCopy(txt);done();});
-  else{_fallbackCopy(txt);done();}
+function copiarUID() {
+  const txt = document.getElementById('uid-box').innerText;
+  if (!txt || txt === '—') return;
+  const done = () => { document.getElementById('uid-box').innerText = '¡Copiado!'; setTimeout(() => document.getElementById('uid-box').innerText = txt, 1500); };
+  if (navigator.clipboard) navigator.clipboard.writeText(txt).then(done).catch(() => { _fallbackCopy(txt); done(); });
+  else { _fallbackCopy(txt); done(); }
 }
-function _fallbackCopy(t){const el=document.createElement('textarea');el.value=t;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);}
+function _fallbackCopy(t) { const el = document.createElement('textarea'); el.value = t; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); }
 
 /* ═══════════════════ NOTAS ═══════════════════ */
-function añadirTarea(){
+function añadirTarea() {
   reproducir('click');
-  const inp=document.getElementById('campo-tarea');
-  if(inp.value.trim()&&currentUser){db.ref('notas/'+currentUser).push({text:inp.value.trim(),done:false});inp.value='';}
+  const inp = document.getElementById('campo-tarea');
+  if (inp.value.trim() && currentUser) { db.ref('notas/' + currentUser).push({ text: inp.value.trim(), done: false }); inp.value = ''; }
 }
-function cargarTareas(){
-  const lista=document.getElementById('lista-tareas');
-  db.ref('notas/'+currentUser).on('value',snap=>{
-    lista.innerHTML='';
-    snap.forEach(child=>{
-      const i=child.key,t=child.val();
-      const item=document.createElement('div');item.className='task-item';item.id='nota-'+i;
-      item.innerHTML='<input type="checkbox" style="width:20px" '+(t.done?'checked':'')+
-        ' onchange="db.ref(\'notas/'+currentUser+'/'+i+'\').update({done:!'+t.done+'})">'+
-        '<div class="task-text" style="'+(t.done?'text-decoration:line-through;opacity:.5':'')+'">'+ t.text +'</div>'+
-        '<button class="btn-edit-note" onclick="modificarTareaInline(\''+i+'\')">✏️</button>';
+function cargarTareas() {
+  const lista = document.getElementById('lista-tareas');
+  db.ref('notas/' + currentUser).on('value', snap => {
+    lista.innerHTML = '';
+    snap.forEach(child => {
+      const i = child.key, t = child.val();
+      const item = document.createElement('div'); item.className = 'task-item'; item.id = 'nota-' + i;
+      item.innerHTML = '<input type="checkbox" style="width:20px" ' + (t.done ? 'checked' : '') +
+        ' onchange="db.ref(\'notas/' + currentUser + '/' + i + '\').update({done:!' + t.done + '})">' +
+        '<div class="task-text" style="' + (t.done ? 'text-decoration:line-through;opacity:.5' : '') + '">' + t.text + '</div>' +
+        '<button class="btn-edit-note" onclick="modificarTareaInline(\'' + i + '\')">✏️</button>';
       lista.appendChild(item);
     });
   });
 }
-function borrarMarcados(){
+function borrarMarcados() {
   reproducir('trash');
-  db.ref('notas/'+currentUser).once('value',snap=>{snap.forEach(c=>{if(c.val().done)db.ref('notas/'+currentUser+'/'+c.key).remove();});});
+  db.ref('notas/' + currentUser).once('value', snap => { snap.forEach(c => { if (c.val().done) db.ref('notas/' + currentUser + '/' + c.key).remove(); }); });
 }
-function modificarTareaInline(i){
-  const item=document.getElementById('nota-'+i),textDiv=item.querySelector('.task-text'),editBtn=item.querySelector('.btn-edit-note');
-  if(item.classList.contains('editing'))return;
-  item.classList.add('editing');reproducir('click');
-  const ct=textDiv.innerText;
-  textDiv.innerHTML='<input type="text" class="edit-input" value="'+ct.replace(/"/g,'&quot;')+'">';
-  editBtn.innerHTML='✅';editBtn.classList.remove('btn-edit-note');editBtn.classList.add('btn-save-note');
-  const inp=textDiv.querySelector('.edit-input');inp.focus();inp.select();
-  const save=()=>{const nv=inp.value.trim();if(nv&&nv!==ct){db.ref('notas/'+currentUser+'/'+i).update({text:nv});reproducir('coin');}item.classList.remove('editing');};
-  inp.addEventListener('keypress',e=>{if(e.key==='Enter')save();});editBtn.onclick=save;
+function modificarTareaInline(i) {
+  const item = document.getElementById('nota-' + i), textDiv = item.querySelector('.task-text'), editBtn = item.querySelector('.btn-edit-note');
+  if (item.classList.contains('editing')) return;
+  item.classList.add('editing'); reproducir('click');
+  const ct = textDiv.innerText;
+  textDiv.innerHTML = '<input type="text" class="edit-input" value="' + ct.replace(/"/g, '&quot;') + '">';
+  editBtn.innerHTML = '✅'; editBtn.classList.remove('btn-edit-note'); editBtn.classList.add('btn-save-note');
+  const inp = textDiv.querySelector('.edit-input'); inp.focus(); inp.select();
+  const save = () => { const nv = inp.value.trim(); if (nv && nv !== ct) { db.ref('notas/' + currentUser + '/' + i).update({ text: nv }); reproducir('coin'); } item.classList.remove('editing'); };
+  inp.addEventListener('keypress', e => { if (e.key === 'Enter') save(); }); editBtn.onclick = save;
 }
 
-function cargarInventario(){
-  const container=document.getElementById('inventario-container');
-  if(!container)return;
-  
-  // Obtener tanto el inventario como las vidas disponibles directamente
+/* ═══════════════════ INVENTARIO ═══════════════════ */
+function cargarInventario() {
+  const container = document.getElementById('inventario-container'); if (!container) return;
   Promise.all([
-    db.ref('usuarios/'+currentUser+'/inventario').once('value'),
-    db.ref('usuarios/'+currentUser+'/vidas_disponibles').once('value')
-  ]).then(([snapInv, snapVidas])=>{
-    let html='';
-    const inventario=snapInv.val()||{};
-    const vidasDisponibles=snapVidas.val()||0;
-    
-    // Mostrar vidas extra
-    if(vidasDisponibles>0){
-      html+='<div style="color:#FFD700;font-size:12px;margin-bottom:5px">❤️ Vidas extra: '+vidasDisponibles+'</div>';
-    }
-    
-    // Mostrar paletas
-    if(inventario.paletas){
-      const paletas=Object.keys(inventario.paletas);
-      if(paletas.length>0){
-        html+='<div style="color:#00FFFF;font-size:12px;margin-bottom:5px">🏓 Paletas: ';
-        paletas.forEach(color=>{html+='<span style="color:'+color+'">▬</span> ';});
-        html+='</div>';
-      }
-    }
-    
-    // Mostrar pájaros
-    if(inventario.pajaros){
-      const pajaros=Object.keys(inventario.pajaros);
-      if(pajaros.length>0){
-        html+='<div style="color:#00FF00;font-size:12px;margin-bottom:5px">🐦 Pájaros: ';
-        pajaros.forEach(color=>{html+='<span style="color:'+color+'">🐦</span> ';});
-        html+='</div>';
-      }
-    }
-    
-    // Mostrar pelotas
-    if(inventario.pelotas){
-      const pelotas=Object.keys(inventario.pelotas);
-      if(pelotas.length>0){
-        html+='<div style="color:#FF69B4;font-size:12px;margin-bottom:5px">⚪ Pelotas: ';
-        pelotas.forEach(color=>{html+='<span style="color:'+color+'">●</span> ';});
-        html+='</div>';
-      }
-    }
-    
-    // Mostrar avatares ganados
-    if(inventario.avatars){
-      const avatars=Object.keys(inventario.avatars);
-      if(avatars.length>0){
-        html+='<div style="color:#FFD700;font-size:12px;margin-bottom:5px">🎭 Avatares ganados: ';
-        avatars.forEach(avatar=>{html+=avatar+' ';});
-        html+='</div>';
-      }
-    }
-    
-    if(html===''){
-      html='<p style="color:#aaa;font-size:11px;text-align:center">No tienes objetos en tu inventario</p>';
-    }
-    
-    container.innerHTML=html;
+    db.ref('usuarios/' + currentUser + '/inventario').once('value'),
+    db.ref('usuarios/' + currentUser + '/vidas_disponibles').once('value'),
+    db.ref('usuarios/' + currentUser + '/candyInv').once('value')
+  ]).then(([snapInv, snapVidas, snapCandy]) => {
+    let html = '';
+    const inv = snapInv.val() || {}, vidas = snapVidas.val() || 0, cInv = snapCandy.val() || {};
+    if (vidas > 0) html += '<div style="color:#FFD700;font-size:12px;margin-bottom:5px">❤️ Vidas extra: ' + vidas + '</div>';
+    if (inv.paletas)  html += '<div style="color:#00FFFF;font-size:12px;margin-bottom:5px">🏓 Paletas: ' + Object.keys(inv.paletas).map(c => '<span style="color:' + c + '">▬</span>').join(' ') + '</div>';
+    if (inv.pajaros)  html += '<div style="color:#00FF00;font-size:12px;margin-bottom:5px">🐦 Pájaros: ' + Object.keys(inv.pajaros).map(c => '<span style="color:' + c + '">🐦</span>').join(' ') + '</div>';
+    if (inv.pelotas)  html += '<div style="color:#FF69B4;font-size:12px;margin-bottom:5px">⚪ Pelotas: ' + Object.keys(inv.pelotas).map(c => '<span style="color:' + c + '">●</span>').join(' ') + '</div>';
+    if (inv.avatars)  html += '<div style="color:#FFD700;font-size:12px;margin-bottom:5px">🎭 Avatares: ' + Object.keys(inv.avatars).join(' ') + '</div>';
+    if ((cInv.rayo || 0) > 0 || (cInv.bollo || 0) > 0)
+      html += '<div style="color:#FF00FF;font-size:12px;margin-bottom:5px">🍬 Candy — ⚡ x' + (cInv.rayo || 0) + ' · 🥐 x' + (cInv.bollo || 0) + '</div>';
+    if (!html) html = '<p style="color:#aaa;font-size:11px;text-align:center">No tienes objetos en tu inventario</p>';
+    container.innerHTML = html;
   });
 }
 
 /* ═══════════════════ TIENDA ═══════════════════ */
+let colorPalaEquipada = '#00FFFF', colorBolaEquipada = '#FF0000';
 
-// Función auxiliar para verificar si el usuario tiene un ítem
-function tieneItem(tipo, valor){
-  if(!currentUser || currentUser === 'admin') return false;
-  
-  const tipoInventario = tipo === 'paleta' ? 'paletas' : 
-                         tipo === 'pajaro' ? 'pajaros' : 
-                         tipo === 'bola' ? 'pelotas' : tipo;
-  
-  // Verificar directamente en Firebase (más confiable)
-  return db.ref('usuarios/'+currentUser+'/inventario/'+tipoInventario+'/'+valor).once('value').then(snap => snap.val() === true).catch(() => false);
+function cargarEquipamientoDesdeDB() {
+  if (!currentUser || currentUser === 'admin') return Promise.resolve();
+  return db.ref('usuarios/' + currentUser).once('value').then(snap => {
+    const d = snap.val() || {};
+    if (d.paletaEquipada) colorPalaEquipada = { red:'#FF0000', pink:'#FFC0CB', yellow:'#FFFF00' }[d.paletaEquipada] || '#00FFFF';
+    if (d.bolaEquipada)   colorBolaEquipada  = { blue:'#0000FF', pink:'#FFC0CB', yellow:'#FFFF00' }[d.bolaEquipada]  || '#FF0000';
+    if (d.pajaroEquipado) skinPajaroEquipada = { red:'🦜', pink:'🦩', yellow:'🦆', blue:'🦅', green:'🦚', purple:'🦢' }[d.pajaroEquipado] || '🐦';
+  }).catch(() => {});
 }
 
-function comprar(tipo,valor){
+function tieneItem(tipo, valor) {
+  if (!currentUser || currentUser === 'admin') return Promise.resolve(false);
+  const tipoInv = tipo === 'paleta' ? 'paletas' : tipo === 'pajaro' ? 'pajaros' : tipo === 'bola' ? 'pelotas' : tipo;
+  return db.ref('usuarios/' + currentUser + '/inventario/' + tipoInv + '/' + valor).once('value').then(s => s.val() === true).catch(() => false);
+}
+
+function comprar(tipo, valor) {
   reproducir('click');
-  
-  // VALIDACIÓN: Bloquear re-compra (solo 1 vez) - manejar Promise
-  if(tipo !== 'vida'){
-    return tieneItem(tipo, valor).then(yaTiene => {
-      if(yaTiene){
-        alert('Ya tienes este objeto. Puedes equiparlo desde aquí.');
-        
-        // Forzar actualización inmediata de todos los botones
-        actualizarBotonesTiendaSimple();
-        
-        // También actualizar después de un pequeño delay por si acaso
-        setTimeout(() => {
-          actualizarBotonesTiendaSimple();
-        }, 200);
-        
-        return;
-      }
-      
-      // Continuar con la compra si no tiene el objeto
+  // Candy power-ups tienen su propio flujo
+  if (tipo === 'candy_rayo' || tipo === 'candy_bollo') {
+    const powerKey = tipo === 'candy_rayo' ? 'rayo' : 'bollo';
+    if (userBalance >= 500) {
+      const ns = userBalance - 500;
+      db.ref('usuarios/' + currentUser).update({ saldo: ns }).then(() => {
+        db.ref('usuarios/' + currentUser + '/candyInv/' + powerKey).transaction(v => (v || 0) + 1).then(() => {
+          reproducir('coin'); actualizarSaldoUI(ns);
+          CANDY.syncInventory(); alert('⚡ Power-up ' + powerKey + ' añadido a Candy Edén');
+        });
+      });
+    } else { reproducir('fail'); alert("No tienes suficiente €Eden€"); }
+    return;
+  }
+  if (tipo !== 'vida') {
+    return tieneItem(tipo, valor).then(ya => {
+      if (ya) { alert('Ya tienes este objeto. Puedes equiparlo desde aquí.'); actualizarBotonesTiendaSimple(); return; }
       procesarCompra(tipo, valor);
     });
   }
-  
-  // Para vidas, procesar directamente
   procesarCompra(tipo, valor);
 }
 
-function procesarCompra(tipo, valor){
-  let precio=0;
-  if(tipo==='paleta')precio=(valor==='red'?500:(valor==='pink'?750:1000));
-  else if(tipo==='pajaro')precio=(valor==='red'?500:(valor==='pink'?750:(valor==='yellow'?1000:(valor==='blue'?600:(valor==='green'?800:1200)))));
-  else if(tipo==='bola')precio=(valor==='blue'?400:(valor==='pink'?600:900));
-  else if(tipo==='vida')precio=(valor===1?5000:(valor===3?12000:20000));
-  if(userBalance>=precio){
-    const ns=userBalance-precio;
-    db.ref('usuarios/'+currentUser).update({saldo:ns}).then(()=>{
-      reproducir('coin');
-      ['shop-balance','shop-balance-unificado','saldo-ingame-l','saldo-ingame-f'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerText='Saldo: '+ns+' €Eden€';});
-      
-      // Guardar objeto comprado en el inventario
-      if(tipo==='vida'){
-        // Guardar vidas adicionales en el campo vidas_disponibles
-        db.ref('usuarios/'+currentUser+'/vidas_disponibles').once('value',s=>{
-          const vidasActuales=s.val()||0;
-          db.ref('usuarios/'+currentUser+'/vidas_disponibles').set(vidasActuales+valor);
-        });
-      }else{
-        // Guardar objetos cosméticos (paletas, pájaros, pelotas)
-        let objetoTipo = tipo;
-        if(tipo==='paleta')objetoTipo='paletas';
-        else if(tipo==='pajaro')objetoTipo='pajaros';
-        else if(tipo==='bola')objetoTipo='pelotas';
-        
-        db.ref('usuarios/'+currentUser+'/inventario/'+objetoTipo+'/'+valor).set(true);
+function procesarCompra(tipo, valor) {
+  let precio = 0;
+  if (tipo === 'paleta') precio = { red:500, pink:750, yellow:1000 }[valor] || 0;
+  else if (tipo === 'pajaro') precio = { red:500, pink:750, yellow:1000, blue:600, green:800, purple:1200 }[valor] || 0;
+  else if (tipo === 'bola')   precio = { blue:400, pink:600, yellow:900 }[valor] || 0;
+  else if (tipo === 'vida')   precio = valor === 1 ? 5000 : valor === 3 ? 12000 : 20000;
+  if (userBalance >= precio) {
+    const ns = userBalance - precio;
+    db.ref('usuarios/' + currentUser).update({ saldo: ns }).then(() => {
+      reproducir('coin'); actualizarSaldoUI(ns);
+      if (tipo === 'vida') {
+        db.ref('usuarios/' + currentUser + '/vidas_disponibles').transaction(v => (v || 0) + valor);
+      } else {
+        const tipoInv = tipo === 'paleta' ? 'paletas' : tipo === 'pajaro' ? 'pajaros' : 'pelotas';
+        db.ref('usuarios/' + currentUser + '/inventario/' + tipoInv + '/' + valor).set(true);
       }
-      
-      alert('¡Gracias por tu compra! Objeto guardado en tu inventario.');
-      
-      // Auto-equipar el ítem recién comprado
+      alert('¡Gracias por tu compra!');
       equiparItem(tipo, valor);
-      
-      // Forzar actualización de UI de tiendas
-      setTimeout(() => {
-        console.log('⚡ Forzando actualización UI después de compra...');
-        actualizarUIEquipamiento();
-      }, 500);
+      setTimeout(actualizarBotonesTiendaSimple, 500);
     });
-  }else{reproducir('fail');alert("No tienes suficiente €Eden€");}
+  } else { reproducir('fail'); alert("No tienes suficiente €Eden€"); }
 }
 
-/* ═══════════════════ SISTEMA DE VIDAS ═══════════════════ */
-function usarVida(juego){
-  if(!currentUser||currentUser==='admin')return;
-  
-  db.ref('usuarios/'+currentUser+'/vidas_disponibles').once('value',s=>{
-    const vidas=s.val()||0;
-    if(vidas>0){
-      // Restar 1 vida
-      db.ref('usuarios/'+currentUser+'/vidas_disponibles').set(vidas-1).then(()=>{
-        reproducir('coin');
-        
-        if(juego==='ladrillos'){
-          // Continuar juego de ladrillos
-          menuGameOver.classList.add('hidden');
-          gameActive=true;
-          // Reponer una pelota y continuar
-          let rad=(currentDifficulty==='eden')?5:8;
-          balls=[{x:canvas.width/2,y:canvas.height-100,dx:4.5,dy:-4.5,radius:rad}];
-          function gameLoop(){if(gameActive){draw();gameInterval=requestAnimationFrame(gameLoop);}}
-          gameLoop();
-        }else if(juego==='flappy'){
-          // Continuar juego de flappy
-          document.getElementById('flappy-over-menu').classList.add('hidden');
-          fBird={x:70,y:FH/2,vy:0,r:20};
-          fActive=true;
-          fLoop();
-        }
-      });
-    }else{
-      reproducir('fail');
-      alert('No tienes vidas disponibles. Compra más en la tienda.');
+function actualizarSaldoUI(ns) {
+  ['shop-balance', 'shop-balance-unificado'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = 'Saldo: ' + ns + ' €Eden€'; });
+  const cw = document.getElementById('ce-wallet-eden'); if (cw) cw.innerText = ns;
+}
+
+function equiparItem(tipo, valor) {
+  if (!currentUser || currentUser === 'admin') return;
+  db.ref('usuarios/' + currentUser + '/inventario').once('value').then(snap => {
+    const inv = snap.val() || {};
+    const tipoInv = tipo === 'paleta' ? 'paletas' : tipo === 'bola' ? 'pelotas' : tipo === 'pajaro' ? 'pajaros' : tipo;
+    if (!inv[tipoInv] || !inv[tipoInv][valor]) { alert('No tienes este ítem en tu inventario.'); return; }
+    const key = tipo === 'paleta' ? 'paletaEquipada' : tipo === 'bola' ? 'bolaEquipada' : tipo === 'pajaro' ? 'pajaroEquipado' : '';
+    if (key) db.ref('usuarios/' + currentUser).update({ [key]: valor }).then(() => {
+      reproducir('coin');
+      if (tipo === 'paleta') colorPalaEquipada = { red:'#FF0000', pink:'#FFC0CB', yellow:'#FFFF00' }[valor] || '#00FFFF';
+      if (tipo === 'bola')   colorBolaEquipada  = { blue:'#0000FF', pink:'#FFC0CB', yellow:'#FFFF00' }[valor] || '#FF0000';
+      if (tipo === 'pajaro') skinPajaroEquipada  = { red:'🦜', pink:'🦩', yellow:'🦆', blue:'🦅', green:'🦚', purple:'🦢' }[valor] || '🐦';
+      actualizarBotonesTiendaSimple();
+    });
+  });
+}
+
+function actualizarBotonesTiendaSimple() {
+  document.querySelectorAll('.shop-item').forEach(btn => {
+    const emoji = btn.querySelector('span:first-child');
+    const price = btn.querySelector('.shop-price');
+    if (!emoji || !price) return;
+    const et = emoji.textContent, es = emoji.getAttribute('style') || '';
+    const mapaP = { '🦜':'red','🦩':'pink','🦆':'yellow','🦅':'blue','🦚':'green','🦢':'purple' };
+    if (mapaP[et]) {
+      const equipado = skinPajaroEquipada === { red:'🦜',pink:'🦩',yellow:'🦆',blue:'🦅',green:'🦚',purple:'🦢' }[mapaP[et]];
+      price.textContent  = equipado ? '✅ EQUIPADO' : 'Equipar';
+      btn.style.border   = equipado ? '2px solid #00FF00' : '';
+      btn.style.boxShadow= equipado ? '0 0 10px #00FF00' : '';
     }
   });
 }
 
-/* ═══════════════════ OVERLAYS COMPARTIDOS ═══════════════════ */
-function toggleRankIngame(juego){
-  const rid='rank-ingame-'+juego;
-  const m=document.getElementById(rid);
-  if(m.classList.contains('hidden')){m.classList.remove('hidden');cargarRankIngame(juego,'mundial');}
+/* ═══════════════════ SISTEMA DE VIDAS ═══════════════════ */
+function usarVida(juego) {
+  if (!currentUser || currentUser === 'admin') return;
+  db.ref('usuarios/' + currentUser + '/vidas_disponibles').once('value', s => {
+    const vidas = s.val() || 0;
+    if (vidas > 0) {
+      db.ref('usuarios/' + currentUser + '/vidas_disponibles').set(vidas - 1).then(() => {
+        reproducir('coin');
+        if (juego === 'ladrillos') {
+          document.getElementById('game-over-menu').classList.add('hidden');
+          bricksGameActive = true;
+          let rad = (bricksCurrentDifficulty === 'eden') ? 5 : 8;
+          bricksBalls = [{ x: bricksCanvas.width / 2, y: bricksCanvas.height - 100, dx: 4.5, dy: -4.5, radius: rad }];
+          function gl() { if (bricksGameActive) { bricksDraw(); bricksGameInterval = requestAnimationFrame(gl); } } gl();
+        } else if (juego === 'flappy') {
+          document.getElementById('flappy-over-menu').classList.add('hidden');
+          fBird = { x: 70, y: FH / 2, vy: 0, r: 20 }; fActive = true; fLoop();
+        }
+      });
+    } else { reproducir('fail'); alert('No tienes vidas disponibles. Compra en la tienda.'); }
+  });
+}
+
+/* ═══════════════════ OVERLAYS RANKING ═══════════════════ */
+function toggleRankIngame(juego) {
+  const rid = 'rank-ingame-' + juego, m = document.getElementById(rid);
+  if (m.classList.contains('hidden')) { m.classList.remove('hidden'); cargarRankIngame(juego, 'mundial'); }
   else m.classList.add('hidden');
 }
-function cerrarRankIngame(juego){document.getElementById('rank-ingame-'+juego).classList.add('hidden');}
-
-function cambiarTabRank(juego,modo){
-  const pre=juego==='ladrillos'?'l':'f';
-  document.getElementById('rtab-'+pre+'-mundial').classList.toggle('active',modo==='mundial');
-  document.getElementById('rtab-'+pre+'-amigos').classList.toggle('active',modo==='amigos');
-  cargarRankIngame(juego,modo);
+function cerrarRankIngame(juego) { document.getElementById('rank-ingame-' + juego).classList.add('hidden'); }
+function cambiarTabRank(juego, modo) {
+  const pre = juego === 'ladrillos' ? 'l' : juego === 'flappy' ? 'f' : 'c';
+  document.getElementById('rtab-' + pre + '-mundial').classList.toggle('active', modo === 'mundial');
+  document.getElementById('rtab-' + pre + '-amigos').classList.toggle('active', modo === 'amigos');
+  cargarRankIngame(juego, modo);
 }
-
-function cargarRankIngame(juego,modo){
-  const cont=document.getElementById('rank-content-'+juego);
-  const campoP=juego==='flappy'?'puntosFlappy':'puntos';
-  cont.innerHTML='<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">Cargando…</p>';
-  if(modo==='mundial'){
-    db.ref('usuarios').orderByChild(campoP).limitToLast(10).once('value',s=>{
-      let rows=[];s.forEach(c=>{const v=c.val();if((v[campoP]||0)>0)rows.push({name:v.nombre||c.key,pts:v[campoP]||0});});
-      rows.reverse();cont.innerHTML='';
-      if(!rows.length){cont.innerHTML='<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">Sin datos aún.</p>';return;}
-      rows.forEach((u,i)=>{const cls=i===0?'gold':(i===1?'silver':(i===2?'bronze':''));cont.innerHTML+='<div class="rank-row '+cls+'"><span>'+(i+1)+'. '+u.name+'</span><span>'+u.pts+' pts</span></div>';});
+function cargarRankIngame(juego, modo) {
+  const cont = document.getElementById('rank-content-' + juego);
+  const campoP = juego === 'flappy' ? 'puntosFlappy' : juego === 'candy' ? 'candyBestScore' : 'puntos';
+  cont.innerHTML = '<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">Cargando…</p>';
+  if (modo === 'mundial') {
+    db.ref('usuarios').orderByChild(campoP).limitToLast(10).once('value', s => {
+      let rows = []; s.forEach(c => { const v = c.val(); if ((v[campoP] || 0) > 0) rows.push({ name: v.nombre || c.key, pts: v[campoP] || 0 }); });
+      rows.reverse(); cont.innerHTML = '';
+      if (!rows.length) { cont.innerHTML = '<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">Sin datos aún.</p>'; return; }
+      rows.forEach((u, i) => { const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''; cont.innerHTML += '<div class="rank-row ' + cls + '"><span>' + (i+1) + '. ' + u.name + '</span><span>' + u.pts + ' pts</span></div>'; });
     });
-  }else{
-    db.ref('amigos/'+currentUser).once('value',sa=>{
-      if(!sa.exists()){cont.innerHTML='<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">No tienes amigos aún.</p>';return;}
-      let keys=[currentUser];sa.forEach(c=>{const k=c.val().key||c.key;if(k)keys.push(k);});
-      Promise.all(keys.map(k=>db.ref('usuarios/'+k).once('value'))).then(snaps=>{
-        let rows=[];snaps.forEach(sn=>{if(sn.exists()){const v=sn.val();rows.push({name:v.nombre||sn.key,pts:v[campoP]||0});}});
-        rows.sort((a,b)=>b.pts-a.pts);cont.innerHTML='';
-        rows.forEach((u,i)=>{const cls=i===0?'gold':(i===1?'silver':(i===2?'bronze':''));cont.innerHTML+='<div class="rank-row '+cls+'"><span>'+(i+1)+'. '+u.name+'</span><span>'+u.pts+' pts</span></div>';});
+  } else {
+    db.ref('amigos/' + currentUser).once('value', sa => {
+      if (!sa.exists()) { cont.innerHTML = '<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">No tienes amigos aún.</p>'; return; }
+      let keys = [currentUser]; sa.forEach(c => { const k = c.val().key || c.key; if (k) keys.push(k); });
+      Promise.all(keys.map(k => db.ref('usuarios/' + k).once('value'))).then(snaps => {
+        let rows = []; snaps.forEach(sn => { if (sn.exists()) { const v = sn.val(); rows.push({ name: v.nombre || sn.key, pts: v[campoP] || 0 }); } });
+        rows.sort((a, b) => b.pts - a.pts); cont.innerHTML = '';
+        rows.forEach((u, i) => { const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''; cont.innerHTML += '<div class="rank-row ' + cls + '"><span>' + (i+1) + '. ' + u.name + '</span><span>' + u.pts + ' pts</span></div>'; });
       });
     });
   }
 }
 
 /* ═══════════════════ AMIGOS ═══════════════════ */
-function buscarAmigos(){
-  const q=document.getElementById('buscar-amigo-input').value.trim(),msg=document.getElementById('msg-amigo'),res=document.getElementById('search-results');
-  res.innerHTML='';msg.innerText='';
-  if(!q){msg.innerText="Escribe un ID o nombre.";return;}
-  db.ref('usuarios/'+q).once('value',s=>{
-    if(s.exists()){_mostrarResultado(res,q,s.val().nombre||q);return;}
-    db.ref('usuarios').orderByChild('nombre').startAt(q).endAt(q+'\uf8ff').limitToFirst(10).once('value',snap=>{
-      if(!snap.exists()){msg.innerText="❌ Sin resultados.";return;}
-      snap.forEach(c=>{if(c.key!==currentUser)_mostrarResultado(res,c.key,c.val().nombre||c.key);});
+function buscarAmigos() {
+  const q = document.getElementById('buscar-amigo-input').value.trim(), msg = document.getElementById('msg-amigo'), res = document.getElementById('search-results');
+  res.innerHTML = ''; msg.innerText = '';
+  if (!q) { msg.innerText = "Escribe un ID o nombre."; return; }
+  db.ref('usuarios/' + q).once('value', s => {
+    if (s.exists()) { _mostrarResultado(res, q, s.val().nombre || q); return; }
+    db.ref('usuarios').orderByChild('nombre').startAt(q).endAt(q + '\uf8ff').limitToFirst(10).once('value', snap => {
+      if (!snap.exists()) { msg.innerText = "❌ Sin resultados."; return; }
+      snap.forEach(c => { if (c.key !== currentUser) _mostrarResultado(res, c.key, c.val().nombre || c.key); });
     });
   });
 }
-function _mostrarResultado(container,key,nombre){
-  const div=document.createElement('div');div.className='search-result-item';
-  div.innerHTML='<span style="color:#00FFFF">👤 '+nombre+'</span>'+
-    '<span style="color:#aaa;font-size:10px;margin:0 5px">'+key.substring(0,16)+'…</span>'+
-    '<button class="btn-add-result" onclick="añadirAmigoPorKey(\''+key+'\',\''+nombre.replace(/'/g,"\\'")+'\')">+</button>';
+function _mostrarResultado(container, key, nombre) {
+  const div = document.createElement('div'); div.className = 'search-result-item';
+  div.innerHTML = '<span style="color:#00FFFF">👤 ' + nombre + '</span>' +
+    '<span style="color:#aaa;font-size:10px;margin:0 5px">' + key.substring(0, 16) + '…</span>' +
+    '<button class="btn-add-result" onclick="añadirAmigoPorKey(\'' + key + '\',\'' + nombre.replace(/'/g, "\\'") + '\')">+</button>';
   container.appendChild(div);
 }
-function añadirAmigoPorKey(amigoKey,nombre){
-  const msg=document.getElementById('msg-amigo');
-  if(amigoKey===currentUser){msg.innerText="Ese eres tú 😅";return;}
-  db.ref('amigos/'+currentUser+'/'+amigoKey).once('value',ya=>{
-    if(ya.exists()){msg.innerText="Ya es tu amigo ✅";return;}
-    db.ref('amigos/'+currentUser+'/'+amigoKey).set({nombre:nombre,key:amigoKey}).then(()=>{
-      msg.innerText='✅ ¡'+nombre+' añadido!';
-      document.getElementById('search-results').innerHTML='';document.getElementById('buscar-amigo-input').value='';
-      reproducir('coin');cargarListaAmigos();
+function añadirAmigoPorKey(amigoKey, nombre) {
+  const msg = document.getElementById('msg-amigo');
+  if (amigoKey === currentUser) { msg.innerText = "Ese eres tú 😅"; return; }
+  db.ref('amigos/' + currentUser + '/' + amigoKey).once('value', ya => {
+    if (ya.exists()) { msg.innerText = "Ya es tu amigo ✅"; return; }
+    db.ref('amigos/' + currentUser + '/' + amigoKey).set({ nombre: nombre, key: amigoKey }).then(() => {
+      msg.innerText = '✅ ¡' + nombre + ' añadido!';
+      document.getElementById('search-results').innerHTML = ''; document.getElementById('buscar-amigo-input').value = '';
+      reproducir('coin'); cargarListaAmigos();
     });
   });
 }
-function toggleListaAmigos(){
-  const w=document.getElementById('lista-amigos-wrap');
-  if(w.classList.contains('open'))w.classList.remove('open');
-  else{w.classList.add('open');cargarListaAmigos();}
+function toggleListaAmigos() {
+  const w = document.getElementById('lista-amigos-wrap');
+  if (w.classList.contains('open')) w.classList.remove('open');
+  else { w.classList.add('open'); cargarListaAmigos(); }
 }
-function cargarListaAmigos(){
-  const c=document.getElementById('lista-amigos');
-  db.ref('amigos/'+currentUser).once('value',s=>{
-    c.innerHTML='';
-    if(!s.exists()){c.innerHTML='<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">No tienes amigos aún.</p>';return;}
-    s.forEach(child=>{
-      const a=child.val(),nombre=a.nombre||a.key,key=a.key||child.key;
-      const div=document.createElement('div');div.className='amigo-item';
-      div.innerHTML='<span class="amigo-nombre">👤 '+nombre+'</span>'+
-        '<button class="btn-hablar" onclick="abrirChatPrivado(\''+key+'\',\''+nombre.replace(/'/g,"\\'")+'\')">Hablar 💬</button>';
+function cargarListaAmigos() {
+  const c = document.getElementById('lista-amigos');
+  db.ref('amigos/' + currentUser).once('value', s => {
+    c.innerHTML = '';
+    if (!s.exists()) { c.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">No tienes amigos aún.</p>'; return; }
+    s.forEach(child => {
+      const a = child.val(), nombre = a.nombre || a.key, key = a.key || child.key;
+      const div = document.createElement('div'); div.className = 'amigo-item';
+      div.innerHTML = '<span class="amigo-nombre">👤 ' + nombre + '</span>' +
+        '<button class="btn-hablar" onclick="abrirChatPrivado(\'' + key + '\',\'' + nombre.replace(/'/g, "\\'") + '\')">Hablar 💬</button>';
       c.appendChild(div);
     });
   });
 }
 
-/* ═══════════════════ CHAT DUAL ═══════════════════ */
-let chatModo='global',chatAmigoKey='',chatAmigoNombre='',chatListener=null,chatRef=null,tabActual='global';
-function getConversationID(a,b){return[a,b].sort().join('__');}
-function pararEscuchaChat(){if(chatRef&&chatListener){chatRef.off('value',chatListener);chatListener=null;chatRef=null;}}
-function cambiarTabChat(modo){
-  tabActual=modo;
-  ['global','amigos','notas'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t===modo));
-  const pm=document.getElementById('panel-mensajes'),pn=document.getElementById('panel-notas'),hd=document.getElementById('chat-amigo-header');
-  if(modo==='notas'){pm.classList.add('hidden');pn.classList.remove('hidden');hd.classList.add('hidden');cargarTareas();}
-  else{
-    pm.classList.remove('hidden');pn.classList.add('hidden');
-    if(modo==='global'){hd.classList.add('hidden');chatModo='global';escucharChatGlobal();}
-    else{
-      chatModo='amigos';
-      if(chatAmigoKey){hd.classList.remove('hidden');hd.innerText='💬 Hablando con '+chatAmigoNombre;escucharChatPrivado(chatAmigoKey);}
-      else{hd.classList.remove('hidden');hd.innerText='Selecciona un amigo desde ⚙️ Ajustes';document.getElementById('chat-box').innerHTML='<p style="color:#aaa;font-size:12px;text-align:center;padding:20px">Ve a Ajustes → toca "Hablar" junto a un amigo.</p>';pararEscuchaChat();}
+/* ═══════════════════ CHAT ═══════════════════ */
+let chatModo = 'global', chatAmigoKey = '', chatAmigoNombre = '', chatListener = null, chatRef = null, tabActual = 'global';
+function getConversationID(a, b) { return [a, b].sort().join('__'); }
+function pararEscuchaChat() { if (chatRef && chatListener) { chatRef.off('value', chatListener); chatListener = null; chatRef = null; } }
+function cambiarTabChat(modo) {
+  tabActual = modo;
+  ['global','amigos','notas'].forEach(t => document.getElementById('tab-' + t).classList.toggle('active', t === modo));
+  const pm = document.getElementById('panel-mensajes'), pn = document.getElementById('panel-notas'), hd = document.getElementById('chat-amigo-header');
+  if (modo === 'notas') { pm.classList.add('hidden'); pn.classList.remove('hidden'); hd.classList.add('hidden'); cargarTareas(); }
+  else {
+    pm.classList.remove('hidden'); pn.classList.add('hidden');
+    if (modo === 'global') { hd.classList.add('hidden'); chatModo = 'global'; escucharChatGlobal(); }
+    else {
+      chatModo = 'amigos';
+      if (chatAmigoKey) { hd.classList.remove('hidden'); hd.innerText = '💬 Hablando con ' + chatAmigoNombre; escucharChatPrivado(chatAmigoKey); }
+      else { hd.classList.remove('hidden'); hd.innerText = 'Selecciona un amigo desde ⚙️ Ajustes'; document.getElementById('chat-box').innerHTML = '<p style="color:#aaa;font-size:12px;text-align:center;padding:20px">Ve a Ajustes → toca "Hablar" junto a un amigo.</p>'; pararEscuchaChat(); }
     }
   }
 }
-function abrirChatPrivado(amigoKey,amigoNombre){chatAmigoKey=amigoKey;chatAmigoNombre=amigoNombre;mostrarVista('vista-chat');cambiarTabChat('amigos');}
-function escucharChatGlobal(){
-  pararEscuchaChat();chatRef=db.ref('chat_global').limitToLast(20);
-  chatListener=chatRef.on('value',s=>{
-    const box=document.getElementById('chat-box');box.innerHTML='';
-    s.forEach(c=>{const m=c.val(),mio=m.user===currentUser;
-      box.innerHTML+='<div style="text-align:'+(mio?'right':'left')+';margin-bottom:8px;font-size:13px;border-bottom:1px solid rgba(0,255,0,.1);padding-bottom:4px"><b style="color:'+(mio?'#00FFFF':'#00FF00')+'">'+m.user+':</b> '+m.text+'</div>';
-    });
-    box.scrollTop=box.scrollHeight;
+function abrirChatPrivado(amigoKey, amigoNombre) { chatAmigoKey = amigoKey; chatAmigoNombre = amigoNombre; mostrarVista('vista-chat'); cambiarTabChat('amigos'); }
+function escucharChatGlobal() {
+  pararEscuchaChat(); chatRef = db.ref('chat_global').limitToLast(20);
+  chatListener = chatRef.on('value', s => {
+    const box = document.getElementById('chat-box'); box.innerHTML = '';
+    s.forEach(c => { const m = c.val(), mio = m.user === currentUser; box.innerHTML += '<div style="text-align:' + (mio ? 'right' : 'left') + ';margin-bottom:8px;font-size:13px;border-bottom:1px solid rgba(0,255,0,.1);padding-bottom:4px"><b style="color:' + (mio ? '#00FFFF' : '#00FF00') + '">' + m.user + ':</b> ' + m.text + '</div>'; });
+    box.scrollTop = box.scrollHeight;
   });
 }
-function escucharChatPrivado(amigoKey){
-  pararEscuchaChat();const convID=getConversationID(currentUser,amigoKey);
-  chatRef=db.ref('mensajes-privados/'+convID).limitToLast(30);
-  chatListener=chatRef.on('value',s=>{
-    const box=document.getElementById('chat-box');box.innerHTML='';
-    if(!s.exists()){box.innerHTML='<p style="color:#aaa;font-size:12px;text-align:center;padding:20px">Sé el primero en decir algo 👋</p>';return;}
-    s.forEach(c=>{const m=c.val(),mio=m.user===currentUser;
-      box.innerHTML+='<div style="text-align:'+(mio?'right':'left')+';margin-bottom:8px;font-size:13px;border-bottom:1px solid rgba(0,255,255,.07);padding-bottom:4px"><b style="color:'+(mio?'#00FFFF':'#FFD700')+'">'+(mio?'Tú':m.user)+':</b> '+m.text+'</div>';
-    });
-    box.scrollTop=box.scrollHeight;
+function escucharChatPrivado(amigoKey) {
+  pararEscuchaChat(); const convID = getConversationID(currentUser, amigoKey);
+  chatRef = db.ref('mensajes-privados/' + convID).limitToLast(30);
+  chatListener = chatRef.on('value', s => {
+    const box = document.getElementById('chat-box'); box.innerHTML = '';
+    if (!s.exists()) { box.innerHTML = '<p style="color:#aaa;font-size:12px;text-align:center;padding:20px">Sé el primero en decir algo 👋</p>'; return; }
+    s.forEach(c => { const m = c.val(), mio = m.user === currentUser; box.innerHTML += '<div style="text-align:' + (mio ? 'right' : 'left') + ';margin-bottom:8px;font-size:13px;border-bottom:1px solid rgba(0,255,255,.07);padding-bottom:4px"><b style="color:' + (mio ? '#00FFFF' : '#FFD700') + '">' + (mio ? 'Tú' : m.user) + ':</b> ' + m.text + '</div>'; });
+    box.scrollTop = box.scrollHeight;
   });
 }
-function escucharChat(){
-  tabActual='global';chatModo='global';
-  ['global','amigos','notas'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t==='global'));
+function escucharChat() {
+  tabActual = 'global'; chatModo = 'global';
+  ['global','amigos','notas'].forEach(t => document.getElementById('tab-' + t).classList.toggle('active', t === 'global'));
   document.getElementById('panel-mensajes').classList.remove('hidden');
   document.getElementById('panel-notas').classList.add('hidden');
   document.getElementById('chat-amigo-header').classList.add('hidden');
   escucharChatGlobal();
 }
-function enviarMensaje(){
-  const inp=document.getElementById('chat-input'),texto=inp.value.trim();
-  if(!texto||!currentUser)return;
-  if(chatModo==='global'){db.ref('chat_global').push({user:currentUser,text:texto,avatar:document.getElementById('avatar-img').innerText||"👤"});}
-  else{if(!chatAmigoKey)return;db.ref('mensajes-privados/'+getConversationID(currentUser,chatAmigoKey)).push({user:currentUser,text:texto,ts:Date.now()});}
-  inp.value='';reproducir('click');
+function enviarMensaje() {
+  const inp = document.getElementById('chat-input'), texto = inp.value.trim();
+  if (!texto || !currentUser) return;
+  if (chatModo === 'global') db.ref('chat_global').push({ user: currentUser, text: texto, avatar: document.getElementById('avatar-img').innerText || "👤" });
+  else { if (!chatAmigoKey) return; db.ref('mensajes-privados/' + getConversationID(currentUser, chatAmigoKey)).push({ user: currentUser, text: texto, ts: Date.now() }); }
+  inp.value = ''; reproducir('click');
 }
 
-/* ═══════════════════════════════════════════════════════
-   JUEGO 1 — LADRILLOS (física intacta)
-═══════════════════════════════════════════════════════ */
-const canvas=document.getElementById("gameCanvas"),ctx=canvas.getContext("2d");
-const menuGameOver=document.getElementById("game-over-menu"),menuDifficulty=document.getElementById("difficulty-menu");
-let balls=[],bricks=[],paddleWidth=90,paddleX,score=0,gameActive=false,gameInterval,isFireBall=false,currentDifficulty='terrestre';
+/* ═══════════════════════════════════════════════════════════════
+   JUEGO 1 — LADRILLOS (variables renombradas para evitar conflictos)
+═══════════════════════════════════════════════════════════════ */
+const bricksCanvas = document.getElementById("gameCanvas"),
+      bricksCtx    = bricksCanvas.getContext("2d");
+const menuGameOver   = document.getElementById("game-over-menu"),
+      menuDifficulty = document.getElementById("difficulty-menu");
 
-// Variables de estado para equipamiento cosmético
-let colorPalaEquipada = '#00FFFF'; // Default: cian
-let colorBolaEquipada = '#FF0000'; // Default: rojo
+let bricksBalls = [], bricksBricksList = [], bricksPaddleWidth = 90, bricksPaddleX,
+    bricksScore = 0, bricksGameActive = false, bricksGameInterval, bricksIsFireBall = false,
+    bricksCurrentDifficulty = 'terrestre';
 
-// Carga de equipamiento desde Firebase
-function cargarEquipamientoDesdeDB(){
-  if(!currentUser || currentUser === 'admin') return Promise.resolve();
-  
-  return db.ref('usuarios/'+currentUser).once('value').then(snap => {
-    const datos = snap.val() || {};
-    
-    // Cargar paleta equipada
-    if(datos.paletaEquipada){
-      const coloresPaleta = {red: '#FF0000', pink: '#FFC0CB', yellow: '#FFFF00'};
-      colorPalaEquipada = coloresPaleta[datos.paletaEquipada] || '#00FFFF';
-    }
-    
-    // Cargar bola equipada
-    if(datos.bolaEquipada){
-      const coloresBola = {blue: '#0000FF', pink: '#FFC0CB', yellow: '#FFFF00'};
-      colorBolaEquipada = coloresBola[datos.bolaEquipada] || '#FF0000';
-    }
-    
-    // Cargar pájaro equipado
-    if(datos.pajaroEquipado){
-      const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'🦆', blue:'🦅', green:'🦚', purple:'🦢'};
-      skinPajaroEquipada = emojisPajaros[datos.pajaroEquipado] || '🐦';
-    }
-    
-    console.log('Equipamiento cargado - Pala:', colorPalaEquipada, 'Bola:', colorBolaEquipada, 'Pájaro:', skinPajaroEquipada);
-  }).catch(error => {
-    console.error('Error cargando equipamiento:', error);
-  });
-}
+document.addEventListener("mousemove", e => {
+  if (!bricksGameActive) return;
+  const rect = bricksCanvas.getBoundingClientRect(), relX = e.clientX - rect.left;
+  if (relX > 0 && relX < bricksCanvas.width) bricksPaddleX = relX - bricksPaddleWidth / 2;
+});
+bricksCanvas.addEventListener("touchmove", e => {
+  if (!bricksGameActive) return; e.preventDefault();
+  const rect = bricksCanvas.getBoundingClientRect(), scaleX = bricksCanvas.width / rect.width;
+  const relX = (e.touches[0].clientX - rect.left) * scaleX;
+  if (relX > 0 && relX < bricksCanvas.width) bricksPaddleX = relX - bricksPaddleWidth / 2;
+}, { passive: false });
 
-// Función para equipar ítems
-function equiparItem(tipo, valor){
-  if(!currentUser || currentUser === 'admin') return;
-  
-  // Verificar que el usuario tiene el ítem
-  db.ref('usuarios/'+currentUser+'/inventario').once('value').then(snap => {
-    const inventario = snap.val() || {};
-    const tipoInventario = tipo === 'paleta' ? 'paletas' : 
-                          tipo === 'bola' ? 'pelotas' : 
-                          tipo === 'pajaro' ? 'pajaros' : tipo;
-    
-    if(!inventario[tipoInventario] || !inventario[tipoInventario][valor]){
-      alert('No tienes este ítem en tu inventario.');
-      return;
-    }
-    
-    // Guardar equipamiento en Firebase
-    const equipamientoKey = tipo === 'paleta' ? 'paletaEquipada' : 
-                           tipo === 'bola' ? 'bolaEquipada' : 
-                           tipo === 'pajaro' ? 'pajaroEquipado' : '';
-    
-    if(equipamientoKey){
-      return db.ref('usuarios/'+currentUser).update({
-        [equipamientoKey]: valor
-      }).then(() => {
-        alert('✅ ' + tipo + ' ' + valor + ' equipado correctamente.');
-        reproducir('coin');
-        
-        // Actualizar variables globales
-        if(tipo === 'paleta'){
-          const coloresPaleta = {red: '#FF0000', pink: '#FFC0CB', yellow: '#FFFF00'};
-          colorPalaEquipada = coloresPaleta[valor] || '#00FFFF';
-        } else if(tipo === 'bola'){
-          const coloresBola = {blue: '#0000FF', pink: '#FFC0CB', yellow: '#FFFF00'};
-          colorBolaEquipada = coloresBola[valor] || '#FF0000';
-        } else if(tipo === 'pajaro'){
-          const emojisPajaros = {red:'🦜', pink:'🦩', yellow:'🦆', blue:'🦅', green:'🦚', purple:'🦢'};
-          skinPajaroEquipada = emojisPajaros[valor] || '🐦';
-        }
-        
-        // Actualizar UI de tienda si está abierta
-        actualizarUIEquipamiento();
-      });
-    }
-  });
-}
-
-// Actualizar UI de tienda para mostrar estado EQUIPADO
-function actualizarUIEquipamiento(){
-  console.log('🔄 Actualizando UI de equipamiento...');
-  
-  // Actualizar tienda principal
-  const shopPrincipal = document.getElementById('vista-tienda');
-  if(shopPrincipal && !shopPrincipal.classList.contains('hidden')){
-    console.log('📦 Actualizando tienda principal');
-    actualizarBotonesTiendaSimple();
-  }
-  
-  // Actualizar tienda unificada si está visible
-  const shopUnificado = document.getElementById('vista-tienda-unificada');
-  if(shopUnificado && !shopUnificado.classList.contains('hidden')){
-    console.log('🛒 Actualizando tienda unificada');
-    actualizarDirecto(); // Usar la misma función simple
-  }
-}
-
-// Función DIRECTA Y SIMPLE para actualizar botones
-function actualizarDirecto(){
-  console.log('🔥 INICIO actualizarDirecto - MODO SIMPLE');
-  console.log('🐦 skinPajaroEquipada actual:', skinPajaroEquipada);
-  console.log('🏓 colorPalaEquipada actual:', colorPalaEquipada);
-  console.log('⚪ colorBolaEquipada actual:', colorBolaEquipada);
-  
-  const botones = document.querySelectorAll('.shop-item');
-  console.log('🔍 Botones encontrados:', botones.length);
-  
-  // Mapeo directo de emojis a colores y funciones
-  const mapaPajaros = {
-    '🦜': {color: 'red', precio: '500 pts', tiene: true},
-    '🦩': {color: 'pink', precio: '750 pts', tiene: true}, 
-    '🦆': {color: 'yellow', precio: '1000 pts', tiene: true},
-    '🦅': {color: 'blue', precio: '600 pts', tiene: true},
-    '🦚': {color: 'green', precio: '800 pts', tiene: true},
-    '🦢': {color: 'purple', precio: '1200 pts', tiene: true}
-  };
-  
-  // Mapeo para pelotas
-  const mapaPelotas = {
-    '●': {color: 'blue', precio: '400 pts', tiene: true},
-    '●': {color: 'pink', precio: '600 pts', tiene: true},
-    '●': {color: 'yellow', precio: '900 pts', tiene: true}
-  };
-  
-  // Mapeo para paletas
-  const mapaPaletas = {
-    '▬': {color: 'red', precio: '500 pts', tiene: true},
-    '▬': {color: 'pink', precio: '750 pts', tiene: true},
-    '▬': {color: 'yellow', precio: '1000 pts', tiene: true}
-  };
-  
-  botones.forEach((boton, index) => {
-    const emoji = boton.querySelector('span:first-child');
-    const priceSpan = boton.querySelector('.shop-price');
-    
-    if(!emoji || !priceSpan) return;
-    
-    const emojiText = emoji.textContent;
-    const emojiStyle = emoji.getAttribute('style') || '';
-    console.log(`🐦 Botón ${index}: emoji="${emojiText}", estilo="${emojiStyle}", precio actual="${priceSpan.textContent}"`);
-    
-    // PÁJAROS
-    if(mapaPajaros[emojiText]){
-      const pajaro = mapaPajaros[emojiText];
-      
-      if(skinPajaroEquipada === emojiText){
-        console.log(`✅ ${emojiText} está equipado - marcando como EQUIPADO`);
-        priceSpan.textContent = '✅ EQUIPADO';
-        boton.style.border = '2px solid #00FF00';
-        boton.style.boxShadow = '0 0 10px #00FF00';
-        boton.setAttribute('onclick', `equiparItem('pajaro','${pajaro.color}')`);
-      }
-      else if(pajaro.tiene){
-        console.log(`🔄 ${emojiText} tiene pero no equipado - marcando como Equipar`);
-        priceSpan.textContent = 'Equipar';
-        boton.style.border = '';
-        boton.style.boxShadow = '';
-        boton.setAttribute('onclick', `equiparItem('pajaro','${pajaro.color}')`);
-      }
-      else{
-        console.log(`💰 ${emojiText} no tiene - marcando como Comprar`);
-        priceSpan.textContent = pajaro.precio;
-        boton.style.border = '';
-        boton.style.boxShadow = '';
-        boton.setAttribute('onclick', `comprar('pajaro','${pajaro.color}')`);
-      }
-    }
-    // PELOTAS
-    else if(emojiText === '●'){
-      let color = '';
-      if(emojiStyle.includes('color:blue')) color = 'blue';
-      else if(emojiStyle.includes('color:pink')) color = 'pink';
-      else if(emojiStyle.includes('color:yellow')) color = 'yellow';
-      
-      if(color){
-        const equipado = (color === 'blue' && colorBolaEquipada === '#0000FF') ||
-                        (color === 'pink' && colorBolaEquipada === '#FFC0CB') ||
-                        (color === 'yellow' && colorBolaEquipada === '#FFFF00');
-        
-        const precios = {blue: '400 pts', pink: '600 pts', yellow: '900 pts'};
-        
-        if(equipado){
-          console.log(`✅ Pelota ${color} está equipada - marcando como EQUIPADO`);
-          priceSpan.textContent = '✅ EQUIPADO';
-          boton.style.border = '2px solid #00FF00';
-          boton.style.boxShadow = '0 0 10px #00FF00';
-          boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
-        }
-        else{
-          console.log(`🔄 Pelota ${color} - marcando como Equipar`);
-          priceSpan.textContent = 'Equipar';
-          boton.style.border = '';
-          boton.style.boxShadow = '';
-          boton.setAttribute('onclick', `equiparItem('bola','${color}')`);
-        }
-      }
-    }
-    // PALETAS
-    else if(emojiText === '▬'){
-      let color = '';
-      if(emojiStyle.includes('color:red')) color = 'red';
-      else if(emojiStyle.includes('color:pink')) color = 'pink';
-      else if(emojiStyle.includes('color:yellow')) color = 'yellow';
-      
-      if(color){
-        const equipado = (color === 'red' && colorPalaEquipada === '#FF0000') ||
-                        (color === 'pink' && colorPalaEquipada === '#FFC0CB') ||
-                        (color === 'yellow' && colorPalaEquipada === '#FFFF00');
-        
-        const precios = {red: '500 pts', pink: '750 pts', yellow: '1000 pts'};
-        
-        if(equipado){
-          console.log(`✅ Paleta ${color} está equipada - marcando como EQUIPADO`);
-          priceSpan.textContent = '✅ EQUIPADO';
-          boton.style.border = '2px solid #00FF00';
-          boton.style.boxShadow = '0 0 10px #00FF00';
-          boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
-        }
-        else{
-          console.log(`🔄 Paleta ${color} - marcando como Equipar`);
-          priceSpan.textContent = 'Equipar';
-          boton.style.border = '';
-          boton.style.boxShadow = '';
-          boton.setAttribute('onclick', `equiparItem('paleta','${color}')`);
-        }
-      }
-    }
-    
-    console.log(`🔧 Nuevo estado: precio="${priceSpan.textContent}", onclick="${boton.getAttribute('onclick')}"`);
-  });
-  
-  console.log('✅ actualizarDirecto COMPLETADO');
-}
-
-// Función simplificada para actualizar botones de tienda (versión compatible)
-function actualizarBotonesTiendaSimple(){
-  console.log('🔄 Versión compatible - llamando a actualizarDirecto');
-  actualizarDirecto();
-}
-
-function abrirMenuDificultad(){
+function abrirMenuDificultad() {
   reproducir('click');
-  document.querySelectorAll('.container,.vista-juego-base').forEach(c=>c.classList.add('hidden'));
-  ['exit-btn','settings-btn','shop-btn','chat-btn','shop-btn-izq'].forEach(b=>{const el=document.getElementById(b);if(el)el.classList.add('hidden');});
+  document.querySelectorAll('.container,.vista-juego-base').forEach(c => c.classList.add('hidden'));
+  ['exit-btn','settings-btn','shop-btn-izq','chat-btn'].forEach(b => { const el = document.getElementById(b); if (el) el.classList.add('hidden'); });
   document.getElementById('vista-juego').classList.remove('hidden');
   document.getElementById('pantalla-oscura').classList.remove('hidden');
-  document.querySelectorAll('.menu-eden').forEach(m=>m.classList.add('hidden'));
-  ['rank-ingame-ladrillos'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden'));
+  document.getElementById('rank-ingame-ladrillos').classList.add('hidden');
   menuDifficulty.classList.remove('hidden');
 }
-function iniciarJuegoEden(diff){
-  reproducir('click');cancelAnimationFrame(gameInterval);
-  ['rank-ingame-ladrillos'].forEach(id=>document.getElementById(id).classList.add('hidden'));
-  
-  // Cargar equipamiento antes de iniciar el juego
+function iniciarJuegoEden(diff) {
+  reproducir('click'); cancelAnimationFrame(bricksGameInterval);
+  document.getElementById('rank-ingame-ladrillos').classList.add('hidden');
   cargarEquipamientoDesdeDB().then(() => {
-    resetVariablesJuego(diff);
-    gameActive = true;
-    function gameLoop(){
-      if(gameActive){
-        draw();
-        gameInterval = requestAnimationFrame(gameLoop);
-      }
-    }
-    gameLoop();
+    _bricksReset(diff); bricksGameActive = true;
+    function gl() { if (bricksGameActive) { bricksDraw(); bricksGameInterval = requestAnimationFrame(gl); } } gl();
   });
 }
-function salirDelJuego(){reproducir('click');gameActive=false;cancelAnimationFrame(gameInterval);mostrarVista('vista-agenda');}
-function resetVariablesJuego(diff){
-  currentDifficulty=diff;document.querySelectorAll('.menu-eden').forEach(m=>m.classList.add('hidden'));
-  canvas.style.cursor="none";paddleWidth=90;paddleX=(canvas.width-paddleWidth)/2;
-  isFireBall=false;score=0;document.getElementById("game-score").innerText="€Eden€: 0";
-  let rad=(diff==='eden')?5:8;
-  balls=[{x:canvas.width/2,y:canvas.height-100,dx:4.5,dy:-4.5,radius:rad}];
-  bricks=[];
-  let rows=(diff==='terrestre')?5:(diff==='semidios'?8:12);
-  let cols=(diff==='terrestre')?7:(diff==='semidios'?12:18);
-  let bw=(canvas.width-40)/cols,bh=(diff==='terrestre')?20:12;
-  for(let c=0;c<cols;c++){
-    bricks[c]=[];
-    for(let r=0;r<rows;r++){
-      let type="normal",life=1;
-      if(diff==='semidios'&&Math.random()<.2){type="hard";life=2;}
-      if(diff==='eden'){if(Math.random()<.15){type="wall";life=999;}else if(Math.random()<.3){type="hard";life=2;}}
-      bricks[c][r]={x:c*(bw-4+4)+15,y:r*(bh-4+4)+50,status:life,type:type,w:bw-4,h:bh-4};
+function salirDelJuego() { reproducir('click'); bricksGameActive = false; cancelAnimationFrame(bricksGameInterval); mostrarVista('vista-agenda'); }
+
+function _bricksReset(diff) {
+  bricksCurrentDifficulty = diff;
+  document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden'));
+  bricksCanvas.style.cursor = "none"; bricksPaddleWidth = 90; bricksPaddleX = (bricksCanvas.width - bricksPaddleWidth) / 2;
+  bricksIsFireBall = false; bricksScore = 0; document.getElementById("game-score").innerText = "€Eden€: 0";
+  const rad = diff === 'eden' ? 5 : 8;
+  bricksBalls = [{ x: bricksCanvas.width / 2, y: bricksCanvas.height - 100, dx: 4.5, dy: -4.5, radius: rad }];
+  bricksBricksList = [];
+  const rows = diff === 'terrestre' ? 5 : diff === 'semidios' ? 8 : 12;
+  const cols = diff === 'terrestre' ? 7 : diff === 'semidios' ? 12 : 18;
+  const bw = (bricksCanvas.width - 40) / cols, bh = diff === 'terrestre' ? 20 : 12;
+  for (let c = 0; c < cols; c++) {
+    bricksBricksList[c] = [];
+    for (let r = 0; r < rows; r++) {
+      let type = "normal", life = 1;
+      if (diff === 'semidios' && Math.random() < .2) { type = "hard"; life = 2; }
+      if (diff === 'eden') { if (Math.random() < .15) { type = "wall"; life = 999; } else if (Math.random() < .3) { type = "hard"; life = 2; } }
+      bricksBricksList[c][r] = { x: c * (bw - 4 + 4) + 15, y: r * (bh - 4 + 4) + 50, status: life, type: type, w: bw - 4, h: bh - 4 };
     }
   }
 }
-document.addEventListener("mousemove",e=>{
-  if(!gameActive)return;
-  let rect=canvas.getBoundingClientRect(),relX=e.clientX-rect.left;
-  if(relX>0&&relX<canvas.width)paddleX=relX-paddleWidth/2;
-});
-canvas.addEventListener("touchmove",e=>{
-  if(!gameActive)return;e.preventDefault();
-  let rect=canvas.getBoundingClientRect(),scaleX=canvas.width/rect.width;
-  let relX=(e.touches[0].clientX-rect.left)*scaleX;
-  if(relX>0&&relX<canvas.width)paddleX=relX-paddleWidth/2;
-},{passive:false});
 
-function draw(){
-  if(!gameActive)return;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  // Ladrillos: imagen para normales, colores para hard/wall
-  bricks.forEach(col=>col.forEach(b=>{
-    if(b.status>0){
-      if(b.type==="wall"){ctx.fillStyle="#888";ctx.fillRect(b.x,b.y,b.w,b.h);}
-      else if(b.type==="hard"){
-        ctx.fillStyle="#FFD700";ctx.fillRect(b.x,b.y,b.w,b.h);
-        ctx.strokeStyle="rgba(255,255,255,.5)";ctx.lineWidth=1;ctx.strokeRect(b.x,b.y,b.w,b.h);
-      }else{
-        if(imgLadrillo.complete&&imgLadrillo.naturalWidth>0)ctx.drawImage(imgLadrillo,b.x,b.y,b.w,b.h);
-        else{ctx.fillStyle="#FF4444";ctx.fillRect(b.x,b.y,b.w,b.h);}
+function bricksDraw() {
+  if (!bricksGameActive) return;
+  bricksCtx.clearRect(0, 0, bricksCanvas.width, bricksCanvas.height);
+  bricksBricksList.forEach(col => col.forEach(b => {
+    if (b.status > 0) {
+      if (b.type === "wall") { bricksCtx.fillStyle = "#888"; bricksCtx.fillRect(b.x, b.y, b.w, b.h); }
+      else if (b.type === "hard") {
+        bricksCtx.fillStyle = "#FFD700"; bricksCtx.fillRect(b.x, b.y, b.w, b.h);
+        bricksCtx.strokeStyle = "rgba(255,255,255,.5)"; bricksCtx.lineWidth = 1; bricksCtx.strokeRect(b.x, b.y, b.w, b.h);
+      } else {
+        if (imgLadrillo.complete && imgLadrillo.naturalWidth > 0) bricksCtx.drawImage(imgLadrillo, b.x, b.y, b.w, b.h);
+        else { bricksCtx.fillStyle = "#FF4444"; bricksCtx.fillRect(b.x, b.y, b.w, b.h); }
       }
     }
   }));
-  // Pelotas
-  balls.forEach((b,index)=>{
-    ctx.beginPath();ctx.arc(b.x,b.y,b.radius,0,Math.PI*2);
-    ctx.fillStyle=isFireBall?"#FFA500":colorBolaEquipada;ctx.fill();ctx.closePath();
-    bricks.forEach(col=>col.forEach(brick=>{
-      if(brick.status>0&&b.x>brick.x&&b.x<brick.x+brick.w&&b.y>brick.y&&b.y<brick.y+brick.h){
-        b.dy=-b.dy;
-        if(brick.type!=="wall"){brick.status--;reproducir('hit');if(brick.status===0){score++;document.getElementById("game-score").innerText="€Eden€: "+score;}}
+  bricksBalls.forEach((b, index) => {
+    bricksCtx.beginPath(); bricksCtx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+    bricksCtx.fillStyle = bricksIsFireBall ? "#FFA500" : colorBolaEquipada; bricksCtx.fill(); bricksCtx.closePath();
+    bricksBricksList.forEach(col => col.forEach(brick => {
+      if (brick.status > 0 && b.x > brick.x && b.x < brick.x + brick.w && b.y > brick.y && b.y < brick.y + brick.h) {
+        b.dy = -b.dy;
+        if (brick.type !== "wall") { brick.status--; reproducir('hit'); if (brick.status === 0) { bricksScore++; document.getElementById("game-score").innerText = "€Eden€: " + bricksScore; } }
       }
     }));
-    if(b.x+b.dx>canvas.width-b.radius||b.x+b.dx<b.radius)b.dx=-b.dx;
-    if(b.y+b.dy<b.radius)b.dy=-b.dy;
-    else if(b.y+b.dy>canvas.height-80){
-      if(b.x>paddleX&&b.x<paddleX+paddleWidth){b.dy=-Math.abs(b.dy);reproducir('bounce');}
-      else if(b.y>canvas.height)balls.splice(index,1);
+    if (b.x + b.dx > bricksCanvas.width - b.radius || b.x + b.dx < b.radius) b.dx = -b.dx;
+    if (b.y + b.dy < b.radius) b.dy = -b.dy;
+    else if (b.y + b.dy > bricksCanvas.height - 80) {
+      if (b.x > bricksPaddleX && b.x < bricksPaddleX + bricksPaddleWidth) { b.dy = -Math.abs(b.dy); reproducir('bounce'); }
+      else if (b.y > bricksCanvas.height) bricksBalls.splice(index, 1);
     }
-    b.x+=b.dx;b.y+=b.dy;
+    b.x += b.dx; b.y += b.dy;
   });
-  ctx.fillStyle=colorPalaEquipada;ctx.fillRect(paddleX,canvas.height-70,paddleWidth,12);
-  if(balls.length===0){reproducir('fail');gameActive=false;endPartida();}
+  bricksCtx.fillStyle = colorPalaEquipada; bricksCtx.fillRect(bricksPaddleX, bricksCanvas.height - 70, bricksPaddleWidth, 12);
+  if (bricksBalls.length === 0) { reproducir('fail'); bricksGameActive = false; _bricksEndPartida(); }
 }
-function endPartida(){
-  if(currentUser&&currentUser!=='admin'){
-    // Comprobar si hay vidas disponibles antes de mostrar Game Over
-    db.ref('usuarios/'+currentUser+'/vidas_disponibles').once('value',s=>{
-      const vidas=s.val()||0;
-      
-      if(vidas>0){
-        // Mostrar menú con opción de usar vida
-        menuGameOver.classList.remove("hidden");
-        document.getElementById('end-score-txt').innerHTML='Puntuación: '+score+' €Eden€<br><span style="color:#00FF00;font-size:12px">❤️ Tienes '+vidas+' vida(s) disponible(s)</span>';
-        
-        // Modificar botones del menú Game Over
-        menuGameOver.innerHTML = `
-          <h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2>
-          <p id="end-score-txt" style="color:#FFD700;font-size:13px;margin-bottom:12px">Puntuación: ${score} €Eden€</p>
-          <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="usarVida('ladrillos')">❤️ Usar 1 Vida para continuar</button>
-          <button class="game-btn-neon" onclick="abrirMenuDificultad()">🔄 Reiniciar nivel</button>
-          <button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button>
-          <button class="game-btn-neon" onclick="salirDelJuego()">🚪 Salir</button>
-        `;
-      }else{
-        // No hay vidas, mostrar Game Over normal
-        menuGameOver.classList.remove("hidden");
-        document.getElementById('end-score-txt').innerText='Puntuación: '+score+' €Eden€';
-        
-        // Restaurar botones normales
-        menuGameOver.innerHTML = `
-          <h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2>
-          <p id="end-score-txt" style="color:#FFD700;font-size:13px;margin-bottom:12px">Puntuación: ${score} €Eden€</p>
-          <button class="game-btn-neon" onclick="abrirMenuDificultad()">¡Repetir!</button>
-          <button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button>
-          <button class="game-btn-neon" onclick="salirDelJuego()">Salir</button>
-        `;
-        
-        // Dar XP y guardar puntuación solo si no hay vidas
-        darXPporJuego(score);
-        db.ref('usuarios/'+currentUser).update({saldo:userBalance+score});
-        db.ref('usuarios/'+currentUser+'/puntos').once('value',s=>{if(score>(s.val()||0))db.ref('usuarios/'+currentUser+'/puntos').set(score);});
-        db.ref('ranking/'+currentDifficulty+'/'+currentUser).once('value',s=>{if(!s.exists()||score>s.val())db.ref('ranking/'+currentDifficulty+'/'+currentUser).set(score);});
+
+function _bricksEndPartida() {
+  if (currentUser && currentUser !== 'admin') {
+    db.ref('usuarios/' + currentUser + '/vidas_disponibles').once('value', s => {
+      const vidas = s.val() || 0;
+      menuGameOver.classList.remove("hidden");
+      if (vidas > 0) {
+        menuGameOver.innerHTML = `<h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2><p style="color:#FFD700;font-size:13px;margin-bottom:12px">Puntuación: ${bricksScore} €Eden€<br><span style="color:#00FF00;font-size:12px">❤️ Tienes ${vidas} vida(s)</span></p><button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="usarVida('ladrillos')">❤️ Usar Vida</button><button class="game-btn-neon" onclick="abrirMenuDificultad()">🔄 Reiniciar</button><button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button><button class="game-btn-neon" onclick="salirDelJuego()">🚪 Salir</button>`;
+      } else {
+        menuGameOver.innerHTML = `<h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2><p id="end-score-txt" style="color:#FFD700;font-size:13px;margin-bottom:12px">Puntuación: ${bricksScore} €Eden€</p><button class="game-btn-neon" onclick="abrirMenuDificultad()">¡Repetir!</button><button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button><button class="game-btn-neon" onclick="salirDelJuego()">Salir</button>`;
+        darXPporJuego(bricksScore);
+        db.ref('usuarios/' + currentUser).update({ saldo: userBalance + bricksScore });
+        db.ref('usuarios/' + currentUser + '/puntos').once('value', sv => { if (bricksScore > (sv.val() || 0)) db.ref('usuarios/' + currentUser + '/puntos').set(bricksScore); });
+        db.ref('ranking/' + bricksCurrentDifficulty + '/' + currentUser).once('value', sv => { if (!sv.exists() || bricksScore > sv.val()) db.ref('ranking/' + bricksCurrentDifficulty + '/' + currentUser).set(bricksScore); });
       }
     });
-  }else{
-    // Usuario admin o sin login
+  } else {
     menuGameOver.classList.remove("hidden");
-    document.getElementById('end-score-txt').innerText='Puntuación: '+score+' €Eden€';
+    menuGameOver.innerHTML = `<h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2><p id="end-score-txt" style="color:#FFD700;font-size:13px;margin-bottom:12px">Puntuación: ${bricksScore} €Eden€</p><button class="game-btn-neon" onclick="abrirMenuDificultad()">¡Repetir!</button><button class="game-btn-neon" onclick="salirDelJuego()">Salir</button>`;
   }
 }
 
-/* ═══════════════════════════════════════════════════════
-   JUEGO 2 — EDÉN FLAPPY
-═══════════════════════════════════════════════════════ */
-const fCvs=document.getElementById('flappyCanvas'),fCtx=fCvs.getContext('2d');
-const FW=fCvs.width,FH=fCvs.height;
-const F_GRAVITY=0.32,F_JUMP=-6.5,F_PIPE_W=52,F_GAP=165,F_PIPE_SPEED=2.4,F_PIPE_INTERVAL=110;
-// Colores neón para columnas (aleatorio por pareja)
-const NEON_COLORS=['#00FFFF','#00FF00','#FF00FF','#FFD700','#FF4500','#7B2FFF'];
+/* ═══════════════════════════════════════════════════════════════
+   JUEGO 2 — FLAPPY EDÉN
+═══════════════════════════════════════════════════════════════ */
+const fCvs = document.getElementById('flappyCanvas'), fCtx = fCvs.getContext('2d');
+const FW = fCvs.width, FH = fCvs.height;
+const F_GRAVITY = 0.32, F_JUMP = -6.5, F_PIPE_W = 52, F_GAP = 165, F_PIPE_SPEED = 2.4, F_PIPE_INTERVAL = 110;
+const NEON_COLORS = ['#00FFFF','#00FF00','#FF00FF','#FFD700','#FF4500','#7B2FFF'];
 
-let fBird={x:70,y:FH/2,vy:0,r:20};
-let fPipes=[],fScore=0,fFrame=0,fActive=false,fRaf=null,fStarted=false;
-let fBgImg=new Image();fBgImg.src='fondo1.jpg';
-let skinPajaroEquipada = '🐦'; // Variable global para skin del pájaro
+let fBird = { x:70, y:FH/2, vy:0, r:20 }, fPipes = [], fScore = 0, fFrame = 0, fActive = false, fRaf = null, fStarted = false;
+let fBgImg = new Image(); fBgImg.src = 'fondo1.jpg';
+let skinPajaroEquipada = '🐦';
 
-function abrirFlappy(){
+function abrirFlappy() {
   reproducir('click');
-  document.querySelectorAll('.container,.vista-juego-base').forEach(c=>c.classList.add('hidden'));
-  ['exit-btn','settings-btn','shop-btn','chat-btn','shop-btn-izq'].forEach(b=>{const el=document.getElementById(b);if(el)el.classList.add('hidden');});
+  document.querySelectorAll('.container,.vista-juego-base').forEach(c => c.classList.add('hidden'));
+  ['exit-btn','settings-btn','shop-btn-izq','chat-btn'].forEach(b => { const el = document.getElementById(b); if (el) el.classList.add('hidden'); });
   document.getElementById('vista-flappy').classList.remove('hidden');
   document.getElementById('pantalla-oscura').classList.remove('hidden');
   document.getElementById('flappy-start-menu').classList.remove('hidden');
   document.getElementById('flappy-over-menu').classList.add('hidden');
-  ['rank-ingame-flappy'].forEach(id=>document.getElementById(id).classList.add('hidden'));
-  fActive=false;fStarted=false;
-  fDrawStatic();
+  document.getElementById('rank-ingame-flappy').classList.add('hidden');
+  fActive = false; fStarted = false; _fDrawStatic();
 }
-function salirFlappy(){
-  fActive=false;cancelAnimationFrame(fRaf);mostrarVista('vista-agenda');
-}
-function iniciarFlappy(){
+function salirFlappy() { fActive = false; cancelAnimationFrame(fRaf); mostrarVista('vista-agenda'); }
+function iniciarFlappy() {
   document.getElementById('flappy-start-menu').classList.add('hidden');
   document.getElementById('flappy-over-menu').classList.add('hidden');
-  ['rank-ingame-flappy'].forEach(id=>document.getElementById(id).classList.add('hidden'));
-  fBird={x:70,y:FH/2,vy:0,r:20};fPipes=[];fScore=0;fFrame=0;fActive=true;fStarted=true;
-  document.getElementById('flappy-score').innerText='€Eden€: 0';
-  cancelAnimationFrame(fRaf);fLoop();
+  document.getElementById('rank-ingame-flappy').classList.add('hidden');
+  fBird = { x:70, y:FH/2, vy:0, r:20 }; fPipes = []; fScore = 0; fFrame = 0; fActive = true; fStarted = true;
+  document.getElementById('flappy-score').innerText = '€Eden€: 0';
+  cancelAnimationFrame(fRaf); fLoop();
 }
-function flappyJump(){
-  if(!fStarted)return;
-  if(!fActive){iniciarFlappy();return;}
-  fBird.vy=F_JUMP;reproducir('bounce');
+function flappyJump() {
+  if (!fStarted) return;
+  if (!fActive) { iniciarFlappy(); return; }
+  fBird.vy = F_JUMP; reproducir('bounce');
 }
-document.addEventListener('keydown',e=>{if(e.code==='Space'&&document.getElementById('vista-flappy')&&!document.getElementById('vista-flappy').classList.contains('hidden')){e.preventDefault();flappyJump();}});
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' && document.getElementById('vista-flappy') && !document.getElementById('vista-flappy').classList.contains('hidden')) {
+    e.preventDefault(); flappyJump();
+  }
+});
 
-function fLoop(){
-  if(!fActive)return;
+function fLoop() {
+  if (!fActive) return;
   fFrame++;
-  // Genera tubos
-  if(fFrame%F_PIPE_INTERVAL===0){
-    const topH=60+Math.random()*(FH-F_GAP-100);
-    const col=NEON_COLORS[Math.floor(Math.random()*NEON_COLORS.length)];
-    fPipes.push({x:FW,topH:topH,bottomY:topH+F_GAP,scored:false,col:col});
+  if (fFrame % F_PIPE_INTERVAL === 0) {
+    const topH = 60 + Math.random() * (FH - F_GAP - 100);
+    const col = NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)];
+    fPipes.push({ x: FW, topH, bottomY: topH + F_GAP, scored: false, col });
   }
-  // Mueve tubos
-  fPipes.forEach(p=>p.x-=F_PIPE_SPEED);
-  fPipes=fPipes.filter(p=>p.x>-F_PIPE_W-10);
-  // Puntuación
-  fPipes.forEach(p=>{
-    if(!p.scored&&p.x+F_PIPE_W<fBird.x){
-      p.scored=true;fScore++;
-      document.getElementById('flappy-score').innerText='€Eden€: '+fScore;
+  fPipes.forEach(p => p.x -= F_PIPE_SPEED);
+  fPipes = fPipes.filter(p => p.x > -F_PIPE_W - 10);
+  fPipes.forEach(p => {
+    if (!p.scored && p.x + F_PIPE_W < fBird.x) {
+      p.scored = true; fScore++;
+      document.getElementById('flappy-score').innerText = '€Eden€: ' + fScore;
       reproducir('coin');
-      // +1 al saldo de Firebase por cada punto
-      if(currentUser&&currentUser!=='admin'){
-        db.ref('usuarios/'+currentUser+'/saldo').transaction(v=>(v||0)+1);
-      }
+      if (currentUser && currentUser !== 'admin') db.ref('usuarios/' + currentUser + '/saldo').transaction(v => (v || 0) + 1);
     }
   });
-  // Física del pájaro
-  fBird.vy+=F_GRAVITY;fBird.y+=fBird.vy;
-  // Colisiones
-  let hit=fBird.y-fBird.r<=0||fBird.y+fBird.r>=FH;
-  fPipes.forEach(p=>{
-    if(fBird.x+fBird.r>p.x&&fBird.x-fBird.r<p.x+F_PIPE_W){
-      if(fBird.y-fBird.r<p.topH||fBird.y+fBird.r>p.bottomY)hit=true;
-    }
-  });
-  if(hit){fActive=false;reproducir('fail');fEndGame();return;}
-  fDraw();fRaf=requestAnimationFrame(fLoop);
+  fBird.vy += F_GRAVITY; fBird.y += fBird.vy;
+  let hit = fBird.y - fBird.r <= 0 || fBird.y + fBird.r >= FH;
+  fPipes.forEach(p => { if (fBird.x + fBird.r > p.x && fBird.x - fBird.r < p.x + F_PIPE_W) { if (fBird.y - fBird.r < p.topH || fBird.y + fBird.r > p.bottomY) hit = true; } });
+  if (hit) { fActive = false; reproducir('fail'); _fEndGame(); return; }
+  _fDraw(); fRaf = requestAnimationFrame(fLoop);
 }
 
-function fDraw(){
-  // Fondo
-  if(fBgImg.complete&&fBgImg.naturalWidth>0)fCtx.drawImage(fBgImg,0,0,FW,FH);
-  else{fCtx.fillStyle='#001a10';fCtx.fillRect(0,0,FW,FH);}
-  // Tuberías con bloques neón
-  fPipes.forEach(p=>{_drawPipeNeon(p.x,0,p.topH,p.col);_drawPipeNeon(p.x,p.bottomY,FH-p.bottomY,p.col);});
-  // Pájaro (avatar circular neón)
+function _fDraw() {
+  if (fBgImg.complete && fBgImg.naturalWidth > 0) fCtx.drawImage(fBgImg, 0, 0, FW, FH);
+  else { fCtx.fillStyle = '#001a10'; fCtx.fillRect(0, 0, FW, FH); }
+  fPipes.forEach(p => { _drawPipeNeon(p.x, 0, p.topH, p.col); _drawPipeNeon(p.x, p.bottomY, FH - p.bottomY, p.col); });
   _drawFlappyBird();
 }
-function fDrawStatic(){
-  if(fBgImg.complete&&fBgImg.naturalWidth>0)fCtx.drawImage(fBgImg,0,0,FW,FH);
-  else{fCtx.fillStyle='#001a10';fCtx.fillRect(0,0,FW,FH);}
+function _fDrawStatic() {
+  if (fBgImg.complete && fBgImg.naturalWidth > 0) fCtx.drawImage(fBgImg, 0, 0, FW, FH);
+  else { fCtx.fillStyle = '#001a10'; fCtx.fillRect(0, 0, FW, FH); }
   _drawFlappyBird();
 }
-
-function _drawPipeNeon(x,y,h,col){
-  const blockSize=18;
-  const cols2=Math.ceil(F_PIPE_W/blockSize),rows2=Math.ceil(h/blockSize);
-  for(let r=0;r<rows2;r++){
-    for(let c2=0;c2<cols2;c2++){
-      const bx=x+c2*blockSize,by=y+r*blockSize;
-      const bw2=Math.min(blockSize,x+F_PIPE_W-bx),bh2=Math.min(blockSize,y+h-by);
-      if(bw2<=0||bh2<=0)continue;
-      fCtx.fillStyle='rgba(0,0,0,.75)';fCtx.fillRect(bx,by,bw2,bh2);
-      fCtx.strokeStyle=col;fCtx.lineWidth=1.5;
-      fCtx.shadowColor=col;fCtx.shadowBlur=6;
-      fCtx.strokeRect(bx+.5,by+.5,bw2-1,bh2-1);
-      fCtx.shadowBlur=0;
-    }
+function _drawPipeNeon(x, y, h, col) {
+  const blockSize = 18, cols2 = Math.ceil(F_PIPE_W / blockSize), rows2 = Math.ceil(h / blockSize);
+  for (let r = 0; r < rows2; r++) for (let c = 0; c < cols2; c++) {
+    const bx = x + c * blockSize, by = y + r * blockSize;
+    const bw2 = Math.min(blockSize, x + F_PIPE_W - bx), bh2 = Math.min(blockSize, y + h - by);
+    if (bw2 <= 0 || bh2 <= 0) continue;
+    fCtx.fillStyle = 'rgba(0,0,0,.75)'; fCtx.fillRect(bx, by, bw2, bh2);
+    fCtx.strokeStyle = col; fCtx.lineWidth = 1.5; fCtx.shadowColor = col; fCtx.shadowBlur = 6;
+    fCtx.strokeRect(bx + .5, by + .5, bw2 - 1, bh2 - 1); fCtx.shadowBlur = 0;
   }
 }
-function _drawFlappyBird(){
-  const b=fBird;
-  // Sombra neón
+function _drawFlappyBird() {
+  const b = fBird;
+  fCtx.save(); fCtx.shadowColor = '#00FFFF'; fCtx.shadowBlur = 18;
+  fCtx.beginPath(); fCtx.arc(b.x, b.y, b.r + 3, 0, Math.PI * 2);
+  fCtx.strokeStyle = '#00FFFF'; fCtx.lineWidth = 2.5; fCtx.stroke(); fCtx.restore();
   fCtx.save();
-  fCtx.shadowColor='#00FFFF';fCtx.shadowBlur=18;
-  fCtx.beginPath();fCtx.arc(b.x,b.y,b.r+3,0,Math.PI*2);
-  fCtx.strokeStyle='#00FFFF';fCtx.lineWidth=2.5;fCtx.stroke();
-  fCtx.restore();
-  // Clip circular
-  fCtx.save();
-  fCtx.beginPath();fCtx.arc(b.x,b.y,b.r,0,Math.PI*2);fCtx.clip();
-  if(flappyAvatarImg&&flappyAvatarImg.complete&&flappyAvatarImg.naturalWidth>0){
-    fCtx.drawImage(flappyAvatarImg,b.x-b.r,b.y-b.r,b.r*2,b.r*2);
-  }else{
-    // Fallback emoji/icono - USAR VARIABLE GLOBAL
-    fCtx.fillStyle='#001828';fCtx.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
-    fCtx.font=b.r+'px serif';fCtx.textAlign='center';fCtx.textBaseline='middle';
-    fCtx.fillText(skinPajaroEquipada,b.x,b.y+2);
+  fCtx.beginPath(); fCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2); fCtx.clip();
+  if (flappyAvatarImg && flappyAvatarImg.complete && flappyAvatarImg.naturalWidth > 0) {
+    fCtx.drawImage(flappyAvatarImg, b.x - b.r, b.y - b.r, b.r * 2, b.r * 2);
+  } else {
+    fCtx.fillStyle = '#001828'; fCtx.fillRect(b.x - b.r, b.y - b.r, b.r * 2, b.r * 2);
+    fCtx.font = b.r + 'px serif'; fCtx.textAlign = 'center'; fCtx.textBaseline = 'middle';
+    fCtx.fillText(skinPajaroEquipada, b.x, b.y + 2);
   }
   fCtx.restore();
-  // Borde neón
-  fCtx.beginPath();fCtx.arc(b.x,b.y,b.r,0,Math.PI*2);
-  fCtx.strokeStyle='#00FFFF';fCtx.lineWidth=2;fCtx.stroke();
+  fCtx.beginPath(); fCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+  fCtx.strokeStyle = '#00FFFF'; fCtx.lineWidth = 2; fCtx.stroke();
 }
 
-function fEndGame(){
-  if(currentUser&&currentUser!=='admin'){
-    // Comprobar si hay vidas disponibles antes de mostrar Game Over
-    db.ref('usuarios/'+currentUser+'/vidas_disponibles').once('value',s=>{
-      const vidas=s.val()||0;
-      
-      if(vidas>0){
-        // Mostrar menú con opción de usar vida
-        const overMenu=document.getElementById('flappy-over-menu');
-        overMenu.classList.remove('hidden');
-        document.getElementById('flappy-score-txt').innerHTML='Puntuación: '+fScore+' €Eden€<br><span style="color:#00FF00;font-size:12px">❤️ Tienes '+vidas+' vida(s) disponible(s)</span>';
-        
-        // Modificar botones del menú Game Over
-        overMenu.innerHTML = `
-          <h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2>
-          <p id="flappy-score-txt" style="color:#FFD700;font-size:14px;margin-bottom:12px">Puntuación: ${fScore} €Eden€</p>
-          <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="usarVida('flappy')">❤️ Usar 1 Vida para continuar</button>
-          <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">🔄 Reiniciar</button>
-          <button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button>
-          <button class="game-btn-neon" onclick="salirFlappy()">🚪 Salir</button>
-        `;
-      }else{
-        // No hay vidas, mostrar Game Over normal
-        const overMenu=document.getElementById('flappy-over-menu');
-        overMenu.classList.remove('hidden');
-        document.getElementById('flappy-score-txt').innerText='Puntuación: '+fScore+' €Eden€';
-        
-        // Restaurar botones normales
-        overMenu.innerHTML = `
-          <h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2>
-          <p id="flappy-score-txt" style="color:#FFD700;font-size:14px;margin-bottom:12px">Puntuación: ${fScore} €Eden€</p>
-          <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">¡Repetir!</button>
-          <button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button>
-          <button class="game-btn-neon" onclick="salirFlappy()">Salir</button>
-        `;
-        
-        // Dar XP y guardar puntuación solo si no hay vidas
+function _fEndGame() {
+  if (currentUser && currentUser !== 'admin') {
+    db.ref('usuarios/' + currentUser + '/vidas_disponibles').once('value', s => {
+      const vidas = s.val() || 0;
+      const overMenu = document.getElementById('flappy-over-menu'); overMenu.classList.remove('hidden');
+      if (vidas > 0) {
+        overMenu.innerHTML = `<h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2><p style="color:#FFD700;font-size:14px;margin-bottom:12px">Puntuación: ${fScore} €Eden€<br><span style="color:#00FF00;font-size:12px">❤️ Tienes ${vidas} vida(s)</span></p><button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="usarVida('flappy')">❤️ Usar Vida</button><button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">🔄 Reiniciar</button><button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button><button class="game-btn-neon" onclick="salirFlappy()">🚪 Salir</button>`;
+      } else {
+        overMenu.innerHTML = `<h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2><p id="flappy-score-txt" style="color:#FFD700;font-size:14px;margin-bottom:12px">Puntuación: ${fScore} €Eden€</p><button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">¡Repetir!</button><button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button><button class="game-btn-neon" onclick="salirFlappy()">Salir</button>`;
         darXPporJuego(fScore);
-        db.ref('usuarios/'+currentUser+'/puntosFlappy').once('value',s=>{
-          if(fScore>(s.val()||0))db.ref('usuarios/'+currentUser+'/puntosFlappy').set(fScore);
-        });
-        db.ref('ranking/flappy/'+currentUser).once('value',s=>{
-          if(!s.exists()||fScore>s.val())db.ref('ranking/flappy/'+currentUser).set(fScore);
-        });
+        db.ref('usuarios/' + currentUser + '/puntosFlappy').once('value', sv => { if (fScore > (sv.val() || 0)) db.ref('usuarios/' + currentUser + '/puntosFlappy').set(fScore); });
+        db.ref('ranking/flappy/' + currentUser).once('value', sv => { if (!sv.exists() || fScore > sv.val()) db.ref('ranking/flappy/' + currentUser).set(fScore); });
       }
     });
-  }else{
-    // Usuario admin o sin login
+  } else {
     document.getElementById('flappy-over-menu').classList.remove('hidden');
-    document.getElementById('flappy-score-txt').innerText='Puntuación: '+fScore+' €Eden€';
+    document.getElementById('flappy-over-menu').innerHTML = `<h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2><p id="flappy-score-txt" style="color:#FFD700;font-size:14px;margin-bottom:12px">Puntuación: ${fScore} €Eden€</p><button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">¡Repetir!</button><button class="game-btn-neon" onclick="salirFlappy()">Salir</button>`;
   }
 }
 
-/* ═══════════════════ PREVIEWS EN TARJETAS ═══════════════════ */
-function dibujarPreviewLadrillos(){
-  const pCvs=document.getElementById('previewCanvas');if(!pCvs)return;
-  const pCtx=pCvs.getContext('2d'),pw=pCvs.width,ph=pCvs.height;
-  pCtx.clearRect(0,0,pw,ph);
-  // Mini ladrillos decorativos
-  const cols2=9,rows2=3,bw2=(pw-20)/(cols2),bh2=22;
-  for(let c2=0;c2<cols2;c2++)for(let r=0;r<rows2;r++){
-    const bx=c2*bw2+10,by=r*(bh2+4)+14;
-    if(imgLadrillo.complete&&imgLadrillo.naturalWidth>0){pCtx.drawImage(imgLadrillo,bx,by,bw2-4,bh2);}
-    else{pCtx.fillStyle=r===0?'#FF4444':(r===1?'#FFD700':'#FF6666');pCtx.fillRect(bx,by,bw2-4,bh2);}
+/* ═══════════════════════════════════════════════════════════════
+   JUEGO 3 — CANDY EDÉN (namespace CANDY, sin conflictos)
+═══════════════════════════════════════════════════════════════ */
+const CANDY = (() => {
+  /* ── Constantes ── */
+  const SKINS = {
+    classic: ['💎','🔥','💧','🌿','⚡','❄️'],
+    fruit:   ['🍎','🍇','🍊','🍋','🍒','🥝'],
+    cyber:   ['⌬','⏦','⌮','⌯','⎔','⍥']
+  };
+  const COLORS = ['#00FFFF','#FF00FF','#00FF00','#FFFF00','#FF4500','#FFFFFF'];
+  const CANDY_GRID_SIZE = 8;
+
+  /* ── Estado ── */
+  let activeSkin = 'classic', gridData = [], selected = null, busy = false,
+      currentLevel = null, candyScore = 0, candyMoves = 0, comboCount = 0,
+      pendingBomb = null, levels = [],
+      candyState = { unlocked: 1, inv: { rayo: 0, bollo: 0 } };
+
+  /* ── Carga estado de Firebase ── */
+  function loadState() {
+    if (!currentUser || currentUser === 'admin') return;
+    db.ref('usuarios/' + currentUser + '/candyState').once('value', s => {
+      if (s.exists()) candyState = s.val();
+      else candyState = { unlocked: 1, inv: { rayo: 0, bollo: 0 } };
+      syncInventory(); _renderLevels();
+    });
   }
-  // Mini pelota
-  pCtx.beginPath();pCtx.arc(pw/2,ph-22,8,0,Math.PI*2);pCtx.fillStyle='#FF0000';pCtx.fill();
-  pCtx.shadowColor='#FF4444';pCtx.shadowBlur=8;pCtx.fill();pCtx.shadowBlur=0;
-  // Mini pala
-  pCtx.fillStyle='#00FFFF';pCtx.shadowColor='#00FFFF';pCtx.shadowBlur=8;
-  pCtx.fillRect(pw/2-30,ph-10,60,6);pCtx.shadowBlur=0;
+
+  function saveState() {
+    if (!currentUser || currentUser === 'admin') return;
+    db.ref('usuarios/' + currentUser + '/candyState').set(candyState);
+    // Sincronizar inventario con candyInv para coherencia con la tienda
+    db.ref('usuarios/' + currentUser + '/candyInv').set(candyState.inv);
+  }
+
+  function syncInventory() {
+    // Leer inventario de candy desde Firebase (puede haber sido comprado desde la tienda principal)
+    if (!currentUser || currentUser === 'admin') return;
+    db.ref('usuarios/' + currentUser + '/candyInv').once('value', s => {
+      if (s.exists()) {
+        const inv = s.val();
+        candyState.inv = { rayo: inv.rayo || 0, bollo: inv.bollo || 0 };
+      }
+      _updateHUD();
+    });
+  }
+
+  /* ── Niveles ── */
+  function _genLevels() {
+    levels = Array.from({ length: 50 }, (_, i) => ({
+      id: i + 1,
+      goal:  1200 + i * 600,
+      moves: Math.max(15, 30 - Math.floor(i / 4))
+    }));
+  }
+
+  function _renderLevels() {
+    const container = document.getElementById('candy-lvl-container');
+    if (!container) return;
+    container.innerHTML = '';
+    levels.forEach(lvl => {
+      const b = document.createElement('div');
+      const unlocked = lvl.id <= (candyState.unlocked || 1);
+      b.className = 'candy-lvl-btn' + (unlocked ? ' unlocked' : '');
+      b.innerHTML = unlocked ? lvl.id : '🔒';
+      if (unlocked) b.onclick = () => { APP.audioCtx.resume(); _startGame(lvl); };
+      container.appendChild(b);
+    });
+    // Wallet
+    const cw = document.getElementById('ce-wallet-eden'); if (cw) cw.innerText = userBalance;
+  }
+
+  /* ── Interfaz menús ── */
+  function showMenu() {
+    reproducir('click');
+    document.getElementById('candy-start-menu').classList.remove('candy-menu-overlay');
+    document.getElementById('candy-start-menu').style.opacity = '1';
+    document.getElementById('candy-start-menu').style.pointerEvents = 'auto';
+    document.getElementById('candy-start-menu').style.transform = 'none';
+    document.getElementById('candy-over-menu').classList.add('ce-hidden');
+    document.getElementById('candy-shop-menu').classList.add('ce-hidden');
+    loadState();
+  }
+
+  function toggleShop() {
+    reproducir('click');
+    document.getElementById('candy-shop-menu').classList.toggle('ce-hidden');
+    const cw = document.getElementById('ce-wallet-eden'); if (cw) cw.innerText = userBalance;
+  }
+
+  function setSkin(s) { activeSkin = s; reproducir('click'); if (gridData.length) _render(); }
+
+  function buy(p) {
+    if (userBalance >= 500) {
+      const ns = userBalance - 500;
+      db.ref('usuarios/' + currentUser).update({ saldo: ns }).then(() => {
+        candyState.inv[p] = (candyState.inv[p] || 0) + 1;
+        saveState(); actualizarSaldoUI(ns); _updateHUD(); reproducir('coin');
+      });
+    } else { reproducir('fail'); alert("No tienes suficiente €Eden€"); }
+  }
+
+  /* ── Game flow ── */
+  function _startGame(lvl) {
+    currentLevel = lvl; candyScore = 0; candyMoves = lvl.moves; comboCount = 0;
+    document.getElementById('candy-start-menu').style.opacity = '0';
+    document.getElementById('candy-start-menu').style.pointerEvents = 'none';
+    document.getElementById('candy-over-menu').classList.add('ce-hidden');
+    document.getElementById('candy-shop-menu').classList.add('ce-hidden');
+    _buildGrid(); _updateHUD();
+  }
+
+  function _buildGrid() {
+    const container = document.getElementById('ce-grid-eden');
+    container.innerHTML = ''; gridData = [];
+    for (let r = 0; r < CANDY_GRID_SIZE; r++) {
+      gridData[r] = [];
+      for (let c = 0; c < CANDY_GRID_SIZE; c++) {
+        const val = Math.floor(Math.random() * 6);
+        gridData[r][c] = { type: val, isBomb: false };
+        const el = document.createElement('div');
+        el.className = 'ce-cell-eden'; el.id = 'ce-' + r + '-' + c;
+        el.onclick = () => _cellClick(r, c);
+        container.appendChild(el);
+      }
+    }
+    _render(); _checkMatches();
+  }
+
+  function _cellClick(r, c) {
+    if (busy || !currentLevel) return;
+    const el = document.getElementById('ce-' + r + '-' + c);
+    if (!selected) {
+      selected = { r, c }; el.classList.add('ce-selected');
+    } else {
+      const { r: r1, c: c1 } = selected;
+      document.getElementById('ce-' + r1 + '-' + c1).classList.remove('ce-selected');
+      if (Math.abs(r - r1) + Math.abs(c - c1) === 1) {
+        busy = true; _swap(r, c, r1, c1);
+        setTimeout(() => {
+          if (!_checkMatches()) { _swap(r, c, r1, c1); busy = false; }
+          else { candyMoves--; _updateHUD(); }
+        }, 280);
+      }
+      selected = null;
+    }
+  }
+
+  function _swap(r1, c1, r2, c2) {
+    let t = gridData[r1][c1]; gridData[r1][c1] = gridData[r2][c2]; gridData[r2][c2] = t; _render();
+  }
+
+  function _checkMatches() {
+    let matched = new Set();
+    for (let r = 0; r < CANDY_GRID_SIZE; r++)
+      for (let c = 0; c < CANDY_GRID_SIZE - 2; c++)
+        if (gridData[r][c].type === gridData[r][c+1].type && gridData[r][c].type === gridData[r][c+2].type)
+          { matched.add(r+','+c); matched.add(r+','+(c+1)); matched.add(r+','+(c+2)); }
+    for (let c = 0; c < CANDY_GRID_SIZE; c++)
+      for (let r = 0; r < CANDY_GRID_SIZE - 2; r++)
+        if (gridData[r][c].type === gridData[r+1][c].type && gridData[r][c].type === gridData[r+2][c].type)
+          { matched.add(r+','+c); matched.add((r+1)+','+c); matched.add((r+2)+','+c); }
+
+    if (matched.size > 0) {
+      comboCount++;
+      const vCard = document.getElementById('vista-candy');
+      if (comboCount >= 3) vCard.classList.add('super-combo-mode');
+      // Sonido tonal con Web Audio API
+      try {
+        const osc = APP.audioCtx.createOscillator(), gain = APP.audioCtx.createGain();
+        osc.type = 'sine'; osc.frequency.value = 300 + comboCount * 70;
+        gain.gain.setValueAtTime(0.12, APP.audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, APP.audioCtx.currentTime + 0.15);
+        osc.connect(gain); gain.connect(APP.audioCtx.destination);
+        osc.start(); osc.stop(APP.audioCtx.currentTime + 0.15);
+      } catch(e) {}
+
+      matched.forEach(pos => {
+        const [r, c] = pos.split(',').map(Number);
+        if (gridData[r][c] && gridData[r][c].isBomb) _triggerBomb(r, c, matched);
+        candyScore += 30 * comboCount;
+        gridData[r][c] = null;
+        const el = document.getElementById('ce-' + r + '-' + c);
+        if (el) el.style.transform = 'scale(0)';
+      });
+      if (matched.size >= 5) {
+        const firstPos = matched.values().next().value.split(',').map(Number);
+        pendingBomb = firstPos;
+      }
+      _updateHUD();
+      setTimeout(_refill, 340);
+      return true;
+    }
+    busy = false; comboCount = 0;
+    document.getElementById('vista-candy').classList.remove('super-combo-mode');
+    _checkEnd(); return false;
+  }
+
+  function _triggerBomb(r, c, matchedSet) {
+    for (let i = r - 2; i <= r + 2; i++)
+      for (let j = c - 2; j <= c + 2; j++)
+        if (gridData[i] && gridData[i][j]) matchedSet.add(i + ',' + j);
+  }
+
+  function _refill() {
+    for (let c = 0; c < CANDY_GRID_SIZE; c++) {
+      let shift = 0;
+      for (let r = CANDY_GRID_SIZE - 1; r >= 0; r--) {
+        if (gridData[r][c] === null) shift++;
+        else if (shift > 0) { gridData[r + shift][c] = gridData[r][c]; gridData[r][c] = null; }
+      }
+      for (let r = 0; r < shift; r++) gridData[r][c] = { type: Math.floor(Math.random() * 6), isBomb: false };
+    }
+    if (pendingBomb) {
+      const [pr, pc] = pendingBomb;
+      if (gridData[pr] && gridData[pr][pc]) gridData[pr][pc].isBomb = true;
+      pendingBomb = null;
+    }
+    _render(); setTimeout(_checkMatches, 280);
+  }
+
+  function _render() {
+    const symbols = SKINS[activeSkin];
+    for (let r = 0; r < CANDY_GRID_SIZE; r++) for (let c = 0; c < CANDY_GRID_SIZE; c++) {
+      const el = document.getElementById('ce-' + r + '-' + c);
+      const cell = gridData[r][c];
+      if (!el) continue;
+      el.innerHTML = cell ? symbols[cell.type] : "";
+      el.style.color = cell ? COLORS[cell.type] : "";
+      el.className = 'ce-cell-eden' + (cell && cell.isBomb ? ' ce-bomb' : '');
+      el.style.transform = cell ? 'scale(1)' : 'scale(0)';
+      if (activeSkin === 'cyber') el.style.fontFamily = 'serif';
+      else el.style.fontFamily = '';
+    }
+  }
+
+  function usePower(p) {
+    if (!candyState.inv[p] || candyState.inv[p] <= 0) { alert('No tienes ' + p + '. Cómpralo en la tienda.'); return; }
+    if (!selected) { alert('Primero selecciona una celda.'); return; }
+    candyState.inv[p]--;
+    const { r, c } = selected; selected = null;
+    try {
+      const osc = APP.audioCtx.createOscillator(), gain = APP.audioCtx.createGain();
+      osc.type = 'square'; osc.frequency.value = 800;
+      gain.gain.setValueAtTime(0.1, APP.audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, APP.audioCtx.currentTime + 0.3);
+      osc.connect(gain); gain.connect(APP.audioCtx.destination);
+      osc.start(); osc.stop(APP.audioCtx.currentTime + 0.3);
+    } catch(e) {}
+    if (p === 'rayo') { for (let i = 0; i < CANDY_GRID_SIZE; i++) { if (gridData[r]) gridData[r][i] = null; if (gridData[i]) gridData[i][c] = null; } }
+    else { for (let i = r - 1; i <= r + 1; i++) for (let j = c - 1; j <= c + 1; j++) if (gridData[i] && gridData[i][j] !== undefined) gridData[i][j] = null; }
+    saveState(); _updateHUD(); _refill();
+  }
+
+  function _updateHUD() {
+    const s = document.getElementById('ce-score-eden'), m = document.getElementById('ce-moves-eden'), g = document.getElementById('ce-goal-eden');
+    const ri = document.getElementById('ce-inv-rayo-eden'), bi = document.getElementById('ce-inv-bollo-eden');
+    if (s) s.innerText = candyScore;
+    if (m) m.innerText = candyMoves;
+    if (g) g.innerText = currentLevel ? currentLevel.goal : 0;
+    if (ri) ri.innerText = candyState.inv.rayo || 0;
+    if (bi) bi.innerText = candyState.inv.bollo || 0;
+  }
+
+  function _checkEnd() {
+    if (!currentLevel) return;
+    if (candyScore >= currentLevel.goal) {
+      // Victoria
+      try {
+        [523, 659, 783, 1046].forEach((f, i) => {
+          setTimeout(() => {
+            const o = APP.audioCtx.createOscillator(), g = APP.audioCtx.createGain();
+            o.type = 'sine'; o.frequency.value = f;
+            g.gain.setValueAtTime(0.12, APP.audioCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, APP.audioCtx.currentTime + 0.2);
+            o.connect(g); g.connect(APP.audioCtx.destination);
+            o.start(); o.stop(APP.audioCtx.currentTime + 0.2);
+          }, i * 120);
+        });
+      } catch(e) {}
+      if (currentLevel.id >= (candyState.unlocked || 1)) candyState.unlocked = currentLevel.id + 1;
+      // Guardar en Firebase
+      if (currentUser && currentUser !== 'admin') {
+        db.ref('usuarios/' + currentUser + '/candyBestLevel').transaction(v => Math.max(v || 0, currentLevel.id));
+        db.ref('usuarios/' + currentUser + '/candyBestScore').transaction(v => Math.max(v || 0, candyScore));
+        db.ref('ranking/candy/' + currentUser).transaction(v => Math.max(v || 0, candyScore));
+        const reward = Math.floor(candyScore / 100) * 10;
+        if (reward > 0) {
+          db.ref('usuarios/' + currentUser + '/saldo').transaction(v => (v || 0) + reward);
+          alert('🏆 ¡NIVEL ' + currentLevel.id + ' SUPERADO!\n🍬 Puntuación: ' + candyScore + '\n💰 +' + reward + ' €Eden€ de recompensa');
+        } else {
+          alert('🏆 ¡NIVEL ' + currentLevel.id + ' SUPERADO!\n🍬 Puntuación: ' + candyScore);
+        }
+        darXPporJuego(Math.floor(candyScore / 10));
+        saveState();
+      }
+      currentLevel = null; showMenu();
+    } else if (candyMoves <= 0) {
+      // Derrota
+      reproducir('fail');
+      const overMenu = document.getElementById('candy-over-menu');
+      const overTitle = document.getElementById('candy-over-title');
+      const overTxt   = document.getElementById('candy-over-txt');
+      if (overTitle) overTitle.innerText = '😔 NIVEL FALLADO';
+      if (overTxt)   overTxt.innerText   = 'Nivel ' + currentLevel.id + ' — ' + candyScore + ' / ' + currentLevel.goal + ' pts';
+      overMenu.classList.remove('ce-hidden');
+      currentLevel = null;
+    }
+  }
+
+  /* ── Abrir / salir ── */
+  function abrir() {
+    reproducir('click');
+    document.querySelectorAll('.container,.vista-juego-base').forEach(c => c.classList.add('hidden'));
+    ['exit-btn','settings-btn','shop-btn-izq','chat-btn'].forEach(b => { const el = document.getElementById(b); if (el) el.classList.add('hidden'); });
+    document.getElementById('vista-candy').classList.remove('hidden');
+    document.getElementById('pantalla-oscura').classList.remove('hidden');
+    // Asegurarse de que el menú inicio está visible
+    const sm = document.getElementById('candy-start-menu');
+    sm.style.opacity = '1'; sm.style.pointerEvents = 'auto'; sm.style.transform = 'none';
+    document.getElementById('candy-over-menu').classList.add('ce-hidden');
+    document.getElementById('candy-shop-menu').classList.add('ce-hidden');
+    loadState();
+  }
+
+  function salir() { reproducir('click'); currentLevel = null; mostrarVista('vista-agenda'); }
+
+  // Init
+  _genLevels();
+
+  return { abrir, salir, showMenu, toggleShop, setSkin, buy, usePower, syncInventory };
+})();
+
+function abrirCandyEden() { CANDY.abrir(); }
+
+/* ═══════════════════ PREVIEWS EN TARJETAS ═══════════════════ */
+function dibujarPreviewLadrillos() {
+  const pCvs = document.getElementById('previewCanvas'); if (!pCvs) return;
+  const pCtx = pCvs.getContext('2d'), pw = pCvs.width, ph = pCvs.height;
+  pCtx.clearRect(0, 0, pw, ph);
+  const cols2 = 9, rows2 = 3, bw2 = (pw - 20) / cols2, bh2 = 20;
+  for (let c = 0; c < cols2; c++) for (let r = 0; r < rows2; r++) {
+    const bx = c * bw2 + 10, by = r * (bh2 + 3) + 10;
+    if (imgLadrillo.complete && imgLadrillo.naturalWidth > 0) pCtx.drawImage(imgLadrillo, bx, by, bw2 - 3, bh2);
+    else { pCtx.fillStyle = r === 0 ? '#FF4444' : r === 1 ? '#FFD700' : '#FF6666'; pCtx.fillRect(bx, by, bw2 - 3, bh2); }
+  }
+  pCtx.beginPath(); pCtx.arc(pw / 2, ph - 18, 8, 0, Math.PI * 2); pCtx.fillStyle = '#FF0000';
+  pCtx.shadowColor = '#FF4444'; pCtx.shadowBlur = 8; pCtx.fill(); pCtx.shadowBlur = 0;
+  pCtx.fillStyle = '#00FFFF'; pCtx.shadowColor = '#00FFFF'; pCtx.shadowBlur = 8; pCtx.fillRect(pw / 2 - 30, ph - 9, 60, 6); pCtx.shadowBlur = 0;
 }
-function dibujarPreviewFlappy(){
-  const pCvs=document.getElementById('previewFlappyCanvas');if(!pCvs)return;
-  const pCtx=pCvs.getContext('2d'),pw=pCvs.width,ph=pCvs.height;
-  pCtx.clearRect(0,0,pw,ph);
-  if(fBgImg.complete&&fBgImg.naturalWidth>0){pCtx.drawImage(fBgImg,0,0,pw,ph);}
-  else{const g=pCtx.createLinearGradient(0,0,0,ph);g.addColorStop(0,'#001a0a');g.addColorStop(1,'#0a1a00');pCtx.fillStyle=g;pCtx.fillRect(0,0,pw,ph);}
-  // Mini columnas neón
-  [[60,0,50],[220,60,45],[340,0,55]].forEach(([x,topH,h],i)=>{
-    const col=NEON_COLORS[i];
-    pCtx.fillStyle='rgba(0,0,0,.6)';pCtx.fillRect(x,topH,28,h);
-    pCtx.strokeStyle=col;pCtx.lineWidth=1.5;pCtx.shadowColor=col;pCtx.shadowBlur=6;
-    pCtx.strokeRect(x,topH,28,h);pCtx.shadowBlur=0;
+
+function dibujarPreviewFlappy() {
+  const pCvs = document.getElementById('previewFlappyCanvas'); if (!pCvs) return;
+  const pCtx = pCvs.getContext('2d'), pw = pCvs.width, ph = pCvs.height;
+  pCtx.clearRect(0, 0, pw, ph);
+  if (fBgImg.complete && fBgImg.naturalWidth > 0) pCtx.drawImage(fBgImg, 0, 0, pw, ph);
+  else { const g = pCtx.createLinearGradient(0, 0, 0, ph); g.addColorStop(0, '#001a0a'); g.addColorStop(1, '#0a1a00'); pCtx.fillStyle = g; pCtx.fillRect(0, 0, pw, ph); }
+  [[60,0,50],[220,58,44],[330,0,52]].forEach(([x, topH, h], i) => {
+    const col = NEON_COLORS[i];
+    pCtx.fillStyle = 'rgba(0,0,0,.6)'; pCtx.fillRect(x, topH, 28, h);
+    pCtx.strokeStyle = col; pCtx.lineWidth = 1.5; pCtx.shadowColor = col; pCtx.shadowBlur = 6;
+    pCtx.strokeRect(x, topH, 28, h); pCtx.shadowBlur = 0;
   });
-  // Mini pájaro
-  pCtx.beginPath();pCtx.arc(pw/2,ph/2,14,0,Math.PI*2);
-  pCtx.fillStyle='#001828';pCtx.fill();
-  pCtx.strokeStyle='#00FFFF';pCtx.lineWidth=2;pCtx.shadowColor='#00FFFF';pCtx.shadowBlur=10;pCtx.stroke();pCtx.shadowBlur=0;
-  pCtx.font='14px serif';pCtx.textAlign='center';pCtx.textBaseline='middle';pCtx.fillText('🐦',pw/2,ph/2+1);
+  pCtx.beginPath(); pCtx.arc(pw / 2, ph / 2, 13, 0, Math.PI * 2); pCtx.fillStyle = '#001828'; pCtx.fill();
+  pCtx.strokeStyle = '#00FFFF'; pCtx.lineWidth = 2; pCtx.shadowColor = '#00FFFF'; pCtx.shadowBlur = 10; pCtx.stroke(); pCtx.shadowBlur = 0;
+  pCtx.font = '13px serif'; pCtx.textAlign = 'center'; pCtx.textBaseline = 'middle'; pCtx.fillText('🐦', pw / 2, ph / 2 + 1);
+}
+
+function dibujarPreviewCandy() {
+  const pCvs = document.getElementById('previewCandyCanvas'); if (!pCvs) return;
+  const pCtx = pCvs.getContext('2d'), pw = pCvs.width, ph = pCvs.height;
+  pCtx.clearRect(0, 0, pw, ph);
+  const g = pCtx.createRadialGradient(pw/2, ph/2, 0, pw/2, ph/2, pw/2);
+  g.addColorStop(0, '#2a0040'); g.addColorStop(1, '#050010');
+  pCtx.fillStyle = g; pCtx.fillRect(0, 0, pw, ph);
+  // Mini grid de gemas
+  const gems = ['💎','🔥','💧','🌿','⚡','❄️'];
+  const gemColors = ['#00FFFF','#FF4500','#0080FF','#00CC00','#FFD700','#88CCFF'];
+  const cols = 10, cellW = pw / cols, cellH = ph / 2;
+  for (let r = 0; r < 2; r++) for (let c = 0; c < cols; c++) {
+    const idx = (r * cols + c) % 6;
+    pCtx.font = (cellH * 0.65) + 'px serif';
+    pCtx.textAlign = 'center'; pCtx.textBaseline = 'middle';
+    pCtx.shadowColor = gemColors[idx]; pCtx.shadowBlur = 6;
+    pCtx.fillText(gems[idx], c * cellW + cellW/2, r * cellH + cellH/2);
+    pCtx.shadowBlur = 0;
+  }
+  // Texto overlay
+  pCtx.fillStyle = 'rgba(0,0,0,.3)'; pCtx.fillRect(0, 0, pw, ph);
 }
 
 /* ═══════════════════ INIT ═══════════════════ */
-if(!cargarSesionLocal()){
+if (!cargarSesionLocal()) {
   mostrarVista('vista-login');
-} else {
-  // Si ya hay sesión, cargar equipamiento y actualizar tienda si está visible
-  setTimeout(() => {
-    const tiendaVisible = !document.getElementById('vista-tienda').classList.contains('hidden');
-    if(tiendaVisible && currentUser){
-      console.log('🔄 Sesión cargada, actualizando tienda...');
-      cargarEquipamientoDesdeDB().then(() => {
-        actualizarBotonesTiendaSimple();
-      });
-    }
-  }, 1000);
 }
 </script>
 </body>
 </html>
-
-
