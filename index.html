@@ -43,12 +43,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
   font-size:36px;border:none;cursor:pointer;z-index:101;display:flex;flex-direction:column;align-items:center}
 .btn-shop-label{font-size:9px;font-weight:bold;margin-top:-4px}
 
-/* ── NUEVO: Botón Misiones ── */
-.btn-missions-float{position:fixed;bottom:25px;left:80px;background:none;color:#FF00FF;
-  font-size:36px;border:none;cursor:pointer;z-index:101;display:flex;flex-direction:column;align-items:center;
-  animation:missionPulse 2s ease-in-out infinite}
-@keyframes missionPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-
 /* ── Settings card ── */
 .settings-card{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;
   background:rgba(20,20,25,0.97);padding:20px;border-radius:20px;
@@ -351,23 +345,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 @keyframes xpGlow{0%,100%{box-shadow:0 0 4px #00FF00}50%{box-shadow:0 0 10px #00FF00}}
 #xp-bar{animation:xpGlow 2s ease-in-out infinite}
 
-/* ── NUEVO: Estilos de Misiones ── */
-.mission-card{background:rgba(255,0,255,.08);border:2px solid rgba(255,0,255,.4);
-  border-radius:16px;padding:16px;margin-bottom:14px;position:relative;transition:.3s}
-.mission-card:hover{border-color:#FF00FF;box-shadow:0 0 18px rgba(255,0,255,.3);transform:translateX(4px)}
-.mission-card.completed{background:rgba(0,255,0,.08);border-color:rgba(0,255,0,.4);opacity:.7}
-.mission-card.completed:hover{border-color:#00FF00}
-.mission-title{color:#FF00FF;font-size:15px;font-weight:bold;margin-bottom:6px;
-  display:flex;align-items:center;gap:8px}
-.mission-desc{color:#aaa;font-size:12px;margin-bottom:10px;line-height:1.4}
-.mission-progress{background:rgba(0,0,0,.5);border-radius:8px;height:10px;overflow:hidden;margin-bottom:8px}
-.mission-progress-bar{background:linear-gradient(90deg,#FF00FF,#00FFFF);height:100%;transition:width .5s ease}
-.mission-reward{color:#FFD700;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:6px}
-.mission-claim-btn{background:#FF00FF;color:#000;border:none;border-radius:8px;
-  padding:8px 16px;font-weight:bold;cursor:pointer;transition:.2s;margin-top:8px}
-.mission-claim-btn:hover{transform:scale(1.05);filter:brightness(1.2)}
-.mission-claim-btn:disabled{opacity:.5;cursor:not-allowed}
-
 /* ── Scrollbar global fina ── */
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -387,9 +364,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
 </button>
 <button id="shop-btn-izq" class="btn-shop-flotante-izq hidden" onclick="mostrarVista('vista-tienda-unificada')">
   <span>🛒</span><span class="btn-shop-label">TIENDA</span>
-</button>
-<button id="missions-btn" class="btn-missions-float hidden" onclick="mostrarVista('vista-misiones')">
-  <span>🎯</span><span class="btn-shop-label">MISIONES</span>
 </button>
 <button id="chat-btn" class="btn-chat-flotante hidden" onclick="mostrarVista('vista-chat')">
   <span>💬</span><span class="btn-shop-label">CHAT</span>
@@ -466,17 +440,6 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
         <div class="game-card-title" style="color:#FF00FF;text-shadow:0 0 8px #FF00FF">🍬 CANDY EDÉN</div>
         <div class="game-card-desc">Combina 3+ gemas. Desbloquea 50 niveles. Power-ups en tienda.</div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ NUEVA VISTA: MISIONES DIARIAS ══ -->
-<div id="vista-misiones" class="container hidden">
-  <div class="settings-card">
-    <button class="btn-close-settings" onclick="mostrarVista('vista-agenda')">✖</button>
-    <h2 style="color:#FF00FF;margin-bottom:15px;text-align:center;letter-spacing:1px">🎯 MISIONES DIARIAS</h2>
-    <div id="missions-container" style="max-height:70vh;overflow-y:auto">
-      <p style="color:#aaa;font-size:12px;text-align:center;padding:20px">Cargando misiones...</p>
     </div>
   </div>
 </div>
@@ -995,6 +958,7 @@ function cambiarAvatar(emoji) {
   mostrarToast('Avatar actualizado ' + emoji, '#00FFFF');
 }
 
+/* CORREGIDO: función cargarLayoutAvatar que faltaba */
 function cargarLayoutAvatar() {
   const input = document.createElement('input');
   input.type = 'file';
@@ -1056,7 +1020,7 @@ function entrarConGoogle() {
 function mostrarVista(id) {
   reproducir('click');
   document.querySelectorAll('.container,.vista-juego-base').forEach(c => c.classList.add('hidden'));
-  ['exit-btn','settings-btn','shop-btn-izq','chat-btn','missions-btn'].forEach(b => {
+  ['exit-btn','settings-btn','shop-btn-izq','chat-btn'].forEach(b => {
     const el = document.getElementById(b); if (el) el.classList.add('hidden');
   });
   const target = document.getElementById(id);
@@ -1072,13 +1036,6 @@ function mostrarVista(id) {
     return;
   }
 
-  if (id === 'vista-misiones') {
-    document.getElementById('pantalla-oscura').classList.remove('hidden');
-    ['exit-btn','settings-btn','chat-btn','shop-btn-izq'].forEach(b => { const el = document.getElementById(b); if (el) el.classList.remove('hidden'); });
-    MISSIONS.loadMissions();
-    return;
-  }
-
   const conNav = ['vista-agenda','vista-ajustes','vista-chat','vista-candy'];
   if (conNav.includes(id)) {
     let botones = [];
@@ -1087,7 +1044,7 @@ function mostrarVista(id) {
     } else if (id === 'vista-ajustes') {
       botones = [];
     } else {
-      botones = ['exit-btn','settings-btn','chat-btn','shop-btn-izq','missions-btn'];
+      botones = ['exit-btn','settings-btn','chat-btn','shop-btn-izq'];
     }
     botones.forEach(b => { const el = document.getElementById(b); if (el) el.classList.remove('hidden'); });
 
@@ -1224,6 +1181,7 @@ function mostrarPremiosDiarios() {
 function darAvatarGratis() {
   const av = ['🎭','🎪','🎨','🎯','🎲','🎸','🎺','🥁','🎻','🎹'];
   const ava = av[Math.floor(Math.random() * av.length)];
+  /* CORREGIDO: guardamos en inventario/avatars para coherencia */
   db.ref('usuarios/' + currentUser + '/inventario/avatars/' + ava).set(true).then(() => {
     mostrarToast('🎁 Avatar gratis: ' + ava + ' (revisa inventario)', '#FF00FF');
     reproducir('coin');
@@ -1402,337 +1360,1343 @@ function cargarInventario() {
   });
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   NUEVO: SISTEMA DE MISIONES DIARIAS
-═══════════════════════════════════════════════════════════════ */
-const MISSIONS = (() => {
-  const MISSION_TEMPLATES = [
-    { id: 'jugar_ladrillos_5', title: '🎯 Rompedor', desc: 'Juega 5 partidas de Ladrillos', target: 5, reward: 800, xp: 50, type: 'count' },
-    { id: 'puntos_flappy_100', title: '🐦 Volador Experto', desc: 'Consigue 100 puntos en Flappy', target: 100, reward: 1200, xp: 80, type: 'score_flappy' },
-    { id: 'candy_nivel_10', title: '🍬 Dulce Victoria', desc: 'Completa nivel 10 de Candy', target: 10, reward: 1500, xp: 100, type: 'candy_level' },
-    { id: 'ganar_5000_coins', title: '💰 Acumulador', desc: 'Gana 5000 €Eden€ en total', target: 5000, reward: 2000, xp: 150, type: 'coins' },
-    { id: 'chat_10_mensajes', title: '💬 Comunicador', desc: 'Envía 10 mensajes en el chat', target: 10, reward: 500, xp: 30, type: 'chat' },
-    { id: 'hacer_3_amigos', title: '👥 Social', desc: 'Añade 3 amigos nuevos', target: 3, reward: 1000, xp: 60, type: 'friends' },
-    { id: 'comprar_5_items', title: '🛒 Comprador', desc: 'Compra 5 items en la tienda', target: 5, reward: 800, xp: 40, type: 'shop' },
-    { id: 'combo_candy_10', title: '⚡ Combo Master', desc: 'Haz un combo de 10 en Candy', target: 10, reward: 1800, xp: 120, type: 'combo' }
-  ];
-
-  function generateDailyMissions() {
-    const today = new Date().toDateString();
-    const shuffled = [...MISSION_TEMPLATES].sort(() => Math.random() - 0.5);
-    const selected = shuffled.slice(0, 3);
-    
-    return {
-      date: today,
-      missions: selected.map(m => ({
-        ...m,
-        progress: 0,
-        completed: false,
-        claimed: false
-      }))
-    };
-  }
-
-  function loadMissions() {
-    if (!currentUser || currentUser === 'admin') {
-      document.getElementById('missions-container').innerHTML = '<p style="color:#aaa;text-align:center;padding:20px">Inicia sesión para ver misiones</p>';
-      return;
-    }
-
-    const today = new Date().toDateString();
-    db.ref('usuarios/' + currentUser + '/missions').once('value', s => {
-      let data = s.val();
-      
-      // Generar nuevas misiones si es un nuevo día o no existen
-      if (!data || data.date !== today) {
-        data = generateDailyMissions();
-        db.ref('usuarios/' + currentUser + '/missions').set(data);
-      }
-
-      renderMissions(data.missions);
-    });
-  }
-
-  function renderMissions(missions) {
-    const container = document.getElementById('missions-container');
-    if (!container) return;
-
-    let html = '';
-    missions.forEach((m, idx) => {
-      const pct = Math.min(100, (m.progress / m.target) * 100);
-      const completed = m.progress >= m.target;
-      const cardClass = completed ? 'mission-card completed' : 'mission-card';
-      
-      html += `
-        <div class="${cardClass}">
-          <div class="mission-title">${m.title}</div>
-          <div class="mission-desc">${m.desc}</div>
-          <div class="mission-progress">
-            <div class="mission-progress-bar" style="width:${pct}%"></div>
-          </div>
-          <div style="color:#aaa;font-size:11px;margin-top:4px">${m.progress}/${m.target}</div>
-          <div class="mission-reward">
-            💰 ${m.reward} €Eden€ · ⭐ ${m.xp} XP
-          </div>
-          ${completed && !m.claimed ? `
-            <button class="mission-claim-btn" onclick="MISSIONS.claimReward(${idx})">
-              ✨ RECLAMAR RECOMPENSA
-            </button>
-          ` : ''}
-          ${m.claimed ? `
-            <div style="color:#00FF00;font-size:12px;margin-top:8px;font-weight:bold">✅ COMPLETADA</div>
-          ` : ''}
-        </div>
-      `;
-    });
-
-    container.innerHTML = html;
-  }
-
-  function updateProgress(type, value) {
-    if (!currentUser || currentUser === 'admin') return;
-
-    db.ref('usuarios/' + currentUser + '/missions/missions').once('value', s => {
-      const missions = s.val();
-      if (!missions) return;
-
-      let updated = false;
-      missions.forEach((m, idx) => {
-        if (m.type === type && !m.completed) {
-          if (type === 'count' || type === 'chat' || type === 'friends' || type === 'shop') {
-            missions[idx].progress = Math.min(m.target, m.progress + 1);
-          } else if (type === 'score_flappy' || type === 'candy_level' || type === 'coins' || type === 'combo') {
-            missions[idx].progress = Math.max(m.progress, value);
-          }
-          
-          if (missions[idx].progress >= m.target) {
-            missions[idx].completed = true;
-            mostrarToast('🎯 ¡Misión completada: ' + m.title + '!', '#FF00FF');
-          }
-          updated = true;
-        }
-      });
-
-      if (updated) {
-        db.ref('usuarios/' + currentUser + '/missions/missions').set(missions);
-        if (!document.getElementById('vista-misiones').classList.contains('hidden')) {
-          renderMissions(missions);
-        }
-      }
-    });
-  }
-
-  function claimReward(idx) {
-    if (!currentUser || currentUser === 'admin') return;
-
-    db.ref('usuarios/' + currentUser + '/missions/missions/' + idx).once('value', s => {
-      const mission = s.val();
-      if (!mission || !mission.completed || mission.claimed) return;
-
-      reproducir('coin');
-      db.ref('usuarios/' + currentUser + '/missions/missions/' + idx + '/claimed').set(true);
-      db.ref('usuarios/' + currentUser + '/saldo').transaction(v => (v || 0) + mission.reward);
-      ganarXP(mission.xp);
-      
-      mostrarToast('✨ +' + mission.reward + ' €Eden€ · +' + mission.xp + ' XP!', '#FFD700');
-      
-      setTimeout(() => loadMissions(), 500);
-    });
-  }
-
-  return { loadMissions, updateProgress, claimReward };
-})();
-
 /* ════════════════════ TIENDA — SISTEMA UNIFICADO ════════════════════ */
 let colorPalaEquipada = '#00FFFF', colorBolaEquipada = '#FF0000', skinPajaroEquipada = '🐦';
 
 /* Mapa de colores */
-const MAPA_PALETA_COLOR = { red:'#FF0000',
-pink:'#FFC0CB',yellow:'#FFFF00',green:'#00FF00',purple:'#9400D3',orange:'#FFA500',cyan:'#00FFFF',white:'#FFFFFF',gold:'#FFD700' }; const MAPA_BOLA_COLOR = { blue:'#0000FF',pink:'#FFC0CB',yellow:'#FFFF00',red:'#FF0000',green:'#00FF00',purple:'#9400D3',orange:'#FFA500',cyan:'#00FFFF',white:'#FFFFFF',gold:'#FFD700',rainbow:'rainbow',fire:'fire' }; const MAPA_PAJARO_SKIN = { red:'🦜',pink:'🦩',yellow:'🦆',blue:'🦅',green:'🦚',purple:'🦢' }; const PRECIO_PALETA = { red:500,pink:750,yellow:1000,green:800,purple:1200,orange:900,cyan:1100,white:1500,gold:2000 }; const PRECIO_BOLA = { blue:400,pink:600,yellow:900,red:500,green:700,purple:1000,orange:800,cyan:950,white:1300,gold:1800,rainbow:2500,fire:3000 }; const PRECIO_PAJARO = { red:500,pink:750,yellow:1000,blue:600,green:800,purple:1200 };
-function cargarEquipamientoDesdeDB() { if (!currentUser || currentUser === 'admin') return Promise.resolve(); return db.ref('usuarios/' + currentUser).once('value').then(snap => { const d = snap.val() || {}; if (d.paletaEquipada) colorPalaEquipada = MAPA_PALETA_COLOR[d.paletaEquipada] || '#00FFFF'; if (d.bolaEquipada) colorBolaEquipada = MAPA_BOLA_COLOR[d.bolaEquipada] || '#FF0000'; if (d.pajaroEquipado) skinPajaroEquipada = MAPA_PAJARO_SKIN[d.pajaroEquipado] || '🐦'; }).catch(() => {}); }
-/* TIENDA: función central de compra basada en data-attributes */ function inicializarTienda() { document.querySelectorAll('.shop-item[data-tipo]').forEach(item => { item.addEventListener('click', () => onShopItemClick(item)); }); }
-function onShopItemClick(item) { const tipo = item.dataset.tipo; const valor = item.dataset.valor; if (!tipo || !valor) return; if (tipo === 'avatar') { comprarOEquiparAvatar(valor, item.dataset.emoji); return; } comprarOEquipar(tipo, valor); }
-function comprarOEquipar(tipo, valor) { if (!currentUser || currentUser === 'admin') return; const tipoInv = tipo === 'paleta' ? 'paletas' : tipo === 'bola' ? 'pelotas' : 'pajaros'; db.ref('usuarios/' + currentUser + '/inventario/' + tipoInv + '/' + valor).once('value', s => { if (s.val() === true) { equiparItem(tipo, valor); } else { procesarCompra(tipo, valor); } }); }
-function procesarCompra(tipo, valor) { let precio = 0; if (tipo === 'paleta') precio = PRECIO_PALETA[valor] || 0; else if (tipo === 'bola') precio = PRECIO_BOLA[valor] || 0; else if (tipo === 'pajaro') precio = PRECIO_PAJARO[valor] || 0; else if (tipo === 'vida') precio = valor == 1 ? 5000 : valor == 3 ? 12000 : 20000; if (!precio) { mostrarToast('Precio no definido', '#ff4444'); return; } if (userBalance < precio) { reproducir('fail'); mostrarToast('❌ Saldo insuficiente', '#ff4444'); return; } const ns = userBalance - precio; db.ref('usuarios/' + currentUser).update({ saldo: ns }).then(() => { reproducir('coin'); actualizarSaldoUI(ns); MISSIONS.updateProgress('shop', 1); if (tipo === 'vida') { const cant = parseInt(valor); db.ref('usuarios/' + currentUser + '/vidas_disponibles').transaction(v => (v || 0) + cant); mostrarToast('❤️ ×' + cant + ' vidas añadidas', '#00FF00'); } else { const tipoInv = tipo === 'paleta' ? 'paletas' : tipo === 'bola' ? 'pelotas' : 'pajaros'; db.ref('usuarios/' + currentUser + '/inventario/' + tipoInv + '/' + valor).set(true); mostrarToast('✅ Comprado: ' + valor, '#00FFFF'); equiparItem(tipo, valor); } setTimeout(actualizarTiendaCompleta, 400); }); }
-function comprar(tipo, valor) { reproducir('click'); if (tipo === 'candy_rayo' || tipo === 'candy_bollo') { const powerKey = tipo === 'candy_rayo' ? 'rayo' : 'bollo'; if (userBalance < 500) { reproducir('fail'); mostrarToast('❌ Saldo insuficiente', '#ff4444'); return; } const ns = userBalance - 500; db.ref('usuarios/' + currentUser).update({ saldo: ns }).then(() => { db.ref('usuarios/' + currentUser + '/candyInv/' + powerKey).transaction(v => (v || 0) + 1).then(() => { reproducir('coin'); actualizarSaldoUI(ns); CANDY.syncInventory(); MISSIONS.updateProgress('shop', 1); mostrarToast('⚡ Power-up ' + powerKey + ' ×1', '#FF00FF'); }); }); return; } if (tipo === 'vida') { procesarCompra(tipo, valor); return; } comprarOEquipar(tipo, valor); }
-function equiparItem(tipo, valor) { if (!currentUser || currentUser === 'admin') return; const key = tipo === 'paleta' ? 'paletaEquipada' : tipo === 'bola' ? 'bolaEquipada' : tipo === 'pajaro' ? 'pajaroEquipado' : ''; if (!key) return; db.ref('usuarios/' + currentUser).update({ [key]: valor }).then(() => { reproducir('coin'); if (tipo === 'paleta') colorPalaEquipada = MAPA_PALETA_COLOR[valor] || '#00FFFF'; if (tipo === 'bola') colorBolaEquipada = MAPA_BOLA_COLOR[valor] || '#FF0000'; if (tipo === 'pajaro') skinPajaroEquipada = MAPA_PAJARO_SKIN[valor] || '🐦'; mostrarToast('✅ Equipado: ' + valor, '#00FF00'); actualizarTiendaCompleta(); }); }
-function actualizarSaldoUI(ns) { ['shop-balance','shop-balance-unificado'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = 'Saldo: ' + ns + ' €Eden€'; }); const cw = document.getElementById('ce-wallet-eden'); if (cw) cw.innerText = ns; }
-function actualizarTiendaCompleta() { if (!currentUser || currentUser === 'admin') return; const su = document.getElementById('shop-balance-unificado'); if (su) su.innerText = 'Saldo: ' + userBalance + ' €Eden€';
-db.ref('usuarios/' + currentUser).once('value').then(snap => { const d = snap.val() || {}; const inv = d.inventario || {}; if (d.paletaEquipada) colorPalaEquipada = MAPA_PALETA_COLOR[d.paletaEquipada] || '#00FFFF'; if (d.bolaEquipada) colorBolaEquipada = MAPA_BOLA_COLOR[d.bolaEquipada] || '#FF0000'; if (d.pajaroEquipado) skinPajaroEquipada = MAPA_PAJARO_SKIN[d.pajaroEquipado] || '🐦';
-document.querySelectorAll('.shop-item[data-tipo]').forEach(item => {
+const MAPA_PALETA_COLOR = { red:'#FF0000',pink:'#FFC0CB',yellow:'#FFFF00',green:'#00FF00',purple:'#9400D3',orange:'#FFA500',cyan:'#00FFFF',white:'#FFFFFF',gold:'#FFD700' };
+const MAPA_BOLA_COLOR   = { blue:'#0000FF',pink:'#FFC0CB',yellow:'#FFFF00',red:'#FF0000',green:'#00FF00',purple:'#9400D3',orange:'#FFA500',cyan:'#00FFFF',white:'#FFFFFF',gold:'#FFD700',rainbow:'rainbow',fire:'fire' };
+const MAPA_PAJARO_SKIN  = { red:'🦜',pink:'🦩',yellow:'🦆',blue:'🦅',green:'🦚',purple:'🦢' };
+const PRECIO_PALETA     = { red:500,pink:750,yellow:1000,green:800,purple:1200,orange:900,cyan:1100,white:1500,gold:2000 };
+const PRECIO_BOLA       = { blue:400,pink:600,yellow:900,red:500,green:700,purple:1000,orange:800,cyan:950,white:1300,gold:1800,rainbow:2500,fire:3000 };
+const PRECIO_PAJARO     = { red:500,pink:750,yellow:1000,blue:600,green:800,purple:1200 };
+
+function cargarEquipamientoDesdeDB() {
+  if (!currentUser || currentUser === 'admin') return Promise.resolve();
+  return db.ref('usuarios/' + currentUser).once('value').then(snap => {
+    const d = snap.val() || {};
+    if (d.paletaEquipada) colorPalaEquipada = MAPA_PALETA_COLOR[d.paletaEquipada] || '#00FFFF';
+    if (d.bolaEquipada)   colorBolaEquipada  = MAPA_BOLA_COLOR[d.bolaEquipada]    || '#FF0000';
+    if (d.pajaroEquipado) skinPajaroEquipada = MAPA_PAJARO_SKIN[d.pajaroEquipado] || '🐦';
+  }).catch(() => {});
+}
+
+/* TIENDA: función central de compra basada en data-attributes */
+function inicializarTienda() {
+  document.querySelectorAll('.shop-item[data-tipo]').forEach(item => {
+    item.addEventListener('click', () => onShopItemClick(item));
+  });
+}
+
+function onShopItemClick(item) {
   const tipo  = item.dataset.tipo;
   const valor = item.dataset.valor;
-  const priceEl = item.querySelector('.shop-price');
-  if (!tipo || !valor || !priceEl) return;
+  if (!tipo || !valor) return;
+  if (tipo === 'avatar') { comprarOEquiparAvatar(valor, item.dataset.emoji); return; }
+  comprarOEquipar(tipo, valor);
+}
 
-  item.classList.remove('owned','equipped');
-  item.style.boxShadow = '';
-
-  if (tipo === 'avatar') {
-    const comprado = d.avatars && d.avatars[valor];
-    if (comprado) {
-      item.classList.add('owned');
-      priceEl.textContent = 'Equipar';
+function comprarOEquipar(tipo, valor) {
+  if (!currentUser || currentUser === 'admin') return;
+  const tipoInv = tipo === 'paleta' ? 'paletas' : tipo === 'bola' ? 'pelotas' : 'pajaros';
+  db.ref('usuarios/' + currentUser + '/inventario/' + tipoInv + '/' + valor).once('value', s => {
+    if (s.val() === true) {
+      equiparItem(tipo, valor);
     } else {
-      priceEl.textContent = '2000 pts';
+      procesarCompra(tipo, valor);
     }
+  });
+}
+
+function procesarCompra(tipo, valor) {
+  let precio = 0;
+  if (tipo === 'paleta') precio = PRECIO_PALETA[valor] || 0;
+  else if (tipo === 'bola')   precio = PRECIO_BOLA[valor]   || 0;
+  else if (tipo === 'pajaro') precio = PRECIO_PAJARO[valor]  || 0;
+  else if (tipo === 'vida')   precio = valor == 1 ? 5000 : valor == 3 ? 12000 : 20000;
+  if (!precio) { mostrarToast('Precio no definido', '#ff4444'); return; }
+  if (userBalance < precio) { reproducir('fail'); mostrarToast('❌ Saldo insuficiente', '#ff4444'); return; }
+  const ns = userBalance - precio;
+  db.ref('usuarios/' + currentUser).update({ saldo: ns }).then(() => {
+    reproducir('coin');
+    actualizarSaldoUI(ns);
+    if (tipo === 'vida') {
+      const cant = parseInt(valor);
+      db.ref('usuarios/' + currentUser + '/vidas_disponibles').transaction(v => (v || 0) + cant);
+      mostrarToast('❤️ ×' + cant + ' vidas añadidas', '#00FF00');
+    } else {
+      const tipoInv = tipo === 'paleta' ? 'paletas' : tipo === 'bola' ? 'pelotas' : 'pajaros';
+      db.ref('usuarios/' + currentUser + '/inventario/' + tipoInv + '/' + valor).set(true);
+      mostrarToast('✅ Comprado: ' + valor, '#00FFFF');
+      equiparItem(tipo, valor);
+    }
+    setTimeout(actualizarTiendaCompleta, 400);
+  });
+}
+
+/* CORREGIDO: comprar power-ups Candy */
+function comprar(tipo, valor) {
+  reproducir('click');
+  if (tipo === 'candy_rayo' || tipo === 'candy_bollo') {
+    const powerKey = tipo === 'candy_rayo' ? 'rayo' : 'bollo';
+    if (userBalance < 500) { reproducir('fail'); mostrarToast('❌ Saldo insuficiente', '#ff4444'); return; }
+    const ns = userBalance - 500;
+    db.ref('usuarios/' + currentUser).update({ saldo: ns }).then(() => {
+      db.ref('usuarios/' + currentUser + '/candyInv/' + powerKey).transaction(v => (v || 0) + 1).then(() => {
+        reproducir('coin'); actualizarSaldoUI(ns);
+        CANDY.syncInventory();
+        mostrarToast('⚡ Power-up ' + powerKey + ' ×1', '#FF00FF');
+      });
+    });
     return;
   }
+  if (tipo === 'vida') { procesarCompra(tipo, valor); return; }
+  comprarOEquipar(tipo, valor);
+}
 
-  const tipoInv = tipo === 'paleta' ? 'paletas' : tipo === 'bola' ? 'pelotas' : 'pajaros';
-  const tiene   = inv[tipoInv] && inv[tipoInv][valor];
+function equiparItem(tipo, valor) {
+  if (!currentUser || currentUser === 'admin') return;
+  const key = tipo === 'paleta' ? 'paletaEquipada' : tipo === 'bola' ? 'bolaEquipada' : tipo === 'pajaro' ? 'pajaroEquipado' : '';
+  if (!key) return;
+  db.ref('usuarios/' + currentUser).update({ [key]: valor }).then(() => {
+    reproducir('coin');
+    if (tipo === 'paleta') colorPalaEquipada = MAPA_PALETA_COLOR[valor] || '#00FFFF';
+    if (tipo === 'bola')   colorBolaEquipada  = MAPA_BOLA_COLOR[valor]  || '#FF0000';
+    if (tipo === 'pajaro') skinPajaroEquipada  = MAPA_PAJARO_SKIN[valor] || '🐦';
+    mostrarToast('✅ Equipado: ' + valor, '#00FF00');
+    actualizarTiendaCompleta();
+  });
+}
 
-  let estaEquipado = false;
-  if (tipo === 'paleta') estaEquipado = (d.paletaEquipada === valor);
-  if (tipo === 'bola')   estaEquipado = (d.bolaEquipada   === valor);
-  if (tipo === 'pajaro') estaEquipado = (d.pajaroEquipado === valor);
+function actualizarSaldoUI(ns) {
+  ['shop-balance','shop-balance-unificado'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.innerText = 'Saldo: ' + ns + ' €Eden€';
+  });
+  const cw = document.getElementById('ce-wallet-eden'); if (cw) cw.innerText = ns;
+}
 
-  if (estaEquipado) {
-    item.classList.add('equipped');
-    priceEl.textContent = '✅ EQUIPADO';
-  } else if (tiene) {
-    item.classList.add('owned');
-    priceEl.textContent = 'Equipar';
+/* CORREGIDO: actualización de tienda usando data-attributes en vez de parsear emojis */
+function actualizarTiendaCompleta() {
+  if (!currentUser || currentUser === 'admin') return;
+  const su = document.getElementById('shop-balance-unificado');
+  if (su) su.innerText = 'Saldo: ' + userBalance + ' €Eden€';
+
+  db.ref('usuarios/' + currentUser).once('value').then(snap => {
+    const d   = snap.val() || {};
+    const inv = d.inventario || {};
+    if (d.paletaEquipada) colorPalaEquipada = MAPA_PALETA_COLOR[d.paletaEquipada] || '#00FFFF';
+    if (d.bolaEquipada)   colorBolaEquipada  = MAPA_BOLA_COLOR[d.bolaEquipada]    || '#FF0000';
+    if (d.pajaroEquipado) skinPajaroEquipada  = MAPA_PAJARO_SKIN[d.pajaroEquipado] || '🐦';
+
+    document.querySelectorAll('.shop-item[data-tipo]').forEach(item => {
+      const tipo  = item.dataset.tipo;
+      const valor = item.dataset.valor;
+      const priceEl = item.querySelector('.shop-price');
+      if (!tipo || !valor || !priceEl) return;
+
+      item.classList.remove('owned','equipped');
+      item.style.boxShadow = '';
+
+      if (tipo === 'avatar') {
+        const comprado = d.avatars && d.avatars[valor];
+        if (comprado) {
+          item.classList.add('owned');
+          priceEl.textContent = 'Equipar';
+        } else {
+          priceEl.textContent = '2000 pts';
+        }
+        return;
+      }
+
+      const tipoInv = tipo === 'paleta' ? 'paletas' : tipo === 'bola' ? 'pelotas' : 'pajaros';
+      const tiene   = inv[tipoInv] && inv[tipoInv][valor];
+
+      let estaEquipado = false;
+      if (tipo === 'paleta') estaEquipado = (d.paletaEquipada === valor);
+      if (tipo === 'bola')   estaEquipado = (d.bolaEquipada   === valor);
+      if (tipo === 'pajaro') estaEquipado = (d.pajaroEquipado === valor);
+
+      if (estaEquipado) {
+        item.classList.add('equipped');
+        priceEl.textContent = '✅ EQUIPADO';
+      } else if (tiene) {
+        item.classList.add('owned');
+        priceEl.textContent = 'Equipar';
+      } else {
+        let precio = 0;
+        if (tipo === 'paleta') precio = PRECIO_PALETA[valor] || 0;
+        if (tipo === 'bola')   precio = PRECIO_BOLA[valor]   || 0;
+        if (tipo === 'pajaro') precio = PRECIO_PAJARO[valor]  || 0;
+        priceEl.textContent = precio ? precio + ' pts' : '-';
+      }
+    });
+
+    actualizarAvataresEnPerfil(d.avatars || {});
+  });
+}
+
+/* CORREGIDO: avatares se guardan en /avatars/ del usuario (consistente) */
+function comprarOEquiparAvatar(tipo, emoji) {
+  if (!currentUser || currentUser === 'admin') return;
+  db.ref('usuarios/' + currentUser + '/avatars/' + tipo).once('value', s => {
+    if (s.exists()) {
+      /* Equipar: simplemente cambiamos el avatar mostrado */
+      cambiarAvatar(emoji || tipo);
+    } else {
+      if (userBalance < 2000) { mostrarToast('❌ Necesitas 2000 €Eden€', '#ff4444'); return; }
+      const ns = userBalance - 2000;
+      db.ref('usuarios/' + currentUser).update({ saldo: ns }).then(() => {
+        db.ref('usuarios/' + currentUser + '/avatars/' + tipo).set(true).then(() => {
+          actualizarSaldoUI(ns);
+          reproducir('coin');
+          mostrarToast('🎭 Avatar ' + (emoji || tipo) + ' comprado!', '#FFD700');
+          cambiarAvatar(emoji || tipo);
+          setTimeout(actualizarTiendaCompleta, 400);
+        });
+      });
+    }
+  });
+}
+
+/* CORREGIDO: unifica la carga de avatares en el perfil */
+function actualizarAvataresEnPerfil(avataresComprados) {
+  const container = document.getElementById('avatar-options-container');
+  if (!container) return;
+
+  const loadAndRender = (avs) => {
+    const avatarEmojis = { samurai:'🗿', astronauta:'👨‍🚀', superheroe:'🦸‍♂️', pirata:'🏴‍☠️', mago:'🧙‍♂️' };
+    let html = `
+      <button class="avatar-opt" onclick="cargarLayoutAvatar()" title="Subir foto">📷</button>
+      <button class="avatar-opt" onclick="cambiarAvatar('👤')">👤</button>
+      <button class="avatar-opt" onclick="cambiarAvatar('🥷')">🥷</button>
+      <button class="avatar-opt" onclick="cambiarAvatar('🤖')">🤖</button>
+      <button class="avatar-opt" onclick="cambiarAvatar('👽')">👽</button>
+    `;
+    Object.keys(avs || {}).forEach(k => {
+      if (avatarEmojis[k]) html += `<button class="avatar-opt" onclick="cambiarAvatar('${avatarEmojis[k]}')">${avatarEmojis[k]}</button>`;
+    });
+    container.innerHTML = html;
+  };
+
+  if (avataresComprados) {
+    loadAndRender(avataresComprados);
   } else {
-    let precio = 0;
-    if (tipo === 'paleta') precio = PRECIO_PALETA[valor] || 0;
-    if (tipo === 'bola')   precio = PRECIO_BOLA[valor]   || 0;
-    if (tipo === 'pajaro') precio = PRECIO_PAJARO[valor]  || 0;
-    priceEl.textContent = precio ? precio + ' pts' : '-';
+    db.ref('usuarios/' + currentUser + '/avatars').once('value', s => loadAndRender(s.val() || {}));
   }
-});
+}
 
-actualizarAvataresEnPerfil(d.avatars || {});
-}); }
-function comprarOEquiparAvatar(tipo, emoji) { if (!currentUser || currentUser === 'admin') return; db.ref('usuarios/' + currentUser + '/avatars/' + tipo).once('value', s => { if (s.exists()) { cambiarAvatar(emoji || tipo); } else { if (userBalance < 2000) { mostrarToast('❌ Necesitas 2000 €Eden€', '#ff4444'); return; } const ns = userBalance - 2000; db.ref('usuarios/' + currentUser).update({ saldo: ns }).then(() => { db.ref('usuarios/' + currentUser + '/avatars/' + tipo).set(true).then(() => { actualizarSaldoUI(ns); reproducir('coin'); MISSIONS.updateProgress('shop', 1); mostrarToast('🎭 Avatar ' + (emoji || tipo) + ' comprado!', '#FFD700'); cambiarAvatar(emoji || tipo); setTimeout(actualizarTiendaCompleta, 400); }); }); } }); }
-function actualizarAvataresEnPerfil(avataresComprados) { const container = document.getElementById('avatar-options-container'); if (!container) return;
-const loadAndRender = (avs) => { const avatarEmojis = { samurai:'🗿', astronauta:'👨‍🚀', superheroe:'🦸‍♂️', pirata:'🏴‍☠️', mago:'🧙‍♂️' }; let html = <button class="avatar-opt" onclick="cargarLayoutAvatar()" title="Subir foto">📷</button> <button class="avatar-opt" onclick="cambiarAvatar('👤')">👤</button> <button class="avatar-opt" onclick="cambiarAvatar('🥷')">🥷</button> <button class="avatar-opt" onclick="cambiarAvatar('🤖')">🤖</button> <button class="avatar-opt" onclick="cambiarAvatar('👽')">👽</button> ; Object.keys(avs || {}).forEach(k => { if (avatarEmojis[k]) html += <button class="avatar-opt" onclick="cambiarAvatar('${avatarEmojis[k]}')">${avatarEmojis[k]}</button>; }); container.innerHTML = html; };
-if (avataresComprados) { loadAndRender(avataresComprados); } else { db.ref('usuarios/' + currentUser + '/avatars').once('value', s => loadAndRender(s.val() || {})); } }
-function cambiarTabTienda(seccion) { ['ladrillos','flappy','candy','avatar'].forEach(t => { const tab = document.getElementById('shop-tab-' + t); const panel = document.getElementById('shop-panel-' + t); const esActivo = (t === seccion); if (tab) tab.classList.toggle('active', esActivo); if (panel) panel.classList.toggle('hidden', !esActivo); }); actualizarTiendaCompleta(); }
-/* ════════════════════ SISTEMA DE VIDAS ════════════════════ */ function usarVida(juego) { if (!currentUser || currentUser === 'admin') return; db.ref('usuarios/' + currentUser + '/vidas_disponibles').once('value', s => { const vidas = s.val() || 0; if (vidas <= 0) { reproducir('fail'); mostrarToast('Sin vidas. Compra en la tienda', '#ff4444'); return; } db.ref('usuarios/' + currentUser + '/vidas_disponibles').set(vidas - 1).then(() => { reproducir('coin'); if (juego === 'ladrillos') { document.getElementById('game-over-menu').classList.add('hidden'); bricksGameActive = true; const rad = (bricksCurrentDifficulty === 'eden') ? 5 : 8; bricksBalls = [{ x: bricksCanvas.width / 2, y: bricksCanvas.height - 100, dx: 4.5, dy: -4.5, radius: rad }]; function gl() { if (bricksGameActive) { bricksDraw(); bricksGameInterval = requestAnimationFrame(gl); } } gl(); } else if (juego === 'flappy') { document.getElementById('flappy-over-menu').classList.add('hidden'); fBird = { x: 70, y: FH / 2, vy: 0, r: 20 }; fActive = true; fLoop(); } }); }); }
-/* ════════════════════ OVERLAYS RANKING ════════════════════ */ function toggleRankIngame(juego) { const m = document.getElementById('rank-ingame-' + juego); if (m.classList.contains('hidden')) { m.classList.remove('hidden'); cargarRankIngame(juego, 'mundial'); if (juego === 'flappy') { document.getElementById('flappy-start-menu').classList.add('hidden'); document.getElementById('flappy-over-menu').classList.add('hidden'); } else if (juego === 'candy') { document.getElementById('candy-start-menu').style.opacity='0'; document.getElementById('candy-start-menu').style.pointerEvents='none'; document.getElementById('candy-over-menu').classList.add('ce-hidden'); document.getElementById('candy-shop-menu').classList.add('ce-hidden'); } else if (juego === 'ladrillos') { document.getElementById('game-over-menu').classList.add('hidden'); document.getElementById('difficulty-menu').classList.add('hidden'); } } else { m.classList.add('hidden'); if (juego === 'flappy' && !fActive) document.getElementById('flappy-start-menu').classList.remove('hidden'); else if (juego === 'ladrillos' && !bricksGameActive) document.getElementById('difficulty-menu').classList.remove('hidden'); } } function cerrarRankIngame(juego) { document.getElementById('rank-ingame-' + juego).classList.add('hidden'); } function cambiarTabRank(juego, modo) { const pre = juego === 'ladrillos' ? 'l' : juego === 'flappy' ? 'f' : 'c'; document.getElementById('rtab-' + pre + '-mundial').classList.toggle('active', modo === 'mundial'); document.getElementById('rtab-' + pre + '-amigos').classList.toggle('active', modo === 'amigos'); cargarRankIngame(juego, modo); } function cargarRankIngame(juego, modo) { const cont = document.getElementById('rank-content-' + juego); const campoP = juego === 'flappy' ? 'puntosFlappy' : juego === 'candy' ? 'candyBestLevel' : 'puntos'; const unidad = juego === 'candy' ? 'Nv.' : ''; const etiqueta = juego === 'candy' ? '' : juego === 'ladrillos' ? ' pts' : ' pts'; cont.innerHTML = '<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">Cargando…</p>'; if (modo === 'mundial') { db.ref('usuarios').orderByChild(campoP).limitToLast(10).once('value', s => { const rows = []; s.forEach(c => { const v = c.val(); if ((v[campoP] || 0) > 0) rows.push({ name: v.nombre || c.key, pts: v[campoP] || 0 }); }); rows.reverse(); cont.innerHTML = ''; if (!rows.length) { cont.innerHTML = '<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">Sin datos aún.</p>'; return; } rows.forEach((u, i) => { const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''; cont.innerHTML += '<div class="rank-row ' + cls + '"><span>' + (i+1) + '. ' + escapeHtml(u.name) + '</span><span>' + unidad + u.pts + etiqueta + '</span></div>'; }); }); } else { db.ref('amigos/' + currentUser).once('value', sa => { if (!sa.exists()) { cont.innerHTML = '<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">No tienes amigos aún.</p>'; return; } const keys = [currentUser]; sa.forEach(c => { const k = c.val().key || c.key; if (k) keys.push(k); }); Promise.all(keys.map(k => db.ref('usuarios/' + k).once('value'))).then(snaps => { const rows = []; snaps.forEach(sn => { if (sn.exists()) { const v = sn.val(); rows.push({ name: v.nombre || sn.key, pts: v[campoP] || 0 }); } }); rows.sort((a, b) => b.pts - a.pts); cont.innerHTML = ''; rows.forEach((u, i) => { const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''; cont.innerHTML += '<div class="rank-row ' + cls + '"><span>' + (i+1) + '. ' + escapeHtml(u.name) + '</span><span>' + unidad + u.pts + etiqueta + '</span></div>'; }); }); }); } }
-/* ════════════════════ AMIGOS ════════════════════ */ function buscarAmigos() { const q = document.getElementById('buscar-amigo-input').value.trim(); const msg = document.getElementById('msg-amigo'); const res = document.getElementById('search-results'); res.innerHTML = ''; msg.innerText = ''; if (!q) { msg.innerText = "Escribe un ID o nombre."; return; } db.ref('usuarios/' + q).once('value', s => { if (s.exists() && q !== currentUser) { _mostrarResultado(res, q, s.val().nombre || q); return; } db.ref('usuarios').orderByChild('nombre').startAt(q).endAt(q + '\uf8ff').limitToFirst(10).once('value', snap => { if (!snap.exists()) { msg.innerText = "❌ Sin resultados."; return; } snap.forEach(c => { if (c.key !== currentUser) _mostrarResultado(res, c.key, c.val().nombre || c.key); }); }); }); } function _mostrarResultado(container, key, nombre) { const div = document.createElement('div'); div.className = 'search-result-item'; div.innerHTML = '<span style="color:#00FFFF">👤 ' + escapeHtml(nombre) + '</span>' + '<span style="color:#aaa;font-size:10px;margin:0 5px">' + key.substring(0, 16) + '…</span>' + '<button class="btn-add-result" onclick="añadirAmigoPorKey(\'' + key + '\',\'' + escapeAttr(nombre) + '\')">+</button>'; container.appendChild(div); } function añadirAmigoPorKey(amigoKey, nombre) { const msg = document.getElementById('msg-amigo'); if (amigoKey === currentUser) { msg.innerText = "Ese eres tú 😅"; return; } db.ref('amigos/' + currentUser + '/' + amigoKey).once('value', ya => { if (ya.exists()) { msg.innerText = "Ya es tu amigo ✅"; return; } db.ref('amigos/' + currentUser + '/' + amigoKey).set({ nombre: nombre, key: amigoKey }).then(() => { mostrarToast('✅ ¡' + nombre + ' añadido!', '#00FFFF'); document.getElementById('search-results').innerHTML = ''; document.getElementById('buscar-amigo-input').value = ''; document.getElementById('msg-amigo').innerText = ''; reproducir('coin'); cargarListaAmigos(); MISSIONS.updateProgress('friends', 1); }); }); } function toggleListaAmigos() { const w = document.getElementById('lista-amigos-wrap'); if (w.classList.contains('open')) w.classList.remove('open'); else { w.classList.add('open'); cargarListaAmigos(); } } function cargarListaAmigos() { const c = document.getElementById('lista-amigos'); db.ref('amigos/' + currentUser).once('value', s => { c.innerHTML = ''; if (!s.exists()) { c.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">No tienes amigos aún.</p>'; return; } s.forEach(child => { const a = child.val(), nombre = a.nombre || a.key, key = a.key || child.key; const div = document.createElement('div'); div.className = 'amigo-item'; div.innerHTML = '<span class="amigo-nombre">👤 ' + escapeHtml(nombre) + '</span>' + '<button class="btn-hablar" onclick="abrirChatPrivado(\'' + key + '\',\'' + escapeAttr(nombre) + '\')">Hablar 💬</button>'; c.appendChild(div); }); }); }
-/* ════════════════════ CHAT ════════════════════ */ let chatModo = 'global', chatAmigoKey = '', chatAmigoNombre = '', chatListener = null, chatRef = null, tabActual = 'global'; function getConversationID(a, b) { return [a, b].sort().join('__'); } function pararEscuchaChat() { if (chatRef && chatListener) { chatRef.off('value', chatListener); chatListener = null; chatRef = null; } }
-function cambiarTabChat(modo) { tabActual = modo; ['global','amigos','notas'].forEach(t => document.getElementById('tab-' + t).classList.toggle('active', t === modo)); const pm = document.getElementById('panel-mensajes'), pn = document.getElementById('panel-notas'), hd = document.getElementById('chat-amigo-header'); if (modo === 'notas') { pm.classList.add('hidden'); pn.classList.remove('hidden'); hd.classList.add('hidden'); cargarTareas(); } else { pm.classList.remove('hidden'); pn.classList.add('hidden'); if (modo === 'global') { hd.classList.add('hidden'); chatModo = 'global'; escucharChatGlobal(); } else { chatModo = 'amigos'; if (chatAmigoKey) { hd.classList.remove('hidden'); hd.innerText = '💬 Hablando con ' + chatAmigoNombre; escucharChatPrivado(chatAmigoKey); } else { hd.classList.remove('hidden'); hd.innerText = 'Selecciona un amigo desde ⚙️ Ajustes'; document.getElementById('chat-box').innerHTML = '<p style="color:#aaa;font-size:12px;text-align:center;padding:20px">Ve a Ajustes → toca "Hablar" junto a un amigo.</p>'; pararEscuchaChat(); } } } }
-function abrirChatPrivado(amigoKey, amigoNombre) { chatAmigoKey = amigoKey; chatAmigoNombre = amigoNombre; mostrarVista('vista-chat'); cambiarTabChat('amigos'); }
-function escucharChatGlobal() { pararEscuchaChat(); chatRef = db.ref('chat_global').limitToLast(25); chatListener = chatRef.on('value', s => { const box = document.getElementById('chat-box'); box.innerHTML = ''; s.forEach(c => { const m = c.val(), mio = m.user === currentUser; box.innerHTML += '<div style="text-align:' + (mio?'right':'left') + ';margin-bottom:6px;font-size:13px;padding-bottom:4px;border-bottom:1px solid rgba(0,255,0,.1)">' + '<b style="color:' + (mio?'#00FFFF':'#00FF00') + '">' + escapeHtml(m.user) + ':</b> ' + escapeHtml(m.text) + '</div>'; }); box.scrollTop = box.scrollHeight; }); } function escucharChatPrivado(amigoKey) { pararEscuchaChat(); const convID = getConversationID(currentUser, amigoKey); chatRef = db.ref('mensajes-privados/' + convID).limitToLast(30); chatListener = chatRef.on('value', s => { const box = document.getElementById('chat-box'); box.innerHTML = ''; if (!s.exists()) { box.innerHTML = '<p style="color:#aaa;font-size:12px;text-align:center;padding:20px">Sé el primero en decir algo 👋</p>'; return; } s.forEach(c => { const m = c.val(), mio = m.user === currentUser; box.innerHTML += '<div style="text-align:' + (mio?'right':'left') + ';margin-bottom:6px;font-size:13px;border-bottom:1px solid rgba(0,255,255,.07);padding-bottom:4px">' + '<b style="color:' + (mio?'#00FFFF':'#FFD700') + '">' + (mio ? 'Tú' : escapeHtml(m.user)) + ':</b> ' + escapeHtml(m.text) + '</div>'; }); box.scrollTop = box.scrollHeight; }); } function escucharChat() { tabActual = 'global'; chatModo = 'global'; ['global','amigos','notas'].forEach(t => document.getElementById('tab-' + t).classList.toggle('active', t === 'global')); document.getElementById('panel-mensajes').classList.remove('hidden'); document.getElementById('panel-notas').classList.add('hidden'); document.getElementById('chat-amigo-header').classList.add('hidden'); escucharChatGlobal(); } function enviarMensaje() { const inp = document.getElementById('chat-input'), texto = inp.value.trim(); if (!texto || !currentUser) return; const avatarEl = document.getElementById('avatar-img'); const avatarTxt = avatarEl ? (avatarEl.innerText || "👤") : "👤"; if (chatModo === 'global') { db.ref('chat_global').push({ user: currentUser, text: texto, avatar: avatarTxt, ts: Date.now() }); } else { if (!chatAmigoKey) return; db.ref('mensajes-privados/' + getConversationID(currentUser, chatAmigoKey)).push({ user: currentUser, text: texto, ts: Date.now() }); } inp.value = ''; reproducir('click'); MISSIONS.updateProgress('chat', 1); }
-/* ═══════════════════════════════════════════════════════════════ JUEGO 1 — LADRILLOS ═══════════════════════════════════════════════════════════════ */ const bricksCanvas = document.getElementById("gameCanvas"), bricksCtx = bricksCanvas.getContext("2d"); const menuGameOver = document.getElementById("game-over-menu"), menuDifficulty = document.getElementById("difficulty-menu");
-let bricksBalls = [], bricksBricksList = [], bricksPaddleWidth = 90, bricksPaddleX, bricksScore = 0, bricksGameActive = false, bricksGameInterval, bricksIsFireBall = false, bricksCurrentDifficulty = 'terrestre';
-document.addEventListener("mousemove", e => { if (!bricksGameActive) return; const rect = bricksCanvas.getBoundingClientRect(), relX = e.clientX - rect.left; if (relX > 0 && relX < bricksCanvas.width) bricksPaddleX = relX - bricksPaddleWidth / 2; }); bricksCanvas.addEventListener("touchmove", e => { if (!bricksGameActive) return; e.preventDefault(); const rect = bricksCanvas.getBoundingClientRect(), scaleX = bricksCanvas.width / rect.width; const relX = (e.touches[0].clientX - rect.left) * scaleX; if (relX > 0 && relX < bricksCanvas.width) bricksPaddleX = relX - bricksPaddleWidth / 2; }, { passive: false });
-function abrirMenuDificultad() { reproducir('click'); document.querySelectorAll('.container,.vista-juego-base').forEach(c => c.classList.add('hidden')); ['exit-btn','settings-btn','shop-btn-izq','chat-btn','missions-btn'].forEach(b => { const el = document.getElementById(b); if (el) el.classList.add('hidden'); }); document.getElementById('vista-juego').classList.remove('hidden'); document.getElementById('pantalla-oscura').classList.remove('hidden'); document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden')); document.getElementById('rank-ingame-ladrillos').classList.add('hidden'); menuDifficulty.classList.remove('hidden'); } function iniciarJuegoEden(diff) { reproducir('click'); cancelAnimationFrame(bricksGameInterval); document.getElementById('rank-ingame-ladrillos').classList.add('hidden'); cargarEquipamientoDesdeDB().then(() => { _bricksReset(diff); bricksGameActive = true; MISSIONS.updateProgress('count', 1); function gl() { if (bricksGameActive) { bricksDraw(); bricksGameInterval = requestAnimationFrame(gl); } } gl(); }); } function salirDelJuego() { reproducir('click'); bricksGameActive = false; cancelAnimationFrame(bricksGameInterval); mostrarVista('vista-agenda'); }
-function _bricksReset(diff) { bricksCurrentDifficulty = diff; document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden')); bricksCanvas.style.cursor = "none"; if (diff === 'eden') { bricksPaddleWidth = 55; bricksBalls = [{ x: bricksCanvas.width / 2, y: bricksCanvas.height - 100, dx: 6.5, dy: -6.5, radius: 5 }]; } else if (diff === 'semidios') { bricksPaddleWidth = 75; bricksBalls = [{ x: bricksCanvas.width / 2, y: bricksCanvas.height - 100, dx: 5, dy: -5, radius: 7 }]; } else { bricksPaddleWidth = 90; bricksBalls = [{ x: bricksCanvas.width / 2, y: bricksCanvas.height - 100, dx: 4, dy: -4, radius: 8 }]; } bricksPaddleX = (bricksCanvas.width - bricksPaddleWidth) / 2; bricksIsFireBall = false; bricksScore = 0; document.getElementById("game-score").innerText = "€Eden€: 0"; bricksBricksList = []; const rows = diff === 'terrestre' ? 5 : diff === 'semidios' ? 8 : 12; const cols = diff === 'terrestre' ? 7 : diff === 'semidios' ? 12 : 18; const bw = (bricksCanvas.width - 40) / cols, bh = diff === 'terrestre' ? 20 : 12; for (let c = 0; c < cols; c++) { bricksBricksList[c] = []; for (let r = 0; r < rows; r++) { let type = "normal", life = 1; if (diff === 'semidios' && Math.random() < .2) { type = "hard"; life = 2; } if (diff === 'eden') { if (Math.random() < .12) { type = "wall"; life = 999; } else if (Math.random() < .28) { type = "hard"; life = 2; } } bricksBricksList[c][r] = { x: c * (bw - 4 + 4) + 15, y: r * (bh - 4 + 4) + 50, status: life, type, w: bw - 4, h: bh - 4 }; } } }
-function bricksDraw() { if (!bricksGameActive) return; bricksCtx.clearRect(0, 0, bricksCanvas.width, bricksCanvas.height); bricksBricksList.forEach(col => col.forEach(b => { if (b.status > 0) { if (b.type === "wall") { bricksCtx.fillStyle = "#555"; bricksCtx.fillRect(b.x, b.y, b.w, b.h); bricksCtx.strokeStyle = "#888"; bricksCtx.lineWidth = 1; bricksCtx.strokeRect(b.x, b.y, b.w, b.h); } else if (b.type === "hard") { bricksCtx.fillStyle = "#FFD700"; bricksCtx.fillRect(b.x, b.y, b.w, b.h); bricksCtx.strokeStyle = "rgba(255,255,255,.6)"; bricksCtx.lineWidth = 1; bricksCtx.strokeRect(b.x, b.y, b.w, b.h); } else { if (imgLadrillo.complete && imgLadrillo.naturalWidth > 0) bricksCtx.drawImage(imgLadrillo, b.x, b.y, b.w, b.h); else { bricksCtx.fillStyle = "#FF4444"; bricksCtx.fillRect(b.x, b.y, b.w, b.h); } } } })); bricksBalls.forEach((b, index) => { bricksCtx.beginPath(); bricksCtx.arc(b.x, b.y, b.radius, 0, Math.PI * 2); if (colorBolaEquipada === 'rainbow') { const grad = bricksCtx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.radius); grad.addColorStop(0, '#fff'); grad.addColorStop(0.4, '#ff0'); grad.addColorStop(0.7, '#0f0'); grad.addColorStop(1, '#00f'); bricksCtx.fillStyle = grad; } else if (colorBolaEquipada === 'fire') { const grad = bricksCtx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.radius); grad.addColorStop(0, '#fff'); grad.addColorStop(0.4, '#ffcc00'); grad.addColorStop(0.8, '#ff4500'); grad.addColorStop(1, '#8b0000'); bricksCtx.fillStyle = grad; } else { bricksCtx.fillStyle = bricksIsFireBall ? "#FFA500" : colorBolaEquipada; } bricksCtx.shadowColor = bricksCtx.fillStyle === '#FFFFFF' ? '#aaa' : bricksCtx.fillStyle; bricksCtx.shadowBlur = 6; bricksCtx.fill(); bricksCtx.closePath(); bricksCtx.shadowBlur = 0;
-bricksBricksList.forEach(col => col.forEach(brick => {
-  if (brick.status > 0 && b.x > brick.x && b.x < brick.x + brick.w && b.y > brick.y && b.y < brick.y + brick.h) {
-    b.dy = -b.dy;
-    if (brick.type !== "wall") {
-      brick.status--;
-      reproducir('hit');
-      if (brick.status === 0) { bricksScore++; document.getElementById("game-score").innerText = "€Eden€: " + bricksScore; }
+/* CORREGIDO: cambiarTabTienda usa classList correctamente */
+function cambiarTabTienda(seccion) {
+  ['ladrillos','flappy','candy','avatar'].forEach(t => {
+    const tab   = document.getElementById('shop-tab-' + t);
+    const panel = document.getElementById('shop-panel-' + t);
+    const esActivo = (t === seccion);
+    if (tab)   tab.classList.toggle('active', esActivo);
+    if (panel) panel.classList.toggle('hidden', !esActivo);
+  });
+  actualizarTiendaCompleta();
+}
+
+/* ════════════════════ SISTEMA DE VIDAS ════════════════════ */
+function usarVida(juego) {
+  if (!currentUser || currentUser === 'admin') return;
+  db.ref('usuarios/' + currentUser + '/vidas_disponibles').once('value', s => {
+    const vidas = s.val() || 0;
+    if (vidas <= 0) { reproducir('fail'); mostrarToast('Sin vidas. Compra en la tienda', '#ff4444'); return; }
+    db.ref('usuarios/' + currentUser + '/vidas_disponibles').set(vidas - 1).then(() => {
+      reproducir('coin');
+      if (juego === 'ladrillos') {
+        document.getElementById('game-over-menu').classList.add('hidden');
+        bricksGameActive = true;
+        const rad = (bricksCurrentDifficulty === 'eden') ? 5 : 8;
+        bricksBalls = [{ x: bricksCanvas.width / 2, y: bricksCanvas.height - 100, dx: 4.5, dy: -4.5, radius: rad }];
+        function gl() { if (bricksGameActive) { bricksDraw(); bricksGameInterval = requestAnimationFrame(gl); } } gl();
+      } else if (juego === 'flappy') {
+        document.getElementById('flappy-over-menu').classList.add('hidden');
+        fBird = { x: 70, y: FH / 2, vy: 0, r: 20 }; fActive = true; fLoop();
+      }
+    });
+  });
+}
+
+/* ════════════════════ OVERLAYS RANKING ════════════════════ */
+function toggleRankIngame(juego) {
+  const m = document.getElementById('rank-ingame-' + juego);
+  if (m.classList.contains('hidden')) {
+    m.classList.remove('hidden');
+    cargarRankIngame(juego, 'mundial');
+    if (juego === 'flappy')   { document.getElementById('flappy-start-menu').classList.add('hidden'); document.getElementById('flappy-over-menu').classList.add('hidden'); }
+    else if (juego === 'candy')   { document.getElementById('candy-start-menu').style.opacity='0'; document.getElementById('candy-start-menu').style.pointerEvents='none'; document.getElementById('candy-over-menu').classList.add('ce-hidden'); document.getElementById('candy-shop-menu').classList.add('ce-hidden'); }
+    else if (juego === 'ladrillos') { document.getElementById('game-over-menu').classList.add('hidden'); document.getElementById('difficulty-menu').classList.add('hidden'); }
+  } else {
+    m.classList.add('hidden');
+    if (juego === 'flappy' && !fActive) document.getElementById('flappy-start-menu').classList.remove('hidden');
+    else if (juego === 'ladrillos' && !bricksGameActive) document.getElementById('difficulty-menu').classList.remove('hidden');
+  }
+}
+function cerrarRankIngame(juego) { document.getElementById('rank-ingame-' + juego).classList.add('hidden'); }
+function cambiarTabRank(juego, modo) {
+  const pre = juego === 'ladrillos' ? 'l' : juego === 'flappy' ? 'f' : 'c';
+  document.getElementById('rtab-' + pre + '-mundial').classList.toggle('active', modo === 'mundial');
+  document.getElementById('rtab-' + pre + '-amigos').classList.toggle('active',  modo === 'amigos');
+  cargarRankIngame(juego, modo);
+}
+function cargarRankIngame(juego, modo) {
+  const cont = document.getElementById('rank-content-' + juego);
+  const campoP = juego === 'flappy' ? 'puntosFlappy' : juego === 'candy' ? 'candyBestLevel' : 'puntos';
+  const unidad = juego === 'candy' ? 'Nv.' : '';
+  const etiqueta = juego === 'candy' ? '' : juego === 'ladrillos' ? ' pts' : ' pts';
+  cont.innerHTML = '<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">Cargando…</p>';
+  if (modo === 'mundial') {
+    db.ref('usuarios').orderByChild(campoP).limitToLast(10).once('value', s => {
+      const rows = [];
+      s.forEach(c => { const v = c.val(); if ((v[campoP] || 0) > 0) rows.push({ name: v.nombre || c.key, pts: v[campoP] || 0 }); });
+      rows.reverse(); cont.innerHTML = '';
+      if (!rows.length) { cont.innerHTML = '<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">Sin datos aún.</p>'; return; }
+      rows.forEach((u, i) => {
+        const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+        cont.innerHTML += '<div class="rank-row ' + cls + '"><span>' + (i+1) + '. ' + escapeHtml(u.name) + '</span><span>' + unidad + u.pts + etiqueta + '</span></div>';
+      });
+    });
+  } else {
+    db.ref('amigos/' + currentUser).once('value', sa => {
+      if (!sa.exists()) { cont.innerHTML = '<p style="color:#aaa;font-size:11px;text-align:center;padding:8px">No tienes amigos aún.</p>'; return; }
+      const keys = [currentUser];
+      sa.forEach(c => { const k = c.val().key || c.key; if (k) keys.push(k); });
+      Promise.all(keys.map(k => db.ref('usuarios/' + k).once('value'))).then(snaps => {
+        const rows = [];
+        snaps.forEach(sn => { if (sn.exists()) { const v = sn.val(); rows.push({ name: v.nombre || sn.key, pts: v[campoP] || 0 }); } });
+        rows.sort((a, b) => b.pts - a.pts); cont.innerHTML = '';
+        rows.forEach((u, i) => {
+          const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+          cont.innerHTML += '<div class="rank-row ' + cls + '"><span>' + (i+1) + '. ' + escapeHtml(u.name) + '</span><span>' + unidad + u.pts + etiqueta + '</span></div>';
+        });
+      });
+    });
+  }
+}
+
+/* ════════════════════ AMIGOS ════════════════════ */
+function buscarAmigos() {
+  const q = document.getElementById('buscar-amigo-input').value.trim();
+  const msg = document.getElementById('msg-amigo');
+  const res = document.getElementById('search-results');
+  res.innerHTML = ''; msg.innerText = '';
+  if (!q) { msg.innerText = "Escribe un ID o nombre."; return; }
+  db.ref('usuarios/' + q).once('value', s => {
+    if (s.exists() && q !== currentUser) { _mostrarResultado(res, q, s.val().nombre || q); return; }
+    db.ref('usuarios').orderByChild('nombre').startAt(q).endAt(q + '\uf8ff').limitToFirst(10).once('value', snap => {
+      if (!snap.exists()) { msg.innerText = "❌ Sin resultados."; return; }
+      snap.forEach(c => { if (c.key !== currentUser) _mostrarResultado(res, c.key, c.val().nombre || c.key); });
+    });
+  });
+}
+function _mostrarResultado(container, key, nombre) {
+  const div = document.createElement('div'); div.className = 'search-result-item';
+  div.innerHTML = '<span style="color:#00FFFF">👤 ' + escapeHtml(nombre) + '</span>' +
+    '<span style="color:#aaa;font-size:10px;margin:0 5px">' + key.substring(0, 16) + '…</span>' +
+    '<button class="btn-add-result" onclick="añadirAmigoPorKey(\'' + key + '\',\'' + escapeAttr(nombre) + '\')">+</button>';
+  container.appendChild(div);
+}
+function añadirAmigoPorKey(amigoKey, nombre) {
+  const msg = document.getElementById('msg-amigo');
+  if (amigoKey === currentUser) { msg.innerText = "Ese eres tú 😅"; return; }
+  db.ref('amigos/' + currentUser + '/' + amigoKey).once('value', ya => {
+    if (ya.exists()) { msg.innerText = "Ya es tu amigo ✅"; return; }
+    db.ref('amigos/' + currentUser + '/' + amigoKey).set({ nombre: nombre, key: amigoKey }).then(() => {
+      mostrarToast('✅ ¡' + nombre + ' añadido!', '#00FFFF');
+      document.getElementById('search-results').innerHTML = '';
+      document.getElementById('buscar-amigo-input').value = '';
+      document.getElementById('msg-amigo').innerText = '';
+      reproducir('coin'); cargarListaAmigos();
+    });
+  });
+}
+function toggleListaAmigos() {
+  const w = document.getElementById('lista-amigos-wrap');
+  if (w.classList.contains('open')) w.classList.remove('open');
+  else { w.classList.add('open'); cargarListaAmigos(); }
+}
+function cargarListaAmigos() {
+  const c = document.getElementById('lista-amigos');
+  db.ref('amigos/' + currentUser).once('value', s => {
+    c.innerHTML = '';
+    if (!s.exists()) { c.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">No tienes amigos aún.</p>'; return; }
+    s.forEach(child => {
+      const a = child.val(), nombre = a.nombre || a.key, key = a.key || child.key;
+      const div = document.createElement('div'); div.className = 'amigo-item';
+      div.innerHTML = '<span class="amigo-nombre">👤 ' + escapeHtml(nombre) + '</span>' +
+        '<button class="btn-hablar" onclick="abrirChatPrivado(\'' + key + '\',\'' + escapeAttr(nombre) + '\')">Hablar 💬</button>';
+      c.appendChild(div);
+    });
+  });
+}
+
+/* ════════════════════ CHAT ════════════════════ */
+let chatModo = 'global', chatAmigoKey = '', chatAmigoNombre = '', chatListener = null, chatRef = null, tabActual = 'global';
+function getConversationID(a, b) { return [a, b].sort().join('__'); }
+function pararEscuchaChat() { if (chatRef && chatListener) { chatRef.off('value', chatListener); chatListener = null; chatRef = null; } }
+
+function cambiarTabChat(modo) {
+  tabActual = modo;
+  ['global','amigos','notas'].forEach(t => document.getElementById('tab-' + t).classList.toggle('active', t === modo));
+  const pm = document.getElementById('panel-mensajes'), pn = document.getElementById('panel-notas'), hd = document.getElementById('chat-amigo-header');
+  if (modo === 'notas') {
+    pm.classList.add('hidden'); pn.classList.remove('hidden'); hd.classList.add('hidden'); cargarTareas();
+  } else {
+    pm.classList.remove('hidden'); pn.classList.add('hidden');
+    if (modo === 'global') {
+      hd.classList.add('hidden'); chatModo = 'global'; escucharChatGlobal();
+    } else {
+      chatModo = 'amigos';
+      if (chatAmigoKey) {
+        hd.classList.remove('hidden'); hd.innerText = '💬 Hablando con ' + chatAmigoNombre;
+        escucharChatPrivado(chatAmigoKey);
+      } else {
+        hd.classList.remove('hidden'); hd.innerText = 'Selecciona un amigo desde ⚙️ Ajustes';
+        document.getElementById('chat-box').innerHTML = '<p style="color:#aaa;font-size:12px;text-align:center;padding:20px">Ve a Ajustes → toca "Hablar" junto a un amigo.</p>';
+        pararEscuchaChat();
+      }
     }
   }
-}));
-if (b.x + b.dx > bricksCanvas.width - b.radius || b.x + b.dx < b.radius) b.dx = -b.dx;
-if (b.y + b.dy < b.radius) b.dy = -b.dy;
-else if (b.y + b.dy > bricksCanvas.height - 80) {
-  if (b.x > bricksPaddleX && b.x < bricksPaddleX + bricksPaddleWidth) {
-    b.dy = -Math.abs(b.dy);
-    const hitPos = (b.x - bricksPaddleX) / bricksPaddleWidth - 0.5;
-    b.dx += hitPos * 2;
-    b.dx = Math.max(-8, Math.min(8, b.dx));
-    reproducir('bounce');
-  } else if (b.y > bricksCanvas.height) {
-    bricksBalls.splice(index, 1);
-  }
 }
-b.x += b.dx; b.y += b.dy;
-});
-bricksCtx.shadowColor = colorPalaEquipada; bricksCtx.shadowBlur = 10; bricksCtx.fillStyle = colorPalaEquipada; bricksCtx.beginPath(); bricksCtx.roundRect(bricksPaddleX, bricksCanvas.height - 70, bricksPaddleWidth, 12, 6); bricksCtx.fill(); bricksCtx.shadowBlur = 0;
-if (bricksBalls.length === 0) { reproducir('fail'); bricksGameActive = false; _bricksEndPartida(); }
-const quedanRompibles = bricksBricksList.some(col => col.some(b => b.status > 0 && b.type !== 'wall')); if (!quedanRompibles && bricksGameActive) { bricksGameActive = false; _bricksVictoria(); } }
-function _bricksVictoria() { const recompensa = bricksCurrentDifficulty === 'terrestre' ? 150 : bricksCurrentDifficulty === 'semidios' ? 350 : 800; if (currentUser && currentUser !== 'admin') { db.ref('usuarios/' + currentUser).update({ saldo: userBalance + recompensa }); db.ref('usuarios/' + currentUser + '/puntos').once('value', sv => { if (bricksScore > (sv.val() || 0)) db.ref('usuarios/' + currentUser + '/puntos').set(bricksScore); }); db.ref('usuarios/' + currentUser + '/rankingBricks').transaction(v => (v || 0) + 1); darXPporJuego(bricksScore + 50); MISSIONS.updateProgress('coins', recompensa); } menuGameOver.classList.remove("hidden"); menuGameOver.innerHTML = <h2 style="color:#FFD700;margin-bottom:8px;text-shadow:0 0 15px #FFD700">🏆 ¡VICTORIA!</h2> <p style="color:#00FF00;font-size:13px;margin-bottom:12px"> Puntuación: ${bricksScore} pts<br> <span style="color:#FFD700">+${recompensa} €Eden€ ganados 🎉</span> </p> <button class="game-btn-neon" onclick="abrirMenuDificultad()">🔄 Jugar de nuevo</button> <button class="game-btn-neon" onclick="salirDelJuego()">🚪 Salir</button>; }
-function _bricksEndPartida() { if (currentUser && currentUser !== 'admin') { db.ref('usuarios/' + currentUser + '/vidas_disponibles').once('value', s => { const vidas = s.val() || 0; menuGameOver.classList.remove("hidden"); if (vidas > 0) { menuGameOver.innerHTML = <h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2> <p style="color:#FFD700;font-size:13px;margin-bottom:12px"> Puntuación: ${bricksScore} pts<br> <span style="color:#00FF00;font-size:12px">❤️ Tienes ${vidas} vida(s)</span> </p> <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="usarVida('ladrillos')">❤️ Usar Vida</button> <button class="game-btn-neon" onclick="abrirMenuDificultad()">🔄 Reiniciar</button> <button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button> <button class="game-btn-neon" onclick="salirDelJuego()">🚪 Salir</button>; } else { const recompensa = bricksCurrentDifficulty === 'terrestre' ? 100 : bricksCurrentDifficulty === 'semidios' ? 200 : 500; menuGameOver.innerHTML = <h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2> <p style="color:#FFD700;font-size:13px;margin-bottom:12px"> Puntuación: ${bricksScore} pts<br> <span style="color:#aaa;font-size:11px">+${recompensa} €Eden€ por participar</span> </p> <button class="game-btn-neon" onclick="abrirMenuDificultad()">🔄 ¡Repetir!</button> <button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button> <button class="game-btn-neon" onclick="salirDelJuego()">🚪 Salir</button>; darXPporJuego(bricksScore); db.ref('usuarios/' + currentUser).update({ saldo: userBalance + recompensa }); db.ref('usuarios/' + currentUser + '/puntos').once('value', sv => { if (bricksScore > (sv.val() || 0)) db.ref('usuarios/' + currentUser + '/puntos').set(bricksScore); }); db.ref('ranking/' + bricksCurrentDifficulty + '/' + currentUser).once('value', sv => { if (!sv.exists() || bricksScore > sv.val()) db.ref('ranking/' + bricksCurrentDifficulty + '/' + currentUser).set(bricksScore); }); MISSIONS.updateProgress('coins', recompensa); } }); } else { menuGameOver.classList.remove("hidden"); menuGameOver.innerHTML = <h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2> <p style="color:#FFD700;font-size:13px;margin-bottom:12px">Puntuación: ${bricksScore} pts</p> <button class="game-btn-neon" onclick="abrirMenuDificultad()">🔄 ¡Repetir!</button> <button class="game-btn-neon" onclick="salirDelJuego()">🚪 Salir</button>; } }
-/* ═══════════════════════════════════════════════════════════════ JUEGO 2 — FLAPPY EDÉN ═══════════════════════════════════════════════════════════════ */ const fCvs = document.getElementById('flappyCanvas'), fCtx = fCvs.getContext('2d'); const FW = fCvs.width, FH = fCvs.height; const F_GRAVITY = 0.32, F_JUMP = -6.5, F_PIPE_W = 52, F_GAP = 165, F_PIPE_SPEED = 2.4, F_PIPE_INTERVAL = 110; const NEON_COLORS = ['#00FFFF','#00FF00','#FF00FF','#FFD700','#FF4500','#7B2FFF'];
-let fBird = { x:70, y:FH/2, vy:0, r:20 }, fPipes = [], fScore = 0, fFrame = 0, fActive = false, fRaf = null, fStarted = false; const fBgImg = new Image(); fBgImg.src = 'fondo1.jpg';
-function abrirFlappy() { reproducir('click'); document.querySelectorAll('.container,.vista-juego-base').forEach(c => c.classList.add('hidden')); ['exit-btn','settings-btn','shop-btn-izq','chat-btn','missions-btn'].forEach(b => { const el = document.getElementById(b); if (el) el.classList.add('hidden'); }); document.getElementById('vista-flappy').classList.remove('hidden'); document.getElementById('pantalla-oscura').classList.remove('hidden'); document.getElementById('flappy-start-menu').classList.remove('hidden'); document.getElementById('flappy-over-menu').classList.add('hidden'); document.getElementById('rank-ingame-flappy').classList.add('hidden'); fActive = false; fStarted = false; _fDrawStatic(); } function salirFlappy() { fActive = false; cancelAnimationFrame(fRaf); mostrarVista('vista-agenda'); } function iniciarFlappy() { document.getElementById('flappy-start-menu').classList.add('hidden'); document.getElementById('flappy-over-menu').classList.add('hidden'); document.getElementById('rank-ingame-flappy').classList.add('hidden'); fBird = { x:70, y:FH/2, vy:0, r:20 }; fPipes = []; fScore = 0; fFrame = 0; fActive = true; fStarted = true; document.getElementById('flappy-score').innerText = '€Eden€: 0'; cancelAnimationFrame(fRaf); fLoop(); } function flappyJump() { if (!fStarted) return; if (!fActive) { iniciarFlappy(); return; } fBird.vy = F_JUMP; reproducir('bounce'); } document.addEventListener('keydown', e => { if (e.code === 'Space' && !document.getElementById('vista-flappy').classList.contains('hidden')) { e.preventDefault(); flappyJump(); } });
-function fLoop() { if (!fActive) return; fFrame++; if (fFrame % F_PIPE_INTERVAL === 0) { const topH = 60 + Math.random() * (FH - F_GAP - 100); const col = NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)]; fPipes.push({ x: FW, topH, bottomY: topH + F_GAP, scored: false, col }); } fPipes.forEach(p => p.x -= F_PIPE_SPEED); fPipes = fPipes.filter(p => p.x > -F_PIPE_W - 10); fPipes.forEach(p => { if (!p.scored && p.x + F_PIPE_W < fBird.x) { p.scored = true; fScore++; document.getElementById('flappy-score').innerText = '€Eden€: ' + fScore; reproducir('coin'); if (currentUser && currentUser !== 'admin') { db.ref('usuarios/' + currentUser + '/saldo').transaction(v => (v || 0) + 25); MISSIONS.updateProgress('score_flappy', fScore); MISSIONS.updateProgress('coins', 25); } } }); fBird.vy += F_GRAVITY; fBird.y += fBird.vy; let hit = fBird.y - fBird.r <= 0 || fBird.y + fBird.r >= FH; fPipes.forEach(p => { if (fBird.x + fBird.r > p.x && fBird.x - fBird.r < p.x + F_PIPE_W) if (fBird.y - fBird.r < p.topH || fBird.y + fBird.r > p.bottomY) hit = true; }); if (hit) { fActive = false; reproducir('fail'); _fEndGame(); return; } _fDraw(); fRaf = requestAnimationFrame(fLoop); }
-function _fDraw() { if (fBgImg.complete && fBgImg.naturalWidth > 0) fCtx.drawImage(fBgImg, 0, 0, FW, FH); else { fCtx.fillStyle = '#001a10'; fCtx.fillRect(0, 0, FW, FH); } fPipes.forEach(p => { _drawPipeNeon(p.x, 0, p.topH, p.col); _drawPipeNeon(p.x, p.bottomY, FH - p.bottomY, p.col); }); _drawFlappyBird(); } function _fDrawStatic() { if (fBgImg.complete && fBgImg.naturalWidth > 0) fCtx.drawImage(fBgImg, 0, 0, FW, FH); else { fCtx.fillStyle = '#001810'; fCtx.fillRect(0, 0, FW, FH); } _drawFlappyBird(); } function _drawPipeNeon(x, y, h, col) { if (h <= 0) return; const blockSize = 18, cols2 = Math.ceil(F_PIPE_W / blockSize), rows2 = Math.ceil(h / blockSize); for (let r = 0; r < rows2; r++) for (let c = 0; c < cols2; c++) { const bx = x + c * blockSize, by = y + r * blockSize; const bw2 = Math.min(blockSize, x + F_PIPE_W - bx), bh2 = Math.min(blockSize, y + h - by); if (bw2 <= 0 || bh2 <= 0) continue; fCtx.fillStyle = 'rgba(0,0,0,.75)'; fCtx.fillRect(bx, by, bw2, bh2); fCtx.strokeStyle = col; fCtx.lineWidth = 1.5; fCtx.shadowColor = col; fCtx.shadowBlur = 6; fCtx.strokeRect(bx + .5, by + .5, bw2 - 1, bh2 - 1); fCtx.shadowBlur = 0; } } function _drawFlappyBird() { const b = fBird; fCtx.save(); fCtx.shadowColor = '#00FFFF'; fCtx.shadowBlur = 18; fCtx.beginPath(); fCtx.arc(b.x, b.y, b.r + 3, 0, Math.PI * 2); fCtx.strokeStyle = '#00FFFF'; fCtx.lineWidth = 2.5; fCtx.stroke(); fCtx.restore(); fCtx.save(); fCtx.beginPath(); fCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2); fCtx.clip(); if (flappyAvatarImg && flappyAvatarImg.complete && flappyAvatarImg.naturalWidth > 0) { fCtx.drawImage(flappyAvatarImg, b.x - b.r, b.y - b.r, b.r * 2, b.r * 2); } else { fCtx.fillStyle = '#001828'; fCtx.fillRect(b.x - b.r, b.y - b.r, b.r * 2, b.r * 2); fCtx.font = b.r + 'px serif'; fCtx.textAlign = 'center'; fCtx.textBaseline = 'middle'; fCtx.fillText(skinPajaroEquipada, b.x, b.y + 2); } fCtx.restore(); fCtx.beginPath(); fCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2); fCtx.strokeStyle = '#00FFFF'; fCtx.lineWidth = 2; fCtx.stroke(); }
-function _fEndGame() { if (currentUser && currentUser !== 'admin') { db.ref('usuarios/' + currentUser + '/vidas_disponibles').once('value', s => { const vidas = s.val() || 0; const overMenu = document.getElementById('flappy-over-menu'); overMenu.classList.remove('hidden'); if (vidas > 0) { overMenu.innerHTML = <h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2> <p style="color:#FFD700;font-size:14px;margin-bottom:12px"> Puntuación: ${fScore} pts<br> <span style="color:#00FF00;font-size:12px">❤️ Tienes ${vidas} vida(s)</span> </p> <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="usarVida('flappy')">❤️ Usar Vida</button> <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">🔄 Reiniciar</button> <button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button> <button class="game-btn-neon" onclick="salirFlappy()">🚪 Salir</button>; } else { overMenu.innerHTML = <h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2> <p style="color:#FFD700;font-size:14px;margin-bottom:12px">Puntuación: ${fScore} pts</p> <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">🔄 ¡Repetir!</button> <button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button> <button class="game-btn-neon" onclick="salirFlappy()">🚪 Salir</button>; darXPporJuego(fScore); db.ref('usuarios/' + currentUser + '/puntosFlappy').once('value', sv => { if (fScore > (sv.val() || 0)) db.ref('usuarios/' + currentUser + '/puntosFlappy').set(fScore); }); db.ref('ranking/flappy/' + currentUser).once('value', sv => { if (!sv.exists() || fScore > sv.val()) db.ref('ranking/flappy/' + currentUser).set(fScore); }); } }); } else { const overMenu = document.getElementById('flappy-over-menu'); overMenu.classList.remove('hidden'); overMenu.innerHTML = <h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2> <p style="color:#FFD700;font-size:14px;margin-bottom:12px">Puntuación: ${fScore} pts</p> <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">🔄 ¡Repetir!</button> <button class="game-btn-neon" onclick="salirFlappy()">🚪 Salir</button>; } }
-/* ═══════════════════════════════════════════════════════════════ JUEGO 3 — CANDY EDÉN (mantiene el código original con ajuste de misiones) ═══════════════════════════════════════════════════════════════ */ const CANDY = (() => { const SKINS = { classic: ['💎','🔥','💧','🌿','⚡','❄️'], fruit: ['🍎','🍇','🍊','🍋','🍒','🥝'], cyber: ['⌬','⏦','⌮','⌯','⎔','⍥'] }; const COLORS = ['#00FFFF','#FF00FF','#00FF00','#FFFF00','#FF4500','#FFFFFF']; const GRID = 8;
-let activeSkin = 'classic', gridData = [], selected = null, busy = false, currentLevel = null, candyScore = 0, candyMoves = 0, comboCount = 0, pendingBomb = null, levels = [], candyState = { unlocked: 1, inv: { rayo: 0, bollo: 0 } };
-function loadState() { if (!currentUser || currentUser === 'admin') { _renderLevels(); return; } db.ref('usuarios/' + currentUser + '/candyState').once('value', s => { candyState = s.exists() ? s.val() : { unlocked: 1, inv: { rayo: 0, bollo: 0 } }; if (!candyState.inv) candyState.inv = { rayo: 0, bollo: 0 }; syncInventory(); _renderLevels(); }); }
-function saveState() { if (!currentUser || currentUser === 'admin') return; db.ref('usuarios/' + currentUser + '/candyState').set(candyState); db.ref('usuarios/' + currentUser + '/candyInv').set(candyState.inv); }
-function syncInventory() { if (!currentUser || currentUser === 'admin') { _updateHUD(); return; } db.ref('usuarios/' + currentUser + '/candyInv').once('value', s => { if (s.exists()) { const inv = s.val(); candyState.inv = { rayo: inv.rayo || 0, bollo: inv.bollo || 0 }; } _updateHUD(); }); }
-function genLevels() { levels = Array.from({ length: 50 }, (, i) => ({ id: i + 1, goal: 1200 + i * 600, moves: Math.max(15, 30 - Math.floor(i / 4)) })); }
-function _renderLevels() { const container = document.getElementById('candy-lvl-container'); if (!container) return; container.innerHTML = ''; levels.forEach(lvl => { const b = document.createElement('div'); const unlocked = lvl.id <= (candyState.unlocked || 1); b.className = 'candy-lvl-btn' + (unlocked ? ' unlocked' : ''); b.innerHTML = unlocked ? lvl.id : '🔒'; b.title = unlocked ? 'Nivel ' + lvl.id + ' — Objetivo: ' + lvl.goal + ' pts' : 'Bloqueado'; if (unlocked) b.onclick = () => { APP.audioCtx.resume(); _startGame(lvl); }; container.appendChild(b); }); const cw = document.getElementById('ce-wallet-eden'); if (cw) cw.innerText = userBalance; }
-function setSkin(s) { activeSkin = s; reproducir('click'); ['classic','fruit','cyber'].forEach(id => { const el = document.getElementById('skin-' + id); if (el) el.style.border = (id === s) ? '2px solid #FF00FF' : '1px solid #444'; }); if (gridData.length) _render(); }
-function showMenu() { reproducir('click'); const sm = document.getElementById('candy-start-menu'); sm.classList.remove('ce-hidden'); sm.style.opacity = '1'; sm.style.pointerEvents = 'auto'; sm.style.transform = 'none'; document.getElementById('candy-over-menu').classList.add('ce-hidden'); document.getElementById('candy-shop-menu').classList.add('ce-hidden'); loadState(); }
-function toggleShop() { reproducir('click'); document.getElementById('candy-shop-menu').classList.toggle('ce-hidden'); const cw = document.getElementById('ce-wallet-eden'); if (cw) cw.innerText = userBalance; }
-function buy(p) { if (userBalance < 500) { reproducir('fail'); mostrarToast('❌ Saldo insuficiente', '#ff4444'); return; } const ns = userBalance - 500; db.ref('usuarios/' + currentUser).update({ saldo: ns }).then(() => { candyState.inv[p] = (candyState.inv[p] || 0) + 1; saveState(); actualizarSaldoUI(ns); _updateHUD(); reproducir('coin'); mostrarToast('✅ ' + p + ' ×1 añadido', '#FF00FF'); }); }
-function _startGame(lvl) { currentLevel = lvl; candyScore = 0; candyMoves = lvl.moves; comboCount = 0; const sm = document.getElementById('candy-start-menu'); sm.style.opacity = '0'; sm.style.pointerEvents = 'none'; document.getElementById('candy-over-menu').classList.add('ce-hidden'); document.getElementById('candy-shop-menu').classList.add('ce-hidden'); _buildGrid(); _updateHUD(); }
-function _buildGrid() { const container = document.getElementById('ce-grid-eden'); container.innerHTML = ''; gridData = []; for (let r = 0; r < GRID; r++) { gridData[r] = []; for (let c = 0; c < GRID; c++) { const val = Math.floor(Math.random() * 6); gridData[r][c] = { type: val, isBomb: false }; const el = document.createElement('div'); el.className = 'ce-cell-eden'; el.id = 'ce-' + r + '-' + c; el.onclick = () => _cellClick(r, c); el.addEventListener('touchstart', e => { e.preventDefault(); _cellTouchStart(r, c, e); }, { passive: false }); el.addEventListener('touchmove', e => { e.preventDefault(); _cellTouchMove(e); }, { passive: false }); el.addEventListener('touchend', e => { e.preventDefault(); _cellTouchEnd(r, c, e); }, { passive: false }); container.appendChild(el); } } _removeInitialMatches(); _render(); }
-function _removeInitialMatches() { let changed = true; let tries = 0; while (changed && tries < 50) { changed = false; tries++; for (let r = 0; r < GRID; r++) { for (let c = 0; c < GRID; c++) { const t = gridData[r][c].type; if (c >= 2 && gridData[r][c-1].type === t && gridData[r][c-2].type === t) { gridData[r][c].type = (t + 1 + Math.floor(Math.random() * 4)) % 6; changed = true; } if (r >= 2 && gridData[r-1][c].type === t && gridData[r-2][c].type === t) { gridData[r][c].type = (t + 1 + Math.floor(Math.random() * 4)) % 6; changed = true; } } } } }
-let touchStartCell = null;
-function _cellTouchStart(r, c, e) { if (busy || !currentLevel) return; touchStartCell = { r, c }; const el = document.getElementById('ce-' + r + '-' + c); if (selected) document.getElementById('ce-' + selected.r + '-' + selected.c)?.classList.remove('ce-selected'); selected = { r, c }; if (el) el.classList.add('ce-selected'); }
-function _cellTouchMove(e) { if (!touchStartCell || busy || !currentLevel) return; const touch = e.touches[0]; const target = document.elementFromPoint(touch.clientX, touch.clientY); if (!target || !target.id.startsWith('ce-')) return; const parts = target.id.split('-'); if (parts.length !== 3) return; const tr = parseInt(parts[1]), tc = parseInt(parts[2]); const { r: sr, c: sc } = touchStartCell; if (Math.abs(tr - sr) + Math.abs(tc - sc) === 1 && !(tr === sr && tc === sc)) { _doSwapAction(sr, sc, tr, tc); touchStartCell = null; } }
-function _cellTouchEnd(r, c, e) { touchStartCell = null; }
-function _cellClick(r, c) { if (busy || !currentLevel) return; if (!selected) { selected = { r, c }; document.getElementById('ce-' + r + '-' + c)?.classList.add('ce-selected'); } else { const { r: r1, c: c1 } = selected; document.getElementById('ce-' + r1 + '-' + c1)?.classList.remove('ce-selected'); if (Math.abs(r - r1) + Math.abs(c - c1) === 1) { _doSwapAction(r1, c1, r, c); } selected = null; } }
-function _doSwapAction(r1, c1, r2, c2) { busy = true; _swap(r1, c1, r2, c2); setTimeout(() => { if (!_checkMatches()) { _swap(r1, c1, r2, c2); busy = false; } else { candyMoves--; _updateHUD(); } }, 280); }
-function _swap(r1, c1, r2, c2) { const t = gridData[r1][c1]; gridData[r1][c1] = gridData[r2][c2]; gridData[r2][c2] = t; _render(); }
-function _checkMatches() { const matched = new Set(); for (let r = 0; r < GRID; r++) for (let c = 0; c < GRID - 2; c++) if (gridData[r][c].type === gridData[r][c+1].type && gridData[r][c].type === gridData[r][c+2].type) { matched.add(r+','+c); matched.add(r+','+(c+1)); matched.add(r+','+(c+2)); } for (let c = 0; c < GRID; c++) for (let r = 0; r < GRID - 2; r++) if (gridData[r][c].type === gridData[r+1][c].type && gridData[r][c].type === gridData[r+2][c].type) { matched.add(r+','+c); matched.add((r+1)+','+c); matched.add((r+2)+','+c); }
-if (matched.size > 0) {
-  comboCount++;
-  const vCard = document.getElementById('vista-candy');
-  if (comboCount >= 3) vCard.classList.add('super-combo-mode');
-  try {
-    const osc = APP.audioCtx.createOscillator(), gain = APP.audioCtx.createGain();
-    osc.type = 'sine'; osc.frequency.value = 300 + comboCount * 70;
-    gain.gain.setValueAtTime(0.12, APP.audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, APP.audioCtx.currentTime + 0.15);
-    osc.connect(gain); gain.connect(APP.audioCtx.destination);
-    osc.start(); osc.stop(APP.audioCtx.currentTime + 0.15);
-  } catch(e) {}
 
-  matched.forEach(pos => {
-    const [r, c] = pos.split(',').map(Number);
-    if (gridData[r][c] && gridData[r][c].isBomb) _triggerBomb(r, c, matched);
-    candyScore += 30 * comboCount;
-    gridData[r][c] = null;
-    const el = document.getElementById('ce-' + r + '-' + c);
-    if (el) el.style.transform = 'scale(0)';
+function abrirChatPrivado(amigoKey, amigoNombre) { chatAmigoKey = amigoKey; chatAmigoNombre = amigoNombre; mostrarVista('vista-chat'); cambiarTabChat('amigos'); }
+
+function escucharChatGlobal() {
+  pararEscuchaChat(); chatRef = db.ref('chat_global').limitToLast(25);
+  chatListener = chatRef.on('value', s => {
+    const box = document.getElementById('chat-box'); box.innerHTML = '';
+    s.forEach(c => {
+      const m = c.val(), mio = m.user === currentUser;
+      box.innerHTML += '<div style="text-align:' + (mio?'right':'left') + ';margin-bottom:6px;font-size:13px;padding-bottom:4px;border-bottom:1px solid rgba(0,255,0,.1)">' +
+        '<b style="color:' + (mio?'#00FFFF':'#00FF00') + '">' + escapeHtml(m.user) + ':</b> ' + escapeHtml(m.text) + '</div>';
+    });
+    box.scrollTop = box.scrollHeight;
   });
-  if (matched.size >= 5) pendingBomb = [...matched][0].split(',').map(Number);
-  _updateHUD();
-  
-  // Actualizar misión de combo
-  if (comboCount >= 10) {
-    MISSIONS.updateProgress('combo', comboCount);
+}
+function escucharChatPrivado(amigoKey) {
+  pararEscuchaChat();
+  const convID = getConversationID(currentUser, amigoKey);
+  chatRef = db.ref('mensajes-privados/' + convID).limitToLast(30);
+  chatListener = chatRef.on('value', s => {
+    const box = document.getElementById('chat-box'); box.innerHTML = '';
+    if (!s.exists()) { box.innerHTML = '<p style="color:#aaa;font-size:12px;text-align:center;padding:20px">Sé el primero en decir algo 👋</p>'; return; }
+    s.forEach(c => {
+      const m = c.val(), mio = m.user === currentUser;
+      box.innerHTML += '<div style="text-align:' + (mio?'right':'left') + ';margin-bottom:6px;font-size:13px;border-bottom:1px solid rgba(0,255,255,.07);padding-bottom:4px">' +
+        '<b style="color:' + (mio?'#00FFFF':'#FFD700') + '">' + (mio ? 'Tú' : escapeHtml(m.user)) + ':</b> ' + escapeHtml(m.text) + '</div>';
+    });
+    box.scrollTop = box.scrollHeight;
+  });
+}
+function escucharChat() {
+  tabActual = 'global'; chatModo = 'global';
+  ['global','amigos','notas'].forEach(t => document.getElementById('tab-' + t).classList.toggle('active', t === 'global'));
+  document.getElementById('panel-mensajes').classList.remove('hidden');
+  document.getElementById('panel-notas').classList.add('hidden');
+  document.getElementById('chat-amigo-header').classList.add('hidden');
+  escucharChatGlobal();
+}
+function enviarMensaje() {
+  const inp = document.getElementById('chat-input'), texto = inp.value.trim();
+  if (!texto || !currentUser) return;
+  const avatarEl = document.getElementById('avatar-img');
+  const avatarTxt = avatarEl ? (avatarEl.innerText || "👤") : "👤";
+  if (chatModo === 'global') {
+    db.ref('chat_global').push({ user: currentUser, text: texto, avatar: avatarTxt, ts: Date.now() });
+  } else {
+    if (!chatAmigoKey) return;
+    db.ref('mensajes-privados/' + getConversationID(currentUser, chatAmigoKey)).push({ user: currentUser, text: texto, ts: Date.now() });
   }
-  
-  setTimeout(_refill, 340);
-  return true;
+  inp.value = ''; reproducir('click');
 }
-busy = false; comboCount = 0;
-document.getElementById('vista-candy').classList.remove('super-combo-mode');
-_checkEnd(); return false;
+
+/* ═══════════════════════════════════════════════════════════════
+   JUEGO 1 — LADRILLOS
+═══════════════════════════════════════════════════════════════ */
+const bricksCanvas = document.getElementById("gameCanvas"),
+      bricksCtx    = bricksCanvas.getContext("2d");
+const menuGameOver   = document.getElementById("game-over-menu"),
+      menuDifficulty = document.getElementById("difficulty-menu");
+
+let bricksBalls = [], bricksBricksList = [], bricksPaddleWidth = 90, bricksPaddleX,
+    bricksScore = 0, bricksGameActive = false, bricksGameInterval, bricksIsFireBall = false,
+    bricksCurrentDifficulty = 'terrestre';
+
+document.addEventListener("mousemove", e => {
+  if (!bricksGameActive) return;
+  const rect = bricksCanvas.getBoundingClientRect(), relX = e.clientX - rect.left;
+  if (relX > 0 && relX < bricksCanvas.width) bricksPaddleX = relX - bricksPaddleWidth / 2;
+});
+bricksCanvas.addEventListener("touchmove", e => {
+  if (!bricksGameActive) return; e.preventDefault();
+  const rect = bricksCanvas.getBoundingClientRect(), scaleX = bricksCanvas.width / rect.width;
+  const relX = (e.touches[0].clientX - rect.left) * scaleX;
+  if (relX > 0 && relX < bricksCanvas.width) bricksPaddleX = relX - bricksPaddleWidth / 2;
+}, { passive: false });
+
+function abrirMenuDificultad() {
+  reproducir('click');
+  document.querySelectorAll('.container,.vista-juego-base').forEach(c => c.classList.add('hidden'));
+  ['exit-btn','settings-btn','shop-btn-izq','chat-btn'].forEach(b => { const el = document.getElementById(b); if (el) el.classList.add('hidden'); });
+  document.getElementById('vista-juego').classList.remove('hidden');
+  document.getElementById('pantalla-oscura').classList.remove('hidden');
+  document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden'));
+  document.getElementById('rank-ingame-ladrillos').classList.add('hidden');
+  menuDifficulty.classList.remove('hidden');
 }
-function _triggerBomb(r, c, matchedSet) { for (let i = r - 2; i <= r + 2; i++) for (let j = c - 2; j <= c + 2; j++) if (i >= 0 && i < GRID && j >= 0 && j < GRID && gridData[i] && gridData[i][j]) matchedSet.add(i + ',' + j); }
-function _refill() { for (let c = 0; c < GRID; c++) { let shift = 0; for (let r = GRID - 1; r >= 0; r--) { if (gridData[r][c] === null) shift++; else if (shift > 0) { gridData[r + shift][c] = gridData[r][c]; gridData[r][c] = null; } } for (let r = 0; r < shift; r++) gridData[r][c] = { type: Math.floor(Math.random() * 6), isBomb: false }; } if (pendingBomb) { const [pr, pc] = pendingBomb; if (gridData[pr] && gridData[pr][pc]) gridData[pr][pc].isBomb = true; pendingBomb = null; } _render(); setTimeout(_checkMatches, 280); }
-function _render() { const symbols = SKINS[activeSkin]; for (let r = 0; r < GRID; r++) for (let c = 0; c < GRID; c++) { const el = document.getElementById('ce-' + r + '-' + c); const cell = gridData[r][c]; if (!el) continue; el.innerHTML = cell ? symbols[cell.type] : ""; el.style.color = cell ? COLORS[cell.type] : ""; el.className = 'ce-cell-eden' + (cell && cell.isBomb ? ' ce-bomb' : ''); el.style.transform = cell ? 'scale(1)' : 'scale(0)'; el.style.fontFamily = activeSkin === 'cyber' ? 'serif' : ''; } }
-function usePower(p) { if (!candyState.inv[p] || candyState.inv[p] <= 0) { mostrarToast('Sin ' + p + '. Cómpralo en tienda', '#FF00FF'); return; } if (!selected) { mostrarToast('Selecciona una celda primero', '#FFD700'); return; } candyState.inv[p]--; const { r, c } = selected; document.getElementById('ce-' + r + '-' + c)?.classList.remove('ce-selected'); selected = null; try { const osc = APP.audioCtx.createOscillator(), gain = APP.audioCtx.createGain(); osc.type = 'square'; osc.frequency.value = 800; gain.gain.setValueAtTime(0.1, APP.audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, APP.audioCtx.currentTime + 0.3); osc.connect(gain); gain.connect(APP.audioCtx.destination); osc.start(); osc.stop(APP.audioCtx.currentTime + 0.3); } catch(e) {} if (p === 'rayo') { for (let i = 0; i < GRID; i++) { if (gridData[i]) gridData[i][c] = null; } mostrarToast('⚡ ¡Columna eliminada!', '#FF00FF'); } else { for (let i = r - 1; i <= r + 1; i++) for (let j = c - 1; j <= c + 1; j++) if (i >= 0 && i < GRID && j >= 0 && j < GRID && gridData[i]) gridData[i][j] = null; mostrarToast('🥐 ¡Mini explosión!', '#FF00FF'); } saveState(); _updateHUD(); _refill(); }
-function _updateHUD() { const s = document.getElementById('ce-score-eden'); const mv = document.getElementById('ce-moves-eden'); const g = document.getElementById('ce-goal-eden'); const ri = document.getElementById('ce-inv-rayo-eden'); const bi = document.getElementById('ce-inv-bollo-eden'); if (s) s.innerText = candyScore; if (mv) mv.innerText = candyMoves; if (g) g.innerText = currentLevel ? currentLevel.goal : 0; if (ri) ri.innerText = candyState.inv?.rayo || 0; if (bi) bi.innerText = candyState.inv?.bollo || 0; }
-function _checkEnd() { if (!currentLevel) return; if (candyScore >= currentLevel.goal) { try { [523,659,783,1046].forEach((f, i) => { setTimeout(() => { const o = APP.audioCtx.createOscillator(), g = APP.audioCtx.createGain(); o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0.12, APP.audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, APP.audioCtx.currentTime + 0.2); o.connect(g); g.connect(APP.audioCtx.destination); o.start(); o.stop(APP.audioCtx.currentTime + 0.2); }, i * 120); }); } catch(e) {} if (currentLevel.id >= (candyState.unlocked || 1)) candyState.unlocked = currentLevel.id + 1; if (currentUser && currentUser !== 'admin') { db.ref('usuarios/' + currentUser + '/candyBestLevel').transaction(v => Math.max(v || 0, currentLevel.id)); db.ref('usuarios/' + currentUser + '/candyBestScore').transaction(v => Math.max(v || 0, candyScore)); db.ref('ranking/candy/' + currentUser).transaction(v => Math.max(v || 0, candyScore)); let recompensa = 250; if (currentLevel.id % 15 === 0) recompensa += 1000; db.ref('usuarios/' + currentUser + '/saldo').transaction(v => (v || 0) + recompensa); actualizarSaldoUI(userBalance + recompensa); darXPporJuego(Math.max(1, Math.floor(candyScore / 10))); MISSIONS.updateProgress('candy_level', currentLevel.id); MISSIONS.updateProgress('coins', recompensa); saveState(); } mostrarToast('🏆 Nivel ' + currentLevel.id + ' completado!', '#FFD700'); currentLevel = null; setTimeout(showMenu, 800); } else if (candyMoves <= 0) { reproducir('fail'); const overTitle = document.getElementById('candy-over-title'); const overTxt = document.getElementById('candy-over-txt'); if (overTitle) overTitle.innerText = 'GAME OVER'; if (overTxt) overTxt.innerText = 'Nivel ' + (currentLevel ? currentLevel.id : '?') + ' — ' + candyScore + ' / ' + (currentLevel ? currentLevel.goal : '?') + ' pts'; document.getElementById('candy-over-menu').classList.remove('ce-hidden'); currentLevel = null; } else { if (!_hayMovimientosPosibles()) { _reorganizarGrid(); mostrarToast('🔀 ¡Sin movimientos! Reorganizando…', '#FF00FF'); } } }
-function _hayMovimientosPosibles() { for (let r = 0; r < GRID; r++) { for (let c = 0; c < GRID; c++) { if (c < GRID - 1) { _swap(r,c,r,c+1); const ok = _tieneMatch(r,c)||_tieneMatch(r,c+1); _swap(r,c,r,c+1); if (ok) return true; } if (r < GRID - 1) { _swap(r,c,r+1,c); const ok = _tieneMatch(r,c)||_tieneMatch(r+1,c); _swap(r,c,r+1,c); if (ok) return true; } } } return false; }
-function _tieneMatch(r, c) { if (!gridData[r] || !gridData[r][c]) return false; const t = gridData[r][c].type; let h = 1, v = 1; for (let i=c-1;i>=0&&gridData[r][i]&&gridData[r][i].type===t;i--) h++; for (let i=c+1;i<GRID&&gridData[r][i]&&gridData[r][i].type===t;i++) h++; for (let i=r-1;i>=0&&gridData[i][c]&&gridData[i][c].type===t;i--) v++; for (let i=r+1;i<GRID&&gridData[i][c]&&gridData[i][c].type===t;i++) v++; return h >= 3 || v >= 3; }
-function _reorganizarGrid() { const figuras = []; for (let r = 0; r < GRID; r++) for (let c = 0; c < GRID; c++) if (gridData[r][c]) figuras.push(gridData[r][c].type); for (let i = figuras.length - 1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [figuras[i],figuras[j]]=[figuras[j],figuras[i]]; } let idx = 0; for (let r = 0; r < GRID; r++) for (let c = 0; c < GRID; c++) if (gridData[r][c]) gridData[r][c] = { type: figuras[idx++], isBomb: false }; _render(); setTimeout(() => { if (!_checkMatches()) { if (!_hayMovimientosPosibles()) setTimeout(_reorganizarGrid, 500); } }, 300); }
-function abrir() { reproducir('click'); document.querySelectorAll('.container,.vista-juego-base').forEach(c => c.classList.add('hidden')); ['exit-btn','settings-btn','shop-btn-izq','chat-btn','missions-btn'].forEach(b => { const el = document.getElementById(b); if (el) el.classList.add('hidden'); }); ['settings-btn','chat-btn','shop-btn-izq'].forEach(b => { const el = document.getElementById(b); if (el) el.classList.remove('hidden'); }); document.getElementById('vista-candy').classList.remove('hidden'); document.getElementById('pantalla-oscura').classList.remove('hidden'); const sm = document.getElementById('candy-start-menu'); sm.style.opacity = '1'; sm.style.pointerEvents = 'auto'; sm.style.transform = 'none'; sm.classList.remove('ce-hidden'); document.getElementById('candy-over-menu').classList.add('ce-hidden'); document.getElementById('candy-shop-menu').classList.add('ce-hidden'); loadState(); }
-function salir() { reproducir('click'); currentLevel = null; mostrarVista('vista-agenda'); }
-_genLevels();
-return { abrir, salir, showMenu, toggleShop, setSkin, buy, usePower, syncInventory }; })();
+function iniciarJuegoEden(diff) {
+  reproducir('click'); cancelAnimationFrame(bricksGameInterval);
+  document.getElementById('rank-ingame-ladrillos').classList.add('hidden');
+  cargarEquipamientoDesdeDB().then(() => {
+    _bricksReset(diff); bricksGameActive = true;
+    function gl() { if (bricksGameActive) { bricksDraw(); bricksGameInterval = requestAnimationFrame(gl); } } gl();
+  });
+}
+function salirDelJuego() { reproducir('click'); bricksGameActive = false; cancelAnimationFrame(bricksGameInterval); mostrarVista('vista-agenda'); }
+
+function _bricksReset(diff) {
+  bricksCurrentDifficulty = diff;
+  document.querySelectorAll('.menu-eden').forEach(m => m.classList.add('hidden'));
+  bricksCanvas.style.cursor = "none";
+  if (diff === 'eden') {
+    bricksPaddleWidth = 55;
+    bricksBalls = [{ x: bricksCanvas.width / 2, y: bricksCanvas.height - 100, dx: 6.5, dy: -6.5, radius: 5 }];
+  } else if (diff === 'semidios') {
+    bricksPaddleWidth = 75;
+    bricksBalls = [{ x: bricksCanvas.width / 2, y: bricksCanvas.height - 100, dx: 5, dy: -5, radius: 7 }];
+  } else {
+    bricksPaddleWidth = 90;
+    bricksBalls = [{ x: bricksCanvas.width / 2, y: bricksCanvas.height - 100, dx: 4, dy: -4, radius: 8 }];
+  }
+  bricksPaddleX = (bricksCanvas.width - bricksPaddleWidth) / 2;
+  bricksIsFireBall = false; bricksScore = 0;
+  document.getElementById("game-score").innerText = "€Eden€: 0";
+  bricksBricksList = [];
+  const rows = diff === 'terrestre' ? 5 : diff === 'semidios' ? 8 : 12;
+  const cols = diff === 'terrestre' ? 7 : diff === 'semidios' ? 12 : 18;
+  const bw = (bricksCanvas.width - 40) / cols, bh = diff === 'terrestre' ? 20 : 12;
+  for (let c = 0; c < cols; c++) {
+    bricksBricksList[c] = [];
+    for (let r = 0; r < rows; r++) {
+      let type = "normal", life = 1;
+      if (diff === 'semidios' && Math.random() < .2) { type = "hard"; life = 2; }
+      if (diff === 'eden') { if (Math.random() < .12) { type = "wall"; life = 999; } else if (Math.random() < .28) { type = "hard"; life = 2; } }
+      bricksBricksList[c][r] = { x: c * (bw - 4 + 4) + 15, y: r * (bh - 4 + 4) + 50, status: life, type, w: bw - 4, h: bh - 4 };
+    }
+  }
+}
+
+function bricksDraw() {
+  if (!bricksGameActive) return;
+  bricksCtx.clearRect(0, 0, bricksCanvas.width, bricksCanvas.height);
+  bricksBricksList.forEach(col => col.forEach(b => {
+    if (b.status > 0) {
+      if (b.type === "wall") {
+        bricksCtx.fillStyle = "#555"; bricksCtx.fillRect(b.x, b.y, b.w, b.h);
+        bricksCtx.strokeStyle = "#888"; bricksCtx.lineWidth = 1; bricksCtx.strokeRect(b.x, b.y, b.w, b.h);
+      } else if (b.type === "hard") {
+        bricksCtx.fillStyle = "#FFD700"; bricksCtx.fillRect(b.x, b.y, b.w, b.h);
+        bricksCtx.strokeStyle = "rgba(255,255,255,.6)"; bricksCtx.lineWidth = 1; bricksCtx.strokeRect(b.x, b.y, b.w, b.h);
+      } else {
+        if (imgLadrillo.complete && imgLadrillo.naturalWidth > 0) bricksCtx.drawImage(imgLadrillo, b.x, b.y, b.w, b.h);
+        else { bricksCtx.fillStyle = "#FF4444"; bricksCtx.fillRect(b.x, b.y, b.w, b.h); }
+      }
+    }
+  }));
+  bricksBalls.forEach((b, index) => {
+    bricksCtx.beginPath(); bricksCtx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+    // Colores especiales de bola
+    if (colorBolaEquipada === 'rainbow') {
+      const grad = bricksCtx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.radius);
+      grad.addColorStop(0, '#fff'); grad.addColorStop(0.4, '#ff0'); grad.addColorStop(0.7, '#0f0'); grad.addColorStop(1, '#00f');
+      bricksCtx.fillStyle = grad;
+    } else if (colorBolaEquipada === 'fire') {
+      const grad = bricksCtx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.radius);
+      grad.addColorStop(0, '#fff'); grad.addColorStop(0.4, '#ffcc00'); grad.addColorStop(0.8, '#ff4500'); grad.addColorStop(1, '#8b0000');
+      bricksCtx.fillStyle = grad;
+    } else {
+      bricksCtx.fillStyle = bricksIsFireBall ? "#FFA500" : colorBolaEquipada;
+    }
+    bricksCtx.shadowColor = bricksCtx.fillStyle === '#FFFFFF' ? '#aaa' : bricksCtx.fillStyle;
+    bricksCtx.shadowBlur = 6;
+    bricksCtx.fill(); bricksCtx.closePath();
+    bricksCtx.shadowBlur = 0;
+
+    bricksBricksList.forEach(col => col.forEach(brick => {
+      if (brick.status > 0 && b.x > brick.x && b.x < brick.x + brick.w && b.y > brick.y && b.y < brick.y + brick.h) {
+        b.dy = -b.dy;
+        if (brick.type !== "wall") {
+          brick.status--;
+          reproducir('hit');
+          if (brick.status === 0) { bricksScore++; document.getElementById("game-score").innerText = "€Eden€: " + bricksScore; }
+        }
+      }
+    }));
+    if (b.x + b.dx > bricksCanvas.width - b.radius || b.x + b.dx < b.radius) b.dx = -b.dx;
+    if (b.y + b.dy < b.radius) b.dy = -b.dy;
+    else if (b.y + b.dy > bricksCanvas.height - 80) {
+      if (b.x > bricksPaddleX && b.x < bricksPaddleX + bricksPaddleWidth) {
+        b.dy = -Math.abs(b.dy);
+        // Añadir variación de ángulo según posición en la pala
+        const hitPos = (b.x - bricksPaddleX) / bricksPaddleWidth - 0.5; // -0.5 a 0.5
+        b.dx += hitPos * 2;
+        b.dx = Math.max(-8, Math.min(8, b.dx)); // Limitar velocidad
+        reproducir('bounce');
+      } else if (b.y > bricksCanvas.height) {
+        bricksBalls.splice(index, 1);
+      }
+    }
+    b.x += b.dx; b.y += b.dy;
+  });
+
+  // Paleta con glow
+  bricksCtx.shadowColor = colorPalaEquipada;
+  bricksCtx.shadowBlur  = 10;
+  bricksCtx.fillStyle   = colorPalaEquipada;
+  bricksCtx.beginPath();
+  bricksCtx.roundRect(bricksPaddleX, bricksCanvas.height - 70, bricksPaddleWidth, 12, 6);
+  bricksCtx.fill();
+  bricksCtx.shadowBlur = 0;
+
+  if (bricksBalls.length === 0) { reproducir('fail'); bricksGameActive = false; _bricksEndPartida(); }
+
+  // Victoria: sin ladrillos rompibles
+  const quedanRompibles = bricksBricksList.some(col => col.some(b => b.status > 0 && b.type !== 'wall'));
+  if (!quedanRompibles && bricksGameActive) { bricksGameActive = false; _bricksVictoria(); }
+}
+
+function _bricksVictoria() {
+  // Victoria: recompensa especial
+  const recompensa = bricksCurrentDifficulty === 'terrestre' ? 150 : bricksCurrentDifficulty === 'semidios' ? 350 : 800;
+  if (currentUser && currentUser !== 'admin') {
+    db.ref('usuarios/' + currentUser).update({ saldo: userBalance + recompensa });
+    db.ref('usuarios/' + currentUser + '/puntos').once('value', sv => { if (bricksScore > (sv.val() || 0)) db.ref('usuarios/' + currentUser + '/puntos').set(bricksScore); });
+    db.ref('usuarios/' + currentUser + '/rankingBricks').transaction(v => (v || 0) + 1);
+    darXPporJuego(bricksScore + 50);
+  }
+  menuGameOver.classList.remove("hidden");
+  menuGameOver.innerHTML = `
+    <h2 style="color:#FFD700;margin-bottom:8px;text-shadow:0 0 15px #FFD700">🏆 ¡VICTORIA!</h2>
+    <p style="color:#00FF00;font-size:13px;margin-bottom:12px">
+      Puntuación: ${bricksScore} pts<br>
+      <span style="color:#FFD700">+${recompensa} €Eden€ ganados 🎉</span>
+    </p>
+    <button class="game-btn-neon" onclick="abrirMenuDificultad()">🔄 Jugar de nuevo</button>
+    <button class="game-btn-neon" onclick="salirDelJuego()">🚪 Salir</button>`;
+}
+
+function _bricksEndPartida() {
+  if (currentUser && currentUser !== 'admin') {
+    db.ref('usuarios/' + currentUser + '/vidas_disponibles').once('value', s => {
+      const vidas = s.val() || 0;
+      menuGameOver.classList.remove("hidden");
+      if (vidas > 0) {
+        menuGameOver.innerHTML = `
+          <h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2>
+          <p style="color:#FFD700;font-size:13px;margin-bottom:12px">
+            Puntuación: ${bricksScore} pts<br>
+            <span style="color:#00FF00;font-size:12px">❤️ Tienes ${vidas} vida(s)</span>
+          </p>
+          <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="usarVida('ladrillos')">❤️ Usar Vida</button>
+          <button class="game-btn-neon" onclick="abrirMenuDificultad()">🔄 Reiniciar</button>
+          <button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button>
+          <button class="game-btn-neon" onclick="salirDelJuego()">🚪 Salir</button>`;
+      } else {
+        const recompensa = bricksCurrentDifficulty === 'terrestre' ? 100 : bricksCurrentDifficulty === 'semidios' ? 200 : 500;
+        menuGameOver.innerHTML = `
+          <h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2>
+          <p style="color:#FFD700;font-size:13px;margin-bottom:12px">
+            Puntuación: ${bricksScore} pts<br>
+            <span style="color:#aaa;font-size:11px">+${recompensa} €Eden€ por participar</span>
+          </p>
+          <button class="game-btn-neon" onclick="abrirMenuDificultad()">🔄 ¡Repetir!</button>
+          <button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button>
+          <button class="game-btn-neon" onclick="salirDelJuego()">🚪 Salir</button>`;
+        darXPporJuego(bricksScore);
+        db.ref('usuarios/' + currentUser).update({ saldo: userBalance + recompensa });
+        db.ref('usuarios/' + currentUser + '/puntos').once('value', sv => {
+          if (bricksScore > (sv.val() || 0)) db.ref('usuarios/' + currentUser + '/puntos').set(bricksScore);
+        });
+        db.ref('ranking/' + bricksCurrentDifficulty + '/' + currentUser).once('value', sv => {
+          if (!sv.exists() || bricksScore > sv.val()) db.ref('ranking/' + bricksCurrentDifficulty + '/' + currentUser).set(bricksScore);
+        });
+      }
+    });
+  } else {
+    /* CORREGIDO: también se muestra el menú para admin */
+    menuGameOver.classList.remove("hidden");
+    menuGameOver.innerHTML = `
+      <h2 style="color:#00FFFF;margin-bottom:8px">FIN</h2>
+      <p style="color:#FFD700;font-size:13px;margin-bottom:12px">Puntuación: ${bricksScore} pts</p>
+      <button class="game-btn-neon" onclick="abrirMenuDificultad()">🔄 ¡Repetir!</button>
+      <button class="game-btn-neon" onclick="salirDelJuego()">🚪 Salir</button>`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   JUEGO 2 — FLAPPY EDÉN
+═══════════════════════════════════════════════════════════════ */
+const fCvs = document.getElementById('flappyCanvas'), fCtx = fCvs.getContext('2d');
+const FW = fCvs.width, FH = fCvs.height;
+const F_GRAVITY = 0.32, F_JUMP = -6.5, F_PIPE_W = 52, F_GAP = 165, F_PIPE_SPEED = 2.4, F_PIPE_INTERVAL = 110;
+const NEON_COLORS = ['#00FFFF','#00FF00','#FF00FF','#FFD700','#FF4500','#7B2FFF'];
+
+let fBird = { x:70, y:FH/2, vy:0, r:20 }, fPipes = [], fScore = 0, fFrame = 0, fActive = false, fRaf = null, fStarted = false;
+const fBgImg = new Image(); fBgImg.src = 'fondo1.jpg';
+
+function abrirFlappy() {
+  reproducir('click');
+  document.querySelectorAll('.container,.vista-juego-base').forEach(c => c.classList.add('hidden'));
+  ['exit-btn','settings-btn','shop-btn-izq','chat-btn'].forEach(b => { const el = document.getElementById(b); if (el) el.classList.add('hidden'); });
+  document.getElementById('vista-flappy').classList.remove('hidden');
+  document.getElementById('pantalla-oscura').classList.remove('hidden');
+  document.getElementById('flappy-start-menu').classList.remove('hidden');
+  document.getElementById('flappy-over-menu').classList.add('hidden');
+  document.getElementById('rank-ingame-flappy').classList.add('hidden');
+  fActive = false; fStarted = false; _fDrawStatic();
+}
+function salirFlappy() { fActive = false; cancelAnimationFrame(fRaf); mostrarVista('vista-agenda'); }
+function iniciarFlappy() {
+  document.getElementById('flappy-start-menu').classList.add('hidden');
+  document.getElementById('flappy-over-menu').classList.add('hidden');
+  document.getElementById('rank-ingame-flappy').classList.add('hidden');
+  fBird = { x:70, y:FH/2, vy:0, r:20 }; fPipes = []; fScore = 0; fFrame = 0; fActive = true; fStarted = true;
+  document.getElementById('flappy-score').innerText = '€Eden€: 0';
+  cancelAnimationFrame(fRaf); fLoop();
+}
+function flappyJump() {
+  if (!fStarted) return;
+  if (!fActive) { iniciarFlappy(); return; }
+  fBird.vy = F_JUMP; reproducir('bounce');
+}
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' && !document.getElementById('vista-flappy').classList.contains('hidden')) {
+    e.preventDefault(); flappyJump();
+  }
+});
+
+function fLoop() {
+  if (!fActive) return;
+  fFrame++;
+  if (fFrame % F_PIPE_INTERVAL === 0) {
+    const topH = 60 + Math.random() * (FH - F_GAP - 100);
+    const col  = NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)];
+    fPipes.push({ x: FW, topH, bottomY: topH + F_GAP, scored: false, col });
+  }
+  fPipes.forEach(p => p.x -= F_PIPE_SPEED);
+  fPipes = fPipes.filter(p => p.x > -F_PIPE_W - 10);
+  fPipes.forEach(p => {
+    if (!p.scored && p.x + F_PIPE_W < fBird.x) {
+      p.scored = true; fScore++;
+      document.getElementById('flappy-score').innerText = '€Eden€: ' + fScore;
+      reproducir('coin');
+      if (currentUser && currentUser !== 'admin')
+        db.ref('usuarios/' + currentUser + '/saldo').transaction(v => (v || 0) + 25);
+    }
+  });
+  fBird.vy += F_GRAVITY; fBird.y += fBird.vy;
+  let hit = fBird.y - fBird.r <= 0 || fBird.y + fBird.r >= FH;
+  fPipes.forEach(p => {
+    if (fBird.x + fBird.r > p.x && fBird.x - fBird.r < p.x + F_PIPE_W)
+      if (fBird.y - fBird.r < p.topH || fBird.y + fBird.r > p.bottomY) hit = true;
+  });
+  if (hit) { fActive = false; reproducir('fail'); _fEndGame(); return; }
+  _fDraw(); fRaf = requestAnimationFrame(fLoop);
+}
+
+function _fDraw() {
+  if (fBgImg.complete && fBgImg.naturalWidth > 0) fCtx.drawImage(fBgImg, 0, 0, FW, FH);
+  else { fCtx.fillStyle = '#001a10'; fCtx.fillRect(0, 0, FW, FH); }
+  fPipes.forEach(p => { _drawPipeNeon(p.x, 0, p.topH, p.col); _drawPipeNeon(p.x, p.bottomY, FH - p.bottomY, p.col); });
+  _drawFlappyBird();
+}
+function _fDrawStatic() {
+  if (fBgImg.complete && fBgImg.naturalWidth > 0) fCtx.drawImage(fBgImg, 0, 0, FW, FH);
+  else { fCtx.fillStyle = '#001810'; fCtx.fillRect(0, 0, FW, FH); }
+  _drawFlappyBird();
+}
+function _drawPipeNeon(x, y, h, col) {
+  if (h <= 0) return;
+  const blockSize = 18, cols2 = Math.ceil(F_PIPE_W / blockSize), rows2 = Math.ceil(h / blockSize);
+  for (let r = 0; r < rows2; r++) for (let c = 0; c < cols2; c++) {
+    const bx = x + c * blockSize, by = y + r * blockSize;
+    const bw2 = Math.min(blockSize, x + F_PIPE_W - bx), bh2 = Math.min(blockSize, y + h - by);
+    if (bw2 <= 0 || bh2 <= 0) continue;
+    fCtx.fillStyle = 'rgba(0,0,0,.75)'; fCtx.fillRect(bx, by, bw2, bh2);
+    fCtx.strokeStyle = col; fCtx.lineWidth = 1.5; fCtx.shadowColor = col; fCtx.shadowBlur = 6;
+    fCtx.strokeRect(bx + .5, by + .5, bw2 - 1, bh2 - 1); fCtx.shadowBlur = 0;
+  }
+}
+function _drawFlappyBird() {
+  const b = fBird;
+  fCtx.save(); fCtx.shadowColor = '#00FFFF'; fCtx.shadowBlur = 18;
+  fCtx.beginPath(); fCtx.arc(b.x, b.y, b.r + 3, 0, Math.PI * 2);
+  fCtx.strokeStyle = '#00FFFF'; fCtx.lineWidth = 2.5; fCtx.stroke(); fCtx.restore();
+  fCtx.save();
+  fCtx.beginPath(); fCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2); fCtx.clip();
+  if (flappyAvatarImg && flappyAvatarImg.complete && flappyAvatarImg.naturalWidth > 0) {
+    fCtx.drawImage(flappyAvatarImg, b.x - b.r, b.y - b.r, b.r * 2, b.r * 2);
+  } else {
+    fCtx.fillStyle = '#001828'; fCtx.fillRect(b.x - b.r, b.y - b.r, b.r * 2, b.r * 2);
+    fCtx.font = b.r + 'px serif'; fCtx.textAlign = 'center'; fCtx.textBaseline = 'middle';
+    fCtx.fillText(skinPajaroEquipada, b.x, b.y + 2);
+  }
+  fCtx.restore();
+  fCtx.beginPath(); fCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+  fCtx.strokeStyle = '#00FFFF'; fCtx.lineWidth = 2; fCtx.stroke();
+}
+
+function _fEndGame() {
+  if (currentUser && currentUser !== 'admin') {
+    db.ref('usuarios/' + currentUser + '/vidas_disponibles').once('value', s => {
+      const vidas = s.val() || 0;
+      const overMenu = document.getElementById('flappy-over-menu'); overMenu.classList.remove('hidden');
+      if (vidas > 0) {
+        overMenu.innerHTML = `
+          <h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2>
+          <p style="color:#FFD700;font-size:14px;margin-bottom:12px">
+            Puntuación: ${fScore} pts<br>
+            <span style="color:#00FF00;font-size:12px">❤️ Tienes ${vidas} vida(s)</span>
+          </p>
+          <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="usarVida('flappy')">❤️ Usar Vida</button>
+          <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">🔄 Reiniciar</button>
+          <button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button>
+          <button class="game-btn-neon" onclick="salirFlappy()">🚪 Salir</button>`;
+      } else {
+        overMenu.innerHTML = `
+          <h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2>
+          <p style="color:#FFD700;font-size:14px;margin-bottom:12px">Puntuación: ${fScore} pts</p>
+          <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">🔄 ¡Repetir!</button>
+          <button class="game-btn-neon" onclick="mostrarVista('vista-tienda-unificada')">🛒 Tienda</button>
+          <button class="game-btn-neon" onclick="salirFlappy()">🚪 Salir</button>`;
+        darXPporJuego(fScore);
+        db.ref('usuarios/' + currentUser + '/puntosFlappy').once('value', sv => {
+          if (fScore > (sv.val() || 0)) db.ref('usuarios/' + currentUser + '/puntosFlappy').set(fScore);
+        });
+        db.ref('ranking/flappy/' + currentUser).once('value', sv => {
+          if (!sv.exists() || fScore > sv.val()) db.ref('ranking/flappy/' + currentUser).set(fScore);
+        });
+      }
+    });
+  } else {
+    const overMenu = document.getElementById('flappy-over-menu'); overMenu.classList.remove('hidden');
+    overMenu.innerHTML = `
+      <h2 style="color:#ff4444;margin-bottom:8px">💀 GAME OVER</h2>
+      <p style="color:#FFD700;font-size:14px;margin-bottom:12px">Puntuación: ${fScore} pts</p>
+      <button class="game-btn-neon" style="border-color:#00FF00;color:#00FF00" onclick="iniciarFlappy()">🔄 ¡Repetir!</button>
+      <button class="game-btn-neon" onclick="salirFlappy()">🚪 Salir</button>`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   JUEGO 3 — CANDY EDÉN
+═══════════════════════════════════════════════════════════════ */
+const CANDY = (() => {
+  const SKINS = {
+    classic: ['💎','🔥','💧','🌿','⚡','❄️'],
+    fruit:   ['🍎','🍇','🍊','🍋','🍒','🥝'],
+    cyber:   ['⌬','⏦','⌮','⌯','⎔','⍥']
+  };
+  const COLORS = ['#00FFFF','#FF00FF','#00FF00','#FFFF00','#FF4500','#FFFFFF'];
+  const GRID = 8;
+
+  let activeSkin = 'classic', gridData = [], selected = null, busy = false,
+      currentLevel = null, candyScore = 0, candyMoves = 0, comboCount = 0,
+      pendingBomb = null, levels = [],
+      candyState = { unlocked: 1, inv: { rayo: 0, bollo: 0 } };
+
+  function loadState() {
+    if (!currentUser || currentUser === 'admin') { _renderLevels(); return; }
+    db.ref('usuarios/' + currentUser + '/candyState').once('value', s => {
+      candyState = s.exists() ? s.val() : { unlocked: 1, inv: { rayo: 0, bollo: 0 } };
+      if (!candyState.inv) candyState.inv = { rayo: 0, bollo: 0 };
+      syncInventory(); _renderLevels();
+    });
+  }
+
+  function saveState() {
+    if (!currentUser || currentUser === 'admin') return;
+    db.ref('usuarios/' + currentUser + '/candyState').set(candyState);
+    db.ref('usuarios/' + currentUser + '/candyInv').set(candyState.inv);
+  }
+
+  function syncInventory() {
+    if (!currentUser || currentUser === 'admin') { _updateHUD(); return; }
+    db.ref('usuarios/' + currentUser + '/candyInv').once('value', s => {
+      if (s.exists()) {
+        const inv = s.val();
+        candyState.inv = { rayo: inv.rayo || 0, bollo: inv.bollo || 0 };
+      }
+      _updateHUD();
+    });
+  }
+
+  function _genLevels() {
+    levels = Array.from({ length: 50 }, (_, i) => ({
+      id: i + 1,
+      goal:  1200 + i * 600,
+      moves: Math.max(15, 30 - Math.floor(i / 4))
+    }));
+  }
+
+  function _renderLevels() {
+    const container = document.getElementById('candy-lvl-container');
+    if (!container) return;
+    container.innerHTML = '';
+    levels.forEach(lvl => {
+      const b = document.createElement('div');
+      const unlocked = lvl.id <= (candyState.unlocked || 1);
+      b.className = 'candy-lvl-btn' + (unlocked ? ' unlocked' : '');
+      b.innerHTML  = unlocked ? lvl.id : '🔒';
+      b.title      = unlocked ? 'Nivel ' + lvl.id + ' — Objetivo: ' + lvl.goal + ' pts' : 'Bloqueado';
+      if (unlocked) b.onclick = () => { APP.audioCtx.resume(); _startGame(lvl); };
+      container.appendChild(b);
+    });
+    const cw = document.getElementById('ce-wallet-eden'); if (cw) cw.innerText = userBalance;
+  }
+
+  /* ── Skin UI ── */
+  function setSkin(s) {
+    activeSkin = s; reproducir('click');
+    ['classic','fruit','cyber'].forEach(id => {
+      const el = document.getElementById('skin-' + id);
+      if (el) el.style.border = (id === s) ? '2px solid #FF00FF' : '1px solid #444';
+    });
+    if (gridData.length) _render();
+  }
+
+  function showMenu() {
+    reproducir('click');
+    const sm = document.getElementById('candy-start-menu');
+    sm.classList.remove('ce-hidden');
+    sm.style.opacity = '1'; sm.style.pointerEvents = 'auto'; sm.style.transform = 'none';
+    document.getElementById('candy-over-menu').classList.add('ce-hidden');
+    document.getElementById('candy-shop-menu').classList.add('ce-hidden');
+    loadState();
+  }
+
+  function toggleShop() {
+    reproducir('click');
+    document.getElementById('candy-shop-menu').classList.toggle('ce-hidden');
+    const cw = document.getElementById('ce-wallet-eden'); if (cw) cw.innerText = userBalance;
+  }
+
+  function buy(p) {
+    if (userBalance < 500) { reproducir('fail'); mostrarToast('❌ Saldo insuficiente', '#ff4444'); return; }
+    const ns = userBalance - 500;
+    db.ref('usuarios/' + currentUser).update({ saldo: ns }).then(() => {
+      candyState.inv[p] = (candyState.inv[p] || 0) + 1;
+      saveState(); actualizarSaldoUI(ns); _updateHUD(); reproducir('coin');
+      mostrarToast('✅ ' + p + ' ×1 añadido', '#FF00FF');
+    });
+  }
+
+  function _startGame(lvl) {
+    currentLevel = lvl; candyScore = 0; candyMoves = lvl.moves; comboCount = 0;
+    const sm = document.getElementById('candy-start-menu');
+    sm.style.opacity = '0'; sm.style.pointerEvents = 'none';
+    document.getElementById('candy-over-menu').classList.add('ce-hidden');
+    document.getElementById('candy-shop-menu').classList.add('ce-hidden');
+    _buildGrid(); _updateHUD();
+  }
+
+  function _buildGrid() {
+    const container = document.getElementById('ce-grid-eden');
+    container.innerHTML = ''; gridData = [];
+    for (let r = 0; r < GRID; r++) {
+      gridData[r] = [];
+      for (let c = 0; c < GRID; c++) {
+        const val = Math.floor(Math.random() * 6);
+        gridData[r][c] = { type: val, isBomb: false };
+        const el = document.createElement('div');
+        el.className = 'ce-cell-eden'; el.id = 'ce-' + r + '-' + c;
+        el.onclick = () => _cellClick(r, c);
+        el.addEventListener('touchstart', e => { e.preventDefault(); _cellTouchStart(r, c, e); }, { passive: false });
+        el.addEventListener('touchmove',  e => { e.preventDefault(); _cellTouchMove(e); },         { passive: false });
+        el.addEventListener('touchend',   e => { e.preventDefault(); _cellTouchEnd(r, c, e); },   { passive: false });
+        container.appendChild(el);
+      }
+    }
+    // Asegurarse de que no haya matches iniciales
+    _removeInitialMatches();
+    _render();
+  }
+
+  function _removeInitialMatches() {
+    let changed = true;
+    let tries = 0;
+    while (changed && tries < 50) {
+      changed = false; tries++;
+      for (let r = 0; r < GRID; r++) {
+        for (let c = 0; c < GRID; c++) {
+          const t = gridData[r][c].type;
+          if (c >= 2 && gridData[r][c-1].type === t && gridData[r][c-2].type === t) {
+            gridData[r][c].type = (t + 1 + Math.floor(Math.random() * 4)) % 6;
+            changed = true;
+          }
+          if (r >= 2 && gridData[r-1][c].type === t && gridData[r-2][c].type === t) {
+            gridData[r][c].type = (t + 1 + Math.floor(Math.random() * 4)) % 6;
+            changed = true;
+          }
+        }
+      }
+    }
+  }
+
+  /* ── Touch drag support ── */
+  let touchStartCell = null;
+
+  function _cellTouchStart(r, c, e) {
+    if (busy || !currentLevel) return;
+    touchStartCell = { r, c };
+    const el = document.getElementById('ce-' + r + '-' + c);
+    if (selected) document.getElementById('ce-' + selected.r + '-' + selected.c)?.classList.remove('ce-selected');
+    selected = { r, c };
+    if (el) el.classList.add('ce-selected');
+  }
+
+  function _cellTouchMove(e) {
+    if (!touchStartCell || busy || !currentLevel) return;
+    const touch  = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (!target || !target.id.startsWith('ce-')) return;
+    const parts  = target.id.split('-');
+    if (parts.length !== 3) return;
+    const tr = parseInt(parts[1]), tc = parseInt(parts[2]);
+    const { r: sr, c: sc } = touchStartCell;
+    if (Math.abs(tr - sr) + Math.abs(tc - sc) === 1 && !(tr === sr && tc === sc)) {
+      _doSwapAction(sr, sc, tr, tc);
+      touchStartCell = null;
+    }
+  }
+
+  function _cellTouchEnd(r, c, e) {
+    touchStartCell = null;
+  }
+
+  function _cellClick(r, c) {
+    if (busy || !currentLevel) return;
+    if (!selected) {
+      selected = { r, c };
+      document.getElementById('ce-' + r + '-' + c)?.classList.add('ce-selected');
+    } else {
+      const { r: r1, c: c1 } = selected;
+      document.getElementById('ce-' + r1 + '-' + c1)?.classList.remove('ce-selected');
+      if (Math.abs(r - r1) + Math.abs(c - c1) === 1) {
+        _doSwapAction(r1, c1, r, c);
+      }
+      selected = null;
+    }
+  }
+
+  function _doSwapAction(r1, c1, r2, c2) {
+    busy = true;
+    _swap(r1, c1, r2, c2);
+    setTimeout(() => {
+      if (!_checkMatches()) {
+        _swap(r1, c1, r2, c2); busy = false;
+      } else {
+        candyMoves--; _updateHUD();
+      }
+    }, 280);
+  }
+
+  function _swap(r1, c1, r2, c2) {
+    const t = gridData[r1][c1]; gridData[r1][c1] = gridData[r2][c2]; gridData[r2][c2] = t; _render();
+  }
+
+  function _checkMatches() {
+    const matched = new Set();
+    for (let r = 0; r < GRID; r++)
+      for (let c = 0; c < GRID - 2; c++)
+        if (gridData[r][c].type === gridData[r][c+1].type && gridData[r][c].type === gridData[r][c+2].type)
+          { matched.add(r+','+c); matched.add(r+','+(c+1)); matched.add(r+','+(c+2)); }
+    for (let c = 0; c < GRID; c++)
+      for (let r = 0; r < GRID - 2; r++)
+        if (gridData[r][c].type === gridData[r+1][c].type && gridData[r][c].type === gridData[r+2][c].type)
+          { matched.add(r+','+c); matched.add((r+1)+','+c); matched.add((r+2)+','+c); }
+
+    if (matched.size > 0) {
+      comboCount++;
+      const vCard = document.getElementById('vista-candy');
+      if (comboCount >= 3) vCard.classList.add('super-combo-mode');
+      try {
+        const osc = APP.audioCtx.createOscillator(), gain = APP.audioCtx.createGain();
+        osc.type = 'sine'; osc.frequency.value = 300 + comboCount * 70;
+        gain.gain.setValueAtTime(0.12, APP.audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, APP.audioCtx.currentTime + 0.15);
+        osc.connect(gain); gain.connect(APP.audioCtx.destination);
+        osc.start(); osc.stop(APP.audioCtx.currentTime + 0.15);
+      } catch(e) {}
+
+      matched.forEach(pos => {
+        const [r, c] = pos.split(',').map(Number);
+        if (gridData[r][c] && gridData[r][c].isBomb) _triggerBomb(r, c, matched);
+        candyScore += 30 * comboCount;
+        gridData[r][c] = null;
+        const el = document.getElementById('ce-' + r + '-' + c);
+        if (el) el.style.transform = 'scale(0)';
+      });
+      if (matched.size >= 5) pendingBomb = [...matched][0].split(',').map(Number);
+      _updateHUD();
+      setTimeout(_refill, 340);
+      return true;
+    }
+    busy = false; comboCount = 0;
+    document.getElementById('vista-candy').classList.remove('super-combo-mode');
+    _checkEnd(); return false;
+  }
+
+  function _triggerBomb(r, c, matchedSet) {
+    for (let i = r - 2; i <= r + 2; i++)
+      for (let j = c - 2; j <= c + 2; j++)
+        if (i >= 0 && i < GRID && j >= 0 && j < GRID && gridData[i] && gridData[i][j])
+          matchedSet.add(i + ',' + j);
+  }
+
+  function _refill() {
+    for (let c = 0; c < GRID; c++) {
+      let shift = 0;
+      for (let r = GRID - 1; r >= 0; r--) {
+        if (gridData[r][c] === null) shift++;
+        else if (shift > 0) { gridData[r + shift][c] = gridData[r][c]; gridData[r][c] = null; }
+      }
+      for (let r = 0; r < shift; r++) gridData[r][c] = { type: Math.floor(Math.random() * 6), isBomb: false };
+    }
+    if (pendingBomb) {
+      const [pr, pc] = pendingBomb;
+      if (gridData[pr] && gridData[pr][pc]) gridData[pr][pc].isBomb = true;
+      pendingBomb = null;
+    }
+    _render(); setTimeout(_checkMatches, 280);
+  }
+
+  function _render() {
+    const symbols = SKINS[activeSkin];
+    for (let r = 0; r < GRID; r++) for (let c = 0; c < GRID; c++) {
+      const el = document.getElementById('ce-' + r + '-' + c);
+      const cell = gridData[r][c];
+      if (!el) continue;
+      el.innerHTML  = cell ? symbols[cell.type] : "";
+      el.style.color = cell ? COLORS[cell.type]  : "";
+      el.className  = 'ce-cell-eden' + (cell && cell.isBomb ? ' ce-bomb' : '');
+      el.style.transform = cell ? 'scale(1)' : 'scale(0)';
+      el.style.fontFamily = activeSkin === 'cyber' ? 'serif' : '';
+    }
+  }
+
+  function usePower(p) {
+    if (!candyState.inv[p] || candyState.inv[p] <= 0) { mostrarToast('Sin ' + p + '. Cómpralo en tienda', '#FF00FF'); return; }
+    if (!selected) { mostrarToast('Selecciona una celda primero', '#FFD700'); return; }
+    candyState.inv[p]--;
+    const { r, c } = selected;
+    document.getElementById('ce-' + r + '-' + c)?.classList.remove('ce-selected');
+    selected = null;
+    try {
+      const osc = APP.audioCtx.createOscillator(), gain = APP.audioCtx.createGain();
+      osc.type = 'square'; osc.frequency.value = 800;
+      gain.gain.setValueAtTime(0.1, APP.audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, APP.audioCtx.currentTime + 0.3);
+      osc.connect(gain); gain.connect(APP.audioCtx.destination);
+      osc.start(); osc.stop(APP.audioCtx.currentTime + 0.3);
+    } catch(e) {}
+    if (p === 'rayo') {
+      for (let i = 0; i < GRID; i++) { if (gridData[i]) gridData[i][c] = null; }
+      mostrarToast('⚡ ¡Columna eliminada!', '#FF00FF');
+    } else {
+      for (let i = r - 1; i <= r + 1; i++)
+        for (let j = c - 1; j <= c + 1; j++)
+          if (i >= 0 && i < GRID && j >= 0 && j < GRID && gridData[i]) gridData[i][j] = null;
+      mostrarToast('🥐 ¡Mini explosión!', '#FF00FF');
+    }
+    saveState(); _updateHUD(); _refill();
+  }
+
+  function _updateHUD() {
+    const s  = document.getElementById('ce-score-eden');
+    const mv = document.getElementById('ce-moves-eden');
+    const g  = document.getElementById('ce-goal-eden');
+    const ri = document.getElementById('ce-inv-rayo-eden');
+    const bi = document.getElementById('ce-inv-bollo-eden');
+    if (s)  s.innerText  = candyScore;
+    if (mv) mv.innerText = candyMoves;
+    if (g)  g.innerText  = currentLevel ? currentLevel.goal : 0;
+    if (ri) ri.innerText = candyState.inv?.rayo  || 0;
+    if (bi) bi.innerText = candyState.inv?.bollo || 0;
+  }
+
+  function _checkEnd() {
+    if (!currentLevel) return;
+    if (candyScore >= currentLevel.goal) {
+      // Victoria
+      try {
+        [523,659,783,1046].forEach((f, i) => {
+          setTimeout(() => {
+            const o = APP.audioCtx.createOscillator(), g = APP.audioCtx.createGain();
+            o.type = 'sine'; o.frequency.value = f;
+            g.gain.setValueAtTime(0.12, APP.audioCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, APP.audioCtx.currentTime + 0.2);
+            o.connect(g); g.connect(APP.audioCtx.destination);
+            o.start(); o.stop(APP.audioCtx.currentTime + 0.2);
+          }, i * 120);
+        });
+      } catch(e) {}
+      if (currentLevel.id >= (candyState.unlocked || 1)) candyState.unlocked = currentLevel.id + 1;
+      if (currentUser && currentUser !== 'admin') {
+        db.ref('usuarios/' + currentUser + '/candyBestLevel').transaction(v => Math.max(v || 0, currentLevel.id));
+        db.ref('usuarios/' + currentUser + '/candyBestScore').transaction(v => Math.max(v || 0, candyScore));
+        db.ref('ranking/candy/' + currentUser).transaction(v => Math.max(v || 0, candyScore));
+        let recompensa = 250;
+        if (currentLevel.id % 15 === 0) recompensa += 1000;
+        db.ref('usuarios/' + currentUser + '/saldo').transaction(v => (v || 0) + recompensa);
+        actualizarSaldoUI(userBalance + recompensa);
+        darXPporJuego(Math.max(1, Math.floor(candyScore / 10)));
+        saveState();
+      }
+      mostrarToast('🏆 Nivel ' + currentLevel.id + ' completado!', '#FFD700');
+      currentLevel = null;
+      setTimeout(showMenu, 800);
+    } else if (candyMoves <= 0) {
+      reproducir('fail');
+      /* CORREGIDO: usar getElementById en lugar de variable overTxt no definida */
+      const overTitle = document.getElementById('candy-over-title');
+      const overTxt   = document.getElementById('candy-over-txt');
+      if (overTitle) overTitle.innerText = 'GAME OVER';
+      if (overTxt)   overTxt.innerText   = 'Nivel ' + (currentLevel ? currentLevel.id : '?') + ' — ' + candyScore + ' / ' + (currentLevel ? currentLevel.goal : '?') + ' pts';
+      document.getElementById('candy-over-menu').classList.remove('ce-hidden');
+      currentLevel = null;
+    } else {
+      if (!_hayMovimientosPosibles()) {
+        _reorganizarGrid();
+        mostrarToast('🔀 ¡Sin movimientos! Reorganizando…', '#FF00FF');
+      }
+    }
+  }
+
+  function _hayMovimientosPosibles() {
+    for (let r = 0; r < GRID; r++) {
+      for (let c = 0; c < GRID; c++) {
+        if (c < GRID - 1) { _swap(r,c,r,c+1); const ok = _tieneMatch(r,c)||_tieneMatch(r,c+1); _swap(r,c,r,c+1); if (ok) return true; }
+        if (r < GRID - 1) { _swap(r,c,r+1,c); const ok = _tieneMatch(r,c)||_tieneMatch(r+1,c); _swap(r,c,r+1,c); if (ok) return true; }
+      }
+    }
+    return false;
+  }
+
+  function _tieneMatch(r, c) {
+    if (!gridData[r] || !gridData[r][c]) return false;
+    const t = gridData[r][c].type;
+    let h = 1, v = 1;
+    for (let i=c-1;i>=0&&gridData[r][i]&&gridData[r][i].type===t;i--) h++;
+    for (let i=c+1;i<GRID&&gridData[r][i]&&gridData[r][i].type===t;i++) h++;
+    for (let i=r-1;i>=0&&gridData[i][c]&&gridData[i][c].type===t;i--) v++;
+    for (let i=r+1;i<GRID&&gridData[i][c]&&gridData[i][c].type===t;i++) v++;
+    return h >= 3 || v >= 3;
+  }
+
+  function _reorganizarGrid() {
+    const figuras = [];
+    for (let r = 0; r < GRID; r++) for (let c = 0; c < GRID; c++) if (gridData[r][c]) figuras.push(gridData[r][c].type);
+    for (let i = figuras.length - 1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [figuras[i],figuras[j]]=[figuras[j],figuras[i]]; }
+    let idx = 0;
+    for (let r = 0; r < GRID; r++) for (let c = 0; c < GRID; c++) if (gridData[r][c]) gridData[r][c] = { type: figuras[idx++], isBomb: false };
+    _render();
+    setTimeout(() => { if (!_checkMatches()) { if (!_hayMovimientosPosibles()) setTimeout(_reorganizarGrid, 500); } }, 300);
+  }
+
+  function abrir() {
+    reproducir('click');
+    document.querySelectorAll('.container,.vista-juego-base').forEach(c => c.classList.add('hidden'));
+    ['exit-btn','settings-btn','shop-btn-izq','chat-btn'].forEach(b => { const el = document.getElementById(b); if (el) el.classList.add('hidden'); });
+    ['settings-btn','chat-btn','shop-btn-izq'].forEach(b => { const el = document.getElementById(b); if (el) el.classList.remove('hidden'); });
+    document.getElementById('vista-candy').classList.remove('hidden');
+    document.getElementById('pantalla-oscura').classList.remove('hidden');
+    const sm = document.getElementById('candy-start-menu');
+    sm.style.opacity = '1'; sm.style.pointerEvents = 'auto'; sm.style.transform = 'none';
+    sm.classList.remove('ce-hidden');
+    document.getElementById('candy-over-menu').classList.add('ce-hidden');
+    document.getElementById('candy-shop-menu').classList.add('ce-hidden');
+    loadState();
+  }
+
+  function salir() { reproducir('click'); currentLevel = null; mostrarVista('vista-agenda'); }
+
+  _genLevels();
+
+  return { abrir, salir, showMenu, toggleShop, setSkin, buy, usePower, syncInventory };
+})();
+
 function abrirCandyEden() { CANDY.abrir(); }
-/* ════════════════════ PREVIEWS EN TARJETAS ════════════════════ / function dibujarPreviewLadrillos() { const pCvs = document.getElementById('previewCanvas'); if (!pCvs) return; const pCtx = pCvs.getContext('2d'), pw = pCvs.width, ph = pCvs.height; pCtx.clearRect(0, 0, pw, ph); const cols2 = 9, rows2 = 3, bw2 = (pw - 20) / cols2, bh2 = 20; for (let c = 0; c < cols2; c++) for (let r = 0; r < rows2; r++) { const bx = c * bw2 + 10, by = r * (bh2 + 3) + 10; if (imgLadrillo.complete && imgLadrillo.naturalWidth > 0) pCtx.drawImage(imgLadrillo, bx, by, bw2 - 3, bh2); else { const colores = ['#FF4444','#FFD700','#FF6666']; pCtx.fillStyle = colores[r]; pCtx.fillRect(bx, by, bw2 - 3, bh2); } } pCtx.beginPath(); pCtx.arc(pw/2, ph-18, 8, 0, Math.PI2); pCtx.fillStyle = '#FF0000'; pCtx.shadowColor = '#FF4444'; pCtx.shadowBlur = 8; pCtx.fill(); pCtx.shadowBlur = 0; pCtx.fillStyle = '#00FFFF'; pCtx.shadowColor = '#00FFFF'; pCtx.shadowBlur = 8; pCtx.beginPath(); pCtx.roundRect(pw/2-30, ph-9, 60, 6, 3); pCtx.fill(); pCtx.shadowBlur = 0; }
-function dibujarPreviewFlappy() { const pCvs = document.getElementById('previewFlappyCanvas'); if (!pCvs) return; const pCtx = pCvs.getContext('2d'), pw = pCvs.width, ph = pCvs.height; pCtx.clearRect(0, 0, pw, ph); if (fBgImg.complete && fBgImg.naturalWidth > 0) pCtx.drawImage(fBgImg, 0, 0, pw, ph); else { const g = pCtx.createLinearGradient(0,0,0,ph); g.addColorStop(0,'#001a0a'); g.addColorStop(1,'#0a1a00'); pCtx.fillStyle=g; pCtx.fillRect(0,0,pw,ph); } [[60,0,50],[220,58,44],[330,0,52]].forEach(([x,topH,h],i) => { const col = NEON_COLORS[i]; pCtx.fillStyle='rgba(0,0,0,.6)'; pCtx.fillRect(x,topH,28,h); pCtx.strokeStyle=col; pCtx.lineWidth=1.5; pCtx.shadowColor=col; pCtx.shadowBlur=6; pCtx.strokeRect(x,topH,28,h); pCtx.shadowBlur=0; }); pCtx.beginPath(); pCtx.arc(pw/2,ph/2,13,0,Math.PI*2); pCtx.fillStyle='#001828'; pCtx.fill(); pCtx.strokeStyle='#00FFFF'; pCtx.lineWidth=2; pCtx.shadowColor='#00FFFF'; pCtx.shadowBlur=10; pCtx.stroke(); pCtx.shadowBlur=0; pCtx.font='13px serif'; pCtx.textAlign='center'; pCtx.textBaseline='middle'; pCtx.fillText('🐦',pw/2,ph/2+1); }
-function dibujarPreviewCandy() { const pCvs = document.getElementById('previewCandyCanvas'); if (!pCvs) return; const pCtx = pCvs.getContext('2d'), pw = pCvs.width, ph = pCvs.height; pCtx.clearRect(0,0,pw,ph); const g = pCtx.createRadialGradient(pw/2,ph/2,0,pw/2,ph/2,pw/2); g.addColorStop(0,'#2a0040'); g.addColorStop(1,'#050010'); pCtx.fillStyle=g; pCtx.fillRect(0,0,pw,ph); const gems=['💎','🔥','💧','🌿','⚡','❄️']; const gemColors=['#00FFFF','#FF4500','#0080FF','#00CC00','#FFD700','#88CCFF']; const cols=10, cellW=pw/cols, cellH=ph/2; for (let r=0;r<2;r++) for (let c=0;c<cols;c++) { const idx=(rcols+c)%6; pCtx.font=(cellH.65)+'px serif'; pCtx.textAlign='center'; pCtx.textBaseline='middle'; pCtx.shadowColor=gemColors[idx]; pCtx.shadowBlur=6; pCtx.fillText(gems[idx],ccellW+cellW/2,rcellH+cellH/2); pCtx.shadowBlur=0; } pCtx.fillStyle='rgba(0,0,0,.25)'; pCtx.fillRect(0,0,pw,ph); }
-/* ════════════════════ INIT ════════════════════ */ document.addEventListener('DOMContentLoaded', () => { inicializarTienda(); });
-if (!cargarSesionLocal()) { mostrarVista('vista-login'); } </script>
-</body> </html> ```
+
+/* ════════════════════ PREVIEWS EN TARJETAS ════════════════════ */
+function dibujarPreviewLadrillos() {
+  const pCvs = document.getElementById('previewCanvas'); if (!pCvs) return;
+  const pCtx = pCvs.getContext('2d'), pw = pCvs.width, ph = pCvs.height;
+  pCtx.clearRect(0, 0, pw, ph);
+  const cols2 = 9, rows2 = 3, bw2 = (pw - 20) / cols2, bh2 = 20;
+  for (let c = 0; c < cols2; c++) for (let r = 0; r < rows2; r++) {
+    const bx = c * bw2 + 10, by = r * (bh2 + 3) + 10;
+    if (imgLadrillo.complete && imgLadrillo.naturalWidth > 0) pCtx.drawImage(imgLadrillo, bx, by, bw2 - 3, bh2);
+    else {
+      const colores = ['#FF4444','#FFD700','#FF6666'];
+      pCtx.fillStyle = colores[r]; pCtx.fillRect(bx, by, bw2 - 3, bh2);
+    }
+  }
+  pCtx.beginPath(); pCtx.arc(pw/2, ph-18, 8, 0, Math.PI*2);
+  pCtx.fillStyle = '#FF0000'; pCtx.shadowColor = '#FF4444'; pCtx.shadowBlur = 8; pCtx.fill(); pCtx.shadowBlur = 0;
+  pCtx.fillStyle = '#00FFFF'; pCtx.shadowColor = '#00FFFF'; pCtx.shadowBlur = 8;
+  pCtx.beginPath(); pCtx.roundRect(pw/2-30, ph-9, 60, 6, 3); pCtx.fill();
+  pCtx.shadowBlur = 0;
+}
+
+function dibujarPreviewFlappy() {
+  const pCvs = document.getElementById('previewFlappyCanvas'); if (!pCvs) return;
+  const pCtx = pCvs.getContext('2d'), pw = pCvs.width, ph = pCvs.height;
+  pCtx.clearRect(0, 0, pw, ph);
+  if (fBgImg.complete && fBgImg.naturalWidth > 0) pCtx.drawImage(fBgImg, 0, 0, pw, ph);
+  else { const g = pCtx.createLinearGradient(0,0,0,ph); g.addColorStop(0,'#001a0a'); g.addColorStop(1,'#0a1a00'); pCtx.fillStyle=g; pCtx.fillRect(0,0,pw,ph); }
+  [[60,0,50],[220,58,44],[330,0,52]].forEach(([x,topH,h],i) => {
+    const col = NEON_COLORS[i];
+    pCtx.fillStyle='rgba(0,0,0,.6)'; pCtx.fillRect(x,topH,28,h);
+    pCtx.strokeStyle=col; pCtx.lineWidth=1.5; pCtx.shadowColor=col; pCtx.shadowBlur=6;
+    pCtx.strokeRect(x,topH,28,h); pCtx.shadowBlur=0;
+  });
+  pCtx.beginPath(); pCtx.arc(pw/2,ph/2,13,0,Math.PI*2); pCtx.fillStyle='#001828'; pCtx.fill();
+  pCtx.strokeStyle='#00FFFF'; pCtx.lineWidth=2; pCtx.shadowColor='#00FFFF'; pCtx.shadowBlur=10; pCtx.stroke(); pCtx.shadowBlur=0;
+  pCtx.font='13px serif'; pCtx.textAlign='center'; pCtx.textBaseline='middle'; pCtx.fillText('🐦',pw/2,ph/2+1);
+}
+
+function dibujarPreviewCandy() {
+  const pCvs = document.getElementById('previewCandyCanvas'); if (!pCvs) return;
+  const pCtx = pCvs.getContext('2d'), pw = pCvs.width, ph = pCvs.height;
+  pCtx.clearRect(0,0,pw,ph);
+  const g = pCtx.createRadialGradient(pw/2,ph/2,0,pw/2,ph/2,pw/2);
+  g.addColorStop(0,'#2a0040'); g.addColorStop(1,'#050010');
+  pCtx.fillStyle=g; pCtx.fillRect(0,0,pw,ph);
+  const gems=['💎','🔥','💧','🌿','⚡','❄️'];
+  const gemColors=['#00FFFF','#FF4500','#0080FF','#00CC00','#FFD700','#88CCFF'];
+  const cols=10, cellW=pw/cols, cellH=ph/2;
+  for (let r=0;r<2;r++) for (let c=0;c<cols;c++) {
+    const idx=(r*cols+c)%6;
+    pCtx.font=(cellH*.65)+'px serif'; pCtx.textAlign='center'; pCtx.textBaseline='middle';
+    pCtx.shadowColor=gemColors[idx]; pCtx.shadowBlur=6;
+    pCtx.fillText(gems[idx],c*cellW+cellW/2,r*cellH+cellH/2);
+    pCtx.shadowBlur=0;
+  }
+  pCtx.fillStyle='rgba(0,0,0,.25)'; pCtx.fillRect(0,0,pw,ph);
+}
+
+/* ════════════════════ INIT ════════════════════ */
+// Inicializar listeners de tienda una vez cargado el DOM
+document.addEventListener('DOMContentLoaded', () => {
+  inicializarTienda();
+});
+
+if (!cargarSesionLocal()) {
+  mostrarVista('vista-login');
+}
+</script>
+</body>
+</html>
