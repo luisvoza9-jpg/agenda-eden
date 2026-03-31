@@ -1,0 +1,19 @@
+LICENCIA DE PROPIEDAD PRIVADA Y DERECHOS RESERVADOS
+
+Copyright (c) 2026 Luis Boza Solanes (luisvoza9-jpg)
+TODOS LOS DERECHOS RESERVADOS.
+
+Este software, incluyendo el código fuente, los archivos de configuración, la lógica de base de datos, los minijuegos integrados, sonidos y arte asociado, son propiedad exclusiva del autor mencionado arriba.
+
+Queda estrictamente prohibida:
+
+-La reproducción, copia o distribución del codigo.
+
+-La comunicación pública o exhibición del funcionamiento interno.
+
+-La transformación, ingeniería inversa o uso comercial de este código y sus recursos.
+
+-El uso total o parcial del contenido sin el permiso previo, expreso y por escrito del propietario legal.
+
+El contenido de este repositorio se muetras exclusivamente con fines de exhibición de portafolio personal. Cualquier uso no autorizado será sujeto a las acciones legales correspondientes bajo las leyes de propiedad intelectual vigentes.
+
