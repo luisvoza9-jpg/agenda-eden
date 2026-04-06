@@ -3019,8 +3019,13 @@ function onMinigameExit() {
   showSocialBar();
 }
 
-// Script de red de anuncios externo
-document.write('<script src="https://pl29078652.profitablecpmratenetwork.com/e1/98/9c/e1989ca6cefe274264e077390202249b.js"></script>');
+// Script de red de anuncios externo - carga segura
+(function() {
+  var s = document.createElement('script');
+  s.src = 'https://pl29078652.profitablecpmratenetwork.com/e1/98/9c/e1989ca6cefe274264e077390202249b.js';
+  s.async = true;
+  document.head.appendChild(s);
+})();
 </script>
 </body>
 </html>
