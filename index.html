@@ -506,6 +506,16 @@ input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #
     <input type="password" id="edit-pass" placeholder="Nueva contraseña">
     <input type="number"   id="edit-age"  placeholder="Cambiar edad" min="1" max="120">
     <button class="game-btn-neon" onclick="actualizarPerfil()" style="font-size:12px">GUARDAR CAMBIOS</button>
+    
+    <!-- SECCIÓN COMPARTIR -->
+    <hr style="border:0;border-top:1px solid rgba(0,255,255,.15);margin:15px 0">
+    <p style="font-size:12px;color:#FFD700;margin-bottom:8px;font-weight:bold;text-align:center">🎮 ¿Te gusta Edén? ¡Comparte!</p>
+    <div style="display:flex;gap:10px;justify-content:center;margin-bottom:10px">
+      <button onclick="compartirApp('facebook')" style="background:#1877f2;border:none;border-radius:8px;padding:8px 14px;color:#fff;font-size:11px;cursor:pointer;font-weight:bold">📘 Facebook</button>
+      <button onclick="compartirApp('twitter')" style="background:#1da1f2;border:none;border-radius:8px;padding:8px 14px;color:#fff;font-size:11px;cursor:pointer;font-weight:bold">🐦 Twitter</button>
+      <button onclick="copiarLinkApp()" style="background:#555;border:none;border-radius:8px;padding:8px 14px;color:#fff;font-size:11px;cursor:pointer;font-weight:bold">📋 Copiar</button>
+    </div>
+    <p id="msg-copiado" style="font-size:10px;color:#00FF00;text-align:center;opacity:0;transition:opacity 0.3s">¡Enlace copiado!</p>
   </div>
 </div>
 
@@ -2721,7 +2731,6 @@ let cooldownTimer = null;
 function initAds() {
   loadAdsState();
   createRewardButton();
-  createSocialBar();
   updateRewardButton();
 }
 
@@ -2788,57 +2797,52 @@ function formatTime(ms) {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
-// Crear botón de recompensa llamativo
+// Crear botón de recompensa - estilo discreto tipo frase, arriba del todo
 function createRewardButton() {
   if (document.getElementById('ad-reward-btn')) return;
+  
+  const agendaContainer = document.getElementById('vista-agenda');
+  if (!agendaContainer) return;
   
   const btn = document.createElement('button');
   btn.id = 'ad-reward-btn';
   btn.className = 'ad-reward-button';
-  btn.innerHTML = `
-    <span class="ad-reward-icon">🎁</span>
-    <span class="ad-reward-text">+500 💰</span>
-    <span class="ad-reward-sub">Ver anuncio</span>
-  `;
+  btn.innerHTML = `🎁 +500 💰 por ver anuncio`;
   btn.onclick = showAdForReward;
   
+  // Estilo discreto tipo frase/pill, optimizado para móviles
   btn.style.cssText = `
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    border: 3px solid #FF6347;
-    border-radius: 15px;
-    padding: 12px 20px;
-    cursor: pointer;
-    z-index: 999;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-    animation: pulseReward 2s infinite;
-    display: flex;
-    flex-direction: column;
+    display: inline-flex;
     align-items: center;
-    min-width: 100px;
+    gap: 4px;
+    background: transparent;
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    border-radius: 15px;
+    padding: 4px 10px;
+    margin: 8px auto 5px auto;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: normal;
+    color: #FFD700;
+    opacity: 0.85;
+    transition: opacity 0.2s, border-color 0.2s;
   `;
   
+  // Hover solo en desktop
   const style = document.createElement('style');
   style.id = 'ad-animations';
   style.textContent = `
-    @keyframes pulseReward {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
-      50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 215, 0, 0.9); }
+    .ad-reward-button:hover {
+      opacity: 1;
+      border-color: #FFD700;
     }
-    @keyframes slideUp {
-      from { transform: translateY(100%); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    .ad-reward-icon { font-size: 24px; }
-    .ad-reward-text { font-size: 16px; font-weight: bold; color: #000; }
-    .ad-reward-sub { font-size: 10px; color: #333; }
     .ad-reward-button.disabled {
-      background: linear-gradient(135deg, #888, #666) !important;
+      opacity: 0.4 !important;
       border-color: #555 !important;
-      animation: none !important;
       cursor: not-allowed !important;
+    }
+    .ad-reward-button.cooldown {
+      position: relative;
     }
     .ad-reward-button.cooldown::after {
       content: attr(data-time);
@@ -2846,17 +2850,22 @@ function createRewardButton() {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 14px;
-      font-weight: bold;
-      color: white;
-      background: rgba(0,0,0,0.8);
-      padding: 5px 10px;
-      border-radius: 5px;
+      font-size: 10px;
+      color: #aaa;
+      background: rgba(0,0,0,0.9);
+      padding: 2px 6px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+    .ad-reward-button.cooldown {
+      color: #666 !important;
+      border-color: #444 !important;
     }
   `;
   document.head.appendChild(style);
   
-  document.body.appendChild(btn);
+  // Insertar al INICIO del contenedor (arriba del todo)
+  agendaContainer.insertBefore(btn, agendaContainer.firstChild);
 }
 
 // Actualizar estado del botón
@@ -2870,11 +2879,7 @@ function updateRewardButton() {
   } else {
     btn.classList.remove('disabled', 'cooldown');
     btn.disabled = false;
-    btn.innerHTML = `
-      <span class="ad-reward-icon">🎁</span>
-      <span class="ad-reward-text">+500 💰</span>
-      <span class="ad-reward-sub">Ver anuncio</span>
-    `;
+    btn.innerHTML = `🎁 +500 💰 por ver anuncio`;
   }
 }
 
@@ -2885,11 +2890,7 @@ function updateRewardButtonCooldown(remainingMs) {
   
   const timeStr = formatTime(remainingMs);
   btn.setAttribute('data-time', timeStr);
-  btn.innerHTML = `
-    <span class="ad-reward-icon">⏳</span>
-    <span class="ad-reward-text">Espera</span>
-    <span class="ad-reward-sub">${timeStr}</span>
-  `;
+  btn.innerHTML = `⏳ Espera ${timeStr}`;
 }
 
 // Mostrar anuncio y dar recompensa
@@ -2932,91 +2933,42 @@ function giveReward() {
   actualizarSaldoUI();
 }
 
-// Crear barra social
-function createSocialBar() {
-  if (document.getElementById('social-bar-ads')) return;
+// Compartir app desde ajustes
+function compartirApp(red) {
+  const url = encodeURIComponent(window.location.href);
+  const texto = encodeURIComponent('¡Jugando en Edén! 🎮');
   
-  const bar = document.createElement('div');
-  bar.id = 'social-bar-ads';
-  bar.className = 'social-bar-ads hidden';
-  bar.innerHTML = `
-    <div class="social-content">
-      <span class="social-text">🎮 ¿Te gustó? ¡Comparte!</span>
-      <button class="social-btn-share" onclick="window.open('https://facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank')">📘 Facebook</button>
-      <button class="social-btn-share" onclick="window.open('https://twitter.com/intent/tweet?text=¡Jugando%20en%20Eden!&url=' + encodeURIComponent(window.location.href), '_blank')">🐦 Twitter</button>
-      <button class="social-btn-close" onclick="document.getElementById('social-bar-ads').classList.add('hidden')">✕</button>
-    </div>
-  `;
-  
-  bar.style.cssText = `
-    position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.9);
-    border: 2px solid #00FFFF;
-    border-radius: 10px;
-    padding: 15px 20px;
-    z-index: 998;
-    animation: slideUp 0.3s ease-out;
-  `;
-  
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes slideUp {
-      from { transform: translate(-50%, 100%); opacity: 0; }
-      to { transform: translate(-50%, 0); opacity: 1; }
-    }
-    .social-content {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .social-text {
-      color: #FFD700;
-      font-weight: bold;
-    }
-    .social-btn-share {
-      background: #00FFFF;
-      color: black;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .social-btn-close {
-      background: #ff4444;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  `;
-  document.head.appendChild(style);
-  
-  document.body.appendChild(bar);
-}
-
-// Mostrar barra social
-function showSocialBar() {
-  const bar = document.getElementById('social-bar-ads');
-  if (bar) {
-    bar.classList.remove('hidden');
-    setTimeout(() => bar.classList.add('hidden'), 10000);
+  if (red === 'facebook') {
+    window.open('https://facebook.com/sharer/sharer.php?u=' + url, '_blank');
+  } else if (red === 'twitter') {
+    window.open('https://twitter.com/intent/tweet?text=' + texto + '&url=' + url, '_blank');
   }
 }
 
-// Ocultar barra social
-function hideSocialBar() {
-  const bar = document.getElementById('social-bar-ads');
-  if (bar) bar.classList.add('hidden');
-}
-
-// Detectar salida de minijuego - llamar desde games.js
-function onMinigameExit() {
-  showSocialBar();
+function copiarLinkApp() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(() => {
+    const msg = document.getElementById('msg-copiado');
+    if (msg) {
+      msg.style.opacity = '1';
+      setTimeout(() => msg.style.opacity = '0', 2000);
+    }
+  }).catch(() => {
+    // Fallback
+    const el = document.createElement('textarea');
+    el.value = url;
+    el.style.position = 'fixed';
+    el.style.opacity = '0';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    const msg = document.getElementById('msg-copiado');
+    if (msg) {
+      msg.style.opacity = '1';
+      setTimeout(() => msg.style.opacity = '0', 2000);
+    }
+  });
 }
 
 // Script de red de anuncios externo - carga segura
