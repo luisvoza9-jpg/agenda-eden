@@ -1864,7 +1864,7 @@ function iniciarJuegoEden(diff) {
     function gl() { if (bricksGameActive) { bricksDraw(); bricksGameInterval = requestAnimationFrame(gl); } } gl();
   });
 }
-function salirDelJuego() { reproducir('click'); bricksGameActive = false; cancelAnimationFrame(bricksGameInterval); onMinigameExit(); mostrarVista('vista-agenda'); }
+function salirDelJuego() { reproducir('click'); bricksGameActive = false; cancelAnimationFrame(bricksGameInterval); mostrarVista('vista-agenda'); }
 
 function _bricksReset(diff) {
   bricksCurrentDifficulty = diff;
@@ -2067,7 +2067,7 @@ function abrirFlappy() {
   document.getElementById('rank-ingame-flappy').classList.add('hidden');
   fActive = false; fStarted = false; _fDrawStatic();
 }
-function salirFlappy() { fActive = false; cancelAnimationFrame(fRaf); onMinigameExit(); mostrarVista('vista-agenda'); }
+function salirFlappy() { fActive = false; cancelAnimationFrame(fRaf); mostrarVista('vista-agenda'); }
 function iniciarFlappy() {
   document.getElementById('flappy-start-menu').classList.add('hidden');
   document.getElementById('flappy-over-menu').classList.add('hidden');
@@ -2631,7 +2631,7 @@ const CANDY = (() => {
     loadState();
   }
 
-  function salir() { reproducir('click'); currentLevel = null; onMinigameExit(); mostrarVista('vista-agenda'); }
+  function salir() { reproducir('click'); currentLevel = null; mostrarVista('vista-agenda'); }
 
   _genLevels();
 
