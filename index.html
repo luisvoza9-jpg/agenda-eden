@@ -1854,7 +1854,7 @@ function iniciarJuegoEden(diff) {
     function gl() { if (bricksGameActive) { bricksDraw(); bricksGameInterval = requestAnimationFrame(gl); } } gl();
   });
 }
-function salirDelJuego() { reproducir('click'); bricksGameActive = false; cancelAnimationFrame(bricksGameInterval); mostrarVista('vista-agenda'); }
+function salirDelJuego() { reproducir('click'); bricksGameActive = false; cancelAnimationFrame(bricksGameInterval); onMinigameExit(); mostrarVista('vista-agenda'); }
 
 function _bricksReset(diff) {
   bricksCurrentDifficulty = diff;
@@ -2057,7 +2057,7 @@ function abrirFlappy() {
   document.getElementById('rank-ingame-flappy').classList.add('hidden');
   fActive = false; fStarted = false; _fDrawStatic();
 }
-function salirFlappy() { fActive = false; cancelAnimationFrame(fRaf); mostrarVista('vista-agenda'); }
+function salirFlappy() { fActive = false; cancelAnimationFrame(fRaf); onMinigameExit(); mostrarVista('vista-agenda'); }
 function iniciarFlappy() {
   document.getElementById('flappy-start-menu').classList.add('hidden');
   document.getElementById('flappy-over-menu').classList.add('hidden');
@@ -2621,7 +2621,7 @@ const CANDY = (() => {
     loadState();
   }
 
-  function salir() { reproducir('click'); currentLevel = null; mostrarVista('vista-agenda'); }
+  function salir() { reproducir('click'); currentLevel = null; onMinigameExit(); mostrarVista('vista-agenda'); }
 
   _genLevels();
 
@@ -2692,11 +2692,335 @@ function dibujarPreviewCandy() {
 // Inicializar listeners de tienda una vez cargado el DOM
 document.addEventListener('DOMContentLoaded', () => {
   inicializarTienda();
+  initAds(); // Inicializar sistema de anuncios
 });
 
 if (!cargarSesionLocal()) {
   mostrarVista('vista-login');
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   SISTEMA DE ANUNCIOS - Módulo integrado
+═══════════════════════════════════════════════════════════════ */
+
+// Configuración de anuncios
+const ADS_CONFIG = {
+  MAX_ADS_PER_SESSION: 5,
+  COOLDOWN_MINUTES: 15,
+  REWARD_COINS: 500,
+  AD_URL: 'https://www.profitablecpmratenetwork.com/he7fd24w?key=32d5534c1ca0fd74b1d8263bff5f7ace'
+};
+
+// Estado de anuncios
+let adsWatched = 0;
+let lastAdTime = 0;
+let isInCooldown = false;
+let cooldownTimer = null;
+
+// Inicializar sistema de anuncios
+function initAds() {
+  loadAdsState();
+  createRewardButton();
+  createSocialBar();
+  updateRewardButton();
+}
+
+// Cargar estado guardado
+function loadAdsState() {
+  const saved = localStorage.getItem('edenAdsState');
+  if (saved) {
+    const state = JSON.parse(saved);
+    adsWatched = state.adsWatched || 0;
+    lastAdTime = state.lastAdTime || 0;
+  }
+  checkCooldown();
+}
+
+// Guardar estado
+function saveAdsState() {
+  localStorage.setItem('edenAdsState', JSON.stringify({
+    adsWatched,
+    lastAdTime
+  }));
+}
+
+// Verificar si está en cooldown
+function checkCooldown() {
+  const now = Date.now();
+  const timeSinceLastAd = now - lastAdTime;
+  const cooldownMs = ADS_CONFIG.COOLDOWN_MINUTES * 60 * 1000;
+  
+  if (adsWatched >= ADS_CONFIG.MAX_ADS_PER_SESSION && timeSinceLastAd < cooldownMs) {
+    isInCooldown = true;
+    const remainingTime = cooldownMs - timeSinceLastAd;
+    startCooldownTimer(remainingTime);
+  } else if (timeSinceLastAd >= cooldownMs) {
+    adsWatched = 0;
+    isInCooldown = false;
+    saveAdsState();
+  }
+}
+
+// Iniciar timer de cooldown
+function startCooldownTimer(remainingMs) {
+  if (cooldownTimer) clearInterval(cooldownTimer);
+  
+  updateRewardButtonCooldown(remainingMs);
+  
+  cooldownTimer = setInterval(() => {
+    remainingMs -= 1000;
+    if (remainingMs <= 0) {
+      clearInterval(cooldownTimer);
+      isInCooldown = false;
+      adsWatched = 0;
+      saveAdsState();
+      updateRewardButton();
+    } else {
+      updateRewardButtonCooldown(remainingMs);
+    }
+  }, 1000);
+}
+
+// Formatear tiempo
+function formatTime(ms) {
+  const minutes = Math.floor(ms / 60000);
+  const seconds = Math.floor((ms % 60000) / 1000);
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
+// Crear botón de recompensa llamativo
+function createRewardButton() {
+  if (document.getElementById('ad-reward-btn')) return;
+  
+  const btn = document.createElement('button');
+  btn.id = 'ad-reward-btn';
+  btn.className = 'ad-reward-button';
+  btn.innerHTML = `
+    <span class="ad-reward-icon">🎁</span>
+    <span class="ad-reward-text">+500 💰</span>
+    <span class="ad-reward-sub">Ver anuncio</span>
+  `;
+  btn.onclick = showAdForReward;
+  
+  btn.style.cssText = `
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border: 3px solid #FF6347;
+    border-radius: 15px;
+    padding: 12px 20px;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    animation: pulseReward 2s infinite;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 100px;
+  `;
+  
+  const style = document.createElement('style');
+  style.id = 'ad-animations';
+  style.textContent = `
+    @keyframes pulseReward {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+      50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 215, 0, 0.9); }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .ad-reward-icon { font-size: 24px; }
+    .ad-reward-text { font-size: 16px; font-weight: bold; color: #000; }
+    .ad-reward-sub { font-size: 10px; color: #333; }
+    .ad-reward-button.disabled {
+      background: linear-gradient(135deg, #888, #666) !important;
+      border-color: #555 !important;
+      animation: none !important;
+      cursor: not-allowed !important;
+    }
+    .ad-reward-button.cooldown::after {
+      content: attr(data-time);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 14px;
+      font-weight: bold;
+      color: white;
+      background: rgba(0,0,0,0.8);
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+  `;
+  document.head.appendChild(style);
+  
+  document.body.appendChild(btn);
+}
+
+// Actualizar estado del botón
+function updateRewardButton() {
+  const btn = document.getElementById('ad-reward-btn');
+  if (!btn) return;
+  
+  if (isInCooldown) {
+    btn.classList.add('disabled', 'cooldown');
+    btn.disabled = true;
+  } else {
+    btn.classList.remove('disabled', 'cooldown');
+    btn.disabled = false;
+    btn.innerHTML = `
+      <span class="ad-reward-icon">🎁</span>
+      <span class="ad-reward-text">+500 💰</span>
+      <span class="ad-reward-sub">Ver anuncio</span>
+    `;
+  }
+}
+
+// Actualizar cooldown visual
+function updateRewardButtonCooldown(remainingMs) {
+  const btn = document.getElementById('ad-reward-btn');
+  if (!btn) return;
+  
+  const timeStr = formatTime(remainingMs);
+  btn.setAttribute('data-time', timeStr);
+  btn.innerHTML = `
+    <span class="ad-reward-icon">⏳</span>
+    <span class="ad-reward-text">Espera</span>
+    <span class="ad-reward-sub">${timeStr}</span>
+  `;
+}
+
+// Mostrar anuncio y dar recompensa
+function showAdForReward() {
+  if (isInCooldown || adsWatched >= ADS_CONFIG.MAX_ADS_PER_SESSION) {
+    mostrarToast(`Espera ${formatTime(lastAdTime + ADS_CONFIG.COOLDOWN_MINUTES * 60000 - Date.now())} para más anuncios`, '#ff9800');
+    return;
+  }
+  
+  const adWindow = window.open(ADS_CONFIG.AD_URL, '_blank', 'width=800,height=600,scrollbars=yes');
+  
+  if (adWindow) {
+    adsWatched++;
+    lastAdTime = Date.now();
+    saveAdsState();
+    
+    giveReward();
+    
+    if (adsWatched >= ADS_CONFIG.MAX_ADS_PER_SESSION) {
+      checkCooldown();
+    }
+    
+    const checkClosed = setInterval(() => {
+      if (adWindow.closed) {
+        clearInterval(checkClosed);
+        mostrarToast(`¡Anuncio completado! +${ADS_CONFIG.REWARD_COINS} 💰`, '#4CAF50');
+      }
+    }, 1000);
+  } else {
+    mostrarToast('Permite ventanas emergentes para ver anuncios', '#ff4444');
+  }
+}
+
+// Dar recompensa de monedas
+function giveReward() {
+  userBalance += ADS_CONFIG.REWARD_COINS;
+  if (currentUser) {
+    db.ref('usuarios/' + currentUser).update({ saldo: userBalance });
+  }
+  actualizarSaldoUI();
+}
+
+// Crear barra social
+function createSocialBar() {
+  if (document.getElementById('social-bar-ads')) return;
+  
+  const bar = document.createElement('div');
+  bar.id = 'social-bar-ads';
+  bar.className = 'social-bar-ads hidden';
+  bar.innerHTML = `
+    <div class="social-content">
+      <span class="social-text">🎮 ¿Te gustó? ¡Comparte!</span>
+      <button class="social-btn-share" onclick="window.open('https://facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank')">📘 Facebook</button>
+      <button class="social-btn-share" onclick="window.open('https://twitter.com/intent/tweet?text=¡Jugando%20en%20Eden!&url=' + encodeURIComponent(window.location.href), '_blank')">🐦 Twitter</button>
+      <button class="social-btn-close" onclick="document.getElementById('social-bar-ads').classList.add('hidden')">✕</button>
+    </div>
+  `;
+  
+  bar.style.cssText = `
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #00FFFF;
+    border-radius: 10px;
+    padding: 15px 20px;
+    z-index: 998;
+    animation: slideUp 0.3s ease-out;
+  `;
+  
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slideUp {
+      from { transform: translate(-50%, 100%); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+    .social-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .social-text {
+      color: #FFD700;
+      font-weight: bold;
+    }
+    .social-btn-share {
+      background: #00FFFF;
+      color: black;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .social-btn-close {
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  `;
+  document.head.appendChild(style);
+  
+  document.body.appendChild(bar);
+}
+
+// Mostrar barra social
+function showSocialBar() {
+  const bar = document.getElementById('social-bar-ads');
+  if (bar) {
+    bar.classList.remove('hidden');
+    setTimeout(() => bar.classList.add('hidden'), 10000);
+  }
+}
+
+// Ocultar barra social
+function hideSocialBar() {
+  const bar = document.getElementById('social-bar-ads');
+  if (bar) bar.classList.add('hidden');
+}
+
+// Detectar salida de minijuego - llamar desde games.js
+function onMinigameExit() {
+  showSocialBar();
+}
+
+// Script de red de anuncios externo
+document.write('<script src="https://pl29078652.profitablecpmratenetwork.com/e1/98/9c/e1989ca6cefe274264e077390202249b.js"></script>');
 </script>
 </body>
 </html>
